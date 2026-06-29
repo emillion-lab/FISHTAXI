@@ -239,7 +239,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <div class="filters-section">
       <span class="flt-label">Payment</span>
       <button class="flt" data-f="revolut" onclick="setFilter('revolut',this)">💜 Revolut</button>
-      <button class="flt" data-f="terminal" onclick="setFilter('terminal',this)">🖥 Terminal</button>
+      <button class="flt" data-f="terminal" onclick="setFilter('terminal',this)">💳 Terminal</button>
       <button class="flt" data-f="cash" onclick="setFilter('cash',this)">💵 Cash</button>
     </div>
     <div class="filters-section">
@@ -472,7 +472,7 @@ function requestGPS() {
 
 function payIcon(p) {
   if(p==='revolut') return '<span class="pay-icon">💜 Revolut</span>';
-  if(p==='terminal') return '<span class="pay-icon">🖥 Terminal</span>';
+  if(p==='terminal') return '<span class="pay-icon">💳 Terminal</span>';
   if(p==='cash') return '<span class="pay-icon">💵 Cash</span>';
   return '';
 }
