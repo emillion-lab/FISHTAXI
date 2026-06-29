@@ -2,191 +2,173 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="theme-color" content="#080808">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>fish.taxi – Find Your Driver Directly</title>
-<meta name="description" content="fish.taxi — Book your taxi directly. No commission. Verified drivers. 24/7 worldwide.">
-<link rel="manifest" href="manifest.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐟</text></svg>">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 :root{--bg:#080808;--s1:#111;--s2:#1a1a1a;--s3:#242424;--brd:#2e2e2e;--brd2:#3d3d3d;--y:#f5c518;--yd:rgba(245,197,24,.13);--tx:#f0f0f0;--mu:#aaa;--mu2:#666;--gr:#22c55e;--rd:#ef4444;--bl:#3b82f6;--or:#f97316;--pu:#a855f7;--cy:#06b6d4;--pi:#ec4899}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{font-size:16px;height:100%}
-body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
-.top{background:#000;border-bottom:3px solid var(--y);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0;z-index:10}
-.logo{font-size:20px;font-weight:900;display:flex;align-items:center;gap:6px}
-.logo span{color:var(--y)}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;display:flex;flex-direction:column}
+/* TOP */
+.top{background:#000;border-bottom:3px solid var(--y);height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0}
+.logo{font-size:19px;font-weight:900;color:var(--y)}
 .langs{display:flex;gap:3px}
-.lang-btn{background:var(--s2);border:1px solid var(--brd);color:var(--mu);font-size:11px;font-weight:700;padding:3px 7px;border-radius:6px;cursor:pointer;min-width:32px;text-align:center}
-.lang-btn.active{background:var(--yd);border-color:var(--y);color:var(--y)}
-.hero{background:linear-gradient(135deg,#0a0a0a,#111,#0d0d0d);border-bottom:1px solid var(--brd);padding:10px 12px;flex-shrink:0}
-.hero-title{font-size:20px;font-weight:900;color:var(--y);margin-bottom:3px}
-.hero-sub{font-size:12px;color:var(--mu);margin-bottom:8px}
-.hero-pills{display:flex;gap:5px;flex-wrap:wrap}
+.lb{background:var(--s2);border:1px solid var(--brd);color:var(--mu);font-size:11px;font-weight:700;padding:3px 7px;border-radius:6px;cursor:pointer}
+.lb.on{background:var(--yd);border-color:var(--y);color:var(--y)}
+/* HERO */
+.hero{background:#0a0a0a;border-bottom:1px solid var(--brd);padding:9px 12px;flex-shrink:0}
+.hero h1{font-size:19px;font-weight:900;color:var(--y);margin-bottom:2px}
+.hero p{font-size:12px;color:var(--mu);margin-bottom:7px}
+.pills{display:flex;gap:5px;flex-wrap:wrap}
 .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;border:1px solid}
-.pill-gr{color:var(--gr);border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.08)}
-.pill-y{color:var(--y);border-color:rgba(245,197,24,.4);background:rgba(245,197,24,.08)}
-.pill-bl{color:var(--bl);border-color:rgba(59,130,246,.4);background:rgba(59,130,246,.08)}
+.pg{color:var(--gr);border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.08)}
+.py{color:var(--y);border-color:rgba(245,197,24,.4);background:rgba(245,197,24,.08)}
+.pb{color:var(--bl);border-color:rgba(59,130,246,.4);background:rgba(59,130,246,.08)}
+/* TABS */
 .tabs{display:flex;background:var(--s1);border-bottom:2px solid var(--brd);flex-shrink:0}
-.tab{flex:1;padding:9px 2px;font-size:13px;font-weight:800;border:none;background:transparent;color:var(--mu);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s}
+.tab{flex:1;padding:9px 2px;font-size:13px;font-weight:800;border:none;background:transparent;color:var(--mu);cursor:pointer;border-bottom:3px solid transparent}
 .tab.on{color:var(--y);border-bottom-color:var(--y)}
-.pg{display:none;flex:1;flex-direction:column;overflow:hidden;min-height:0}
-.pg.on{display:flex}
-#map{height:220px;background:#0d1117;flex-shrink:0}
+/* PAGES */
+.page{display:none;flex:1;flex-direction:column;overflow:hidden;min-height:0}
+.page.on{display:flex}
+/* MAP */
+#map{height:210px;flex-shrink:0}
 .leaflet-container{background:#0d1117!important}
 .leaflet-popup-content-wrapper{background:var(--s2)!important;color:var(--tx)!important;border:1px solid var(--brd2)!important;border-radius:10px!important}
 .leaflet-popup-tip{background:var(--s2)!important}
-.city-bar{padding:7px 10px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;display:flex;align-items:center;gap:8px}
-.city-sel{background:var(--s2);border:1px solid var(--brd2);color:var(--tx);border-radius:8px;padding:5px 8px;font-size:13px;font-weight:700;flex:1}
-.city-sel:focus{outline:none;border-color:var(--y)}
-.counter-bar{background:var(--s1);border-bottom:1px solid var(--brd);padding:7px 14px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-.counter-item{text-align:center}
-.counter-num{font-size:17px;font-weight:900;color:var(--y)}
-.counter-lbl{font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase}
-.srch{padding:8px 10px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;display:flex;gap:7px}
+.city-bar{padding:6px 10px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;display:flex;gap:8px;align-items:center}
+.city-bar label{font-size:12px;color:var(--mu);font-weight:600}
+.csel{background:var(--s2);border:1px solid var(--brd2);color:var(--tx);border-radius:8px;padding:5px 8px;font-size:13px;font-weight:700;flex:1}
+.csel:focus{outline:none;border-color:var(--y)}
+.ctr{background:var(--s1);border-bottom:1px solid var(--brd);padding:6px 14px;display:flex;justify-content:space-between;flex-shrink:0}
+.ci{text-align:center}
+.cn{font-size:16px;font-weight:900;color:var(--y)}
+.cl{font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase}
+/* SEARCH */
+.srch{padding:7px 10px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;display:flex;gap:7px}
 .srch input{flex:1;background:var(--s2);border:1px solid var(--brd2);color:var(--tx);border-radius:8px;padding:7px 11px;font-size:14px}
 .srch input:focus{outline:none;border-color:var(--y)}
-.srch-btn{background:var(--y);color:#000;border:none;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:800;cursor:pointer}
-
-/* FILTERS - bigger text */
-.filters-wrap{background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0}
-.filters-section{padding:5px 8px 3px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;align-items:center}
-.filters-section::-webkit-scrollbar{display:none}
-.flt-label{font-size:10px;color:var(--mu2);font-weight:700;text-transform:uppercase;white-space:nowrap;padding-right:4px;flex-shrink:0}
-.flt{font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px;border:1px solid var(--brd2);background:var(--s2);color:var(--mu);cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.sb{background:var(--y);color:#000;border:none;border-radius:8px;padding:7px 12px;font-size:14px;font-weight:800;cursor:pointer}
+/* FILTERS */
+.fw{background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0}
+.fs{padding:4px 8px 2px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;align-items:center}
+.fs::-webkit-scrollbar{display:none}
+.fl{font-size:10px;color:var(--mu2);font-weight:700;text-transform:uppercase;white-space:nowrap;padding-right:3px;flex-shrink:0}
+.flt{font-size:13px;font-weight:700;padding:6px 13px;border-radius:20px;border:1px solid var(--brd2);background:var(--s2);color:var(--mu);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
 .flt.on{background:var(--yd);border-color:var(--y);color:var(--y)}
-.flt:active{opacity:.7}
-
+/* LIST */
 .dlist{flex:1;overflow-y:auto;padding:8px}
 .dlist::-webkit-scrollbar{width:3px}
 .dlist::-webkit-scrollbar-thumb{background:var(--brd2)}
-
-/* DRIVER CARD */
-.dcard{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:12px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
-.dcard:hover,.dcard:active{border-color:var(--y)}
-.dcard-top{display:flex;gap:10px;align-items:flex-start}
-.dcard-avatar{width:56px;height:56px;border-radius:12px;background:var(--s3);border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
-.dcard-info{flex:1;min-width:0}
-.dcard-name{font-size:15px;font-weight:800;margin-bottom:1px;display:flex;align-items:center;gap:5px}
-.dcard-car{font-size:12px;color:var(--mu);margin-bottom:5px}
-.dcard-tags{display:flex;gap:3px;flex-wrap:wrap}
-.tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:10px;border:1px solid}
-.tag-gr{color:var(--gr);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.07)}
-.tag-y{color:var(--y);border-color:rgba(245,197,24,.3);background:rgba(245,197,24,.07)}
-.tag-bl{color:var(--bl);border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.07)}
-.tag-pu{color:var(--pu);border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.07)}
-.tag-cy{color:var(--cy);border-color:rgba(6,182,212,.3);background:rgba(6,182,212,.07)}
-.tag-rd{color:var(--rd);border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.07)}
-.tag-or{color:var(--or);border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.07)}
-.tag-pi{color:var(--pi);border-color:rgba(236,72,153,.3);background:rgba(236,72,153,.07)}
-.pay-icons{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap}
-.pay-icon{font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;border:1px solid rgba(245,197,24,.3);color:var(--y);background:rgba(245,197,24,.06)}
-.dcard-bottom{display:flex;gap:6px;margin-top:10px}
-.btn-call{flex:1;background:var(--gr);color:#000;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:800;cursor:pointer}
-.btn-wp{flex:1;background:#25D366;color:#fff;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:800;cursor:pointer}
-.btn-info{background:var(--s3);color:var(--mu);border:1px solid var(--brd2);border-radius:8px;padding:9px 12px;font-size:13px;cursor:pointer}
-.rating-badge{font-size:12px;color:var(--y);font-weight:700;margin-left:auto;white-space:nowrap}
-.verified{display:inline-flex;align-items:center;gap:2px;font-size:10px;font-weight:700;color:var(--gr);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:1px 5px}
-
+/* CARD */
+.dc{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:11px;margin-bottom:7px;cursor:pointer;transition:border-color .15s}
+.dc:active{border-color:var(--y)}
+.dct{display:flex;gap:9px;align-items:flex-start}
+.dca{width:54px;height:54px;border-radius:12px;background:var(--s3);border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.dci{flex:1;min-width:0}
+.dcn{font-size:15px;font-weight:800;margin-bottom:1px}
+.dcc{font-size:12px;color:var(--mu);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tags{display:flex;gap:3px;flex-wrap:wrap}
+.t{font-size:11px;font-weight:700;padding:2px 7px;border-radius:9px;border:1px solid}
+.tg{color:var(--gr);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.07)}
+.ty{color:var(--y);border-color:rgba(245,197,24,.3);background:rgba(245,197,24,.07)}
+.tb{color:var(--bl);border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.07)}
+.tp{color:var(--pu);border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.07)}
+.tc{color:var(--cy);border-color:rgba(6,182,212,.3);background:rgba(6,182,212,.07)}
+.tr{color:var(--rd);border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.07)}
+.to{color:var(--or);border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.07)}
+.tpi{color:var(--pi);border-color:rgba(236,72,153,.3);background:rgba(236,72,153,.07)}
+.pays{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap}
+.pi{font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;border:1px solid rgba(245,197,24,.3);color:var(--y);background:rgba(245,197,24,.06)}
+.dcb{display:flex;gap:5px;margin-top:9px}
+.bc{flex:1;background:var(--gr);color:#000;border:none;border-radius:8px;padding:8px;font-size:13px;font-weight:800;cursor:pointer}
+.bw{flex:1;background:#25D366;color:#fff;border:none;border-radius:8px;padding:8px;font-size:13px;font-weight:800;cursor:pointer}
+.bi{background:var(--s3);color:var(--mu);border:1px solid var(--brd2);border-radius:8px;padding:8px 11px;font-size:13px;cursor:pointer}
+.rb{font-size:12px;color:var(--y);font-weight:700;margin-left:auto;flex-shrink:0}
+.vbadge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;color:var(--gr);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:7px;padding:1px 5px}
 /* MODAL */
 .modal{display:none;position:fixed;inset:0;background:#000c;z-index:200;align-items:flex-end}
 .modal.on{display:flex}
-.modal-box{background:var(--s1);border-top:3px solid var(--y);border-radius:20px 20px 0 0;padding:18px;width:100%;max-height:90vh;overflow-y:auto}
-.modal-close{float:right;background:var(--s3);border:none;color:var(--mu);border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;line-height:30px;text-align:center}
-.modal-avatar{width:72px;height:72px;border-radius:14px;background:var(--s3);border:3px solid var(--y);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 10px}
-.modal-name{font-size:19px;font-weight:900;text-align:center;margin-bottom:2px}
-.modal-car{font-size:13px;color:var(--mu);text-align:center;margin-bottom:8px}
-.modal-section{margin-bottom:12px}
-.modal-section h4{font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;border-bottom:1px solid var(--brd);padding-bottom:4px}
-.modal-btns{display:flex;gap:8px;margin-top:14px}
-.modal-call{flex:1;background:var(--gr);color:#000;border:none;border-radius:10px;padding:12px;font-size:15px;font-weight:800;cursor:pointer}
-.modal-wp{flex:1;background:#25D366;color:#fff;border:none;border-radius:10px;padding:12px;font-size:15px;font-weight:800;cursor:pointer}
-.info-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--brd)}
-.info-row:last-child{border-bottom:none}
-.info-key{font-size:12px;color:var(--mu)}
-.info-val{font-size:13px;font-weight:700}
-
-/* RATING MODAL */
-.rating-modal{display:none;position:fixed;inset:0;background:#000c;z-index:300;align-items:center;justify-content:center;padding:20px}
-.rating-modal.on{display:flex}
-.rating-box{background:var(--s1);border:2px solid var(--y);border-radius:20px;padding:20px;width:100%;max-width:400px}
-.rating-box h3{font-size:17px;font-weight:900;margin-bottom:4px;color:var(--y)}
-.rating-box p{font-size:12px;color:var(--mu);margin-bottom:16px;line-height:1.5}
-.stars-input{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
-.star-btn{font-size:32px;cursor:pointer;opacity:.3;transition:opacity .2s}
-.star-btn.on{opacity:1}
-.rating-comment{width:100%;background:var(--s2);border:1px solid var(--brd2);color:var(--tx);border-radius:10px;padding:10px;font-size:13px;margin-bottom:10px;resize:none;height:80px}
-.rating-comment:focus{outline:none;border-color:var(--y)}
-.rating-notice{background:var(--s3);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--mu);margin-bottom:12px;line-height:1.5}
-.rating-submit{background:var(--y);color:#000;border:none;border-radius:10px;padding:11px;width:100%;font-size:14px;font-weight:800;cursor:pointer}
-.rating-cancel{background:transparent;color:var(--mu);border:none;padding:8px;width:100%;font-size:13px;cursor:pointer;margin-top:4px}
-
-/* GPS NOTICE */
-.gps-bar{background:rgba(59,130,246,.1);border-bottom:1px solid rgba(59,130,246,.3);padding:6px 12px;font-size:11px;color:var(--bl);display:flex;align-items:center;gap:6px;flex-shrink:0}
-.gps-bar button{background:var(--bl);color:#fff;border:none;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer;margin-left:auto}
-
-/* DRIVING STYLE BAR */
-.style-notice{background:var(--s3);border:1px solid var(--brd2);border-radius:10px;padding:10px;margin-bottom:10px;font-size:12px;color:var(--mu);line-height:1.5}
-.style-notice strong{color:var(--or)}
-
-/* HOW PAGE */
-.how-page{flex:1;overflow-y:auto;padding:14px}
-.how-step{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:14px;margin-bottom:8px;display:flex;gap:12px}
-.how-num{width:36px;height:36px;border-radius:50%;background:var(--y);color:#000;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.how-text h3{font-size:14px;font-weight:800;margin-bottom:3px}
-.how-text p{font-size:12px;color:var(--mu);line-height:1.5}
-.how-cta{background:var(--y);color:#000;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:900;width:100%;cursor:pointer;margin-top:8px}
-.divider-label{text-align:center;font-size:11px;color:var(--mu);margin:10px 0;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
-
-/* JOIN PAGE */
-.reg-page{flex:1;overflow-y:auto;padding:12px}
-.reg-card{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:14px;margin-bottom:8px}
-.reg-card h3{font-size:14px;font-weight:800;margin-bottom:8px;color:var(--y)}
-.reg-card p{font-size:12px;color:var(--mu);line-height:1.5;margin-bottom:6px}
-.price-box{background:var(--s3);border:2px solid var(--y);border-radius:12px;padding:12px;text-align:center;margin:8px 0}
-.price-big{font-size:34px;font-weight:900;color:var(--y)}
-.benefit{display:flex;gap:8px;margin-bottom:7px}
-.benefit-icon{font-size:16px;flex-shrink:0;margin-top:1px}
-.benefit-text{font-size:12px;color:var(--mu);line-height:1.4}
-.benefit-text strong{color:var(--tx)}
-.reg-btn{background:var(--y);color:#000;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:900;width:100%;cursor:pointer;margin-top:6px}
-
+.mb{background:var(--s1);border-top:3px solid var(--y);border-radius:20px 20px 0 0;padding:18px;width:100%;max-height:88vh;overflow-y:auto}
+.mc{float:right;background:var(--s3);border:none;color:var(--mu);border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;line-height:30px;text-align:center}
+.ma{width:68px;height:68px;border-radius:14px;background:var(--s3);border:3px solid var(--y);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 8px}
+.mn{font-size:18px;font-weight:900;text-align:center;margin-bottom:2px}
+.mcar{font-size:12px;color:var(--mu);text-align:center;margin-bottom:8px}
+.msec h4{font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 5px;border-bottom:1px solid var(--brd);padding-bottom:3px}
+.ir{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--brd)}
+.ik{font-size:12px;color:var(--mu)}
+.iv{font-size:13px;font-weight:700}
+.mbtns{display:flex;gap:8px;margin-top:12px}
+.mcall{flex:1;background:var(--gr);color:#000;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:800;cursor:pointer}
+.mwp{flex:1;background:#25D366;color:#fff;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:800;cursor:pointer}
+.style-box{background:var(--s3);border-left:3px solid var(--or);border-radius:8px;padding:9px 11px;font-size:12px;color:var(--mu);margin:8px 0;line-height:1.5}
+/* RATING */
+.rmodal{display:none;position:fixed;inset:0;background:#000c;z-index:300;align-items:center;justify-content:center;padding:20px}
+.rmodal.on{display:flex}
+.rbox{background:var(--s1);border:2px solid var(--y);border-radius:18px;padding:18px;width:100%;max-width:380px}
+.rbox h3{font-size:16px;font-weight:900;color:var(--y);margin-bottom:3px}
+.rbox p{font-size:12px;color:var(--mu);margin-bottom:14px;line-height:1.5}
+.stars{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
+.star{font-size:34px;cursor:pointer;opacity:.25;transition:opacity .15s}
+.star.on{opacity:1}
+.rta{width:100%;background:var(--s2);border:1px solid var(--brd2);color:var(--tx);border-radius:9px;padding:9px;font-size:13px;margin-bottom:9px;resize:none;height:75px}
+.rta:focus{outline:none;border-color:var(--y)}
+.rnote{background:var(--s3);border-radius:7px;padding:8px 9px;font-size:11px;color:var(--mu);margin-bottom:11px;line-height:1.5}
+.rsub{background:var(--y);color:#000;border:none;border-radius:9px;padding:11px;width:100%;font-size:14px;font-weight:800;cursor:pointer}
+.rcan{background:transparent;color:var(--mu);border:none;padding:7px;width:100%;font-size:13px;cursor:pointer;margin-top:3px}
+/* HOW & JOIN */
+.scroll-page{flex:1;overflow-y:auto;padding:13px}
+.hstep{background:var(--s2);border:1px solid var(--brd);border-radius:13px;padding:13px;margin-bottom:7px;display:flex;gap:11px}
+.hnum{width:34px;height:34px;border-radius:50%;background:var(--y);color:#000;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hstep h3{font-size:14px;font-weight:800;margin-bottom:2px}
+.hstep p{font-size:12px;color:var(--mu);line-height:1.5}
+.jcard{background:var(--s2);border:1px solid var(--brd);border-radius:13px;padding:13px;margin-bottom:7px}
+.jcard h3{font-size:14px;font-weight:800;margin-bottom:7px;color:var(--y)}
+.jcard p{font-size:12px;color:var(--mu);line-height:1.5;margin-bottom:5px}
+.pbox{background:var(--s3);border:2px solid var(--y);border-radius:11px;padding:11px;text-align:center;margin:7px 0}
+.pbig{font-size:32px;font-weight:900;color:var(--y)}
+.brow{display:flex;gap:7px;margin-bottom:6px}
+.bicon{font-size:15px;flex-shrink:0}
+.btext{font-size:12px;color:var(--mu);line-height:1.4}
+.btext strong{color:var(--tx)}
+.jbtn{background:var(--y);color:#000;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:900;width:100%;cursor:pointer;margin-top:5px}
+.hcta{background:var(--y);color:#000;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:900;width:100%;cursor:pointer;margin-top:7px}
 /* LOADING */
-.ld{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.ld{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px}
 .ld.hide{display:none}
-.ld-fish{font-size:52px;animation:swim 1.4s ease-in-out infinite}
-@keyframes swim{0%,100%{transform:translateX(-8px) rotate(-5deg)}50%{transform:translateX(8px) rotate(5deg)}}
-.ld-title{font-size:26px;font-weight:900;color:var(--y)}
+.fish-anim{font-size:50px;animation:sw 1.3s ease-in-out infinite}
+@keyframes sw{0%,100%{transform:translateX(-8px) rotate(-5deg)}50%{transform:translateX(8px) rotate(5deg)}}
 </style>
 </head>
 <body>
 
 <div class="ld" id="ld">
-  <div class="ld-fish">🐟</div>
-  <div class="ld-title">fish.taxi</div>
+  <div class="fish-anim">🐟</div>
+  <div style="font-size:24px;font-weight:900;color:var(--y)">fish.taxi</div>
   <div style="font-size:13px;color:var(--mu)">Finding drivers near you...</div>
 </div>
 
 <div class="top">
-  <div class="logo">🐟 <span>fish.taxi</span></div>
+  <div class="logo">🐟 fish.taxi</div>
   <div class="langs">
-    <button class="lang-btn active" onclick="setLang('en')">EN</button>
-    <button class="lang-btn" onclick="setLang('bg')">БГ</button>
-    <button class="lang-btn" onclick="setLang('de')">DE</button>
-    <button class="lang-btn" onclick="setLang('fr')">FR</button>
+    <button class="lb on" onclick="setLang('en')">EN</button>
+    <button class="lb" onclick="setLang('bg')">БГ</button>
+    <button class="lb" onclick="setLang('de')">DE</button>
+    <button class="lb" onclick="setLang('fr')">FR</button>
   </div>
 </div>
 
 <div class="hero">
-  <div class="hero-title">🐟 Find Your Driver Directly</div>
-  <div class="hero-sub">No commission. No middleman. Just you and your driver.</div>
-  <div class="hero-pills">
-    <span class="pill pill-gr">✓ Verified Drivers</span>
-    <span class="pill pill-y">24/7 Available</span>
-    <span class="pill pill-bl">Zero Commission</span>
+  <h1 id="htitle">🐟 Find Your Driver Directly</h1>
+  <p id="hsub">No commission. No middleman. Just you and your driver.</p>
+  <div class="pills">
+    <span class="pill pg">✓ Verified Drivers</span>
+    <span class="pill py">24/7 Available</span>
+    <span class="pill pb">Zero Commission</span>
   </div>
 </div>
 
@@ -197,11 +179,11 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
   <button class="tab" onclick="showTab('reg')" id="tab-reg">🚕 Join</button>
 </div>
 
-<!-- MAP PAGE -->
-<div class="pg on" id="pg-map" style="overflow:hidden">
+<!-- MAP -->
+<div class="page on" id="page-map" style="overflow:hidden">
   <div class="city-bar">
-    <span style="font-size:12px;color:var(--mu);font-weight:600">City:</span>
-    <select class="city-sel" id="city-sel" onchange="changeCity()">
+    <label>City:</label>
+    <select class="csel" id="city-sel" onchange="changeCity()">
       <option value="sofia">Sofia 🇧🇬</option>
       <option value="zurich">Zürich 🇨🇭</option>
       <option value="berlin">Berlin 🇩🇪</option>
@@ -215,494 +197,314 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     </select>
   </div>
   <div id="map"></div>
-  <div class="counter-bar">
-    <div class="counter-item"><div class="counter-num" id="cnt-online">0</div><div class="counter-lbl">Online</div></div>
-    <div class="counter-item"><div class="counter-num" id="cnt-total">0</div><div class="counter-lbl">In City</div></div>
-    <div class="counter-item"><div class="counter-num">10</div><div class="counter-lbl">Cities</div></div>
-    <div class="counter-item"><div class="counter-num">200</div><div class="counter-lbl">Total</div></div>
+  <div class="ctr">
+    <div class="ci"><div class="cn" id="cnt-on">0</div><div class="cl">Online</div></div>
+    <div class="ci"><div class="cn" id="cnt-city">0</div><div class="cl">In City</div></div>
+    <div class="ci"><div class="cn">10</div><div class="cl">Cities</div></div>
+    <div class="ci"><div class="cn">200</div><div class="cl">Drivers</div></div>
   </div>
-  <div class="dlist" id="map-dlist" style="flex:1;overflow-y:auto;padding:8px"></div>
+  <div class="dlist" id="map-list" style="flex:1;overflow-y:auto;padding:8px"></div>
 </div>
 
-<!-- DRIVERS PAGE -->
-<div class="pg" id="pg-list">
+<!-- DRIVERS -->
+<div class="page" id="page-list">
   <div class="srch">
-    <input type="text" id="srch-inp" placeholder="Search driver, car, area..." oninput="renderDrivers()">
-    <button class="srch-btn" onclick="renderDrivers()">🔍</button>
+    <input type="text" id="srch" placeholder="Search driver, car, area..." oninput="renderList()">
+    <button class="sb" onclick="renderList()">🔍</button>
   </div>
-  <div class="filters-wrap">
-    <div class="filters-section">
-      <span class="flt-label">Status</span>
-      <button class="flt on" data-f="all" onclick="setFilter('all',this)">All</button>
-      <button class="flt" data-f="online" onclick="setFilter('online',this)">🟢 Online</button>
+  <div class="fw">
+    <div class="fs"><span class="fl">Status</span>
+      <button class="flt on" data-f="all" onclick="sf('all',this)">All</button>
+      <button class="flt" data-f="online" onclick="sf('online',this)">🟢 Online</button>
     </div>
-    <div class="filters-section">
-      <span class="flt-label">Payment</span>
-      <button class="flt" data-f="revolut" onclick="setFilter('revolut',this)">💜 Revolut</button>
-      <button class="flt" data-f="terminal" onclick="setFilter('terminal',this)">💳 Terminal</button>
-      <button class="flt" data-f="cash" onclick="setFilter('cash',this)">💵 Cash</button>
+    <div class="fs"><span class="fl">Payment</span>
+      <button class="flt" data-f="revolut" onclick="sf('revolut',this)">💜 Revolut</button>
+      <button class="flt" data-f="terminal" onclick="sf('terminal',this)">💳 Terminal</button>
+      <button class="flt" data-f="cash" onclick="sf('cash',this)">💵 Cash</button>
     </div>
-    <div class="filters-section">
-      <span class="flt-label">Driving style</span>
-      <button class="flt" data-f="sport" onclick="setFilter('sport',this)">🏎 Sport 0–5s</button>
-      <button class="flt" data-f="fast" onclick="setFilter('fast',this)">⚡ Fast 5–7s</button>
-      <button class="flt" data-f="comfort" onclick="setFilter('comfort',this)">🛋 Comfort</button>
+    <div class="fs"><span class="fl">Driving style</span>
+      <button class="flt" data-f="sport" onclick="sf('sport',this)">🏎 Sport 0–5s</button>
+      <button class="flt" data-f="fast" onclick="sf('fast',this)">⚡ Fast 5–7s</button>
+      <button class="flt" data-f="comfort" onclick="sf('comfort',this)">🛋 Comfort</button>
     </div>
-    <div class="filters-section">
-      <span class="flt-label">Car type</span>
-      <button class="flt" data-f="electric" onclick="setFilter('electric',this)">⚡ Electric</button>
-      <button class="flt" data-f="suv" onclick="setFilter('suv',this)">🚙 SUV</button>
-      <button class="flt" data-f="minivan" onclick="setFilter('minivan',this)">🚐 Minivan</button>
-      <button class="flt" data-f="sedan" onclick="setFilter('sedan',this)">🚗 Sedan</button>
+    <div class="fs"><span class="fl">Car type</span>
+      <button class="flt" data-f="electric" onclick="sf('electric',this)">⚡ Electric</button>
+      <button class="flt" data-f="suv" onclick="sf('suv',this)">🚙 SUV</button>
+      <button class="flt" data-f="minivan" onclick="sf('minivan',this)">🚐 Minivan</button>
+      <button class="flt" data-f="sedan" onclick="sf('sedan',this)">🚗 Sedan</button>
     </div>
-    <div class="filters-section">
-      <span class="flt-label">Language</span>
-      <button class="flt" data-f="lang_en" onclick="setFilter('lang_en',this)">🇬🇧 English</button>
-      <button class="flt" data-f="lang_de" onclick="setFilter('lang_de',this)">🇩🇪 Deutsch</button>
-      <button class="flt" data-f="lang_fr" onclick="setFilter('lang_fr',this)">🇫🇷 Français</button>
-      <button class="flt" data-f="lang_ru" onclick="setFilter('lang_ru',this)">🇷🇺 Русский</button>
+    <div class="fs"><span class="fl">Language</span>
+      <button class="flt" data-f="len" onclick="sf('len',this)">🇬🇧 English</button>
+      <button class="flt" data-f="lde" onclick="sf('lde',this)">🇩🇪 Deutsch</button>
+      <button class="flt" data-f="lfr" onclick="sf('lfr',this)">🇫🇷 Français</button>
+      <button class="flt" data-f="lru" onclick="sf('lru',this)">🇷🇺 Русский</button>
     </div>
-    <div class="filters-section">
-      <span class="flt-label">Extras</span>
-      <button class="flt" data-f="nosmoker" onclick="setFilter('nosmoker',this)">🚭 No Smoke</button>
-      <button class="flt" data-f="smoking" onclick="setFilter('smoking',this)">🚬 Smoking OK</button>
-      <button class="flt" data-f="petfriendly" onclick="setFilter('petfriendly',this)">🐾 Pets OK</button>
-      <button class="flt" data-f="childok" onclick="setFilter('childok',this)">👶 Child Seat</button>
-      <button class="flt" data-f="highrated" onclick="setFilter('highrated',this)">⭐ Top Rated</button>
-      <button class="flt" data-f="minivan8" onclick="setFilter('minivan8',this)">👥 8 Seats</button>
+    <div class="fs"><span class="fl">Extras</span>
+      <button class="flt" data-f="nosmoker" onclick="sf('nosmoker',this)">🚭 No Smoke</button>
+      <button class="flt" data-f="smoking" onclick="sf('smoking',this)">🚬 Smoking OK</button>
+      <button class="flt" data-f="pet" onclick="sf('pet',this)">🐾 Pets OK</button>
+      <button class="flt" data-f="child" onclick="sf('child',this)">👶 Child Seat</button>
+      <button class="flt" data-f="top" onclick="sf('top',this)">⭐ Top Rated</button>
+      <button class="flt" data-f="big" onclick="sf('big',this)">👥 8+ Seats</button>
     </div>
   </div>
   <div class="dlist" id="dlist"></div>
 </div>
 
-<!-- HOW PAGE -->
-<div class="pg" id="pg-how">
-  <div class="how-page">
-    <div class="how-step">
-      <div class="how-num">1</div>
-      <div class="how-text"><h3>Find a Driver</h3><p>Browse verified drivers on the map or list. Use filters for payment, car type, language, and driving style.</p></div>
-    </div>
-    <div class="how-step">
-      <div class="how-num">2</div>
-      <div class="how-text"><h3>Check the Profile</h3><p>See the driver's photo, car photos, prices, languages, driving style and payment options. Know exactly who's coming.</p></div>
-    </div>
-    <div class="how-step">
-      <div class="how-num">3</div>
-      <div class="how-text"><h3>Call or WhatsApp</h3><p>Contact your chosen driver directly. No booking fee, no algorithm, no waiting for a match.</p></div>
-    </div>
-    <div class="how-step">
-      <div class="how-num">4</div>
-      <div class="how-text"><h3>Tell Your Driver Your Style</h3><p style="color:var(--or)">⚠️ Please tell your driver how you prefer to ride (fast/calm/music/silence) when you get in the car — not after the trip.</p></div>
-    </div>
-    <div class="how-step">
-      <div class="how-num">5</div>
-      <div class="how-text"><h3>Pay the Driver Directly</h3><p>Cash, card terminal, or Revolut — whatever you agreed. 100% goes to the driver.</p></div>
-    </div>
-    <div class="divider-label">RATINGS & REVIEWS</div>
-    <div class="how-step">
-      <div class="how-num">⭐</div>
-      <div class="how-text"><h3>Ratings Are Verified</h3><p>After your trip, you can rate your driver and leave a comment. All reviews are reviewed by our team before being published. This protects drivers from unfair ratings.</p></div>
-    </div>
-    <button class="how-cta" onclick="showTab('list')">Find a Driver Now 🐟</button>
+<!-- HOW -->
+<div class="page" id="page-how">
+  <div class="scroll-page">
+    <div class="hstep"><div class="hnum">1</div><div><h3>Find a Driver</h3><p>Browse verified drivers on the map or list. Use filters for payment, car type, language, and driving style.</p></div></div>
+    <div class="hstep"><div class="hnum">2</div><div><h3>Check the Profile</h3><p>See the driver's photo, car, prices, languages and driving style. Know exactly who to expect.</p></div></div>
+    <div class="hstep"><div class="hnum">3</div><div><h3>Call or WhatsApp Directly</h3><p>Contact your chosen driver directly. No booking fee, no algorithm.</p></div></div>
+    <div class="hstep"><div class="hnum" style="background:var(--or);font-size:16px">⚠️</div><div><h3>Tell Your Driver Your Style</h3><p style="color:var(--or)">Please tell your driver how you prefer to ride (fast/calm/music/silence) when you get in — not after the trip.</p></div></div>
+    <div class="hstep"><div class="hnum">5</div><div><h3>Pay the Driver</h3><p>Cash, card terminal, or Revolut. 100% goes to the driver.</p></div></div>
+    <div class="hstep"><div class="hnum">⭐</div><div><h3>Ratings Are Admin-Verified</h3><p>Rate your driver after the trip. All reviews are checked by our team before publishing — protecting drivers from unfair ratings.</p></div></div>
+    <button class="hcta" onclick="showTab('list')">Find a Driver Now 🐟</button>
   </div>
 </div>
 
-<!-- JOIN PAGE -->
-<div class="pg" id="pg-reg">
-  <div class="reg-page">
-    <div style="background:linear-gradient(135deg,#1a1200,#2a1e00);border:2px solid var(--y);border-radius:14px;padding:14px;margin-bottom:10px;text-align:center">
-      <div style="font-size:20px;font-weight:900;color:var(--y)">🎉 FREE for first 300 drivers</div>
-      <div style="font-size:12px;color:#ccc;margin-top:3px">Join now during our launch — no payment required</div>
-      <div style="margin-top:10px;background:#0006;border-radius:8px;padding:5px 0">
-        <div style="font-size:11px;color:var(--mu);margin-bottom:3px">SPOTS REMAINING</div>
-        <div style="background:var(--brd);border-radius:6px;height:8px;margin:0 20px;overflow:hidden">
-          <div style="background:var(--y);width:8%;height:100%;border-radius:6px"></div>
-        </div>
-        <div style="font-size:12px;color:var(--y);margin-top:3px;font-weight:800">276 / 300 spots left</div>
+<!-- JOIN -->
+<div class="page" id="page-reg">
+  <div class="scroll-page">
+    <div style="background:linear-gradient(135deg,#1a1200,#2a1e00);border:2px solid var(--y);border-radius:13px;padding:13px;margin-bottom:8px;text-align:center">
+      <div style="font-size:19px;font-weight:900;color:var(--y)">🎉 FREE for first 300 drivers</div>
+      <div style="font-size:12px;color:#ccc;margin-top:3px">Join now — no payment required</div>
+      <div style="margin-top:9px;background:#0006;border-radius:7px;padding:5px 0">
+        <div style="font-size:10px;color:var(--mu);margin-bottom:3px">SPOTS REMAINING</div>
+        <div style="background:var(--brd);border-radius:5px;height:8px;margin:0 16px;overflow:hidden"><div style="background:var(--y);width:8%;height:100%"></div></div>
+        <div style="font-size:12px;color:var(--y);margin-top:3px;font-weight:800">276 / 300 left</div>
       </div>
     </div>
-    <div class="reg-card">
+    <div class="jcard">
       <h3>🚕 Drive with fish.taxi</h3>
-      <p>The platform where drivers come first. You keep 100% of every ride.</p>
-      <div class="price-box">
-        <div style="font-size:12px;color:var(--mu);text-decoration:line-through;margin-bottom:3px">€20/month after launch</div>
-        <div class="price-big">FREE</div>
+      <p>The platform where drivers come first. Keep 100% of every ride.</p>
+      <div class="pbox">
+        <div style="font-size:12px;color:var(--mu);text-decoration:line-through;margin-bottom:2px">€20/month after launch</div>
+        <div class="pbig">FREE</div>
         <div style="font-size:12px;color:var(--mu)">Beta — first 300 drivers worldwide</div>
       </div>
     </div>
-    <div class="reg-card">
+    <div class="jcard">
       <h3>✅ What You Get</h3>
-      <div class="benefit"><div class="benefit-icon">📍</div><div class="benefit-text"><strong>Live GPS on Map</strong><br>Clients see you in real time</div></div>
-      <div class="benefit"><div class="benefit-icon">🛡️</div><div class="benefit-text"><strong>Driver Protection</strong><br>We protect drivers from bad clients. Ratings reviewed before publishing.</div></div>
-      <div class="benefit"><div class="benefit-icon">✅</div><div class="benefit-text"><strong>Verified Badge</strong><br>Vehicle checked against official registries</div></div>
-      <div class="benefit"><div class="benefit-icon">📋</div><div class="benefit-text"><strong>Digital Documents</strong><br>Carrier permit and logbook included</div></div>
-      <div class="benefit"><div class="benefit-icon">💰</div><div class="benefit-text"><strong>Zero Commission</strong><br>Every cent from the ride is yours. Always.</div></div>
-      <div class="benefit"><div class="benefit-icon">🌍</div><div class="benefit-text"><strong>Any City, Any Country</strong><br>No geographic restrictions worldwide</div></div>
+      <div class="brow"><div class="bicon">📍</div><div class="btext"><strong>Live GPS on Map</strong><br>Clients see you in real time</div></div>
+      <div class="brow"><div class="bicon">🛡️</div><div class="btext"><strong>Driver Protection</strong><br>We protect drivers from bad clients. Ratings reviewed before publishing.</div></div>
+      <div class="brow"><div class="bicon">✅</div><div class="btext"><strong>Verified Badge</strong><br>Vehicle checked against official registries</div></div>
+      <div class="brow"><div class="bicon">📋</div><div class="btext"><strong>Digital Documents</strong><br>Carrier permit and logbook included</div></div>
+      <div class="brow"><div class="bicon">💰</div><div class="btext"><strong>Zero Commission</strong><br>Every cent from the ride is yours. Always.</div></div>
+      <div class="brow"><div class="bicon">🌍</div><div class="btext"><strong>Any City, Any Country</strong><br>No geographic restrictions worldwide</div></div>
     </div>
-    <div class="reg-card">
+    <div class="jcard">
       <h3>📸 What We Need</h3>
-      <div class="benefit"><div class="benefit-icon">🤳</div><div class="benefit-text"><strong>Your photo</strong> — so clients know who to expect</div></div>
-      <div class="benefit"><div class="benefit-icon">🚗</div><div class="benefit-text"><strong>Car photos</strong> — outside, inside, dashboard</div></div>
-      <div class="benefit"><div class="benefit-icon">📱</div><div class="benefit-text"><strong>Phone number</strong> — clients call you directly</div></div>
-      <div class="benefit"><div class="benefit-icon">🏙️</div><div class="benefit-text"><strong>City & areas</strong> — where you drive</div></div>
-      <p style="font-size:11px;color:var(--mu2);margin-top:10px;line-height:1.5;border-top:1px solid var(--brd);padding-top:8px">🔒 <strong style="color:var(--mu)">GDPR:</strong> We collect only what you choose to display publicly. No ID, no address, no financial data. Delete anytime. Data never sold.</p>
+      <div class="brow"><div class="bicon">🤳</div><div class="btext"><strong>Your photo</strong> — clients know who to expect</div></div>
+      <div class="brow"><div class="bicon">🚗</div><div class="btext"><strong>Car photos</strong> — outside, inside, dashboard</div></div>
+      <div class="brow"><div class="bicon">📱</div><div class="btext"><strong>Phone number</strong> — clients call directly</div></div>
+      <div class="brow"><div class="bicon">🏙️</div><div class="btext"><strong>City & areas</strong> — where you drive</div></div>
+      <p style="font-size:11px;color:var(--mu2);margin-top:9px;line-height:1.5;border-top:1px solid var(--brd);padding-top:7px">🔒 <strong style="color:var(--mu)">GDPR:</strong> Only public profile data collected. No ID, no address, no financials. Delete anytime. Never sold.</p>
     </div>
-    <div class="reg-card">
+    <div class="jcard">
       <h3>📱 How to Join</h3>
-      <p style="margin-bottom:10px">Driver registration via our dedicated driver app. Under 5 minutes.</p>
-      <div style="background:var(--s3);border:1px solid var(--brd2);border-radius:10px;padding:10px;margin-bottom:8px;text-align:center">
+      <p style="margin-bottom:9px">Driver registration via our dedicated driver app — under 5 minutes.</p>
+      <div style="background:var(--s3);border:1px solid var(--brd2);border-radius:9px;padding:9px;margin-bottom:7px;text-align:center">
         <div style="font-size:13px;color:var(--mu)">Driver app — coming soon</div>
-        <div style="font-size:11px;color:var(--mu2);margin-top:2px">Leave contact, we notify you</div>
       </div>
-      <button class="reg-btn" onclick="openRegForm()">Join Waitlist — Free 🐟</button>
+      <button class="jbtn" onclick="openReg()">Join Waitlist — Free 🐟</button>
     </div>
   </div>
 </div>
 
 <!-- DRIVER MODAL -->
 <div class="modal" id="modal">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-avatar" id="m-avatar">🚗</div>
-    <div class="modal-name" id="m-name"></div>
-    <div class="modal-car" id="m-car"></div>
-    <div style="text-align:center;margin-bottom:12px" id="m-rating-row"></div>
-
-    <div class="style-notice" id="m-style-notice"></div>
-
-    <div class="modal-section">
-      <h4>Car Details</h4>
-      <div id="m-car-details"></div>
+  <div class="mb">
+    <button class="mc" onclick="closeMod()">✕</button>
+    <div class="ma" id="m-av">🚗</div>
+    <div class="mn" id="m-name"></div>
+    <div class="mcar" id="m-car"></div>
+    <div style="text-align:center;margin-bottom:6px" id="m-stars"></div>
+    <div class="style-box" id="m-style"></div>
+    <div class="msec"><h4>Car Details</h4><div id="m-cardet"></div></div>
+    <div class="msec"><h4>Payment</h4><div id="m-pay"></div></div>
+    <div class="msec"><h4>Languages</h4><div id="m-langs"></div></div>
+    <div class="msec"><h4>Options</h4><div id="m-opts"></div></div>
+    <div class="msec"><h4>Price</h4><div id="m-price" style="font-size:14px;font-weight:700;color:var(--y)"></div></div>
+    <div class="msec"><h4>Areas</h4><div id="m-areas" style="font-size:13px;color:var(--mu)"></div></div>
+    <div class="mbtns">
+      <button class="mcall" onclick="doCall()">📞 Call</button>
+      <button class="mwp" onclick="doWA()">💬 WhatsApp</button>
     </div>
-    <div class="modal-section">
-      <h4>Payment</h4>
-      <div id="m-payment"></div>
-    </div>
-    <div class="modal-section">
-      <h4>Languages</h4>
-      <div id="m-langs"></div>
-    </div>
-    <div class="modal-section">
-      <h4>Options</h4>
-      <div id="m-options"></div>
-    </div>
-    <div class="modal-section">
-      <h4>Pricing</h4>
-      <div id="m-price" style="font-size:14px;font-weight:700;color:var(--y)"></div>
-    </div>
-    <div class="modal-section">
-      <h4>Areas</h4>
-      <div id="m-areas" style="font-size:13px;color:var(--mu)"></div>
-    </div>
-    <div class="modal-btns">
-      <button class="modal-call" onclick="callDriver()">📞 Call</button>
-      <button class="modal-wp" onclick="whatsappDriver()">💬 WhatsApp</button>
-    </div>
-    <button onclick="openRating()" style="width:100%;margin-top:8px;background:var(--s3);border:1px solid var(--brd2);color:var(--mu);border-radius:10px;padding:10px;font-size:13px;cursor:pointer">⭐ Rate this driver</button>
+    <button onclick="openRateMod()" style="width:100%;margin-top:7px;background:var(--s3);border:1px solid var(--brd2);color:var(--mu);border-radius:9px;padding:9px;font-size:13px;cursor:pointer">⭐ Rate this driver</button>
   </div>
 </div>
 
 <!-- RATING MODAL -->
-<div class="rating-modal" id="rating-modal">
-  <div class="rating-box">
+<div class="rmodal" id="rmod">
+  <div class="rbox">
     <h3>⭐ Rate Your Driver</h3>
-    <p>Your review will be checked by our team before publishing. This protects drivers from unfair ratings.</p>
-    <div class="stars-input" id="stars-input">
-      <span class="star-btn" onclick="setStar(1)">★</span>
-      <span class="star-btn" onclick="setStar(2)">★</span>
-      <span class="star-btn" onclick="setStar(3)">★</span>
-      <span class="star-btn" onclick="setStar(4)">★</span>
-      <span class="star-btn" onclick="setStar(5)">★</span>
+    <p>Your review will be checked by our admin team before publishing. This protects drivers from unfair ratings.</p>
+    <div class="stars" id="stars">
+      <span class="star" onclick="setStar(1)">★</span>
+      <span class="star" onclick="setStar(2)">★</span>
+      <span class="star" onclick="setStar(3)">★</span>
+      <span class="star" onclick="setStar(4)">★</span>
+      <span class="star" onclick="setStar(5)">★</span>
     </div>
-    <textarea class="rating-comment" id="rating-comment" placeholder="Tell us about your experience (optional)..."></textarea>
-    <div class="rating-notice">🛡️ <strong>Admin review required.</strong> Your comment will only appear after verification. Unfair or false reviews will not be published. Please rate based on facts, not preferences about driving speed you didn't communicate to the driver.</div>
-    <button class="rating-submit" onclick="submitRating()">Submit Review</button>
-    <button class="rating-cancel" onclick="closeRating()">Cancel</button>
+    <textarea class="rta" id="rcomment" placeholder="Tell us about your experience (optional)..."></textarea>
+    <div class="rnote">🛡️ <strong>Admin review required.</strong> Ratings appear only after verification. Please rate based on facts — not preferences you didn't communicate to the driver.</div>
+    <button class="rsub" onclick="submitRate()">Submit Review</button>
+    <button class="rcan" onclick="closeRate()">Cancel</button>
   </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-PYEOF
-
-# Now append the JS with drivers data
-python3 << 'EOF'
-import json
-
-with open('/home/claude/drivers_v2.json', 'r') as f:
-    drivers = json.load(f)
-
-js_drivers = "const DRIVERS = " + json.dumps(drivers, ensure_ascii=False) + ";\n"
-
-cities_js = """
-const CITIES = {
-  sofia:     {lat:42.6977,lng:23.3219,zoom:12},
-  zurich:    {lat:47.3769,lng:8.5417, zoom:13},
-  berlin:    {lat:52.5200,lng:13.4050,zoom:12},
-  london:    {lat:51.5074,lng:-0.1278,zoom:12},
-  paris:     {lat:48.8566,lng:2.3522, zoom:12},
-  vienna:    {lat:48.2082,lng:16.3738,zoom:13},
-  amsterdam: {lat:52.3676,lng:4.9041, zoom:13},
-  barcelona: {lat:41.3851,lng:2.1734, zoom:13},
-  athens:    {lat:37.9838,lng:23.7275,zoom:13},
-  rome:      {lat:41.9028,lng:12.4964,zoom:12},
-};
-"""
-
-main_js = """
-let currentCity = 'sofia';
-let activeFilter = 'all';
-let currentDriver = null;
-let currentStar = 0;
-let map, markers = [];
-let userLat = null, userLng = null;
-
-// GPS
-function requestGPS() {
-  if(!navigator.geolocation) return;
-  navigator.geolocation.getCurrentPosition(pos => {
-    userLat = pos.coords.latitude;
-    userLng = pos.coords.longitude;
-    map.setView([userLat, userLng], 14);
-    L.marker([userLat, userLng], {
-      icon: L.divIcon({html:'<div style="background:var(--bl);border:3px solid #fff;border-radius:50%;width:16px;height:16px;box-shadow:0 0 10px #3b82f680"></div>',iconSize:[16,16],iconAnchor:[8,8],className:''})
-    }).addTo(map).bindPopup('📍 You are here');
-  }, () => {});
-}
-
-function payIcon(p) {
-  if(p==='revolut') return '<span class="pay-icon">💜 Revolut</span>';
-  if(p==='terminal') return '<span class="pay-icon">💳 Terminal</span>';
-  if(p==='cash') return '<span class="pay-icon">💵 Cash</span>';
-  return '';
-}
-
-function styleLabel(d) {
-  if(d.accel < 5) return {label:'🏎 Sport', color:'var(--pi)', desc:`0–100 in ${d.accel}s`};
-  if(d.accel < 6.5) return {label:'⚡ Fast', color:'var(--or)', desc:`0–100 in ${d.accel}s`};
-  if(d.accel > 10) return {label:'🛋 Comfort', color:'var(--cy)', desc:'Smooth & relaxed'};
-  return {label:'🚗 Normal', color:'var(--gr)', desc:'Balanced driving'};
-}
-
-function carIcon(d) {
-  if(d.minivan) return '🚐';
-  if(d.suv) return '🚙';
-  if(d.accel < 5) return '🏎';
-  if(d.electric) return '🚗';
-  return '🚗';
-}
-
-function driverCard(d, compact=false) {
-  const style = styleLabel(d);
-  const tags = [];
-  if(d.online) tags.push('<span class="tag tag-gr">🟢 Online</span>');
-  else tags.push('<span class="tag" style="color:var(--mu2);border-color:var(--brd)">⚫ Offline</span>');
-  if(d.electric) tags.push('<span class="tag tag-cy">⚡ Electric</span>');
-  if(d.minivan) tags.push('<span class="tag tag-bl">🚐 ' + d.seats + ' seats</span>');
-  if(d.suv) tags.push('<span class="tag tag-bl">🚙 SUV</span>');
-  tags.push('<span class="tag" style="color:' + style.color + ';border-color:' + style.color + '33;background:' + style.color + '11">' + style.label + '</span>');
-  if(d.nosmoker) tags.push('<span class="tag tag-y">🚭</span>');
-  if(d.smoking) tags.push('<span class="tag tag-rd">🚬 OK</span>');
-  if(d.petfriendly) tags.push('<span class="tag tag-pu">🐾</span>');
-  if(d.childok) tags.push('<span class="tag tag-or">👶</span>');
-  const pays = d.payment.map(payIcon).join('');
-  const icon = carIcon(d);
-  return `<div class="dcard" onclick="openModal(${d.id})">
-    <div class="dcard-top">
-      <div class="dcard-avatar">${icon}</div>
-      <div class="dcard-info">
-        <div class="dcard-name">${d.name} <span class="verified">✓</span></div>
-        <div class="dcard-car">${d.car} · ${d.plate}</div>
-        <div class="dcard-tags">${tags.join('')}</div>
-        <div class="pay-icons">${pays}</div>
+const CITIES={sofia:{lat:42.6977,lng:23.3219,zoom:12},zurich:{lat:47.3769,lng:8.5417,zoom:13},berlin:{lat:52.5200,lng:13.4050,zoom:12},london:{lat:51.5074,lng:-0.1278,zoom:12},paris:{lat:48.8566,lng:2.3522,zoom:12},vienna:{lat:48.2082,lng:16.3738,zoom:13},amsterdam:{lat:52.3676,lng:4.9041,zoom:13},barcelona:{lat:41.3851,lng:2.1734,zoom:13},athens:{lat:37.9838,lng:23.7275,zoom:13},rome:{lat:41.9028,lng:12.4964,zoom:12}};
+const DRIVERS=[{"id":1,"name":"Emil M.","avatar":"🚗","city":"sofia","lat":42.7175,"lng":23.3027,"car":"Tesla Model 3","plate":"СА1037АА","car_type":"electric","accel":4.4,"seats":4,"online":true,"rating":4.4,"reviews":16,"payment":["revolut","terminal"],"langs":["bg","en"],"electric":true,"smoking":true,"nosmoker":false,"petfriendly":true,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000007","price":"1.20 лв/km","driving_style":"sport"},{"id":2,"name":"Ivan P.","avatar":"🚗","city":"sofia","lat":42.6632,"lng":23.3768,"car":"VW Passat","plate":"СА1074АА","car_type":"sedan","accel":8.9,"seats":4,"online":true,"rating":4.5,"reviews":25,"payment":["cash","terminal"],"langs":["bg"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000014","price":"1.20 лв/km","driving_style":"normal"},{"id":3,"name":"Stefan K.","avatar":"🏎","city":"sofia","lat":42.6814,"lng":23.273,"car":"Tesla Model 3 Performance","plate":"СА1111АА","car_type":"sport","accel":3.3,"seats":4,"online":true,"rating":4.6,"reviews":34,"payment":["revolut","cash"],"langs":["bg","ru"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000021","price":"1.20 лв/km","driving_style":"sport"},{"id":4,"name":"Georgi D.","avatar":"🚙","city":"sofia","lat":42.6574,"lng":23.3636,"car":"Mercedes GLE","plate":"СА1148АА","car_type":"suv","accel":6.8,"seats":5,"online":true,"rating":4.7,"reviews":43,"payment":["revolut","terminal"],"langs":["bg","en","ru"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Sofia & surroundings","phone":"+359810000028","price":"1.20 лв/km","driving_style":"normal"},{"id":5,"name":"Petar A.","avatar":"🚐","city":"sofia","lat":42.7081,"lng":23.3588,"car":"Renault Trafic","plate":"СА1185АА","car_type":"minivan","accel":13.5,"seats":8,"online":true,"rating":4.8,"reviews":52,"payment":["cash","terminal"],"langs":["bg","en"],"electric":false,"smoking":true,"nosmoker":false,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000035","price":"1.20 лв/km","driving_style":"comfort"},{"id":6,"name":"Nikolay V.","avatar":"🏎","city":"sofia","lat":42.7207,"lng":23.3262,"car":"BMW M3","plate":"СА1222АА","car_type":"sport","accel":3.9,"seats":4,"online":true,"rating":4.9,"reviews":61,"payment":["revolut","cash"],"langs":["bg"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000042","price":"1.20 лв/km","driving_style":"sport"},{"id":7,"name":"Martin T.","avatar":"🚐","city":"sofia","lat":42.745,"lng":23.3073,"car":"VW Caravelle","plate":"СА1259АА","car_type":"minivan","accel":11.5,"seats":8,"online":true,"rating":4.4,"reviews":70,"payment":["revolut","terminal"],"langs":["bg","ru"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000049","price":"1.20 лв/km","driving_style":"comfort"},{"id":8,"name":"Dimitar H.","avatar":"🚗","city":"sofia","lat":42.7029,"lng":23.3614,"car":"Skoda Superb","plate":"СА1296АА","car_type":"sedan","accel":9.1,"seats":4,"online":true,"rating":4.5,"reviews":79,"payment":["cash","terminal"],"langs":["bg","en","ru"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":false,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000056","price":"1.20 лв/km","driving_style":"normal"},{"id":9,"name":"Boyko R.","avatar":"🚙","city":"sofia","lat":42.7096,"lng":23.3653,"car":"Volvo XC90","plate":"СА1333АА","car_type":"suv","accel":6.5,"seats":6,"online":true,"rating":4.6,"reviews":88,"payment":["revolut","cash"],"langs":["bg","en"],"electric":false,"smoking":true,"nosmoker":false,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Sofia & surroundings","phone":"+359810000063","price":"1.20 лв/km","driving_style":"normal"},{"id":10,"name":"Todor S.","avatar":"🏎","city":"sofia","lat":42.7054,"lng":23.3464,"car":"Mercedes AMG C43","plate":"СА1370АА","car_type":"sport","accel":4.7,"seats":4,"online":true,"rating":4.7,"reviews":97,"payment":["revolut","terminal"],"langs":["bg"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000070","price":"1.20 лв/km","driving_style":"sport"},{"id":11,"name":"Plamen N.","avatar":"🚙","city":"sofia","lat":42.6523,"lng":23.2892,"car":"BMW X5","plate":"СА1407АА","car_type":"suv","accel":5.3,"seats":5,"online":true,"rating":4.8,"reviews":106,"payment":["cash","terminal"],"langs":["bg","ru"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Sofia & surroundings","phone":"+359810000077","price":"1.20 лв/km","driving_style":"normal"},{"id":12,"name":"Kiril M.","avatar":"🚗","city":"sofia","lat":42.6766,"lng":23.2715,"car":"Lexus ES","plate":"СА1444АА","car_type":"sedan","accel":8.8,"seats":4,"online":true,"rating":4.9,"reviews":115,"payment":["revolut","cash"],"langs":["bg","en","ru"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000084","price":"1.20 лв/km","driving_style":"normal"},{"id":13,"name":"Hristo B.","avatar":"🚗","city":"sofia","lat":42.671,"lng":23.274,"car":"Kia EV6","plate":"СА1481АА","car_type":"electric","accel":5.2,"seats":4,"online":true,"rating":4.4,"reviews":124,"payment":["revolut","terminal"],"langs":["bg","en"],"electric":true,"smoking":true,"nosmoker":false,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000091","price":"1.20 лв/km","driving_style":"normal"},{"id":14,"name":"Vasil G.","avatar":"🏎","city":"sofia","lat":42.6755,"lng":23.3382,"car":"Porsche Panamera","plate":"СА1518АА","car_type":"sport","accel":4.0,"seats":4,"online":false,"rating":4.5,"reviews":133,"payment":["cash","terminal"],"langs":["bg"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000098","price":"1.20 лв/km","driving_style":"sport"},{"id":15,"name":"Angel I.","avatar":"🚐","city":"sofia","lat":42.6842,"lng":23.3063,"car":"Toyota Proace","plate":"СА1555АА","car_type":"minivan","accel":13.0,"seats":7,"online":false,"rating":4.6,"reviews":142,"payment":["revolut","cash"],"langs":["bg","ru"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000105","price":"1.20 лв/km","driving_style":"comfort"},{"id":16,"name":"Rumen C.","avatar":"🚙","city":"sofia","lat":42.6687,"lng":23.2939,"car":"Range Rover","plate":"СА1592АА","car_type":"suv","accel":5.4,"seats":5,"online":false,"rating":4.7,"reviews":151,"payment":["revolut","terminal"],"langs":["bg","en","ru"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Sofia & surroundings","phone":"+359810000112","price":"1.20 лв/km","driving_style":"normal"},{"id":17,"name":"Stoyan F.","avatar":"🚗","city":"sofia","lat":42.7414,"lng":23.3397,"car":"Polestar 2","plate":"СА1629АА","car_type":"electric","accel":4.7,"seats":4,"online":false,"rating":4.8,"reviews":160,"payment":["cash","terminal"],"langs":["bg","en"],"electric":true,"smoking":true,"nosmoker":false,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000119","price":"1.20 лв/km","driving_style":"sport"},{"id":18,"name":"Lyubomir E.","avatar":"🚗","city":"sofia","lat":42.7086,"lng":23.2824,"car":"BMW 5 Series","plate":"СА1666АА","car_type":"sedan","accel":6.2,"seats":4,"online":false,"rating":4.9,"reviews":169,"payment":["revolut","cash"],"langs":["bg"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000126","price":"1.20 лв/km","driving_style":"normal"},{"id":19,"name":"Kaloyan Z.","avatar":"🏎","city":"sofia","lat":42.7206,"lng":23.2815,"car":"Audi RS6","plate":"СА1703АА","car_type":"sport","accel":3.6,"seats":4,"online":false,"rating":4.4,"reviews":178,"payment":["revolut","terminal"],"langs":["bg","ru"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia & surroundings","phone":"+359810000133","price":"1.20 лв/km","driving_style":"sport"},{"id":20,"name":"Svetoslav L.","avatar":"🚙","city":"sofia","lat":42.6856,"lng":23.3806,"car":"Audi Q7","plate":"СА1740АА","car_type":"suv","accel":6.1,"seats":6,"online":false,"rating":4.5,"reviews":187,"payment":["cash","terminal"],"langs":["bg","en","ru"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Sofia & surroundings","phone":"+359810000140","price":"1.20 лв/km","driving_style":"normal"},{"id":21,"name":"Hans B.","avatar":"🚗","city":"zurich","lat":47.4266,"lng":8.4983,"car":"Lexus ES","plate":"ZH·107·AB","car_type":"sedan","accel":8.8,"seats":4,"online":true,"rating":4.4,"reviews":36,"payment":["revolut","terminal"],"langs":["de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000147","price":"4.50 CHF/km","driving_style":"normal"},{"id":22,"name":"Klaus M.","avatar":"🚗","city":"zurich","lat":47.3763,"lng":8.5724,"car":"Mercedes E-Class","plate":"ZH·114·AB","car_type":"sedan","accel":7.5,"seats":4,"online":true,"rating":4.5,"reviews":45,"payment":["cash","terminal"],"langs":["de","fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000154","price":"4.50 CHF/km","driving_style":"normal"},{"id":23,"name":"Werner S.","avatar":"🚐","city":"zurich","lat":47.413,"lng":8.5,"car":"Ford Tourneo","plate":"ZH·121·AB","car_type":"minivan","accel":12.8,"seats":7,"online":true,"rating":4.6,"reviews":54,"payment":["revolut","cash"],"langs":["fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000161","price":"4.50 CHF/km","driving_style":"comfort"},{"id":24,"name":"Friedrich K.","avatar":"🚗","city":"zurich","lat":47.3429,"lng":8.5634,"car":"Mercedes EQE","plate":"ZH·128·AB","car_type":"electric","accel":5.9,"seats":4,"online":true,"rating":4.7,"reviews":63,"payment":["revolut","terminal"],"langs":["de","it","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000168","price":"4.50 CHF/km","driving_style":"normal"},{"id":25,"name":"Günter H.","avatar":"🚙","city":"zurich","lat":47.3865,"lng":8.5279,"car":"Range Rover","plate":"ZH·135·AB","car_type":"suv","accel":5.4,"seats":5,"online":true,"rating":4.8,"reviews":72,"payment":["cash","terminal"],"langs":["de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Zurich & surroundings","phone":"+417910000175","price":"4.50 CHF/km","driving_style":"normal"},{"id":26,"name":"Dieter L.","avatar":"🚗","city":"zurich","lat":47.3865,"lng":8.5379,"car":"Polestar 2","plate":"ZH·142·AB","car_type":"electric","accel":4.7,"seats":4,"online":true,"rating":4.9,"reviews":81,"payment":["revolut","cash"],"langs":["de","fr","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000182","price":"4.50 CHF/km","driving_style":"sport"},{"id":27,"name":"Helmut W.","avatar":"🚗","city":"zurich","lat":47.352,"lng":8.5481,"car":"VW Passat","plate":"ZH·149·AB","car_type":"sedan","accel":8.9,"seats":4,"online":true,"rating":4.4,"reviews":90,"payment":["revolut","terminal"],"langs":["fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000189","price":"4.50 CHF/km","driving_style":"normal"},{"id":28,"name":"Bernhard R.","avatar":"🏎","city":"zurich","lat":47.4211,"lng":8.5633,"car":"Audi RS6","plate":"ZH·156·AB","car_type":"sport","accel":3.6,"seats":4,"online":true,"rating":4.5,"reviews":99,"payment":["cash","terminal"],"langs":["de","it","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000196","price":"4.50 CHF/km","driving_style":"sport"},{"id":29,"name":"Luca R.","avatar":"🚗","city":"zurich","lat":47.3384,"lng":8.5879,"car":"Tesla Model S","plate":"ZH·163·AB","car_type":"sedan","accel":2.1,"seats":4,"online":true,"rating":4.6,"reviews":108,"payment":["revolut","cash"],"langs":["de","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000203","price":"4.50 CHF/km","driving_style":"sport"},{"id":30,"name":"Marco T.","avatar":"🏎","city":"zurich","lat":47.402,"lng":8.5739,"car":"BMW M3","plate":"ZH·170·AB","car_type":"sport","accel":3.9,"seats":4,"online":true,"rating":4.7,"reviews":117,"payment":["revolut","terminal"],"langs":["de","fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000210","price":"4.50 CHF/km","driving_style":"sport"},{"id":31,"name":"Jean-Pierre D.","avatar":"🚗","city":"zurich","lat":47.3609,"lng":8.5169,"car":"Toyota Camry","plate":"ZH·177·AB","car_type":"sedan","accel":8.3,"seats":4,"online":true,"rating":4.8,"reviews":126,"payment":["cash","terminal"],"langs":["fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000217","price":"4.50 CHF/km","driving_style":"normal"},{"id":32,"name":"François M.","avatar":"🚙","city":"zurich","lat":47.3427,"lng":8.4821,"car":"Volvo XC90","plate":"ZH·184·AB","car_type":"suv","accel":6.5,"seats":6,"online":true,"rating":4.9,"reviews":135,"payment":["revolut","cash"],"langs":["de","it","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Zurich & surroundings","phone":"+417910000224","price":"4.50 CHF/km","driving_style":"normal"},{"id":33,"name":"Alain N.","avatar":"🚗","city":"zurich","lat":47.3991,"lng":8.5681,"car":"Kia EV6","plate":"ZH·191·AB","car_type":"electric","accel":5.2,"seats":4,"online":true,"rating":4.4,"reviews":144,"payment":["revolut","terminal"],"langs":["de","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000231","price":"4.50 CHF/km","driving_style":"normal"},{"id":34,"name":"Pietro G.","avatar":"🚙","city":"zurich","lat":47.4241,"lng":8.5731,"car":"Tesla Model X","plate":"ZH·198·AB","car_type":"suv","accel":2.6,"seats":6,"online":false,"rating":4.5,"reviews":153,"payment":["cash","terminal"],"langs":["de","fr","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Zurich & surroundings","phone":"+417910000238","price":"4.50 CHF/km","driving_style":"sport"},{"id":35,"name":"Sergio F.","avatar":"🚙","city":"zurich","lat":47.3777,"lng":8.4945,"car":"BMW X5","plate":"ZH·205·AB","car_type":"suv","accel":5.3,"seats":5,"online":false,"rating":4.6,"reviews":162,"payment":["revolut","cash"],"langs":["fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Zurich & surroundings","phone":"+417910000245","price":"4.50 CHF/km","driving_style":"normal"},{"id":36,"name":"Urs K.","avatar":"🚙","city":"zurich","lat":47.3894,"lng":8.5827,"car":"Mercedes GLE","plate":"ZH·212·AB","car_type":"suv","accel":6.8,"seats":5,"online":false,"rating":4.7,"reviews":171,"payment":["revolut","terminal"],"langs":["de","it","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Zurich & surroundings","phone":"+417910000252","price":"4.50 CHF/km","driving_style":"normal"},{"id":37,"name":"Beat S.","avatar":"🚙","city":"zurich","lat":47.3777,"lng":8.5056,"car":"Audi Q7","plate":"ZH·219·AB","car_type":"suv","accel":6.1,"seats":6,"online":false,"rating":4.8,"reviews":180,"payment":["cash","terminal"],"langs":["de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Zurich & surroundings","phone":"+417910000259","price":"4.50 CHF/km","driving_style":"normal"},{"id":38,"name":"Reto N.","avatar":"🚐","city":"zurich","lat":47.3643,"lng":8.5011,"car":"VW Caravelle","plate":"ZH·226·AB","car_type":"minivan","accel":11.5,"seats":8,"online":false,"rating":4.9,"reviews":189,"payment":["revolut","cash"],"langs":["de","fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000266","price":"4.50 CHF/km","driving_style":"comfort"},{"id":39,"name":"Markus W.","avatar":"🚗","city":"zurich","lat":47.4222,"lng":8.5924,"car":"Skoda Superb","plate":"ZH·233·AB","car_type":"sedan","accel":9.1,"seats":4,"online":false,"rating":4.4,"reviews":198,"payment":["revolut","terminal"],"langs":["fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":true,"minivan":false,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000273","price":"4.50 CHF/km","driving_style":"normal"},{"id":40,"name":"Daniel Z.","avatar":"🚗","city":"zurich","lat":47.4187,"lng":8.5536,"car":"Audi A6","plate":"ZH·240·AB","car_type":"sedan","accel":6.8,"seats":4,"online":false,"rating":4.5,"reviews":167,"payment":["cash","terminal"],"langs":["de","it","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Zurich & surroundings","phone":"+417910000280","price":"4.50 CHF/km","driving_style":"normal"},{"id":41,"name":"Hans B.","avatar":"🚗","city":"berlin","lat":52.5138,"lng":13.4071,"car":"Polestar 2","plate":"B·AB·1013","car_type":"electric","accel":4.7,"seats":4,"online":true,"rating":4.4,"reviews":16,"payment":["revolut","terminal"],"langs":["de","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000287","price":"2.50 €/km","driving_style":"sport"},{"id":42,"name":"Klaus M.","avatar":"🏎","city":"berlin","lat":52.4821,"lng":13.372,"car":"Audi RS6","plate":"B·AB·1026","car_type":"sport","accel":3.6,"seats":4,"online":true,"rating":4.5,"reviews":25,"payment":["cash","terminal"],"langs":["de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000294","price":"2.50 €/km","driving_style":"sport"},{"id":43,"name":"Werner S.","avatar":"🚗","city":"berlin","lat":52.5038,"lng":13.4156,"car":"Hyundai Ioniq 6","plate":"B·AB·1039","car_type":"electric","accel":5.1,"seats":4,"online":true,"rating":4.6,"reviews":34,"payment":["revolut","cash"],"langs":["de","tr"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000301","price":"2.50 €/km","driving_style":"normal"},{"id":44,"name":"Friedrich K.","avatar":"🚗","city":"berlin","lat":52.493,"lng":13.3714,"car":"Kia EV6","plate":"B·AB·1052","car_type":"electric","accel":5.2,"seats":4,"online":true,"rating":4.7,"reviews":43,"payment":["revolut","terminal"],"langs":["de","en","fr"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000308","price":"2.50 €/km","driving_style":"normal"},{"id":45,"name":"Günter H.","avatar":"🚐","city":"berlin","lat":52.4771,"lng":13.4207,"car":"Ford Tourneo","plate":"B·AB·1065","car_type":"minivan","accel":12.8,"seats":7,"online":true,"rating":4.8,"reviews":52,"payment":["cash","terminal"],"langs":["de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000315","price":"2.50 €/km","driving_style":"comfort"},{"id":46,"name":"Dieter L.","avatar":"🚗","city":"berlin","lat":52.4929,"lng":13.4537,"car":"VW Passat","plate":"B·AB·1078","car_type":"sedan","accel":8.9,"seats":4,"online":true,"rating":4.9,"reviews":61,"payment":["revolut","cash"],"langs":["de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000322","price":"2.50 €/km","driving_style":"normal"},{"id":47,"name":"Helmut W.","avatar":"🏎","city":"berlin","lat":52.556,"lng":13.3535,"car":"Porsche Panamera","plate":"B·AB·1091","car_type":"sport","accel":4.0,"seats":4,"online":true,"rating":4.4,"reviews":70,"payment":["revolut","terminal"],"langs":["de","tr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000329","price":"2.50 €/km","driving_style":"sport"},{"id":48,"name":"Bernhard R.","avatar":"🚗","city":"berlin","lat":52.4938,"lng":13.4253,"car":"BMW i4","plate":"B·AB·1104","car_type":"electric","accel":5.7,"seats":4,"online":true,"rating":4.5,"reviews":79,"payment":["cash","terminal"],"langs":["de","en","fr"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000336","price":"2.50 €/km","driving_style":"normal"},{"id":49,"name":"Wolfgang T.","avatar":"🚗","city":"berlin","lat":52.4914,"lng":13.3609,"car":"Skoda Superb","plate":"B·AB·1117","car_type":"sedan","accel":9.1,"seats":4,"online":true,"rating":4.6,"reviews":88,"payment":["revolut","cash"],"langs":["de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":false,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000343","price":"2.50 €/km","driving_style":"normal"},{"id":50,"name":"Manfred A.","avatar":"🏎","city":"berlin","lat":52.5636,"lng":13.4135,"car":"Mercedes AMG C43","plate":"B·AB·1130","car_type":"sport","accel":4.7,"seats":4,"online":true,"rating":4.7,"reviews":97,"payment":["revolut","terminal"],"langs":["de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000350","price":"2.50 €/km","driving_style":"sport"},{"id":51,"name":"Jürgen P.","avatar":"🚐","city":"berlin","lat":52.5173,"lng":13.4392,"car":"Mercedes Vito","plate":"B·AB·1143","car_type":"minivan","accel":12.0,"seats":8,"online":true,"rating":4.8,"reviews":106,"payment":["cash","terminal"],"langs":["de","tr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000357","price":"2.50 €/km","driving_style":"comfort"},{"id":52,"name":"Rudolf N.","avatar":"🚙","city":"berlin","lat":52.5507,"lng":13.3678,"car":"Tesla Model X","plate":"B·AB·1156","car_type":"suv","accel":2.6,"seats":6,"online":true,"rating":4.9,"reviews":115,"payment":["revolut","cash"],"langs":["de","en","fr"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Berlin & surroundings","phone":"+491510000364","price":"2.50 €/km","driving_style":"sport"},{"id":53,"name":"Gerhard F.","avatar":"🚗","city":"berlin","lat":52.4797,"lng":13.3967,"car":"Volvo S90","plate":"B·AB·1169","car_type":"sedan","accel":6.9,"seats":4,"online":true,"rating":4.4,"reviews":124,"payment":["revolut","terminal"],"langs":["de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000371","price":"2.50 €/km","driving_style":"normal"},{"id":54,"name":"Heinrich C.","avatar":"🚐","city":"berlin","lat":52.5124,"lng":13.401,"car":"VW Caravelle","plate":"B·AB·1182","car_type":"minivan","accel":11.5,"seats":8,"online":false,"rating":4.5,"reviews":133,"payment":["cash","terminal"],"langs":["de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000378","price":"2.50 €/km","driving_style":"comfort"},{"id":55,"name":"Siegfried D.","avatar":"🏎","city":"berlin","lat":52.5429,"lng":13.4258,"car":"Tesla Model 3 Performance","plate":"B·AB·1195","car_type":"sport","accel":3.3,"seats":4,"online":false,"rating":4.6,"reviews":142,"payment":["revolut","cash"],"langs":["de","tr"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000385","price":"2.50 €/km","driving_style":"sport"},{"id":56,"name":"Horst E.","avatar":"🚙","city":"berlin","lat":52.5684,"lng":13.3568,"car":"BMW X5","plate":"B·AB·1208","car_type":"suv","accel":5.3,"seats":5,"online":false,"rating":4.7,"reviews":151,"payment":["revolut","terminal"],"langs":["de","en","fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Berlin & surroundings","phone":"+491510000392","price":"2.50 €/km","driving_style":"normal"},{"id":57,"name":"Erich G.","avatar":"🚗","city":"berlin","lat":52.5103,"lng":13.3857,"car":"Toyota Camry","plate":"B·AB·1221","car_type":"sedan","accel":8.3,"seats":4,"online":false,"rating":4.8,"reviews":160,"payment":["cash","terminal"],"langs":["de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Berlin & surroundings","phone":"+491510000399","price":"2.50 €/km","driving_style":"normal"},{"id":58,"name":"Konrad I.","avatar":"🚙","city":"berlin","lat":52.5562,"lng":13.3748,"car":"Volvo XC90","plate":"B·AB·1234","car_type":"suv","accel":6.5,"seats":6,"online":false,"rating":4.9,"reviews":169,"payment":["revolut","cash"],"langs":["de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Berlin & surroundings","phone":"+491510000406","price":"2.50 €/km","driving_style":"normal"},{"id":59,"name":"Alfred J.","avatar":"🚙","city":"berlin","lat":52.489,"lng":13.3988,"car":"Mercedes GLE","plate":"B·AB·1247","car_type":"suv","accel":6.8,"seats":5,"online":false,"rating":4.4,"reviews":178,"payment":["revolut","terminal"],"langs":["de","tr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Berlin & surroundings","phone":"+491510000413","price":"2.50 €/km","driving_style":"normal"},{"id":60,"name":"Otto V.","avatar":"🚙","city":"berlin","lat":52.5122,"lng":13.3784,"car":"Range Rover","plate":"B·AB·1260","car_type":"suv","accel":5.4,"seats":5,"online":false,"rating":4.5,"reviews":187,"payment":["cash","terminal"],"langs":["de","en","fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Berlin & surroundings","phone":"+491510000420","price":"2.50 €/km","driving_style":"normal"},{"id":61,"name":"James W.","avatar":"🚗","city":"london","lat":51.4729,"lng":-0.1522,"car":"Volvo S90","plate":"AB11 EFG","car_type":"sedan","accel":6.9,"seats":4,"online":true,"rating":4.4,"reviews":36,"payment":["revolut","terminal"],"langs":["en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"London & surroundings","phone":"+447710000427","price":"3.20 £/km","driving_style":"normal"},{"id":62,"name":"John S.","avatar":"🚐","city":"london","lat":51.5543,"lng":-0.1183,"car":"Ford Tourneo","plate":"AB12 EFG","car_type":"minivan","accel":12.8,"seats":7,"online":true,"rating":4.5,"reviews":45,"payment":["cash","terminal"],"langs":["en","fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"London & surroundings","phone":"+447710000434","price":"3.20 £/km","driving_style":"comfort"},{"id":63,"name":"Robert B.","avatar":"🚗","city":"london","lat":51.5116,"lng":-0.098,"car":"Toyota Camry","plate":"AB13 EFG","car_type":"sedan","accel":8.3,"seats":4,"online":true,"rating":4.6,"reviews":54,"payment":["revolut","cash"],"langs":["en","hi"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"London & surroundings","phone":"+447710000441","price":"3.20 £/km","driving_style":"normal"},{"id":64,"name":"Michael D.","avatar":"🚐","city":"london","lat":51.4631,"lng":-0.1177,"car":"Mercedes Vito","plate":"AB14 EFG","car_type":"minivan","accel":12.0,"seats":8,"online":true,"rating":4.7,"reviews":63,"payment":["revolut","terminal"],"langs":["en","ar"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"London & surroundings","phone":"+447710000448","price":"3.20 £/km","driving_style":"comfort"},{"id":65,"name":"William J.","avatar":"🚗","city":"london","lat":51.5077,"lng":-0.0855,"car":"Polestar 2","plate":"AB15 EFG","car_type":"electric","accel":4.7,"seats":4,"online":true,"rating":4.8,"reviews":72,"payment":["cash","terminal"],"langs":["en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"London & surroundings","phone":"+447710000455","price":"3.20 £/km","driving_style":"sport"},{"id":66,"name":"David A.","avatar":"🚙","city":"london","lat":51.4731,"lng":-0.0725,"car":"BMW X5","plate":"AB16 EFG","car_type":"suv","accel":5.3,"seats":5,"online":true,"rating":4.9,"reviews":81,"payment":["revolut","cash"],"langs":["en","fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"London & surroundings","phone":"+447710000462","price":"3.20 £/km","driving_style":"normal"},{"id":67,"name":"Richard N.","avatar":"🏎","city":"london","lat":51.4654,"lng":-0.1655,"car":"Tesla Model 3 Performance","plate":"AB17 EFG","car_type":"sport","accel":3.3,"seats":4,"online":true,"rating":4.4,"reviews":90,"payment":["revolut","terminal"],"langs":["en","hi"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"London & surroundings","phone":"+447710000469","price":"3.20 £/km","driving_style":"sport"},{"id":68,"name":"Joseph H.","avatar":"🚗","city":"london","lat":51.5169,"lng":-0.1068,"car":"Lexus ES","plate":"AB18 EFG","car_type":"sedan","accel":8.8,"seats":4,"online":true,"rating":4.5,"reviews":99,"payment":["cash","terminal"],"langs":["en","ar"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"London & surroundings","phone":"+447710000476","price":"3.20 £/km","driving_style":"normal"},{"id":69,"name":"Thomas C.","avatar":"🏎","city":"london","lat":51.4809,"lng":-0.1734,"car":"BMW M3","plate":"AB19 EFG","car_type":"sport","accel":3.9,"seats":4,"online":true,"rating":4.6,"reviews":108,"payment":["revolut","cash"],"langs":["en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"London & surroundings","phone":"+447710000483","price":"3.20 £/km","driving_style":"sport"},{"id":70,"name":"Charles F.","avatar":"🏎","city":"london","lat":51.5464,"lng":-0.1583,"car":"Mercedes AMG C43","plate":"AB20 EFG","car_type":"sport","accel":4.7,"seats":4,"online":true,"rating":4.7,"reviews":117,"payment":["revolut","terminal"],"langs":["en","fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"London & surroundings","phone":"+447710000490","price":"3.20 £/km","driving_style":"sport"},{"id":71,"name":"Christopher E.","avatar":"🚙","city":"london","lat":51.5169,"lng":-0.1135,"car":"Volvo XC90","plate":"AB21 EFG","car_type":"suv","accel":6.5,"seats":6,"online":true,"rating":4.8,"reviews":126,"payment":["cash","terminal"],"langs":["en","hi"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"London & surroundings","phone":"+447710000497","price":"3.20 £/km","driving_style":"normal"},{"id":72,"name":"Daniel G.","avatar":"🚐","city":"london","lat":51.4993,"lng":-0.1178,"car":"VW Caravelle","plate":"AB22 EFG","car_type":"minivan","accel":11.5,"seats":8,"online":true,"rating":4.9,"reviews":135,"payment":["revolut","cash"],"langs":["en","ar"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"London & surroundings","phone":"+447710000504","price":"3.20 £/km","driving_style":"comfort"},{"id":73,"name":"Matthew I.","avatar":"🚗","city":"london","lat":51.5097,"lng":-0.0756,"car":"Skoda Superb","plate":"AB23 EFG","car_type":"sedan","accel":9.1,"seats":4,"online":true,"rating":4.4,"reviews":144,"payment":["revolut","terminal"],"langs":["en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":true,"minivan":false,"suv":false,"areas":"London & surroundings","phone":"+447710000511","price":"3.20 £/km","driving_style":"normal"},{"id":74,"name":"Anthony K.","avatar":"🚐","city":"london","lat":51.4778,"lng":-0.1019,"car":"Toyota Proace","plate":"AB24 EFG","car_type":"minivan","accel":13.0,"seats":7,"online":false,"rating":4.5,"reviews":153,"payment":["cash","terminal"],"langs":["en","fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"London & surroundings","phone":"+447710000518","price":"3.20 £/km","driving_style":"comfort"},{"id":75,"name":"Mark L.","avatar":"🚙","city":"london","lat":51.4813,"lng":-0.1403,"car":"Audi Q7","plate":"AB25 EFG","car_type":"suv","accel":6.1,"seats":6,"online":false,"rating":4.6,"reviews":162,"payment":["revolut","cash"],"langs":["en","hi"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"London & surroundings","phone":"+447710000525","price":"3.20 £/km","driving_style":"normal"},{"id":76,"name":"Donald P.","avatar":"🚗","city":"london","lat":51.5246,"lng":-0.1518,"car":"Mercedes EQE","plate":"AB26 EFG","car_type":"electric","accel":5.9,"seats":4,"online":false,"rating":4.7,"reviews":171,"payment":["revolut","terminal"],"langs":["en","ar"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"London & surroundings","phone":"+447710000532","price":"3.20 £/km","driving_style":"normal"},{"id":77,"name":"Steven Q.","avatar":"🏎","city":"london","lat":51.489,"lng":-0.0976,"car":"Audi RS6","plate":"AB27 EFG","car_type":"sport","accel":3.6,"seats":4,"online":false,"rating":4.8,"reviews":180,"payment":["cash","terminal"],"langs":["en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"London & surroundings","phone":"+447710000539","price":"3.20 £/km","driving_style":"sport"},{"id":78,"name":"Paul R.","avatar":"🚗","city":"london","lat":51.4647,"lng":-0.1328,"car":"VW Passat","plate":"AB28 EFG","car_type":"sedan","accel":8.9,"seats":4,"online":false,"rating":4.9,"reviews":189,"payment":["revolut","cash"],"langs":["en","fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"London & surroundings","phone":"+447710000546","price":"3.20 £/km","driving_style":"normal"},{"id":79,"name":"Andrew T.","avatar":"🚗","city":"london","lat":51.5572,"lng":-0.0683,"car":"Peugeot 508","plate":"AB29 EFG","car_type":"sedan","accel":8.4,"seats":4,"online":false,"rating":4.4,"reviews":198,"payment":["revolut","terminal"],"langs":["en","hi"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"London & surroundings","phone":"+447710000553","price":"3.20 £/km","driving_style":"normal"},{"id":80,"name":"Kenneth U.","avatar":"🚗","city":"london","lat":51.4647,"lng":-0.1622,"car":"Kia EV6","plate":"AB30 EFG","car_type":"electric","accel":5.2,"seats":4,"online":false,"rating":4.5,"reviews":167,"payment":["cash","terminal"],"langs":["en","ar"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"London & surroundings","phone":"+447710000560","price":"3.20 £/km","driving_style":"normal"},{"id":81,"name":"Pierre D.","avatar":"🚙","city":"paris","lat":48.8571,"lng":2.3223,"car":"Mercedes GLE","plate":"AB-107-EF","car_type":"suv","accel":6.8,"seats":5,"online":true,"rating":4.4,"reviews":16,"payment":["revolut","terminal"],"langs":["fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Paris & surroundings","phone":"+336110000567","price":"2.10 €/km","driving_style":"normal"},{"id":82,"name":"Jean L.","avatar":"🚐","city":"paris","lat":48.8974,"lng":2.2983,"car":"Ford Tourneo","plate":"AB-114-EF","car_type":"minivan","accel":12.8,"seats":7,"online":true,"rating":4.5,"reviews":25,"payment":["cash","terminal"],"langs":["fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Paris & surroundings","phone":"+336110000574","price":"2.10 €/km","driving_style":"comfort"},{"id":83,"name":"Michel B.","avatar":"🚐","city":"paris","lat":48.87,"lng":2.3917,"car":"Mercedes Vito","plate":"AB-121-EF","car_type":"minivan","accel":12.0,"seats":8,"online":true,"rating":4.6,"reviews":34,"payment":["revolut","cash"],"langs":["fr","ar"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Paris & surroundings","phone":"+336110000581","price":"2.10 €/km","driving_style":"comfort"},{"id":84,"name":"François M.","avatar":"🚗","city":"paris","lat":48.811,"lng":2.3322,"car":"Skoda Superb","plate":"AB-128-EF","car_type":"sedan","accel":9.1,"seats":4,"online":true,"rating":4.7,"reviews":43,"payment":["revolut","terminal"],"langs":["fr","es"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":true,"minivan":false,"suv":false,"areas":"Paris & surroundings","phone":"+336110000588","price":"2.10 €/km","driving_style":"normal"},{"id":85,"name":"Philippe R.","avatar":"🏎","city":"paris","lat":48.8197,"lng":2.4098,"car":"Tesla Model 3 Performance","plate":"AB-135-EF","car_type":"sport","accel":3.3,"seats":4,"online":true,"rating":4.8,"reviews":52,"payment":["cash","terminal"],"langs":["fr","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Paris & surroundings","phone":"+336110000595","price":"2.10 €/km","driving_style":"sport"},{"id":86,"name":"Jacques T.","avatar":"🚗","city":"paris","lat":48.8228,"lng":2.3452,"car":"Tesla Model 3","plate":"AB-142-EF","car_type":"electric","accel":4.4,"seats":4,"online":true,"rating":4.9,"reviews":61,"payment":["revolut","cash"],"langs":["fr"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Paris & surroundings","phone":"+336110000602","price":"2.10 €/km","driving_style":"sport"},{"id":87,"name":"Alain N.","avatar":"🚙","city":"paris","lat":48.8772,"lng":2.3595,"car":"Audi Q7","plate":"AB-149-EF","car_type":"suv","accel":6.1,"seats":6,"online":true,"rating":4.4,"reviews":70,"payment":["revolut","terminal"],"langs":["fr","ar"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Paris & surroundings","phone":"+336110000609","price":"2.10 €/km","driving_style":"normal"},{"id":88,"name":"Bernard C.","avatar":"🏎","city":"paris","lat":48.8178,"lng":2.4056,"car":"Mercedes AMG C43","plate":"AB-156-EF","car_type":"sport","accel":4.7,"seats":4,"online":true,"rating":4.5,"reviews":79,"payment":["cash","terminal"],"langs":["fr","es"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Paris & surroundings","phone":"+336110000616","price":"2.10 €/km","driving_style":"sport"},{"id":89,"name":"Claude F.","avatar":"🏎","city":"paris","lat":48.8757,"lng":2.3101,"car":"Audi RS6","plate":"AB-163-EF","car_type":"sport","accel":3.6,"seats":4,"online":true,"rating":4.6,"reviews":88,"payment":["revolut","cash"],"langs":["fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Paris & surroundings","phone":"+336110000623","price":"2.10 €/km","driving_style":"sport"},{"id":90,"name":"René G.","avatar":"🚗","city":"paris","lat":48.8102,"lng":2.3365,"car":"Volvo S90","plate":"AB-170-EF","car_type":"sedan","accel":6.9,"seats":4,"online":true,"rating":4.7,"reviews":97,"payment":["revolut","terminal"],"langs":["fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Paris & surroundings","phone":"+336110000630","price":"2.10 €/km","driving_style":"normal"},{"id":91,"name":"André H.","avatar":"🚐","city":"paris","lat":48.8619,"lng":2.3438,"car":"Renault Trafic","plate":"AB-177-EF","car_type":"minivan","accel":13.5,"seats":8,"online":true,"rating":4.8,"reviews":106,"payment":["cash","terminal"],"langs":["fr","ar"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Paris & surroundings","phone":"+336110000637","price":"2.10 €/km","driving_style":"comfort"},{"id":92,"name":"Henri I.","avatar":"🚗","city":"paris","lat":48.8108,"lng":2.336,"car":"BMW 5 Series","plate":"AB-184-EF","car_type":"sedan","accel":6.2,"seats":4,"online":true,"rating":4.9,"reviews":115,"payment":["revolut","cash"],"langs":["fr","es"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Paris & surroundings","phone":"+336110000644","price":"2.10 €/km","driving_style":"normal"},{"id":93,"name":"Louis J.","avatar":"🚗","city":"paris","lat":48.8999,"lng":2.4089,"car":"Polestar 2","plate":"AB-191-EF","car_type":"electric","accel":4.7,"seats":4,"online":true,"rating":4.4,"reviews":124,"payment":["revolut","terminal"],"langs":["fr","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Paris & surroundings","phone":"+336110000651","price":"2.10 €/km","driving_style":"sport"},{"id":94,"name":"Marcel K.","avatar":"🚗","city":"paris","lat":48.8106,"lng":2.3351,"car":"Hyundai Ioniq 6","plate":"AB-198-EF","car_type":"electric","accel":5.1,"seats":4,"online":false,"rating":4.5,"reviews":133,"payment":["cash","terminal"],"langs":["fr"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Paris & surroundings","phone":"+336110000658","price":"2.10 €/km","driving_style":"normal"},{"id":95,"name":"Paul O.","avatar":"🚐","city":"paris","lat":48.8748,"lng":2.3722,"car":"VW Caravelle","plate":"AB-205-EF","car_type":"minivan","accel":11.5,"seats":8,"online":false,"rating":4.6,"reviews":142,"payment":["revolut","cash"],"langs":["fr","ar"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Paris & surroundings","phone":"+336110000665","price":"2.10 €/km","driving_style":"comfort"},{"id":96,"name":"Roger Q.","avatar":"🚗","city":"paris","lat":48.842,"lng":2.3594,"car":"Tesla Model S","plate":"AB-212-EF","car_type":"sedan","accel":2.1,"seats":4,"online":false,"rating":4.7,"reviews":151,"payment":["revolut","terminal"],"langs":["fr","es"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Paris & surroundings","phone":"+336110000672","price":"2.10 €/km","driving_style":"sport"},{"id":97,"name":"Robert S.","avatar":"🚙","city":"paris","lat":48.8941,"lng":2.4091,"car":"Range Rover","plate":"AB-219-EF","car_type":"suv","accel":5.4,"seats":5,"online":false,"rating":4.8,"reviews":160,"payment":["cash","terminal"],"langs":["fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Paris & surroundings","phone":"+336110000679","price":"2.10 €/km","driving_style":"normal"},{"id":98,"name":"Charles U.","avatar":"🚗","city":"paris","lat":48.8815,"lng":2.4033,"car":"Mercedes E-Class","plate":"AB-226-EF","car_type":"sedan","accel":7.5,"seats":4,"online":false,"rating":4.9,"reviews":169,"payment":["revolut","cash"],"langs":["fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Paris & surroundings","phone":"+336110000686","price":"2.10 €/km","driving_style":"normal"},{"id":99,"name":"Georges W.","avatar":"🚗","city":"paris","lat":48.8303,"lng":2.3117,"car":"Mercedes EQE","plate":"AB-233-EF","car_type":"electric","accel":5.9,"seats":4,"online":false,"rating":4.4,"reviews":178,"payment":["revolut","terminal"],"langs":["fr","ar"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Paris & surroundings","phone":"+336110000693","price":"2.10 €/km","driving_style":"normal"},{"id":100,"name":"Émile X.","avatar":"🚙","city":"paris","lat":48.8866,"lng":2.3134,"car":"Volvo XC90","plate":"AB-240-EF","car_type":"suv","accel":6.5,"seats":6,"online":false,"rating":4.5,"reviews":187,"payment":["cash","terminal"],"langs":["fr","es"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Paris & surroundings","phone":"+336110000700","price":"2.10 €/km","driving_style":"normal"},{"id":101,"name":"Franz K.","avatar":"🚗","city":"vienna","lat":48.2549,"lng":16.3473,"car":"Hyundai Ioniq 6","plate":"W 111AB","car_type":"electric","accel":5.1,"seats":4,"online":true,"rating":4.4,"reviews":36,"payment":["revolut","terminal"],"langs":["de","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000707","price":"2.30 €/km","driving_style":"normal"},{"id":102,"name":"Johann S.","avatar":"🚙","city":"vienna","lat":48.2223,"lng":16.3618,"car":"Audi Q7","plate":"W 122AB","car_type":"suv","accel":6.1,"seats":6,"online":true,"rating":4.5,"reviews":45,"payment":["cash","terminal"],"langs":["de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Vienna & surroundings","phone":"+436910000714","price":"2.30 €/km","driving_style":"normal"},{"id":103,"name":"Leopold M.","avatar":"🚗","city":"vienna","lat":48.2563,"lng":16.3781,"car":"Skoda Superb","plate":"W 133AB","car_type":"sedan","accel":9.1,"seats":4,"online":true,"rating":4.6,"reviews":54,"payment":["revolut","cash"],"langs":["de","hu"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":false,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000721","price":"2.30 €/km","driving_style":"normal"},{"id":104,"name":"Karl H.","avatar":"🚗","city":"vienna","lat":48.2521,"lng":16.3276,"car":"Audi A6","plate":"W 144AB","car_type":"sedan","accel":6.8,"seats":4,"online":true,"rating":4.7,"reviews":63,"payment":["revolut","terminal"],"langs":["de","it"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000728","price":"2.30 €/km","driving_style":"normal"},{"id":105,"name":"Josef B.","avatar":"🚐","city":"vienna","lat":48.2552,"lng":16.3352,"car":"Toyota Proace","plate":"W 155AB","car_type":"minivan","accel":13.0,"seats":7,"online":true,"rating":4.8,"reviews":72,"payment":["cash","terminal"],"langs":["de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000735","price":"2.30 €/km","driving_style":"comfort"},{"id":106,"name":"Ernst N.","avatar":"🚙","city":"vienna","lat":48.2545,"lng":16.3457,"car":"Tesla Model X","plate":"W 166AB","car_type":"suv","accel":2.6,"seats":6,"online":true,"rating":4.9,"reviews":81,"payment":["revolut","cash"],"langs":["de"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Vienna & surroundings","phone":"+436910000742","price":"2.30 €/km","driving_style":"sport"},{"id":107,"name":"Alois T.","avatar":"🏎","city":"vienna","lat":48.169,"lng":16.3659,"car":"BMW M3","plate":"W 177AB","car_type":"sport","accel":3.9,"seats":4,"online":true,"rating":4.4,"reviews":90,"payment":["revolut","terminal"],"langs":["de","hu"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000749","price":"2.30 €/km","driving_style":"sport"},{"id":108,"name":"Rudolf F.","avatar":"🚗","city":"vienna","lat":48.2311,"lng":16.3514,"car":"Polestar 2","plate":"W 188AB","car_type":"electric","accel":4.7,"seats":4,"online":true,"rating":4.5,"reviews":99,"payment":["cash","terminal"],"langs":["de","it"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000756","price":"2.30 €/km","driving_style":"sport"},{"id":109,"name":"Gerhard C.","avatar":"🚗","city":"vienna","lat":48.2188,"lng":16.3752,"car":"Lexus ES","plate":"W 199AB","car_type":"sedan","accel":8.8,"seats":4,"online":true,"rating":4.6,"reviews":108,"payment":["revolut","cash"],"langs":["de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000763","price":"2.30 €/km","driving_style":"normal"},{"id":110,"name":"Heinrich G.","avatar":"🏎","city":"vienna","lat":48.1967,"lng":16.383,"car":"Porsche Panamera","plate":"W 210AB","car_type":"sport","accel":4.0,"seats":4,"online":true,"rating":4.7,"reviews":117,"payment":["revolut","terminal"],"langs":["de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000770","price":"2.30 €/km","driving_style":"sport"},{"id":111,"name":"Manfred I.","avatar":"🚗","city":"vienna","lat":48.1837,"lng":16.3989,"car":"Toyota Camry","plate":"W 221AB","car_type":"sedan","accel":8.3,"seats":4,"online":true,"rating":4.8,"reviews":126,"payment":["cash","terminal"],"langs":["de","hu"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000777","price":"2.30 €/km","driving_style":"normal"},{"id":112,"name":"Helmut J.","avatar":"🚙","city":"vienna","lat":48.1584,"lng":16.4249,"car":"Range Rover","plate":"W 232AB","car_type":"suv","accel":5.4,"seats":5,"online":true,"rating":4.9,"reviews":135,"payment":["revolut","cash"],"langs":["de","it"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Vienna & surroundings","phone":"+436910000784","price":"2.30 €/km","driving_style":"normal"},{"id":113,"name":"Walter L.","avatar":"🚙","city":"vienna","lat":48.212,"lng":16.4001,"car":"BMW X5","plate":"W 243AB","car_type":"suv","accel":5.3,"seats":5,"online":true,"rating":4.4,"reviews":144,"payment":["revolut","terminal"],"langs":["de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Vienna & surroundings","phone":"+436910000791","price":"2.30 €/km","driving_style":"normal"},{"id":114,"name":"Erich O.","avatar":"🚗","city":"vienna","lat":48.2324,"lng":16.3943,"car":"Mercedes EQE","plate":"W 254AB","car_type":"electric","accel":5.9,"seats":4,"online":false,"rating":4.5,"reviews":153,"payment":["cash","terminal"],"langs":["de"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000798","price":"2.30 €/km","driving_style":"normal"},{"id":115,"name":"Otto P.","avatar":"🚙","city":"vienna","lat":48.1946,"lng":16.3222,"car":"Volvo XC90","plate":"W 265AB","car_type":"suv","accel":6.5,"seats":6,"online":false,"rating":4.6,"reviews":162,"payment":["revolut","cash"],"langs":["de","hu"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Vienna & surroundings","phone":"+436910000805","price":"2.30 €/km","driving_style":"normal"},{"id":116,"name":"Werner Q.","avatar":"🚐","city":"vienna","lat":48.2246,"lng":16.3534,"car":"VW Caravelle","plate":"W 276AB","car_type":"minivan","accel":11.5,"seats":8,"online":false,"rating":4.7,"reviews":171,"payment":["revolut","terminal"],"langs":["de","it"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000812","price":"2.30 €/km","driving_style":"comfort"},{"id":117,"name":"Alfred R.","avatar":"🚙","city":"vienna","lat":48.1896,"lng":16.4156,"car":"Mercedes GLE","plate":"W 287AB","car_type":"suv","accel":6.8,"seats":5,"online":false,"rating":4.8,"reviews":180,"payment":["cash","terminal"],"langs":["de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Vienna & surroundings","phone":"+436910000819","price":"2.30 €/km","driving_style":"normal"},{"id":118,"name":"Günter U.","avatar":"🚗","city":"vienna","lat":48.2302,"lng":16.3498,"car":"BMW 5 Series","plate":"W 298AB","car_type":"sedan","accel":6.2,"seats":4,"online":false,"rating":4.9,"reviews":189,"payment":["revolut","cash"],"langs":["de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000826","price":"2.30 €/km","driving_style":"normal"},{"id":119,"name":"Horst V.","avatar":"🏎","city":"vienna","lat":48.1891,"lng":16.3628,"car":"Mercedes AMG C43","plate":"W 309AB","car_type":"sport","accel":4.7,"seats":4,"online":false,"rating":4.4,"reviews":198,"payment":["revolut","terminal"],"langs":["de","hu"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000833","price":"2.30 €/km","driving_style":"sport"},{"id":120,"name":"Siegfried W.","avatar":"🚗","city":"vienna","lat":48.1984,"lng":16.3493,"car":"Tesla Model S","plate":"W 320AB","car_type":"sedan","accel":2.1,"seats":4,"online":false,"rating":4.5,"reviews":167,"payment":["cash","terminal"],"langs":["de","it"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Vienna & surroundings","phone":"+436910000840","price":"2.30 €/km","driving_style":"sport"},{"id":121,"name":"Jan V.","avatar":"🚗","city":"amsterdam","lat":52.3835,"lng":4.8782,"car":"Toyota Camry","plate":"AB-109-EF","car_type":"sedan","accel":8.3,"seats":4,"online":true,"rating":4.4,"reviews":16,"payment":["revolut","terminal"],"langs":["nl","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000847","price":"2.40 €/km","driving_style":"normal"},{"id":122,"name":"Pieter D.","avatar":"🚐","city":"amsterdam","lat":52.384,"lng":4.9184,"car":"VW Caravelle","plate":"AB-118-EF","car_type":"minivan","accel":11.5,"seats":8,"online":true,"rating":4.5,"reviews":25,"payment":["cash","terminal"],"langs":["en","nl"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000854","price":"2.40 €/km","driving_style":"comfort"},{"id":123,"name":"Hendrik B.","avatar":"🚗","city":"amsterdam","lat":52.3269,"lng":4.9583,"car":"Audi A6","plate":"AB-127-EF","car_type":"sedan","accel":6.8,"seats":4,"online":true,"rating":4.6,"reviews":34,"payment":["revolut","cash"],"langs":["nl","de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000861","price":"2.40 €/km","driving_style":"normal"},{"id":124,"name":"Cornelis M.","avatar":"🏎","city":"amsterdam","lat":52.3411,"lng":4.8814,"car":"Porsche Panamera","plate":"AB-136-EF","car_type":"sport","accel":4.0,"seats":4,"online":true,"rating":4.7,"reviews":43,"payment":["revolut","terminal"],"langs":["en","fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000868","price":"2.40 €/km","driving_style":"sport"},{"id":125,"name":"Johannes S.","avatar":"🚗","city":"amsterdam","lat":52.3983,"lng":4.8618,"car":"BMW 5 Series","plate":"AB-145-EF","car_type":"sedan","accel":6.2,"seats":4,"online":true,"rating":4.8,"reviews":52,"payment":["cash","terminal"],"langs":["nl","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000875","price":"2.40 €/km","driving_style":"normal"},{"id":126,"name":"Willem T.","avatar":"🏎","city":"amsterdam","lat":52.3222,"lng":4.9622,"car":"BMW M3","plate":"AB-154-EF","car_type":"sport","accel":3.9,"seats":4,"online":true,"rating":4.9,"reviews":61,"payment":["revolut","cash"],"langs":["en","nl"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000882","price":"2.40 €/km","driving_style":"sport"},{"id":127,"name":"Gerrit N.","avatar":"🚗","city":"amsterdam","lat":52.3787,"lng":4.9363,"car":"Tesla Model S","plate":"AB-163-EF","car_type":"sedan","accel":2.1,"seats":4,"online":true,"rating":4.4,"reviews":70,"payment":["revolut","terminal"],"langs":["nl","de","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000889","price":"2.40 €/km","driving_style":"sport"},{"id":128,"name":"Dirk F.","avatar":"🚗","city":"amsterdam","lat":52.3631,"lng":4.9504,"car":"Mercedes EQE","plate":"AB-172-EF","car_type":"electric","accel":5.9,"seats":4,"online":true,"rating":4.5,"reviews":79,"payment":["cash","terminal"],"langs":["en","fr"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000896","price":"2.40 €/km","driving_style":"normal"},{"id":129,"name":"Jacob C.","avatar":"🚗","city":"amsterdam","lat":52.3752,"lng":4.9303,"car":"Peugeot 508","plate":"AB-181-EF","car_type":"sedan","accel":8.4,"seats":4,"online":true,"rating":4.6,"reviews":88,"payment":["revolut","cash"],"langs":["nl","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000903","price":"2.40 €/km","driving_style":"normal"},{"id":130,"name":"Adriaan G.","avatar":"🚐","city":"amsterdam","lat":52.356,"lng":4.8921,"car":"Toyota Proace","plate":"AB-190-EF","car_type":"minivan","accel":13.0,"seats":7,"online":true,"rating":4.7,"reviews":97,"payment":["revolut","terminal"],"langs":["en","nl"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000910","price":"2.40 €/km","driving_style":"comfort"},{"id":131,"name":"Maarten H.","avatar":"🏎","city":"amsterdam","lat":52.3324,"lng":4.9266,"car":"Tesla Model 3 Performance","plate":"AB-199-EF","car_type":"sport","accel":3.3,"seats":4,"online":true,"rating":4.8,"reviews":106,"payment":["cash","terminal"],"langs":["nl","de","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000917","price":"2.40 €/km","driving_style":"sport"},{"id":132,"name":"Sjoerd I.","avatar":"🚗","city":"amsterdam","lat":52.4069,"lng":4.9474,"car":"BMW i4","plate":"AB-208-EF","car_type":"electric","accel":5.7,"seats":4,"online":true,"rating":4.9,"reviews":115,"payment":["revolut","cash"],"langs":["en","fr"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000924","price":"2.40 €/km","driving_style":"normal"},{"id":133,"name":"Klaas J.","avatar":"🚙","city":"amsterdam","lat":52.4061,"lng":4.9375,"car":"BMW X5","plate":"AB-217-EF","car_type":"suv","accel":5.3,"seats":5,"online":true,"rating":4.4,"reviews":124,"payment":["revolut","terminal"],"langs":["nl","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Amsterdam & surroundings","phone":"+316210000931","price":"2.40 €/km","driving_style":"normal"},{"id":134,"name":"Leendert K.","avatar":"🚙","city":"amsterdam","lat":52.3395,"lng":4.9406,"car":"Range Rover","plate":"AB-226-EF","car_type":"suv","accel":5.4,"seats":5,"online":false,"rating":4.5,"reviews":133,"payment":["cash","terminal"],"langs":["en","nl"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Amsterdam & surroundings","phone":"+316210000938","price":"2.40 €/km","driving_style":"normal"},{"id":135,"name":"Arjan L.","avatar":"🚙","city":"amsterdam","lat":52.3872,"lng":4.8998,"car":"Mercedes GLE","plate":"AB-235-EF","car_type":"suv","accel":6.8,"seats":5,"online":false,"rating":4.6,"reviews":142,"payment":["revolut","cash"],"langs":["nl","de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Amsterdam & surroundings","phone":"+316210000945","price":"2.40 €/km","driving_style":"normal"},{"id":136,"name":"Bas O.","avatar":"🚗","city":"amsterdam","lat":52.3733,"lng":4.9542,"car":"Polestar 2","plate":"AB-244-EF","car_type":"electric","accel":4.7,"seats":4,"online":false,"rating":4.7,"reviews":151,"payment":["revolut","terminal"],"langs":["en","fr"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000952","price":"2.40 €/km","driving_style":"sport"},{"id":137,"name":"Ruud P.","avatar":"🚐","city":"amsterdam","lat":52.3297,"lng":4.8601,"car":"Renault Trafic","plate":"AB-253-EF","car_type":"minivan","accel":13.5,"seats":8,"online":false,"rating":4.8,"reviews":160,"payment":["cash","terminal"],"langs":["nl","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000959","price":"2.40 €/km","driving_style":"comfort"},{"id":138,"name":"Floris Q.","avatar":"🚗","city":"amsterdam","lat":52.3641,"lng":4.9078,"car":"Tesla Model 3","plate":"AB-262-EF","car_type":"electric","accel":4.4,"seats":4,"online":false,"rating":4.9,"reviews":169,"payment":["revolut","cash"],"langs":["en","nl"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000966","price":"2.40 €/km","driving_style":"sport"},{"id":139,"name":"Thijs R.","avatar":"🚗","city":"amsterdam","lat":52.3735,"lng":4.8822,"car":"Mercedes E-Class","plate":"AB-271-EF","car_type":"sedan","accel":7.5,"seats":4,"online":false,"rating":4.4,"reviews":178,"payment":["revolut","terminal"],"langs":["nl","de","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Amsterdam & surroundings","phone":"+316210000973","price":"2.40 €/km","driving_style":"normal"},{"id":140,"name":"Niels U.","avatar":"🚙","city":"amsterdam","lat":52.3931,"lng":4.8972,"car":"Tesla Model X","plate":"AB-280-EF","car_type":"suv","accel":2.6,"seats":6,"online":false,"rating":4.5,"reviews":187,"payment":["cash","terminal"],"langs":["en","fr"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Amsterdam & surroundings","phone":"+316210000980","price":"2.40 €/km","driving_style":"sport"},{"id":141,"name":"Carlos G.","avatar":"🚗","city":"barcelona","lat":41.4045,"lng":2.1982,"car":"Audi A6","plate":"1017 ABC","car_type":"sedan","accel":6.8,"seats":4,"online":true,"rating":4.4,"reviews":36,"payment":["revolut","terminal"],"langs":["es","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110000987","price":"1.90 €/km","driving_style":"normal"},{"id":142,"name":"José M.","avatar":"🏎","city":"barcelona","lat":41.3415,"lng":2.1623,"car":"Tesla Model 3 Performance","plate":"1034 ABC","car_type":"sport","accel":3.3,"seats":4,"online":true,"rating":4.5,"reviews":45,"payment":["cash","terminal"],"langs":["es","ca"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110000994","price":"1.90 €/km","driving_style":"sport"},{"id":143,"name":"Antonio R.","avatar":"🚐","city":"barcelona","lat":41.3894,"lng":2.1633,"car":"Renault Trafic","plate":"1051 ABC","car_type":"minivan","accel":13.5,"seats":8,"online":true,"rating":4.6,"reviews":54,"payment":["revolut","cash"],"langs":["es","fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001001","price":"1.90 €/km","driving_style":"comfort"},{"id":144,"name":"Manuel S.","avatar":"🚗","city":"barcelona","lat":41.3558,"lng":2.1638,"car":"Skoda Superb","plate":"1068 ABC","car_type":"sedan","accel":9.1,"seats":4,"online":true,"rating":4.7,"reviews":63,"payment":["revolut","terminal"],"langs":["ca","es"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":true,"minivan":false,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001008","price":"1.90 €/km","driving_style":"normal"},{"id":145,"name":"Francisco T.","avatar":"🏎","city":"barcelona","lat":41.4256,"lng":2.1835,"car":"Audi RS6","plate":"1085 ABC","car_type":"sport","accel":3.6,"seats":4,"online":true,"rating":4.8,"reviews":72,"payment":["cash","terminal"],"langs":["es","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001015","price":"1.90 €/km","driving_style":"sport"},{"id":146,"name":"David N.","avatar":"🚗","city":"barcelona","lat":41.4047,"lng":2.2162,"car":"Mercedes E-Class","plate":"1102 ABC","car_type":"sedan","accel":7.5,"seats":4,"online":true,"rating":4.9,"reviews":81,"payment":["revolut","cash"],"langs":["es","ca"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001022","price":"1.90 €/km","driving_style":"normal"},{"id":147,"name":"Juan F.","avatar":"🚗","city":"barcelona","lat":41.4117,"lng":2.159,"car":"Lexus ES","plate":"1119 ABC","car_type":"sedan","accel":8.8,"seats":4,"online":true,"rating":4.4,"reviews":90,"payment":["revolut","terminal"],"langs":["es","fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001029","price":"1.90 €/km","driving_style":"normal"},{"id":148,"name":"Luis C.","avatar":"🚗","city":"barcelona","lat":41.3357,"lng":2.1556,"car":"Kia EV6","plate":"1136 ABC","car_type":"electric","accel":5.2,"seats":4,"online":true,"rating":4.5,"reviews":99,"payment":["cash","terminal"],"langs":["ca","es"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001036","price":"1.90 €/km","driving_style":"normal"},{"id":149,"name":"Miguel H.","avatar":"🚗","city":"barcelona","lat":41.4104,"lng":2.2158,"car":"Polestar 2","plate":"1153 ABC","car_type":"electric","accel":4.7,"seats":4,"online":true,"rating":4.6,"reviews":108,"payment":["revolut","cash"],"langs":["es","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001043","price":"1.90 €/km","driving_style":"sport"},{"id":150,"name":"Alejandro I.","avatar":"🏎","city":"barcelona","lat":41.4304,"lng":2.1637,"car":"Mercedes AMG C43","plate":"1170 ABC","car_type":"sport","accel":4.7,"seats":4,"online":true,"rating":4.7,"reviews":117,"payment":["revolut","terminal"],"langs":["es","ca"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001050","price":"1.90 €/km","driving_style":"sport"},{"id":151,"name":"Pedro J.","avatar":"🚗","city":"barcelona","lat":41.4099,"lng":2.1789,"car":"Tesla Model S","plate":"1187 ABC","car_type":"sedan","accel":2.1,"seats":4,"online":true,"rating":4.8,"reviews":126,"payment":["cash","terminal"],"langs":["es","fr","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001057","price":"1.90 €/km","driving_style":"sport"},{"id":152,"name":"Fernando K.","avatar":"🚗","city":"barcelona","lat":41.3954,"lng":2.1399,"car":"Toyota Camry","plate":"1204 ABC","car_type":"sedan","accel":8.3,"seats":4,"online":true,"rating":4.9,"reviews":135,"payment":["revolut","cash"],"langs":["ca","es"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001064","price":"1.90 €/km","driving_style":"normal"},{"id":153,"name":"Pablo L.","avatar":"🏎","city":"barcelona","lat":41.357,"lng":2.1657,"car":"BMW M3","plate":"1221 ABC","car_type":"sport","accel":3.9,"seats":4,"online":true,"rating":4.4,"reviews":144,"payment":["revolut","terminal"],"langs":["es","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001071","price":"1.90 €/km","driving_style":"sport"},{"id":154,"name":"Javier O.","avatar":"🚗","city":"barcelona","lat":41.338,"lng":2.1537,"car":"BMW 5 Series","plate":"1238 ABC","car_type":"sedan","accel":6.2,"seats":4,"online":false,"rating":4.5,"reviews":153,"payment":["cash","terminal"],"langs":["es","ca"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001078","price":"1.90 €/km","driving_style":"normal"},{"id":155,"name":"Sergio P.","avatar":"🚙","city":"barcelona","lat":41.403,"lng":2.1619,"car":"Audi Q7","plate":"1255 ABC","car_type":"suv","accel":6.1,"seats":6,"online":false,"rating":4.6,"reviews":162,"payment":["revolut","cash"],"langs":["es","fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Barcelona & surroundings","phone":"+346110001085","price":"1.90 €/km","driving_style":"normal"},{"id":156,"name":"Álvaro Q.","avatar":"🚙","city":"barcelona","lat":41.3516,"lng":2.1695,"car":"Volvo XC90","plate":"1272 ABC","car_type":"suv","accel":6.5,"seats":6,"online":false,"rating":4.7,"reviews":171,"payment":["revolut","terminal"],"langs":["ca","es"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Barcelona & surroundings","phone":"+346110001092","price":"1.90 €/km","driving_style":"normal"},{"id":157,"name":"Andrés R.","avatar":"🚐","city":"barcelona","lat":41.3479,"lng":2.1881,"car":"Mercedes Vito","plate":"1289 ABC","car_type":"minivan","accel":12.0,"seats":8,"online":false,"rating":4.8,"reviews":180,"payment":["cash","terminal"],"langs":["es","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001099","price":"1.90 €/km","driving_style":"comfort"},{"id":158,"name":"Rafael S.","avatar":"🚐","city":"barcelona","lat":41.3378,"lng":2.1607,"car":"Toyota Proace","plate":"1306 ABC","car_type":"minivan","accel":13.0,"seats":7,"online":false,"rating":4.9,"reviews":189,"payment":["revolut","cash"],"langs":["es","ca"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001106","price":"1.90 €/km","driving_style":"comfort"},{"id":159,"name":"Eduardo T.","avatar":"🚙","city":"barcelona","lat":41.3915,"lng":2.1167,"car":"BMW X5","plate":"1323 ABC","car_type":"suv","accel":5.3,"seats":5,"online":false,"rating":4.4,"reviews":198,"payment":["revolut","terminal"],"langs":["es","fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Barcelona & surroundings","phone":"+346110001113","price":"1.90 €/km","driving_style":"normal"},{"id":160,"name":"Ricardo U.","avatar":"🚐","city":"barcelona","lat":41.3994,"lng":2.1297,"car":"VW Caravelle","plate":"1340 ABC","car_type":"minivan","accel":11.5,"seats":8,"online":false,"rating":4.5,"reviews":167,"payment":["cash","terminal"],"langs":["ca","es"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Barcelona & surroundings","phone":"+346110001120","price":"1.90 €/km","driving_style":"comfort"},{"id":161,"name":"Nikos P.","avatar":"🚐","city":"athens","lat":37.9812,"lng":23.6812,"car":"VW Caravelle","plate":"ΑΒΒ 1011","car_type":"minivan","accel":11.5,"seats":8,"online":true,"rating":4.4,"reviews":16,"payment":["revolut","terminal"],"langs":["el","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Athens & surroundings","phone":"+306910001127","price":"1.70 €/km","driving_style":"comfort"},{"id":162,"name":"Yannis K.","avatar":"🚙","city":"athens","lat":38.0286,"lng":23.7233,"car":"Tesla Model X","plate":"ΑΒΒ 1022","car_type":"suv","accel":2.6,"seats":6,"online":true,"rating":4.5,"reviews":25,"payment":["cash","terminal"],"langs":["el"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Athens & surroundings","phone":"+306910001134","price":"1.70 €/km","driving_style":"sport"},{"id":163,"name":"Kostas M.","avatar":"🚗","city":"athens","lat":37.9594,"lng":23.7118,"car":"Toyota Camry","plate":"ΑΒΒ 1033","car_type":"sedan","accel":8.3,"seats":4,"online":true,"rating":4.6,"reviews":34,"payment":["revolut","cash"],"langs":["el","en","de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Athens & surroundings","phone":"+306910001141","price":"1.70 €/km","driving_style":"normal"},{"id":164,"name":"Dimitris S.","avatar":"🚐","city":"athens","lat":37.9944,"lng":23.7831,"car":"Toyota Proace","plate":"ΑΒΒ 1044","car_type":"minivan","accel":13.0,"seats":7,"online":true,"rating":4.7,"reviews":43,"payment":["revolut","terminal"],"langs":["el","fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Athens & surroundings","phone":"+306910001148","price":"1.70 €/km","driving_style":"comfort"},{"id":165,"name":"Giannis T.","avatar":"🚗","city":"athens","lat":38.0056,"lng":23.7608,"car":"Peugeot 508","plate":"ΑΒΒ 1055","car_type":"sedan","accel":8.4,"seats":4,"online":true,"rating":4.8,"reviews":52,"payment":["cash","terminal"],"langs":["el","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Athens & surroundings","phone":"+306910001155","price":"1.70 €/km","driving_style":"normal"},{"id":166,"name":"Petros A.","avatar":"🚐","city":"athens","lat":37.9502,"lng":23.7048,"car":"Renault Trafic","plate":"ΑΒΒ 1066","car_type":"minivan","accel":13.5,"seats":8,"online":true,"rating":4.9,"reviews":61,"payment":["revolut","cash"],"langs":["el"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Athens & surroundings","phone":"+306910001162","price":"1.70 €/km","driving_style":"comfort"},{"id":167,"name":"Alexandros N.","avatar":"🚗","city":"athens","lat":37.9917,"lng":23.779,"car":"Lexus ES","plate":"ΑΒΒ 1077","car_type":"sedan","accel":8.8,"seats":4,"online":true,"rating":4.4,"reviews":70,"payment":["revolut","terminal"],"langs":["el","en","de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Athens & surroundings","phone":"+306910001169","price":"1.70 €/km","driving_style":"normal"},{"id":168,"name":"Stavros F.","avatar":"🚙","city":"athens","lat":37.9914,"lng":23.7765,"car":"Volvo XC90","plate":"ΑΒΒ 1088","car_type":"suv","accel":6.5,"seats":6,"online":true,"rating":4.5,"reviews":79,"payment":["cash","terminal"],"langs":["el","fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Athens & surroundings","phone":"+306910001176","price":"1.70 €/km","driving_style":"normal"},{"id":169,"name":"Christos B.","avatar":"🚐","city":"athens","lat":37.9713,"lng":23.7805,"car":"Mercedes Vito","plate":"ΑΒΒ 1099","car_type":"minivan","accel":12.0,"seats":8,"online":true,"rating":4.6,"reviews":88,"payment":["revolut","cash"],"langs":["el","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Athens & surroundings","phone":"+306910001183","price":"1.70 €/km","driving_style":"comfort"},{"id":170,"name":"Vasilis G.","avatar":"🚗","city":"athens","lat":37.9536,"lng":23.7386,"car":"Mercedes EQE","plate":"ΑΒΒ 1110","car_type":"electric","accel":5.9,"seats":4,"online":true,"rating":4.7,"reviews":97,"payment":["revolut","terminal"],"langs":["el"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Athens & surroundings","phone":"+306910001190","price":"1.70 €/km","driving_style":"normal"},{"id":171,"name":"Spyros H.","avatar":"🚗","city":"athens","lat":38.0169,"lng":23.6966,"car":"Tesla Model S","plate":"ΑΒΒ 1121","car_type":"sedan","accel":2.1,"seats":4,"online":true,"rating":4.8,"reviews":106,"payment":["cash","terminal"],"langs":["el","en","de"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Athens & surroundings","phone":"+306910001197","price":"1.70 €/km","driving_style":"sport"},{"id":172,"name":"Takis I.","avatar":"🚗","city":"athens","lat":38.0035,"lng":23.7037,"car":"Polestar 2","plate":"ΑΒΒ 1132","car_type":"electric","accel":4.7,"seats":4,"online":true,"rating":4.9,"reviews":115,"payment":["revolut","cash"],"langs":["el","fr"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Athens & surroundings","phone":"+306910001204","price":"1.70 €/km","driving_style":"sport"},{"id":173,"name":"Manolis J.","avatar":"🚙","city":"athens","lat":38.0022,"lng":23.7642,"car":"BMW X5","plate":"ΑΒΒ 1143","car_type":"suv","accel":5.3,"seats":5,"online":true,"rating":4.4,"reviews":124,"payment":["revolut","terminal"],"langs":["el","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Athens & surroundings","phone":"+306910001211","price":"1.70 €/km","driving_style":"normal"},{"id":174,"name":"Stratos L.","avatar":"🚙","city":"athens","lat":38.0134,"lng":23.7354,"car":"Audi Q7","plate":"ΑΒΒ 1154","car_type":"suv","accel":6.1,"seats":6,"online":false,"rating":4.5,"reviews":133,"payment":["cash","terminal"],"langs":["el"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Athens & surroundings","phone":"+306910001218","price":"1.70 €/km","driving_style":"normal"},{"id":175,"name":"Kosmas O.","avatar":"🏎","city":"athens","lat":37.9379,"lng":23.7314,"car":"BMW M3","plate":"ΑΒΒ 1165","car_type":"sport","accel":3.9,"seats":4,"online":false,"rating":4.6,"reviews":142,"payment":["revolut","cash"],"langs":["el","en","de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Athens & surroundings","phone":"+306910001225","price":"1.70 €/km","driving_style":"sport"},{"id":176,"name":"Panos Q.","avatar":"🚗","city":"athens","lat":38.0,"lng":23.6758,"car":"Mercedes E-Class","plate":"ΑΒΒ 1176","car_type":"sedan","accel":7.5,"seats":4,"online":false,"rating":4.7,"reviews":151,"payment":["revolut","terminal"],"langs":["el","fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Athens & surroundings","phone":"+306910001232","price":"1.70 €/km","driving_style":"normal"},{"id":177,"name":"Stelios R.","avatar":"🚙","city":"athens","lat":37.9986,"lng":23.669,"car":"Mercedes GLE","plate":"ΑΒΒ 1187","car_type":"suv","accel":6.8,"seats":5,"online":false,"rating":4.8,"reviews":160,"payment":["cash","terminal"],"langs":["el","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":true,"areas":"Athens & surroundings","phone":"+306910001239","price":"1.70 €/km","driving_style":"normal"},{"id":178,"name":"Tasos U.","avatar":"🚗","city":"athens","lat":37.9758,"lng":23.7263,"car":"Audi A6","plate":"ΑΒΒ 1198","car_type":"sedan","accel":6.8,"seats":4,"online":false,"rating":4.9,"reviews":169,"payment":["revolut","cash"],"langs":["el"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Athens & surroundings","phone":"+306910001246","price":"1.70 €/km","driving_style":"normal"},{"id":179,"name":"Giorgos V.","avatar":"🚙","city":"athens","lat":37.9772,"lng":23.711,"car":"Range Rover","plate":"ΑΒΒ 1209","car_type":"suv","accel":5.4,"seats":5,"online":false,"rating":4.4,"reviews":178,"payment":["revolut","terminal"],"langs":["el","en","de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Athens & surroundings","phone":"+306910001253","price":"1.70 €/km","driving_style":"normal"},{"id":180,"name":"Antonis W.","avatar":"🏎","city":"athens","lat":38.023,"lng":23.7227,"car":"Audi RS6","plate":"ΑΒΒ 1220","car_type":"sport","accel":3.6,"seats":4,"online":false,"rating":4.5,"reviews":187,"payment":["cash","terminal"],"langs":["el","fr"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Athens & surroundings","phone":"+306910001260","price":"1.70 €/km","driving_style":"sport"},{"id":181,"name":"Marco R.","avatar":"🚐","city":"rome","lat":41.8883,"lng":12.4674,"car":"Mercedes Vito","plate":"AB107CD","car_type":"minivan","accel":12.0,"seats":8,"online":true,"rating":4.4,"reviews":36,"payment":["revolut","terminal"],"langs":["it","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Rome & surroundings","phone":"+393410001267","price":"2.00 €/km","driving_style":"comfort"},{"id":182,"name":"Luca B.","avatar":"🚐","city":"rome","lat":41.8808,"lng":12.5079,"car":"Toyota Proace","plate":"AB114CD","car_type":"minivan","accel":13.0,"seats":7,"online":true,"rating":4.5,"reviews":45,"payment":["cash","terminal"],"langs":["it"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Rome & surroundings","phone":"+393410001274","price":"2.00 €/km","driving_style":"comfort"},{"id":183,"name":"Giovanni M.","avatar":"🏎","city":"rome","lat":41.9408,"lng":12.5031,"car":"BMW M3","plate":"AB121CD","car_type":"sport","accel":3.9,"seats":4,"online":true,"rating":4.6,"reviews":54,"payment":["revolut","cash"],"langs":["it","fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001281","price":"2.00 €/km","driving_style":"sport"},{"id":184,"name":"Francesco S.","avatar":"🚗","city":"rome","lat":41.9045,"lng":12.4593,"car":"BMW 5 Series","plate":"AB128CD","car_type":"sedan","accel":6.2,"seats":4,"online":true,"rating":4.7,"reviews":63,"payment":["revolut","terminal"],"langs":["it","de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001288","price":"2.00 €/km","driving_style":"normal"},{"id":185,"name":"Antonio T.","avatar":"🚐","city":"rome","lat":41.8769,"lng":12.4852,"car":"VW Caravelle","plate":"AB135CD","car_type":"minivan","accel":11.5,"seats":8,"online":true,"rating":4.8,"reviews":72,"payment":["cash","terminal"],"langs":["it","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Rome & surroundings","phone":"+393410001295","price":"2.00 €/km","driving_style":"comfort"},{"id":186,"name":"Giuseppe N.","avatar":"🏎","city":"rome","lat":41.9083,"lng":12.4652,"car":"Mercedes AMG C43","plate":"AB142CD","car_type":"sport","accel":4.7,"seats":4,"online":true,"rating":4.9,"reviews":81,"payment":["revolut","cash"],"langs":["it"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001302","price":"2.00 €/km","driving_style":"sport"},{"id":187,"name":"Matteo F.","avatar":"🚗","city":"rome","lat":41.9004,"lng":12.5218,"car":"Mercedes E-Class","plate":"AB149CD","car_type":"sedan","accel":7.5,"seats":4,"online":true,"rating":4.4,"reviews":90,"payment":["revolut","terminal"],"langs":["it","fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001309","price":"2.00 €/km","driving_style":"normal"},{"id":188,"name":"Alessandro C.","avatar":"🚗","city":"rome","lat":41.8976,"lng":12.4385,"car":"BMW i4","plate":"AB156CD","car_type":"electric","accel":5.7,"seats":4,"online":true,"rating":4.5,"reviews":99,"payment":["cash","terminal"],"langs":["it","de"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001316","price":"2.00 €/km","driving_style":"normal"},{"id":189,"name":"Stefano G.","avatar":"🚗","city":"rome","lat":41.8822,"lng":12.4849,"car":"Skoda Superb","plate":"AB163CD","car_type":"sedan","accel":9.1,"seats":4,"online":true,"rating":4.6,"reviews":108,"payment":["revolut","cash"],"langs":["it","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":true,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001323","price":"2.00 €/km","driving_style":"normal"},{"id":190,"name":"Roberto H.","avatar":"🚗","city":"rome","lat":41.8771,"lng":12.5161,"car":"Kia EV6","plate":"AB170CD","car_type":"electric","accel":5.2,"seats":4,"online":true,"rating":4.7,"reviews":117,"payment":["revolut","terminal"],"langs":["it"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001330","price":"2.00 €/km","driving_style":"normal"},{"id":191,"name":"Davide I.","avatar":"🚗","city":"rome","lat":41.8897,"lng":12.5028,"car":"Mercedes EQE","plate":"AB177CD","car_type":"electric","accel":5.9,"seats":4,"online":true,"rating":4.8,"reviews":126,"payment":["cash","terminal"],"langs":["it","fr","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001337","price":"2.00 €/km","driving_style":"normal"},{"id":192,"name":"Simone J.","avatar":"🚗","city":"rome","lat":41.8872,"lng":12.556,"car":"Tesla Model 3","plate":"AB184CD","car_type":"electric","accel":4.4,"seats":4,"online":true,"rating":4.9,"reviews":135,"payment":["revolut","cash"],"langs":["it","de"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001344","price":"2.00 €/km","driving_style":"sport"},{"id":193,"name":"Andrea L.","avatar":"🚗","city":"rome","lat":41.9078,"lng":12.4786,"car":"Tesla Model S","plate":"AB191CD","car_type":"sedan","accel":2.1,"seats":4,"online":true,"rating":4.4,"reviews":144,"payment":["revolut","terminal"],"langs":["it","en"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001351","price":"2.00 €/km","driving_style":"sport"},{"id":194,"name":"Emanuele O.","avatar":"🚗","city":"rome","lat":41.8982,"lng":12.4732,"car":"Hyundai Ioniq 6","plate":"AB198CD","car_type":"electric","accel":5.1,"seats":4,"online":false,"rating":4.5,"reviews":153,"payment":["cash","terminal"],"langs":["it"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001358","price":"2.00 €/km","driving_style":"normal"},{"id":195,"name":"Fabio P.","avatar":"🚗","city":"rome","lat":41.8759,"lng":12.523,"car":"Toyota Camry","plate":"AB205CD","car_type":"sedan","accel":8.3,"seats":4,"online":false,"rating":4.6,"reviews":162,"payment":["revolut","cash"],"langs":["it","fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001365","price":"2.00 €/km","driving_style":"normal"},{"id":196,"name":"Riccardo Q.","avatar":"🚗","city":"rome","lat":41.8844,"lng":12.5255,"car":"Audi A6","plate":"AB212CD","car_type":"sedan","accel":6.8,"seats":4,"online":false,"rating":4.7,"reviews":171,"payment":["revolut","terminal"],"langs":["it","de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":true,"childok":true,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001372","price":"2.00 €/km","driving_style":"normal"},{"id":197,"name":"Daniele U.","avatar":"🚗","city":"rome","lat":41.9479,"lng":12.5192,"car":"Peugeot 508","plate":"AB219CD","car_type":"sedan","accel":8.4,"seats":4,"online":false,"rating":4.8,"reviews":180,"payment":["cash","terminal"],"langs":["it","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":false,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001379","price":"2.00 €/km","driving_style":"normal"},{"id":198,"name":"Paolo V.","avatar":"🏎","city":"rome","lat":41.872,"lng":12.525,"car":"Tesla Model 3 Performance","plate":"AB226CD","car_type":"sport","accel":3.3,"seats":4,"online":false,"rating":4.9,"reviews":189,"payment":["revolut","cash"],"langs":["it"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Rome & surroundings","phone":"+393410001386","price":"2.00 €/km","driving_style":"sport"},{"id":199,"name":"Nicola W.","avatar":"🚐","city":"rome","lat":41.8804,"lng":12.5072,"car":"Renault Trafic","plate":"AB233CD","car_type":"minivan","accel":13.5,"seats":8,"online":false,"rating":4.4,"reviews":198,"payment":["revolut","terminal"],"langs":["it","fr","en"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":true,"sport":false,"fast":false,"comfort":true,"minivan":true,"suv":false,"areas":"Rome & surroundings","phone":"+393410001393","price":"2.00 €/km","driving_style":"comfort"},{"id":200,"name":"Lorenzo X.","avatar":"🚙","city":"rome","lat":41.9288,"lng":12.508,"car":"Audi Q7","plate":"AB240CD","car_type":"suv","accel":6.1,"seats":6,"online":false,"rating":4.5,"reviews":167,"payment":["cash","terminal"],"langs":["it","de"],"electric":false,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":false,"fast":true,"comfort":false,"minivan":false,"suv":true,"areas":"Rome & surroundings","phone":"+393410001400","price":"2.00 €/km","driving_style":"normal"}];
+let city='sofia',filt='all',cur=null,star=0,map,mkrs=[];
+function payI(p){return p==='revolut'?'<span class="pi">💜 Revolut</span>':p==='terminal'?'<span class="pi">💳 Terminal</span>':'<span class="pi">💵 Cash</span>'}
+function styleI(d){if(d.accel<5)return{l:'🏎 Sport',c:'var(--pi)',s:`0–100 in ${d.accel}s`};if(d.accel<6.5)return{l:'⚡ Fast',c:'var(--or)',s:`0–100 in ${d.accel}s`};if(d.accel>10)return{l:'🛋 Comfort',c:'var(--cy)',s:'Smooth & relaxed'};return{l:'🚗 Normal',c:'var(--gr)',s:'Balanced'}}
+function carI(d){return d.minivan?'🚐':d.suv?'🚙':d.accel<5?'🏎':d.electric?'🚗':'🚗'}
+function card(d,mini=false){
+  const st=styleI(d),ic=carI(d);
+  const tags=[];
+  if(d.online)tags.push('<span class="t tg">🟢 Online</span>');
+  else tags.push('<span class="t" style="color:var(--mu2);border-color:var(--brd)">⚫ Offline</span>');
+  if(d.electric)tags.push('<span class="t tc">⚡ EV</span>');
+  if(d.minivan)tags.push(`<span class="t tb">🚐 ${d.seats}p</span>`);
+  if(d.suv)tags.push('<span class="t tb">🚙 SUV</span>');
+  tags.push(`<span class="t" style="color:${st.c};border-color:${st.c}33;background:${st.c}11">${st.l}</span>`);
+  if(d.nosmoker)tags.push('<span class="t ty">🚭</span>');
+  if(d.smoking)tags.push('<span class="t tr">🚬</span>');
+  if(d.petfriendly)tags.push('<span class="t tp">🐾</span>');
+  if(d.childok)tags.push('<span class="t to">👶</span>');
+  return `<div class="dc" onclick="openMod(${d.id})">
+    <div class="dct">
+      <div class="dca">${ic}</div>
+      <div class="dci">
+        <div class="dcn">${d.name} <span class="vbadge">✓</span></div>
+        <div class="dcc">${d.car} · ${d.plate}</div>
+        <div class="tags">${tags.join('')}</div>
+        <div class="pays">${d.payment.map(payI).join('')}</div>
       </div>
-      <div class="rating-badge">⭐${d.rating}</div>
+      <div class="rb">⭐${d.rating}</div>
     </div>
-    ${!compact ? `<div class="dcard-bottom">
-      <button class="btn-call" onclick="event.stopPropagation();quickCall(${d.id})">📞 Call</button>
-      <button class="btn-wp" onclick="event.stopPropagation();quickWA(${d.id})">💬 WhatsApp</button>
-      <button class="btn-info">ℹ️</button>
-    </div>` : ''}
+    ${!mini?`<div class="dcb">
+      <button class="bc" onclick="event.stopPropagation();qCall(${d.id})">📞 Call</button>
+      <button class="bw" onclick="event.stopPropagation();qWA(${d.id})">💬 WhatsApp</button>
+      <button class="bi">ℹ️</button>
+    </div>`:''}
   </div>`;
 }
-
-function setFilter(f, el) {
-  activeFilter = f;
-  document.querySelectorAll('.flt').forEach(b => b.classList.remove('on'));
-  el.classList.add('on');
-  renderDrivers();
+function sf(f,el){filt=f;document.querySelectorAll('.flt').forEach(b=>b.classList.remove('on'));el.classList.add('on');renderList()}
+function renderList(){
+  const q=(document.getElementById('srch')?.value||'').toLowerCase();
+  let ds=DRIVERS.filter(d=>d.city===city);
+  if(filt==='online')ds=ds.filter(d=>d.online);
+  if(filt==='revolut')ds=ds.filter(d=>d.payment.includes('revolut'));
+  if(filt==='terminal')ds=ds.filter(d=>d.payment.includes('terminal'));
+  if(filt==='cash')ds=ds.filter(d=>d.payment.includes('cash'));
+  if(filt==='sport')ds=ds.filter(d=>d.sport);
+  if(filt==='fast')ds=ds.filter(d=>d.fast&&!d.sport);
+  if(filt==='comfort')ds=ds.filter(d=>d.comfort);
+  if(filt==='electric')ds=ds.filter(d=>d.electric);
+  if(filt==='suv')ds=ds.filter(d=>d.suv);
+  if(filt==='minivan')ds=ds.filter(d=>d.minivan);
+  if(filt==='sedan')ds=ds.filter(d=>!d.suv&&!d.minivan);
+  if(filt==='len')ds=ds.filter(d=>d.langs.includes('en'));
+  if(filt==='lde')ds=ds.filter(d=>d.langs.includes('de'));
+  if(filt==='lfr')ds=ds.filter(d=>d.langs.includes('fr'));
+  if(filt==='lru')ds=ds.filter(d=>d.langs.includes('ru'));
+  if(filt==='nosmoker')ds=ds.filter(d=>d.nosmoker);
+  if(filt==='smoking')ds=ds.filter(d=>d.smoking);
+  if(filt==='pet')ds=ds.filter(d=>d.petfriendly);
+  if(filt==='child')ds=ds.filter(d=>d.childok);
+  if(filt==='top')ds=ds.filter(d=>d.rating>=4.8);
+  if(filt==='big')ds=ds.filter(d=>d.seats>=8);
+  if(q)ds=ds.filter(d=>d.name.toLowerCase().includes(q)||d.car.toLowerCase().includes(q)||d.areas.toLowerCase().includes(q));
+  ds.sort((a,b)=>(b.online?1:0)-(a.online?1:0)||b.rating-a.rating);
+  document.getElementById('dlist').innerHTML=ds.map(d=>card(d)).join('')||'<div style="text-align:center;padding:30px;color:var(--mu)">No drivers found</div>';
+  document.getElementById('map-list').innerHTML=ds.slice(0,4).map(d=>card(d,true)).join('');
 }
-
-function renderDrivers() {
-  const q = (document.getElementById('srch-inp')?.value||'').toLowerCase();
-  let drivers = DRIVERS.filter(d => d.city === currentCity);
-  const f = activeFilter;
-  if(f==='online') drivers = drivers.filter(d=>d.online);
-  if(f==='revolut') drivers = drivers.filter(d=>d.payment.includes('revolut'));
-  if(f==='terminal') drivers = drivers.filter(d=>d.payment.includes('terminal'));
-  if(f==='cash') drivers = drivers.filter(d=>d.payment.includes('cash'));
-  if(f==='sport') drivers = drivers.filter(d=>d.sport);
-  if(f==='fast') drivers = drivers.filter(d=>d.fast && !d.sport);
-  if(f==='comfort') drivers = drivers.filter(d=>d.comfort);
-  if(f==='electric') drivers = drivers.filter(d=>d.electric);
-  if(f==='suv') drivers = drivers.filter(d=>d.suv);
-  if(f==='minivan') drivers = drivers.filter(d=>d.minivan);
-  if(f==='sedan') drivers = drivers.filter(d=>!d.suv && !d.minivan);
-  if(f==='lang_en') drivers = drivers.filter(d=>d.langs.includes('en'));
-  if(f==='lang_de') drivers = drivers.filter(d=>d.langs.includes('de'));
-  if(f==='lang_fr') drivers = drivers.filter(d=>d.langs.includes('fr'));
-  if(f==='lang_ru') drivers = drivers.filter(d=>d.langs.includes('ru'));
-  if(f==='nosmoker') drivers = drivers.filter(d=>d.nosmoker);
-  if(f==='smoking') drivers = drivers.filter(d=>d.smoking);
-  if(f==='petfriendly') drivers = drivers.filter(d=>d.petfriendly);
-  if(f==='childok') drivers = drivers.filter(d=>d.childok);
-  if(f==='highrated') drivers = drivers.filter(d=>d.rating>=4.8);
-  if(f==='minivan8') drivers = drivers.filter(d=>d.seats>=8);
-  if(q) drivers = drivers.filter(d=>
-    d.name.toLowerCase().includes(q)||d.car.toLowerCase().includes(q)||d.areas.toLowerCase().includes(q)
-  );
-  // Online first
-  drivers.sort((a,b) => (b.online?1:0)-(a.online?1:0) || b.rating-a.rating);
-  const html = drivers.map(d=>driverCard(d)).join('') ||
-    '<div style="text-align:center;padding:30px;color:var(--mu)">No drivers found with this filter</div>';
-  document.getElementById('dlist').innerHTML = html;
-  document.getElementById('map-dlist').innerHTML = drivers.slice(0,4).map(d=>driverCard(d,true)).join('');
-}
-
-function changeCity() {
-  currentCity = document.getElementById('city-sel').value;
-  const c = CITIES[currentCity];
-  map.setView([c.lat,c.lng],c.zoom);
-  renderMap();
-  renderDrivers();
-  const cd = DRIVERS.filter(d=>d.city===currentCity);
-  document.getElementById('cnt-online').textContent = cd.filter(d=>d.online).length;
-  document.getElementById('cnt-total').textContent = cd.length;
-}
-
-function renderMap() {
-  markers.forEach(m=>m.remove());
-  markers=[];
-  DRIVERS.filter(d=>d.city===currentCity).forEach(d=>{
-    const icon = carIcon(d);
-    const m = L.marker([d.lat,d.lng],{
-      icon: L.divIcon({
-        html:`<div style="background:${d.online?'#22c55e':'#444'};border:2px solid #fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px #0008">${icon}</div>`,
-        iconSize:[30,30],iconAnchor:[15,15],className:''
-      })
-    }).addTo(map);
+function renderMap(){
+  mkrs.forEach(m=>m.remove());mkrs=[];
+  DRIVERS.filter(d=>d.city===city).forEach(d=>{
+    const ic=carI(d);
+    const m=L.marker([d.lat,d.lng],{icon:L.divIcon({html:`<div style="background:${d.online?'#22c55e':'#444'};border:2px solid #fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 2px 5px #0008">${ic}</div>`,iconSize:[28,28],iconAnchor:[14,14],className:''})}).addTo(map);
     m.bindPopup(`<b>${d.name}</b><br>${d.car}<br>⭐${d.rating}`);
-    m.on('click',()=>openModal(d.id));
-    markers.push(m);
+    m.on('click',()=>openMod(d.id));
+    mkrs.push(m);
   });
 }
-
-function openModal(id) {
-  currentDriver = DRIVERS.find(d=>d.id===id);
-  if(!currentDriver) return;
-  const d = currentDriver;
-  const style = styleLabel(d);
-  document.getElementById('m-avatar').textContent = carIcon(d);
-  document.getElementById('m-name').innerHTML = d.name + ' <span class="verified">✓ Verified</span>';
-  document.getElementById('m-car').textContent = d.car + ' · ' + d.plate;
-  document.getElementById('m-rating-row').innerHTML = 
-    `<span style="color:var(--y);font-size:20px">${'★'.repeat(Math.round(d.rating))}</span> <span style="font-weight:800">${d.rating}</span> <span style="color:var(--mu);font-size:12px">(${d.reviews} reviews)</span>`;
-  
-  document.getElementById('m-style-notice').innerHTML = 
-    `<strong style="color:var(--or)">⚠️ Please tell your driver your preferred riding style when you get in the car.</strong><br>
-    This driver's style: <strong style="color:${style.color}">${style.label} — ${style.desc}</strong>`;
-
-  document.getElementById('m-car-details').innerHTML = `
-    <div class="info-row"><span class="info-key">Type</span><span class="info-val">${d.car_type.toUpperCase()}</span></div>
-    <div class="info-row"><span class="info-key">Seats</span><span class="info-val">${d.seats} passengers</span></div>
-    <div class="info-row"><span class="info-key">0–100 km/h</span><span class="info-val" style="color:${style.color}">${d.accel}s</span></div>
-    <div class="info-row"><span class="info-key">Electric</span><span class="info-val">${d.electric?'✅ Yes':'No'}</span></div>
-  `;
-  document.getElementById('m-payment').innerHTML = d.payment.map(payIcon).join(' ');
-  const langMap = {bg:'🇧🇬 BG',en:'🇬🇧 EN',de:'🇩🇪 DE',fr:'🇫🇷 FR',ru:'🇷🇺 RU',el:'🇬🇷 EL',it:'🇮🇹 IT',es:'🇪🇸 ES',nl:'🇳🇱 NL',ca:'Català',hi:'हिं',ar:'عربي',tr:'TR',hu:'HU',pl:'PL'};
-  document.getElementById('m-langs').innerHTML = d.langs.map(l=>`<span class="tag tag-bl">${langMap[l]||l}</span>`).join(' ');
-  const opts = [];
-  if(d.nosmoker) opts.push('<span class="tag tag-y">🚭 No smoking</span>');
-  if(d.smoking) opts.push('<span class="tag tag-rd">🚬 Smoking OK</span>');
-  if(d.petfriendly) opts.push('<span class="tag tag-pu">🐾 Pets OK</span>');
-  if(d.childok) opts.push('<span class="tag tag-or">👶 Child seat</span>');
-  document.getElementById('m-options').innerHTML = opts.join(' ')||'—';
-  document.getElementById('m-price').textContent = d.price;
-  document.getElementById('m-areas').textContent = d.areas;
+function changeCity(){
+  city=document.getElementById('city-sel').value;
+  const c=CITIES[city];map.setView([c.lat,c.lng],c.zoom);
+  renderMap();renderList();updCtr();
+}
+function updCtr(){
+  const ds=DRIVERS.filter(d=>d.city===city);
+  document.getElementById('cnt-on').textContent=ds.filter(d=>d.online).length;
+  document.getElementById('cnt-city').textContent=ds.length;
+}
+const LM={bg:'🇧🇬 BG',en:'🇬🇧 EN',de:'🇩🇪 DE',fr:'🇫🇷 FR',ru:'🇷🇺 RU',el:'🇬🇷 EL',it:'🇮🇹 IT',es:'🇪🇸 ES',nl:'🇳🇱 NL',ca:'CA',hi:'हिं',ar:'عر',tr:'TR',hu:'HU',pl:'PL'};
+function openMod(id){
+  cur=DRIVERS.find(d=>d.id===id);if(!cur)return;
+  const d=cur,st=styleI(d),ic=carI(d);
+  document.getElementById('m-av').textContent=ic;
+  document.getElementById('m-name').innerHTML=d.name+' <span class="vbadge">✓ Verified</span>';
+  document.getElementById('m-car').textContent=d.car+' · '+d.plate;
+  document.getElementById('m-stars').innerHTML='<span style="color:var(--y);font-size:18px">'+'★'.repeat(Math.round(d.rating))+'</span> <strong>'+d.rating+'</strong> <span style="color:var(--mu);font-size:12px">('+d.reviews+' reviews)</span>';
+  document.getElementById('m-style').innerHTML='<strong style="color:var(--or)">⚠️ Please tell your driver your preferred style when you get in the car.</strong><br>This driver: <strong style="color:'+st.c+'">'+st.l+' — '+st.s+'</strong>';
+  document.getElementById('m-cardet').innerHTML=`<div class="ir"><span class="ik">Type</span><span class="iv">${d.car_type.toUpperCase()}</span></div><div class="ir"><span class="ik">Seats</span><span class="iv">${d.seats} passengers</span></div><div class="ir"><span class="ik">0–100 km/h</span><span class="iv" style="color:${st.c}">${d.accel}s</span></div><div class="ir"><span class="ik">Electric</span><span class="iv">${d.electric?'✅ Yes':'No'}</span></div>`;
+  document.getElementById('m-pay').innerHTML=d.payment.map(payI).join(' ');
+  document.getElementById('m-langs').innerHTML=d.langs.map(l=>`<span class="t tb">${LM[l]||l}</span>`).join(' ');
+  const opts=[];
+  if(d.nosmoker)opts.push('<span class="t ty">🚭 No smoking</span>');
+  if(d.smoking)opts.push('<span class="t tr">🚬 Smoking OK</span>');
+  if(d.petfriendly)opts.push('<span class="t tp">🐾 Pets OK</span>');
+  if(d.childok)opts.push('<span class="t to">👶 Child seat</span>');
+  document.getElementById('m-opts').innerHTML=opts.join(' ')||'—';
+  document.getElementById('m-price').textContent=d.price;
+  document.getElementById('m-areas').textContent=d.areas;
   document.getElementById('modal').classList.add('on');
 }
+function closeMod(){document.getElementById('modal').classList.remove('on')}
+function doCall(){if(cur)window.location.href='tel:'+cur.phone}
+function doWA(){if(cur)window.open('https://wa.me/'+cur.phone.replace(/[^0-9]/g,''))}
+function qCall(id){const d=DRIVERS.find(x=>x.id===id);if(d)window.location.href='tel:'+d.phone}
+function qWA(id){const d=DRIVERS.find(x=>x.id===id);if(d)window.open('https://wa.me/'+d.phone.replace(/[^0-9]/g,''))}
+function openRateMod(){document.getElementById('rmod').classList.add('on')}
+function closeRate(){document.getElementById('rmod').classList.remove('on');star=0;updStars()}
+function setStar(n){star=n;updStars()}
+function updStars(){document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<star))}
+function submitRate(){if(!star){alert('Please select a rating');return}alert('✅ Thank you! Your review has been submitted for admin approval.
 
-function closeModal(){document.getElementById('modal').classList.remove('on')}
-function callDriver(){if(currentDriver)window.location.href='tel:'+currentDriver.phone}
-function whatsappDriver(){if(currentDriver)window.open('https://wa.me/'+currentDriver.phone.replace(/[^0-9]/g,''))}
-function quickCall(id){const d=DRIVERS.find(x=>x.id===id);if(d)window.location.href='tel:'+d.phone}
-function quickWA(id){const d=DRIVERS.find(x=>x.id===id);if(d)window.open('https://wa.me/'+d.phone.replace(/[^0-9]/g,''))}
-
-function openRating(){document.getElementById('rating-modal').classList.add('on')}
-function closeRating(){document.getElementById('rating-modal').classList.remove('on');currentStar=0;updateStars()}
-function setStar(n){currentStar=n;updateStars()}
-function updateStars(){
-  document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('on',i<currentStar));
-}
-function submitRating(){
-  if(!currentStar){alert('Please select a rating');return}
-  const comment = document.getElementById('rating-comment').value;
-  alert('✅ Thank you! Your review has been submitted for admin approval.\\n\\nIt will appear on the profile after verification.');
-  closeRating();
-  closeModal();
-}
-
-function openRegForm(){
-  window.open('mailto:register@fish.taxi?subject=Driver Registration&body=Name:%0APhone:%0ACity:%0ACar:%0A','_blank');
-}
-
+It will appear after verification.');closeRate();closeMod()}
+function openReg(){window.open('mailto:register@fish.taxi?subject=Driver Registration - fish.taxi&body=Name:%0APhone:%0ACity:%0ACar model:%0APlate number:','_blank')}
 function showTab(t){
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
-  document.getElementById('pg-'+t).classList.add('on');
+  document.getElementById('page-'+t).classList.add('on');
   document.getElementById('tab-'+t).classList.add('on');
-  if(t==='map') setTimeout(()=>map&&map.invalidateSize(),100);
+  if(t==='map')setTimeout(()=>map&&map.invalidateSize(),100);
 }
-
-function setLang(l){
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',
-    (l==='en'&&b.textContent==='EN')||(l==='bg'&&b.textContent==='БГ')||(l==='de'&&b.textContent==='DE')||(l==='fr'&&b.textContent==='FR')
-  ));
+function setLang(l){document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('on',(l==='en'&&b.textContent==='EN')||(l==='bg'&&b.textContent==='БГ')||(l==='de'&&b.textContent==='DE')||(l==='fr'&&b.textContent==='FR')))}
+function reqGPS(){
+  if(!navigator.geolocation)return;
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const {latitude:lt,longitude:ln}=pos.coords;
+    map.setView([lt,ln],14);
+    L.marker([lt,ln],{icon:L.divIcon({html:'<div style="background:var(--bl);border:3px solid #fff;border-radius:50%;width:14px;height:14px;box-shadow:0 0 10px #3b82f680"></div>',iconSize:[14,14],iconAnchor:[7,7],className:''})}).addTo(map).bindPopup('📍 You');
+  },()=>{});
 }
-
 window.addEventListener('DOMContentLoaded',()=>{
-  const c = CITIES.sofia;
-  map = L.map('map',{zoomControl:false,attributionControl:false}).setView([c.lat,c.lng],c.zoom);
+  const c=CITIES.sofia;
+  map=L.map('map',{zoomControl:false,attributionControl:false}).setView([c.lat,c.lng],c.zoom);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
   L.control.zoom({position:'topright'}).addTo(map);
-  
-  // Request GPS
-  requestGPS();
-
-  setTimeout(()=>{
-    renderMap();
-    renderDrivers();
-    const cd = DRIVERS.filter(d=>d.city==='sofia');
-    document.getElementById('cnt-online').textContent = cd.filter(d=>d.online).length;
-    document.getElementById('cnt-total').textContent = cd.length;
-    document.getElementById('ld').classList.add('hide');
-  },1200);
+  reqGPS();
+  setTimeout(()=>{renderMap();renderList();updCtr();document.getElementById('ld').classList.add('hide')},1000);
 });
-
-document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal()});
-document.getElementById('rating-modal').addEventListener('click',function(e){if(e.target===this)closeRating()});
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeMod()});
+document.getElementById('rmod').addEventListener('click',function(e){if(e.target===this)closeRate()});
 </script>
 </body>
 </html>
-"""
-
-with open('/home/claude/fishtaxi_v3.html', 'r') as f:
-    html = f.read()
-
-html = html + js_drivers + cities_js + main_js
-
-with open('/home/claude/fishtaxi_v3.html', 'w', encoding='utf-8') as f:
-    f.write(html)
-
-print(f"Final size: {len(html)} chars ({len(html)//1024}KB)")
-EOF
