@@ -208,58 +208,62 @@ async function sendOffline() {
   } catch(e) {}
 }
 
-function startGPS() {
+function getPos() {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject, {
+      enableHighAccuracy: false,
+      maximumAge: 20000,
+      timeout: 15000
+    });
+  });
+}
+
+async function startGPS() {
   setGPSBar('waiting', 'Requesting GPS...');
   log('Starting GPS...');
 
-  watchId = navigator.geolocation.watchPosition(
-    pos => {
-      const {latitude:lat, longitude:lng, accuracy, speed} = pos.coords;
-      lastLat = lat;
-      lastLng = lng;
-      lastAccuracy = accuracy;
+  // First fix
+  try {
+    const pos = await getPos();
+    onGPSFix(pos);
+  } catch(e) {
+    setGPSBar('error', 'GPS denied: ' + e.message);
+    log('GPS error: ' + e.message, 'err');
+    // Don't go offline — let user retry
+    return;
+  }
 
-      document.getElementById('val-lat').textContent = lat.toFixed(6);
-      document.getElementById('val-lng').textContent = lng.toFixed(6);
-
-      const accClass = accuracy < 20 ? 'acc-good' : accuracy < 50 ? 'acc-ok' : 'acc-bad';
-      document.getElementById('val-acc').innerHTML =
-        `<span class="acc-badge ${accClass}">±${Math.round(accuracy)}m</span>`;
-
-      if(speed !== null && speed !== undefined) {
-        document.getElementById('val-speed').textContent = Math.round(speed * 3.6) + ' km/h';
-      }
-
-      setGPSBar('active', `GPS active ±${Math.round(accuracy)}m`);
-    },
-    err => {
-      setGPSBar('error', 'GPS error: ' + err.message);
-      log('GPS error: ' + err.message, 'err');
-    },
-    {enableHighAccuracy: true, maximumAge: 10000, timeout: 30000}
-  );
-
-  // Send GPS every 15 seconds
-  sendInterval = setInterval(() => {
-    if(lastLat !== null && isOnline) {
+  // Poll every 15 seconds
+  sendInterval = setInterval(async () => {
+    if(!isOnline) return;
+    try {
+      const pos = await getPos();
+      onGPSFix(pos);
       sendGPS(lastLat, lastLng, true);
+    } catch(e) {
+      log('GPS poll error: ' + e.message, 'err');
     }
   }, 15000);
 
-  // Send immediately when first fix arrives
-  const firstFix = setInterval(() => {
-    if(lastLat !== null) {
-      sendGPS(lastLat, lastLng, true);
-      clearInterval(firstFix);
-    }
-  }, 1000);
+  // Send first fix immediately
+  if(lastLat !== null) sendGPS(lastLat, lastLng, true);
+}
+
+function onGPSFix(pos) {
+  const {latitude:lat, longitude:lng, accuracy, speed} = pos.coords;
+  lastLat = lat;
+  lastLng = lng;
+  lastAccuracy = accuracy;
+  document.getElementById('val-lat').textContent = lat.toFixed(6);
+  document.getElementById('val-lng').textContent = lng.toFixed(6);
+  const accClass = accuracy < 20 ? 'acc-good' : accuracy < 50 ? 'acc-ok' : 'acc-bad';
+  document.getElementById('val-acc').innerHTML =
+    `<span class="acc-badge ${accClass}">±${Math.round(accuracy)}m</span>`;
+  if(speed != null) document.getElementById('val-speed').textContent = Math.round(speed*3.6)+' km/h';
+  setGPSBar('active', `GPS active ±${Math.round(accuracy)}m`);
 }
 
 function stopGPS() {
-  if(watchId !== null) {
-    navigator.geolocation.clearWatch(watchId);
-    watchId = null;
-  }
   if(sendInterval !== null) {
     clearInterval(sendInterval);
     sendInterval = null;
