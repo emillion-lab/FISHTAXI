@@ -220,6 +220,9 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
       <option value="berlin">Berlin, Germany 🇩🇪</option>
       <option value="london">London, UK 🇬🇧</option>
       <option value="paris">Paris, France 🇫🇷</option>
+      <option value="vienna">Vienna, Austria 🇦🇹</option>
+      <option value="amsterdam">Amsterdam, Netherlands 🇳🇱</option>
+      <option value="barcelona">Barcelona, Spain 🇪🇸</option>
     </select>
   </div>
   <div id="map"></div>
@@ -240,13 +243,17 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
   <div class="filters" id="filters">
     <button class="flt on" data-f="all" onclick="setFilter('all',this)">All</button>
     <button class="flt" data-f="online" onclick="setFilter('online',this)">🟢 Online</button>
-    <button class="flt" data-f="revolut" onclick="setFilter('revolut',this)">💳 Revolut</button>
+    <button class="flt" data-f="revolut" onclick="setFilter('revolut',this)">💜 Revolut</button>
     <button class="flt" data-f="terminal" onclick="setFilter('terminal',this)">🖥 Terminal</button>
+    <button class="flt" data-f="cash" onclick="setFilter('cash',this)">💵 Cash</button>
     <button class="flt" data-f="electric" onclick="setFilter('electric',this)">⚡ Electric</button>
-    <button class="flt" data-f="english" onclick="setFilter('english',this)">🇬🇧 English</button>
+    <button class="flt" data-f="english" onclick="setFilter('english',this)">🇬🇧 EN</button>
+    <button class="flt" data-f="german" onclick="setFilter('german',this)">🇩🇪 DE</button>
+    <button class="flt" data-f="french" onclick="setFilter('french',this)">🇫🇷 FR</button>
     <button class="flt" data-f="nosmoker" onclick="setFilter('nosmoker',this)">🚭 No Smoke</button>
     <button class="flt" data-f="petfriendly" onclick="setFilter('petfriendly',this)">🐾 Pet OK</button>
     <button class="flt" data-f="childok" onclick="setFilter('childok',this)">👶 Child Seat</button>
+    <button class="flt" data-f="highrated" onclick="setFilter('highrated',this)">⭐ Top Rated</button>
   </div>
   <div class="dlist" id="dlist"></div>
 </div>
@@ -583,53 +590,4358 @@ const CITIES = {
   zurich: { lat: 47.3769, lng: 8.5417,  zoom: 13, label: 'Zürich 🇨🇭' },
   berlin: { lat: 52.5200, lng: 13.4050, zoom: 12, label: 'Berlin 🇩🇪' },
   london: { lat: 51.5074, lng: -0.1278, zoom: 12, label: 'London 🇬🇧' },
-  paris:  { lat: 48.8566, lng: 2.3522,  zoom: 12, label: 'Paris 🇫🇷' },
+  paris:   { lat: 48.8566, lng: 2.3522,  zoom: 12, label: 'Paris 🇫🇷' },
+  vienna:  { lat: 48.2082, lng: 16.3738, zoom: 13, label: 'Vienna 🇦🇹' },
+  amsterdam:{ lat: 52.3676, lng: 4.9041,  zoom: 13, label: 'Amsterdam 🇳🇱' },
+  barcelona:{ lat: 41.3851, lng: 2.1734,  zoom: 13, label: 'Barcelona 🇪🇸' },
 };
 
 // ── DEMO DRIVERS ─────────────────────────────────────────
 const DRIVERS = [
-  { id:1, name:'Emil M.', avatar:'🚗', city:'sofia', lat:42.6977, lng:23.3219,
-    car:'Tesla Model S • EK7834BK', online:true, rating:4.9, reviews:127,
-    payment:['revolut','terminal','cash'], langs:['bg','en','ru'],
-    electric:true, nosmoker:true, petfriendly:false, childok:true,
-    areas:'Sofia Center, Airport, Vitosha', phone:'+359888000001',
-    price:'Starting from 1.20 лв/km' },
-  { id:2, name:'Ivan P.', avatar:'🚙', city:'sofia', lat:42.7100, lng:23.3300,
-    car:'Mercedes E220 • СА1234АА', online:true, rating:4.8, reviews:89,
-    payment:['cash','terminal'], langs:['bg','en'],
-    electric:false, nosmoker:true, petfriendly:true, childok:false,
-    areas:'Sofia, Boyana, Dragalevtsi', phone:'+359888000002',
-    price:'Starting from 1.10 лв/km' },
-  { id:3, name:'Stefan K.', avatar:'🚕', city:'sofia', lat:42.6850, lng:23.3100,
-    car:'Toyota Camry • СА5678ВВ', online:false, rating:4.7, reviews:203,
-    payment:['revolut','cash'], langs:['bg'],
-    electric:false, nosmoker:false, petfriendly:false, childok:true,
-    areas:'Whole Sofia', phone:'+359888000003',
-    price:'Starting from 1.00 лв/km' },
-  { id:4, name:'Hans B.', avatar:'🚗', city:'zurich', lat:47.3769, lng:8.5417,
-    car:'BMW 5 Series • ZH·123·AB', online:true, rating:5.0, reviews:45,
-    payment:['revolut','terminal'], langs:['de','en','fr'],
-    electric:false, nosmoker:true, petfriendly:false, childok:true,
-    areas:'Zürich City, Airport, Winterthur', phone:'+41791000001',
-    price:'CHF 4.50/km' },
-  { id:5, name:'Klaus M.', avatar:'🚙', city:'zurich', lat:47.3900, lng:8.5500,
-    car:'Tesla Model 3 • ZH·456·CD', online:true, rating:4.9, reviews:67,
-    payment:['revolut','cash'], langs:['de','en'],
-    electric:true, nosmoker:true, petfriendly:true, childok:false,
-    areas:'Zürich, Zug, Baden', phone:'+41791000002',
-    price:'CHF 4.00/km' },
-  { id:6, name:'Pierre D.', avatar:'🚕', city:'paris', lat:48.8566, lng:2.3522,
-    car:'Peugeot 508 • AB-123-CD', online:true, rating:4.8, reviews:156,
-    payment:['revolut','terminal','cash'], langs:['fr','en'],
-    electric:false, nosmoker:true, petfriendly:false, childok:true,
-    areas:'Paris, CDG Airport, Versailles', phone:'+33612000001',
-    price:'€2.10/km' },
-  { id:7, name:'Marco B.', avatar:'🚗', city:'berlin', lat:52.5200, lng:13.4050,
-    car:'VW Passat • B·AB·1234', online:true, rating:4.7, reviews:98,
-    payment:['revolut','terminal'], langs:['de','en'],
-    electric:false, nosmoker:true, petfriendly:false, childok:false,
-    areas:'Berlin, BER Airport, Potsdam', phone:'+49157000001',
-    price:'€2.50/km' },
+  {
+    "id": 1,
+    "name": "Emil M.",
+    "avatar": "🚗",
+    "city": "sofia",
+    "lat": 42.7387,
+    "lng": 23.2829,
+    "car": "Tesla Model S • СА1037ВВ",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 21,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "bg",
+      "en"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000007",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 2,
+    "name": "Ivan P.",
+    "avatar": "🚙",
+    "city": "sofia",
+    "lat": 42.6697,
+    "lng": 23.2829,
+    "car": "Mercedes E220 • СА1074СС",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 29,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "bg"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000014",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 3,
+    "name": "Stefan K.",
+    "avatar": "🚕",
+    "city": "sofia",
+    "lat": 42.6557,
+    "lng": 23.3239,
+    "car": "Toyota Camry • СА1111АА",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 37,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "bg",
+      "ru"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000021",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 4,
+    "name": "Georgi D.",
+    "avatar": "🏎",
+    "city": "sofia",
+    "lat": 42.6797,
+    "lng": 23.3499,
+    "car": "BMW 520 • СА1148ВВ",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 45,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "bg",
+      "en",
+      "ru"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000028",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 5,
+    "name": "Petar A.",
+    "avatar": "🚐",
+    "city": "sofia",
+    "lat": 42.7207,
+    "lng": 23.3199,
+    "car": "Volkswagen Passat • СА1185СС",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 53,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "bg",
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000035",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 6,
+    "name": "Nikolay V.",
+    "avatar": "🚗",
+    "city": "sofia",
+    "lat": 42.6527,
+    "lng": 23.2769,
+    "car": "Skoda Octavia • СА1222АА",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 61,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "bg",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000042",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 7,
+    "name": "Martin T.",
+    "avatar": "🚙",
+    "city": "sofia",
+    "lat": 42.6727,
+    "lng": 23.3469,
+    "car": "Honda Accord • СА1259ВВ",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 69,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "bg"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000049",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 8,
+    "name": "Dimitar H.",
+    "avatar": "🚕",
+    "city": "sofia",
+    "lat": 42.6997,
+    "lng": 23.3679,
+    "car": "Hyundai Sonata • СА1296СС",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 77,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "bg",
+      "ru"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000056",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 9,
+    "name": "Boyko R.",
+    "avatar": "🏎",
+    "city": "sofia",
+    "lat": 42.7077,
+    "lng": 23.3649,
+    "car": "Kia Optima • СА1333АА",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 85,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "bg",
+      "en",
+      "ru"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000063",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 10,
+    "name": "Todor S.",
+    "avatar": "🚐",
+    "city": "sofia",
+    "lat": 42.6787,
+    "lng": 23.2829,
+    "car": "Ford Mondeo • СА1370ВВ",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 93,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "bg",
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000070",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 11,
+    "name": "Plamen N.",
+    "avatar": "🚗",
+    "city": "sofia",
+    "lat": 42.7007,
+    "lng": 23.2859,
+    "car": "Tesla Model S • СА1407СС",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 101,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "bg",
+      "en"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000077",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 12,
+    "name": "Kiril M.",
+    "avatar": "🚙",
+    "city": "sofia",
+    "lat": 42.6587,
+    "lng": 23.3399,
+    "car": "Mercedes E220 • СА1444АА",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 109,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "bg"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000084",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 13,
+    "name": "Hristo B.",
+    "avatar": "🚕",
+    "city": "sofia",
+    "lat": 42.7047,
+    "lng": 23.3249,
+    "car": "Toyota Camry • СА1481ВВ",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 117,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "bg",
+      "ru"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000091",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 14,
+    "name": "Vasil G.",
+    "avatar": "🏎",
+    "city": "sofia",
+    "lat": 42.7197,
+    "lng": 23.3249,
+    "car": "BMW 520 • СА1518СС",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 125,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "bg",
+      "en",
+      "ru"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000098",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 15,
+    "name": "Angel I.",
+    "avatar": "🚐",
+    "city": "sofia",
+    "lat": 42.7237,
+    "lng": 23.2899,
+    "car": "Volkswagen Passat • СА1555АА",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 133,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "bg",
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000105",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 16,
+    "name": "Rumen C.",
+    "avatar": "🚗",
+    "city": "sofia",
+    "lat": 42.7277,
+    "lng": 23.3419,
+    "car": "Skoda Octavia • СА1592ВВ",
+    "online": false,
+    "rating": 4.5,
+    "reviews": 141,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "bg",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000112",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 17,
+    "name": "Stoyan F.",
+    "avatar": "🚙",
+    "city": "sofia",
+    "lat": 42.6677,
+    "lng": 23.2869,
+    "car": "Honda Accord • СА1629СС",
+    "online": false,
+    "rating": 4.6,
+    "reviews": 149,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "bg"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000119",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 18,
+    "name": "Lyubomir E.",
+    "avatar": "🚕",
+    "city": "sofia",
+    "lat": 42.7167,
+    "lng": 23.3319,
+    "car": "Hyundai Sonata • СА1666АА",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 157,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "bg",
+      "ru"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000126",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 19,
+    "name": "Kaloyan Z.",
+    "avatar": "🏎",
+    "city": "sofia",
+    "lat": 42.7267,
+    "lng": 23.3589,
+    "car": "Kia Optima • СА1703ВВ",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 165,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "bg",
+      "en",
+      "ru"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000133",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 20,
+    "name": "Svetoslav L.",
+    "avatar": "🚐",
+    "city": "sofia",
+    "lat": 42.7017,
+    "lng": 23.3539,
+    "car": "Ford Mondeo • СА1740СС",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 173,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "bg",
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Sofia + surroundings",
+    "phone": "+359810000140",
+    "price": "Starting from 1.20 лв/km"
+  },
+  {
+    "id": 21,
+    "name": "Hans B.",
+    "avatar": "🚗",
+    "city": "zurich",
+    "lat": 47.3769,
+    "lng": 8.5617,
+    "car": "BMW 5 Series • ZH·107·CD",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 41,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000147",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 22,
+    "name": "Klaus M.",
+    "avatar": "🚙",
+    "city": "zurich",
+    "lat": 47.4219,
+    "lng": 8.5207,
+    "car": "Mercedes E-Class • ZH·114·AB",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 49,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "fr",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000154",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 23,
+    "name": "Werner S.",
+    "avatar": "🚕",
+    "city": "zurich",
+    "lat": 47.3339,
+    "lng": 8.5407,
+    "car": "Tesla Model 3 • ZH·121·CD",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 57,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de"
+    ],
+    "electric": true,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000161",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 24,
+    "name": "Friedrich K.",
+    "avatar": "🏎",
+    "city": "zurich",
+    "lat": 47.3479,
+    "lng": 8.5277,
+    "car": "Audi A6 • ZH·128·AB",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 65,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en",
+      "it"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000168",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 25,
+    "name": "Günter H.",
+    "avatar": "🚐",
+    "city": "zurich",
+    "lat": 47.4179,
+    "lng": 8.5047,
+    "car": "Volkswagen Passat • ZH·135·CD",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 73,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000175",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 26,
+    "name": "Dieter L.",
+    "avatar": "🚗",
+    "city": "zurich",
+    "lat": 47.4229,
+    "lng": 8.5457,
+    "car": "Volvo V90 • ZH·142·AB",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 81,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000182",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 27,
+    "name": "Helmut W.",
+    "avatar": "🚙",
+    "city": "zurich",
+    "lat": 47.3929,
+    "lng": 8.5297,
+    "car": "Lexus ES • ZH·149·CD",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 89,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "fr",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000189",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 28,
+    "name": "Bernhard R.",
+    "avatar": "🚕",
+    "city": "zurich",
+    "lat": 47.4219,
+    "lng": 8.5437,
+    "car": "Mercedes S-Class • ZH·156·AB",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 97,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000196",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 29,
+    "name": "Wolfgang T.",
+    "avatar": "🏎",
+    "city": "zurich",
+    "lat": 47.3799,
+    "lng": 8.4977,
+    "car": "Porsche Cayenne • ZH·163·CD",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 105,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "en",
+      "it"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000203",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 30,
+    "name": "Manfred A.",
+    "avatar": "🚐",
+    "city": "zurich",
+    "lat": 47.3839,
+    "lng": 8.5057,
+    "car": "Tesla Model X • ZH·170·AB",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 113,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "fr"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000210",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 31,
+    "name": "Jürgen P.",
+    "avatar": "🚗",
+    "city": "zurich",
+    "lat": 47.3949,
+    "lng": 8.5287,
+    "car": "BMW 5 Series • ZH·177·CD",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 121,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000217",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 32,
+    "name": "Rudolf N.",
+    "avatar": "🚙",
+    "city": "zurich",
+    "lat": 47.3529,
+    "lng": 8.5037,
+    "car": "Mercedes E-Class • ZH·184·AB",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 129,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "fr",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000224",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 33,
+    "name": "Gerhard F.",
+    "avatar": "🚕",
+    "city": "zurich",
+    "lat": 47.4089,
+    "lng": 8.5157,
+    "car": "Tesla Model 3 • ZH·191·CD",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 137,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000231",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 34,
+    "name": "Heinrich C.",
+    "avatar": "🏎",
+    "city": "zurich",
+    "lat": 47.3929,
+    "lng": 8.5567,
+    "car": "Audi A6 • ZH·198·AB",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 145,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en",
+      "it"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000238",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 35,
+    "name": "Siegfried D.",
+    "avatar": "🚐",
+    "city": "zurich",
+    "lat": 47.3799,
+    "lng": 8.5407,
+    "car": "Volkswagen Passat • ZH·205·CD",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 153,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000245",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 36,
+    "name": "Horst E.",
+    "avatar": "🚗",
+    "city": "zurich",
+    "lat": 47.3389,
+    "lng": 8.5867,
+    "car": "Volvo V90 • ZH·212·AB",
+    "online": false,
+    "rating": 4.5,
+    "reviews": 161,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000252",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 37,
+    "name": "Erich G.",
+    "avatar": "🚙",
+    "city": "zurich",
+    "lat": 47.3669,
+    "lng": 8.4977,
+    "car": "Lexus ES • ZH·219·CD",
+    "online": false,
+    "rating": 4.6,
+    "reviews": 169,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "fr",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000259",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 38,
+    "name": "Konrad I.",
+    "avatar": "🚕",
+    "city": "zurich",
+    "lat": 47.3739,
+    "lng": 8.5277,
+    "car": "Mercedes S-Class • ZH·226·AB",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 177,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000266",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 39,
+    "name": "Alfred J.",
+    "avatar": "🏎",
+    "city": "zurich",
+    "lat": 47.3889,
+    "lng": 8.4977,
+    "car": "Porsche Cayenne • ZH·233·CD",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 185,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en",
+      "it"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000273",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 40,
+    "name": "Otto V.",
+    "avatar": "🚐",
+    "city": "zurich",
+    "lat": 47.3409,
+    "lng": 8.5637,
+    "car": "Tesla Model X • ZH·240·AB",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 193,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "fr"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Zurich + surroundings",
+    "phone": "+417910000280",
+    "price": "Starting from 4.50 CHF/km"
+  },
+  {
+    "id": 41,
+    "name": "Hans B.",
+    "avatar": "🚗",
+    "city": "berlin",
+    "lat": 52.503,
+    "lng": 13.447,
+    "car": "VW Passat • B·CD·1013",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 61,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000287",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 42,
+    "name": "Klaus M.",
+    "avatar": "🚙",
+    "city": "berlin",
+    "lat": 52.554,
+    "lng": 13.402,
+    "car": "Mercedes C-Class • B·EF·1026",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 69,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000294",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 43,
+    "name": "Werner S.",
+    "avatar": "🚕",
+    "city": "berlin",
+    "lat": 52.531,
+    "lng": 13.388,
+    "car": "BMW 3 Series • B·AB·1039",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 77,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "tr",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000301",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 44,
+    "name": "Friedrich K.",
+    "avatar": "🏎",
+    "city": "berlin",
+    "lat": 52.546,
+    "lng": 13.394,
+    "car": "Audi A4 • B·CD·1052",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 85,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en",
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000308",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 45,
+    "name": "Günter H.",
+    "avatar": "🚐",
+    "city": "berlin",
+    "lat": 52.487,
+    "lng": 13.39,
+    "car": "Tesla Model 3 • B·EF·1065",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 93,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "ru"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000315",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 46,
+    "name": "Dieter L.",
+    "avatar": "🚗",
+    "city": "berlin",
+    "lat": 52.478,
+    "lng": 13.431,
+    "car": "Ford Mondeo • B·AB·1078",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 101,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000322",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 47,
+    "name": "Helmut W.",
+    "avatar": "🚙",
+    "city": "berlin",
+    "lat": 52.562,
+    "lng": 13.415,
+    "car": "Skoda Superb • B·CD·1091",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 109,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000329",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 48,
+    "name": "Bernhard R.",
+    "avatar": "🚕",
+    "city": "berlin",
+    "lat": 52.525,
+    "lng": 13.422,
+    "car": "Opel Insignia • B·EF·1104",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 117,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "tr",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000336",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 49,
+    "name": "Wolfgang T.",
+    "avatar": "🏎",
+    "city": "berlin",
+    "lat": 52.519,
+    "lng": 13.453,
+    "car": "Toyota Avensis • B·AB·1117",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 125,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "en",
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000343",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 50,
+    "name": "Manfred A.",
+    "avatar": "🚐",
+    "city": "berlin",
+    "lat": 52.527,
+    "lng": 13.38,
+    "car": "Hyundai i40 • B·CD·1130",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 83,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "ru"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000350",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 51,
+    "name": "Jürgen P.",
+    "avatar": "🚗",
+    "city": "berlin",
+    "lat": 52.561,
+    "lng": 13.419,
+    "car": "VW Passat • B·EF·1143",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 91,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000357",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 52,
+    "name": "Rudolf N.",
+    "avatar": "🚙",
+    "city": "berlin",
+    "lat": 52.563,
+    "lng": 13.405,
+    "car": "Mercedes C-Class • B·AB·1156",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 99,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000364",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 53,
+    "name": "Gerhard F.",
+    "avatar": "🚕",
+    "city": "berlin",
+    "lat": 52.544,
+    "lng": 13.368,
+    "car": "BMW 3 Series • B·CD·1169",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 107,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "tr",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000371",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 54,
+    "name": "Heinrich C.",
+    "avatar": "🏎",
+    "city": "berlin",
+    "lat": 52.491,
+    "lng": 13.444,
+    "car": "Audi A4 • B·EF·1182",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 115,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en",
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000378",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 55,
+    "name": "Siegfried D.",
+    "avatar": "🚐",
+    "city": "berlin",
+    "lat": 52.541,
+    "lng": 13.406,
+    "car": "Tesla Model 3 • B·AB·1195",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 123,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "ru"
+    ],
+    "electric": true,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000385",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 56,
+    "name": "Horst E.",
+    "avatar": "🚗",
+    "city": "berlin",
+    "lat": 52.548,
+    "lng": 13.371,
+    "car": "Ford Mondeo • B·CD·1208",
+    "online": false,
+    "rating": 4.5,
+    "reviews": 131,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000392",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 57,
+    "name": "Erich G.",
+    "avatar": "🚙",
+    "city": "berlin",
+    "lat": 52.501,
+    "lng": 13.377,
+    "car": "Skoda Superb • B·EF·1221",
+    "online": false,
+    "rating": 4.6,
+    "reviews": 139,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000399",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 58,
+    "name": "Konrad I.",
+    "avatar": "🚕",
+    "city": "berlin",
+    "lat": 52.57,
+    "lng": 13.444,
+    "car": "Opel Insignia • B·AB·1234",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 147,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "tr",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000406",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 59,
+    "name": "Alfred J.",
+    "avatar": "🏎",
+    "city": "berlin",
+    "lat": 52.554,
+    "lng": 13.435,
+    "car": "Toyota Avensis • B·CD·1247",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 155,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en",
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000413",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 60,
+    "name": "Otto V.",
+    "avatar": "🚐",
+    "city": "berlin",
+    "lat": 52.48,
+    "lng": 13.404,
+    "car": "Hyundai i40 • B·EF·1260",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 163,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "ru"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Berlin + surroundings",
+    "phone": "+491510000420",
+    "price": "Starting from 2.50 €/km"
+  },
+  {
+    "id": 61,
+    "name": "James W.",
+    "avatar": "🚗",
+    "city": "london",
+    "lat": 51.5454,
+    "lng": -0.0908,
+    "car": "Toyota Prius • CD11 HIJ",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 31,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "London + surroundings",
+    "phone": "+447710000427",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 62,
+    "name": "John S.",
+    "avatar": "🚙",
+    "city": "london",
+    "lat": 51.5174,
+    "lng": -0.1248,
+    "car": "Ford Galaxy • AB12 EFG",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 39,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "London + surroundings",
+    "phone": "+447710000434",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 63,
+    "name": "Robert B.",
+    "avatar": "🚕",
+    "city": "london",
+    "lat": 51.5384,
+    "lng": -0.1418,
+    "car": "Mercedes Vito • CD13 HIJ",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 47,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "en",
+      "hi"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "London + surroundings",
+    "phone": "+447710000441",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 64,
+    "name": "Michael D.",
+    "avatar": "🏎",
+    "city": "london",
+    "lat": 51.5434,
+    "lng": -0.1378,
+    "car": "Vauxhall Insignia • AB14 EFG",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 55,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "ar"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "London + surroundings",
+    "phone": "+447710000448",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 65,
+    "name": "William J.",
+    "avatar": "🚐",
+    "city": "london",
+    "lat": 51.4844,
+    "lng": -0.1778,
+    "car": "BMW 5 Series • CD15 HIJ",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 63,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "pl"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "London + surroundings",
+    "phone": "+447710000455",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 66,
+    "name": "David A.",
+    "avatar": "🚗",
+    "city": "london",
+    "lat": 51.5524,
+    "lng": -0.1768,
+    "car": "Hyundai Ioniq • AB16 EFG",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 71,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "en"
+    ],
+    "electric": true,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "London + surroundings",
+    "phone": "+447710000462",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 67,
+    "name": "Richard N.",
+    "avatar": "🚙",
+    "city": "london",
+    "lat": 51.5204,
+    "lng": -0.1318,
+    "car": "Tesla Model 3 • CD17 HIJ",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 79,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "fr"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "London + surroundings",
+    "phone": "+447710000469",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 68,
+    "name": "Joseph H.",
+    "avatar": "🚕",
+    "city": "london",
+    "lat": 51.5234,
+    "lng": -0.0868,
+    "car": "Kia e-Niro • AB18 EFG",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 87,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "hi"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "London + surroundings",
+    "phone": "+447710000476",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 69,
+    "name": "Thomas C.",
+    "avatar": "🏎",
+    "city": "london",
+    "lat": 51.4654,
+    "lng": -0.1488,
+    "car": "VW Passat • CD19 HIJ",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 95,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "en",
+      "ar"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "London + surroundings",
+    "phone": "+447710000483",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 70,
+    "name": "Charles F.",
+    "avatar": "🚐",
+    "city": "london",
+    "lat": 51.4744,
+    "lng": -0.1378,
+    "car": "Skoda Octavia • AB20 EFG",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 103,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "pl"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "London + surroundings",
+    "phone": "+447710000490",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 71,
+    "name": "Christopher E.",
+    "avatar": "🚗",
+    "city": "london",
+    "lat": 51.5384,
+    "lng": -0.1638,
+    "car": "Toyota Prius • CD21 HIJ",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 111,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "London + surroundings",
+    "phone": "+447710000497",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 72,
+    "name": "Daniel G.",
+    "avatar": "🚙",
+    "city": "london",
+    "lat": 51.5434,
+    "lng": -0.1098,
+    "car": "Ford Galaxy • AB22 EFG",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 119,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "en",
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "London + surroundings",
+    "phone": "+447710000504",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 73,
+    "name": "Matthew I.",
+    "avatar": "🚕",
+    "city": "london",
+    "lat": 51.4934,
+    "lng": -0.1078,
+    "car": "Mercedes Vito • CD23 HIJ",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 127,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "hi"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "London + surroundings",
+    "phone": "+447710000511",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 74,
+    "name": "Anthony K.",
+    "avatar": "🏎",
+    "city": "london",
+    "lat": 51.5034,
+    "lng": -0.1178,
+    "car": "Vauxhall Insignia • AB24 EFG",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 135,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "ar"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "London + surroundings",
+    "phone": "+447710000518",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 75,
+    "name": "Mark L.",
+    "avatar": "🚐",
+    "city": "london",
+    "lat": 51.5334,
+    "lng": -0.1368,
+    "car": "BMW 5 Series • CD25 HIJ",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 143,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "en",
+      "pl"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "London + surroundings",
+    "phone": "+447710000525",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 76,
+    "name": "Donald P.",
+    "avatar": "🚗",
+    "city": "london",
+    "lat": 51.4634,
+    "lng": -0.1648,
+    "car": "Hyundai Ioniq • AB26 EFG",
+    "online": false,
+    "rating": 4.5,
+    "reviews": 151,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "en"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "London + surroundings",
+    "phone": "+447710000532",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 77,
+    "name": "Steven Q.",
+    "avatar": "🚙",
+    "city": "london",
+    "lat": 51.4634,
+    "lng": -0.1668,
+    "car": "Tesla Model 3 • CD27 HIJ",
+    "online": false,
+    "rating": 4.6,
+    "reviews": 159,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "fr"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "London + surroundings",
+    "phone": "+447710000539",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 78,
+    "name": "Paul R.",
+    "avatar": "🚕",
+    "city": "london",
+    "lat": 51.5434,
+    "lng": -0.1678,
+    "car": "Kia e-Niro • AB28 EFG",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 167,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "en",
+      "hi"
+    ],
+    "electric": true,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "London + surroundings",
+    "phone": "+447710000546",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 79,
+    "name": "Andrew T.",
+    "avatar": "🏎",
+    "city": "london",
+    "lat": 51.5294,
+    "lng": -0.1328,
+    "car": "VW Passat • CD29 HIJ",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 175,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "ar"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "London + surroundings",
+    "phone": "+447710000553",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 80,
+    "name": "Kenneth U.",
+    "avatar": "🚐",
+    "city": "london",
+    "lat": 51.4694,
+    "lng": -0.1358,
+    "car": "Skoda Octavia • AB30 EFG",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 183,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "pl"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "London + surroundings",
+    "phone": "+447710000560",
+    "price": "Starting from 3.20 £/km"
+  },
+  {
+    "id": 81,
+    "name": "Pierre D.",
+    "avatar": "🚗",
+    "city": "paris",
+    "lat": 48.8316,
+    "lng": 2.3492,
+    "car": "Peugeot 508 • CD-107-GH",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 51,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "fr",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000567",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 82,
+    "name": "Jean L.",
+    "avatar": "🚙",
+    "city": "paris",
+    "lat": 48.8426,
+    "lng": 2.3362,
+    "car": "Renault Talisman • AB-114-EF",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 59,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000574",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 83,
+    "name": "Michel B.",
+    "avatar": "🚕",
+    "city": "paris",
+    "lat": 48.8176,
+    "lng": 2.3112,
+    "car": "Citroën C5 • CD-121-GH",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 67,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "fr",
+      "ar",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000581",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 84,
+    "name": "François M.",
+    "avatar": "🏎",
+    "city": "paris",
+    "lat": 48.8936,
+    "lng": 2.3702,
+    "car": "Mercedes E-Class • AB-128-EF",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 75,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "fr",
+      "es"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000588",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 85,
+    "name": "Philippe R.",
+    "avatar": "🚐",
+    "city": "paris",
+    "lat": 48.8606,
+    "lng": 2.3782,
+    "car": "Tesla Model 3 • CD-135-GH",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 83,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "fr",
+      "en",
+      "de"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000595",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 86,
+    "name": "Jacques T.",
+    "avatar": "🚗",
+    "city": "paris",
+    "lat": 48.8976,
+    "lng": 2.3402,
+    "car": "BMW 5 Series • AB-142-EF",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 91,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "fr",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000602",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 87,
+    "name": "Alain N.",
+    "avatar": "🚙",
+    "city": "paris",
+    "lat": 48.8196,
+    "lng": 2.3042,
+    "car": "Audi A6 • CD-149-GH",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 99,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000609",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 88,
+    "name": "Bernard C.",
+    "avatar": "🚕",
+    "city": "paris",
+    "lat": 48.8546,
+    "lng": 2.3852,
+    "car": "Volkswagen Passat • AB-156-EF",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 107,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "fr",
+      "ar",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000616",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 89,
+    "name": "Claude F.",
+    "avatar": "🏎",
+    "city": "paris",
+    "lat": 48.8836,
+    "lng": 2.3172,
+    "car": "Toyota Camry • CD-163-GH",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 115,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "fr",
+      "es"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000623",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 90,
+    "name": "René G.",
+    "avatar": "🚐",
+    "city": "paris",
+    "lat": 48.8406,
+    "lng": 2.3262,
+    "car": "DS 9 • AB-170-EF",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 123,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "fr",
+      "en",
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000630",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 91,
+    "name": "André H.",
+    "avatar": "🚗",
+    "city": "paris",
+    "lat": 48.8446,
+    "lng": 2.3682,
+    "car": "Peugeot 508 • CD-177-GH",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 131,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "fr",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000637",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 92,
+    "name": "Henri I.",
+    "avatar": "🚙",
+    "city": "paris",
+    "lat": 48.8096,
+    "lng": 2.3112,
+    "car": "Renault Talisman • AB-184-EF",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 139,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000644",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 93,
+    "name": "Louis J.",
+    "avatar": "🚕",
+    "city": "paris",
+    "lat": 48.8166,
+    "lng": 2.3762,
+    "car": "Citroën C5 • CD-191-GH",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 147,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "fr",
+      "ar",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000651",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 94,
+    "name": "Marcel K.",
+    "avatar": "🏎",
+    "city": "paris",
+    "lat": 48.8586,
+    "lng": 2.3212,
+    "car": "Mercedes E-Class • AB-198-EF",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 155,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "fr",
+      "es"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000658",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 95,
+    "name": "Paul O.",
+    "avatar": "🚐",
+    "city": "paris",
+    "lat": 48.8386,
+    "lng": 2.3112,
+    "car": "Tesla Model 3 • CD-205-GH",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 163,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "fr",
+      "en",
+      "de"
+    ],
+    "electric": true,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000665",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 96,
+    "name": "Roger Q.",
+    "avatar": "🚗",
+    "city": "paris",
+    "lat": 48.8906,
+    "lng": 2.3452,
+    "car": "BMW 5 Series • AB-212-EF",
+    "online": false,
+    "rating": 4.5,
+    "reviews": 171,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "fr",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000672",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 97,
+    "name": "Robert S.",
+    "avatar": "🚙",
+    "city": "paris",
+    "lat": 48.8506,
+    "lng": 2.3882,
+    "car": "Audi A6 • CD-219-GH",
+    "online": false,
+    "rating": 4.6,
+    "reviews": 179,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000679",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 98,
+    "name": "Charles U.",
+    "avatar": "🚕",
+    "city": "paris",
+    "lat": 48.8356,
+    "lng": 2.3552,
+    "car": "Volkswagen Passat • AB-226-EF",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 187,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "fr",
+      "ar",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000686",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 99,
+    "name": "Georges W.",
+    "avatar": "🏎",
+    "city": "paris",
+    "lat": 48.8696,
+    "lng": 2.3652,
+    "car": "Toyota Camry • CD-233-GH",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 195,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "fr",
+      "es"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000693",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 100,
+    "name": "Émile X.",
+    "avatar": "🚐",
+    "city": "paris",
+    "lat": 48.8916,
+    "lng": 2.3922,
+    "car": "DS 9 • AB-240-EF",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 153,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "fr",
+      "en",
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Paris + surroundings",
+    "phone": "+336110000700",
+    "price": "Starting from 2.10 €/km"
+  },
+  {
+    "id": 101,
+    "name": "Hans B.",
+    "avatar": "🚗",
+    "city": "vienna",
+    "lat": 48.2582,
+    "lng": 16.3948,
+    "car": "Mercedes E-Class • W 111CD",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 21,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000707",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 102,
+    "name": "Klaus M.",
+    "avatar": "🚙",
+    "city": "vienna",
+    "lat": 48.2382,
+    "lng": 16.3858,
+    "car": "BMW 5 Series • W 122AB",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 29,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000714",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 103,
+    "name": "Werner S.",
+    "avatar": "🚕",
+    "city": "vienna",
+    "lat": 48.1612,
+    "lng": 16.3778,
+    "car": "Audi A6 • W 133CD",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 37,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "hu",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000721",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 104,
+    "name": "Friedrich K.",
+    "avatar": "🏎",
+    "city": "vienna",
+    "lat": 48.1762,
+    "lng": 16.3498,
+    "car": "VW Passat • W 144AB",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 45,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "it",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000728",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 105,
+    "name": "Günter H.",
+    "avatar": "🚐",
+    "city": "vienna",
+    "lat": 48.1602,
+    "lng": 16.3608,
+    "car": "Tesla Model 3 • W 155CD",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 53,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "fr"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000735",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 106,
+    "name": "Dieter L.",
+    "avatar": "🚗",
+    "city": "vienna",
+    "lat": 48.2282,
+    "lng": 16.3568,
+    "car": "Skoda Superb • W 166AB",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 61,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000742",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 107,
+    "name": "Helmut W.",
+    "avatar": "🚙",
+    "city": "vienna",
+    "lat": 48.1712,
+    "lng": 16.3678,
+    "car": "Volvo V60 • W 177CD",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 69,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000749",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 108,
+    "name": "Bernhard R.",
+    "avatar": "🚕",
+    "city": "vienna",
+    "lat": 48.1862,
+    "lng": 16.3348,
+    "car": "Ford Mondeo • W 188AB",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 77,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "hu",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000756",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 109,
+    "name": "Wolfgang T.",
+    "avatar": "🏎",
+    "city": "vienna",
+    "lat": 48.2562,
+    "lng": 16.3598,
+    "car": "Opel Insignia • W 199CD",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 85,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "it",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000763",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 110,
+    "name": "Manfred A.",
+    "avatar": "🚐",
+    "city": "vienna",
+    "lat": 48.2162,
+    "lng": 16.4048,
+    "car": "Hyundai Sonata • W 210AB",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 93,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000770",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 111,
+    "name": "Jürgen P.",
+    "avatar": "🚗",
+    "city": "vienna",
+    "lat": 48.2352,
+    "lng": 16.3578,
+    "car": "Mercedes E-Class • W 221CD",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 101,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000777",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 112,
+    "name": "Rudolf N.",
+    "avatar": "🚙",
+    "city": "vienna",
+    "lat": 48.2022,
+    "lng": 16.3858,
+    "car": "BMW 5 Series • W 232AB",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 109,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000784",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 113,
+    "name": "Gerhard F.",
+    "avatar": "🚕",
+    "city": "vienna",
+    "lat": 48.2552,
+    "lng": 16.3738,
+    "car": "Audi A6 • W 243CD",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 117,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "hu",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000791",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 114,
+    "name": "Heinrich C.",
+    "avatar": "🏎",
+    "city": "vienna",
+    "lat": 48.2112,
+    "lng": 16.3958,
+    "car": "VW Passat • W 254AB",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 125,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "it",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000798",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 115,
+    "name": "Siegfried D.",
+    "avatar": "🚐",
+    "city": "vienna",
+    "lat": 48.1962,
+    "lng": 16.3918,
+    "car": "Tesla Model 3 • W 265CD",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 133,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "fr"
+    ],
+    "electric": true,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000805",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 116,
+    "name": "Horst E.",
+    "avatar": "🚗",
+    "city": "vienna",
+    "lat": 48.2032,
+    "lng": 16.4188,
+    "car": "Skoda Superb • W 276AB",
+    "online": false,
+    "rating": 4.5,
+    "reviews": 141,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000812",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 117,
+    "name": "Erich G.",
+    "avatar": "🚙",
+    "city": "vienna",
+    "lat": 48.1922,
+    "lng": 16.3578,
+    "car": "Volvo V60 • W 287CD",
+    "online": false,
+    "rating": 4.6,
+    "reviews": 149,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000819",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 118,
+    "name": "Konrad I.",
+    "avatar": "🚕",
+    "city": "vienna",
+    "lat": 48.2082,
+    "lng": 16.3938,
+    "car": "Ford Mondeo • W 298AB",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 157,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "de",
+      "hu",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000826",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 119,
+    "name": "Alfred J.",
+    "avatar": "🏎",
+    "city": "vienna",
+    "lat": 48.1742,
+    "lng": 16.4208,
+    "car": "Opel Insignia • W 309CD",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 165,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "it",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000833",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 120,
+    "name": "Otto V.",
+    "avatar": "🚐",
+    "city": "vienna",
+    "lat": 48.2242,
+    "lng": 16.3358,
+    "car": "Hyundai Sonata • W 320AB",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 173,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "de",
+      "fr"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Vienna + surroundings",
+    "phone": "+436910000840",
+    "price": "Starting from 2.30 €/km"
+  },
+  {
+    "id": 121,
+    "name": "Jan V.",
+    "avatar": "🚗",
+    "city": "amsterdam",
+    "lat": 52.3576,
+    "lng": 4.8981,
+    "car": "Tesla Model 3 • CD-109-GH",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 41,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "nl",
+      "en"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000847",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 122,
+    "name": "Pieter D.",
+    "avatar": "🚙",
+    "city": "amsterdam",
+    "lat": 52.3836,
+    "lng": 4.9061,
+    "car": "Peugeot 508 • AB-118-EF",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 49,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "nl"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000854",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 123,
+    "name": "Hendrik B.",
+    "avatar": "🚕",
+    "city": "amsterdam",
+    "lat": 52.4046,
+    "lng": 4.8941,
+    "car": "BMW 5 Series • CD-127-GH",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 57,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "nl",
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000861",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 124,
+    "name": "Cornelis M.",
+    "avatar": "🏎",
+    "city": "amsterdam",
+    "lat": 52.3196,
+    "lng": 4.9401,
+    "car": "Mercedes E-Class • AB-136-EF",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 65,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "fr",
+      "nl"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000868",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 125,
+    "name": "Johannes S.",
+    "avatar": "🚐",
+    "city": "amsterdam",
+    "lat": 52.3546,
+    "lng": 4.8781,
+    "car": "VW Passat • CD-145-GH",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 73,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "nl"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000875",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 126,
+    "name": "Willem T.",
+    "avatar": "🚗",
+    "city": "amsterdam",
+    "lat": 52.3346,
+    "lng": 4.9411,
+    "car": "Toyota Prius • AB-154-EF",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 81,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "nl",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000882",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 127,
+    "name": "Gerrit N.",
+    "avatar": "🚙",
+    "city": "amsterdam",
+    "lat": 52.3316,
+    "lng": 4.8741,
+    "car": "Renault Talisman • CD-163-GH",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 89,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "nl"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000889",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 128,
+    "name": "Dirk F.",
+    "avatar": "🚕",
+    "city": "amsterdam",
+    "lat": 52.3616,
+    "lng": 4.9301,
+    "car": "Volvo S90 • AB-172-EF",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 97,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "nl",
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000896",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 129,
+    "name": "Jacob C.",
+    "avatar": "🏎",
+    "city": "amsterdam",
+    "lat": 52.3856,
+    "lng": 4.9431,
+    "car": "Audi A6 • CD-181-GH",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 105,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "en",
+      "fr",
+      "nl"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000903",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 130,
+    "name": "Adriaan G.",
+    "avatar": "🚐",
+    "city": "amsterdam",
+    "lat": 52.3436,
+    "lng": 4.9281,
+    "car": "Skoda Superb • AB-190-EF",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 113,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "nl"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000910",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 131,
+    "name": "Maarten H.",
+    "avatar": "🚗",
+    "city": "amsterdam",
+    "lat": 52.3786,
+    "lng": 4.8581,
+    "car": "Tesla Model 3 • CD-199-GH",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 121,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "nl",
+      "en"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000917",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 132,
+    "name": "Sjoerd I.",
+    "avatar": "🚙",
+    "city": "amsterdam",
+    "lat": 52.3576,
+    "lng": 4.9391,
+    "car": "Peugeot 508 • AB-208-EF",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 129,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "en",
+      "nl"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000924",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 133,
+    "name": "Klaas J.",
+    "avatar": "🚕",
+    "city": "amsterdam",
+    "lat": 52.3886,
+    "lng": 4.8751,
+    "car": "BMW 5 Series • CD-217-GH",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 137,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "nl",
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000931",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 134,
+    "name": "Leendert K.",
+    "avatar": "🏎",
+    "city": "amsterdam",
+    "lat": 52.3546,
+    "lng": 4.9271,
+    "car": "Mercedes E-Class • AB-226-EF",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 145,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "fr",
+      "nl"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000938",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 135,
+    "name": "Arjan L.",
+    "avatar": "🚐",
+    "city": "amsterdam",
+    "lat": 52.3586,
+    "lng": 4.8761,
+    "car": "VW Passat • CD-235-GH",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 153,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "nl"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000945",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 136,
+    "name": "Bas O.",
+    "avatar": "🚗",
+    "city": "amsterdam",
+    "lat": 52.3856,
+    "lng": 4.8871,
+    "car": "Toyota Prius • AB-244-EF",
+    "online": false,
+    "rating": 4.5,
+    "reviews": 161,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "nl",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000952",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 137,
+    "name": "Ruud P.",
+    "avatar": "🚙",
+    "city": "amsterdam",
+    "lat": 52.3406,
+    "lng": 4.8991,
+    "car": "Renault Talisman • CD-253-GH",
+    "online": false,
+    "rating": 4.6,
+    "reviews": 169,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "nl"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000959",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 138,
+    "name": "Floris Q.",
+    "avatar": "🚕",
+    "city": "amsterdam",
+    "lat": 52.4006,
+    "lng": 4.8891,
+    "car": "Volvo S90 • AB-262-EF",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 177,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "nl",
+      "de",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000966",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 139,
+    "name": "Thijs R.",
+    "avatar": "🏎",
+    "city": "amsterdam",
+    "lat": 52.3606,
+    "lng": 4.9091,
+    "car": "Audi A6 • CD-271-GH",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 185,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "en",
+      "fr",
+      "nl"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000973",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 140,
+    "name": "Niels U.",
+    "avatar": "🚐",
+    "city": "amsterdam",
+    "lat": 52.3676,
+    "lng": 4.9521,
+    "car": "Skoda Superb • AB-280-EF",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 193,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "nl"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Amsterdam + surroundings",
+    "phone": "+316210000980",
+    "price": "Starting from 2.40 €/km"
+  },
+  {
+    "id": 141,
+    "name": "Carlos G.",
+    "avatar": "🚗",
+    "city": "barcelona",
+    "lat": 41.3451,
+    "lng": 2.1874,
+    "car": "Mercedes E-Class • 1017 DEF",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 61,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "es",
+      "ca",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110000987",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 142,
+    "name": "José M.",
+    "avatar": "🚙",
+    "city": "barcelona",
+    "lat": 41.3791,
+    "lng": 2.1504,
+    "car": "BMW 5 Series • 1034 ABC",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 69,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "es",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110000994",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 143,
+    "name": "Antonio R.",
+    "avatar": "🚕",
+    "city": "barcelona",
+    "lat": 41.4341,
+    "lng": 2.1814,
+    "car": "Audi A6 • 1051 DEF",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 77,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "ca",
+      "es"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001001",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 144,
+    "name": "Manuel S.",
+    "avatar": "🏎",
+    "city": "barcelona",
+    "lat": 41.3801,
+    "lng": 2.1284,
+    "car": "Tesla Model 3 • 1068 ABC",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 85,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "es",
+      "fr",
+      "en"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001008",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 145,
+    "name": "Francisco T.",
+    "avatar": "🚐",
+    "city": "barcelona",
+    "lat": 41.4201,
+    "lng": 2.1924,
+    "car": "Toyota Camry • 1085 DEF",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 93,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "es",
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001015",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 146,
+    "name": "David N.",
+    "avatar": "🚗",
+    "city": "barcelona",
+    "lat": 41.3961,
+    "lng": 2.2044,
+    "car": "VW Passat • 1102 ABC",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 101,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "es",
+      "ca",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001022",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 147,
+    "name": "Juan F.",
+    "avatar": "🚙",
+    "city": "barcelona",
+    "lat": 41.4121,
+    "lng": 2.1794,
+    "car": "Peugeot 508 • 1119 DEF",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 109,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "es",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001029",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 148,
+    "name": "Luis C.",
+    "avatar": "🚕",
+    "city": "barcelona",
+    "lat": 41.3681,
+    "lng": 2.1694,
+    "car": "SEAT León • 1136 ABC",
+    "online": true,
+    "rating": 4.7,
+    "reviews": 117,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "ca",
+      "es"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001036",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 149,
+    "name": "Miguel H.",
+    "avatar": "🏎",
+    "city": "barcelona",
+    "lat": 41.4211,
+    "lng": 2.2164,
+    "car": "Hyundai Ioniq • 1153 DEF",
+    "online": true,
+    "rating": 4.8,
+    "reviews": 125,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "es",
+      "fr",
+      "en"
+    ],
+    "electric": true,
+    "nosmoker": false,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001043",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 150,
+    "name": "Alejandro I.",
+    "avatar": "🚐",
+    "city": "barcelona",
+    "lat": 41.3401,
+    "lng": 2.2074,
+    "car": "Ford Mondeo • 1170 ABC",
+    "online": true,
+    "rating": 4.9,
+    "reviews": 83,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "es",
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001050",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 151,
+    "name": "Pedro J.",
+    "avatar": "🚗",
+    "city": "barcelona",
+    "lat": 41.3751,
+    "lng": 2.1694,
+    "car": "Mercedes E-Class • 1187 DEF",
+    "online": true,
+    "rating": 4.5,
+    "reviews": 91,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "es",
+      "ca",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001057",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 152,
+    "name": "Fernando K.",
+    "avatar": "🚙",
+    "city": "barcelona",
+    "lat": 41.4111,
+    "lng": 2.1814,
+    "car": "BMW 5 Series • 1204 ABC",
+    "online": true,
+    "rating": 4.6,
+    "reviews": 99,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "es",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001064",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 153,
+    "name": "Pablo L.",
+    "avatar": "🚕",
+    "city": "barcelona",
+    "lat": 41.4131,
+    "lng": 2.1484,
+    "car": "Audi A6 • 1221 DEF",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 107,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "ca",
+      "es"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": true,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001071",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 154,
+    "name": "Javier O.",
+    "avatar": "🏎",
+    "city": "barcelona",
+    "lat": 41.3381,
+    "lng": 2.1554,
+    "car": "Tesla Model 3 • 1238 ABC",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 115,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "es",
+      "fr",
+      "en"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001078",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 155,
+    "name": "Sergio P.",
+    "avatar": "🚐",
+    "city": "barcelona",
+    "lat": 41.4061,
+    "lng": 2.1304,
+    "car": "Toyota Camry • 1255 DEF",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 123,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "es",
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001085",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 156,
+    "name": "Álvaro Q.",
+    "avatar": "🚗",
+    "city": "barcelona",
+    "lat": 41.3701,
+    "lng": 2.2084,
+    "car": "VW Passat • 1272 ABC",
+    "online": false,
+    "rating": 4.5,
+    "reviews": 131,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "es",
+      "ca",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001092",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 157,
+    "name": "Andrés R.",
+    "avatar": "🚙",
+    "city": "barcelona",
+    "lat": 41.3621,
+    "lng": 2.2134,
+    "car": "Peugeot 508 • 1289 DEF",
+    "online": false,
+    "rating": 4.6,
+    "reviews": 139,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "es",
+      "en"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": true,
+    "childok": false,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001099",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 158,
+    "name": "Rafael S.",
+    "avatar": "🚕",
+    "city": "barcelona",
+    "lat": 41.3731,
+    "lng": 2.1834,
+    "car": "SEAT León • 1306 ABC",
+    "online": false,
+    "rating": 4.7,
+    "reviews": 147,
+    "payment": [
+      "revolut",
+      "cash"
+    ],
+    "langs": [
+      "ca",
+      "es"
+    ],
+    "electric": false,
+    "nosmoker": false,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001106",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 159,
+    "name": "Eduardo T.",
+    "avatar": "🏎",
+    "city": "barcelona",
+    "lat": 41.4051,
+    "lng": 2.1984,
+    "car": "Hyundai Ioniq • 1323 DEF",
+    "online": false,
+    "rating": 4.8,
+    "reviews": 155,
+    "payment": [
+      "revolut",
+      "terminal"
+    ],
+    "langs": [
+      "es",
+      "fr",
+      "en"
+    ],
+    "electric": true,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": true,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001113",
+    "price": "Starting from 1.90 €/km"
+  },
+  {
+    "id": 160,
+    "name": "Ricardo U.",
+    "avatar": "🚐",
+    "city": "barcelona",
+    "lat": 41.4081,
+    "lng": 2.1594,
+    "car": "Ford Mondeo • 1340 ABC",
+    "online": false,
+    "rating": 4.9,
+    "reviews": 163,
+    "payment": [
+      "cash",
+      "terminal"
+    ],
+    "langs": [
+      "es",
+      "de"
+    ],
+    "electric": false,
+    "nosmoker": true,
+    "petfriendly": false,
+    "childok": false,
+    "areas": "Barcelona + surroundings",
+    "phone": "+346110001120",
+    "price": "Starting from 1.90 €/km"
+  }
 ];
 
 let currentCity = 'sofia';
@@ -706,11 +5018,15 @@ function renderDrivers() {
   if(activeFilter === 'online') drivers = drivers.filter(d => d.online);
   if(activeFilter === 'revolut') drivers = drivers.filter(d => d.payment.includes('revolut'));
   if(activeFilter === 'terminal') drivers = drivers.filter(d => d.payment.includes('terminal'));
+  if(activeFilter === 'cash') drivers = drivers.filter(d => d.payment.includes('cash'));
   if(activeFilter === 'electric') drivers = drivers.filter(d => d.electric);
   if(activeFilter === 'english') drivers = drivers.filter(d => d.langs.includes('en'));
+  if(activeFilter === 'german') drivers = drivers.filter(d => d.langs.includes('de'));
+  if(activeFilter === 'french') drivers = drivers.filter(d => d.langs.includes('fr'));
   if(activeFilter === 'nosmoker') drivers = drivers.filter(d => d.nosmoker);
   if(activeFilter === 'petfriendly') drivers = drivers.filter(d => d.petfriendly);
   if(activeFilter === 'childok') drivers = drivers.filter(d => d.childok);
+  if(activeFilter === 'highrated') drivers = drivers.filter(d => d.rating >= 4.8);
   if(q) drivers = drivers.filter(d =>
     d.name.toLowerCase().includes(q) || d.car.toLowerCase().includes(q) || d.areas.toLowerCase().includes(q)
   );
