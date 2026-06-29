@@ -13,13 +13,11 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;display:flex;flex-direction:column}
-/* TOP */
 .top{background:#000;border-bottom:3px solid var(--y);height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0}
 .logo{font-size:19px;font-weight:900;color:var(--y)}
 .langs{display:flex;gap:3px}
 .lb{background:var(--s2);border:1px solid var(--brd);color:var(--mu);font-size:11px;font-weight:700;padding:3px 7px;border-radius:6px;cursor:pointer}
 .lb.on{background:var(--yd);border-color:var(--y);color:var(--y)}
-/* HERO */
 .hero{background:#0a0a0a;border-bottom:1px solid var(--brd);padding:9px 12px;flex-shrink:0}
 .hero h1{font-size:19px;font-weight:900;color:var(--y);margin-bottom:2px}
 .hero p{font-size:12px;color:var(--mu);margin-bottom:7px}
@@ -28,14 +26,11 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 .pg{color:var(--gr);border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.08)}
 .py{color:var(--y);border-color:rgba(245,197,24,.4);background:rgba(245,197,24,.08)}
 .pb{color:var(--bl);border-color:rgba(59,130,246,.4);background:rgba(59,130,246,.08)}
-/* TABS */
 .tabs{display:flex;background:var(--s1);border-bottom:2px solid var(--brd);flex-shrink:0}
 .tab{flex:1;padding:9px 2px;font-size:13px;font-weight:800;border:none;background:transparent;color:var(--mu);cursor:pointer;border-bottom:3px solid transparent}
 .tab.on{color:var(--y);border-bottom-color:var(--y)}
-/* PAGES */
 .page{display:none;flex:1;flex-direction:column;overflow:hidden;min-height:0}
 .page.on{display:flex}
-/* MAP */
 #map{height:210px;flex-shrink:0}
 .leaflet-container{background:#0d1117!important}
 .leaflet-popup-content-wrapper{background:var(--s2)!important;color:var(--tx)!important;border:1px solid var(--brd2)!important;border-radius:10px!important}
@@ -48,30 +43,27 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 .ci{text-align:center}
 .cn{font-size:16px;font-weight:900;color:var(--y)}
 .cl{font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase}
-/* SEARCH */
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--gr);display:inline-block;animation:blink 1.5s infinite;margin-right:4px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .srch{padding:7px 10px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;display:flex;gap:7px}
 .srch input{flex:1;background:var(--s2);border:1px solid var(--brd2);color:var(--tx);border-radius:8px;padding:7px 11px;font-size:14px}
 .srch input:focus{outline:none;border-color:var(--y)}
 .sb{background:var(--y);color:#000;border:none;border-radius:8px;padding:7px 12px;font-size:14px;font-weight:800;cursor:pointer}
-/* FILTERS */
 .fw{background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0}
 .fs{padding:4px 8px 2px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;align-items:center}
 .fs::-webkit-scrollbar{display:none}
 .fl{font-size:10px;color:var(--mu2);font-weight:700;text-transform:uppercase;white-space:nowrap;padding-right:3px;flex-shrink:0}
-.flt{font-size:13px;font-weight:700;padding:6px 13px;border-radius:20px;border:1px solid var(--brd2);background:var(--s2);color:var(--mu);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.flt{font-size:13px;font-weight:700;padding:6px 13px;border-radius:20px;border:1px solid var(--brd2);background:var(--s2);color:var(--mu);cursor:pointer;white-space:nowrap;flex-shrink:0}
 .flt.on{background:var(--yd);border-color:var(--y);color:var(--y)}
-/* LIST */
 .dlist{flex:1;overflow-y:auto;padding:8px}
-.dlist::-webkit-scrollbar{width:3px}
-.dlist::-webkit-scrollbar-thumb{background:var(--brd2)}
-/* CARD */
-.dc{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:11px;margin-bottom:7px;cursor:pointer;transition:border-color .15s}
+.dc{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:11px;margin-bottom:7px;cursor:pointer}
 .dc:active{border-color:var(--y)}
 .dct{display:flex;gap:9px;align-items:flex-start}
-.dca{width:54px;height:54px;border-radius:12px;background:var(--s3);border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.dca{width:54px;height:54px;border-radius:12px;background:var(--s3);border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;overflow:hidden}
+.dca img{width:100%;height:100%;object-fit:cover;border-radius:10px}
 .dci{flex:1;min-width:0}
 .dcn{font-size:15px;font-weight:800;margin-bottom:1px}
-.dcc{font-size:12px;color:var(--mu);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dcc{font-size:12px;color:var(--mu);margin-bottom:4px}
 .tags{display:flex;gap:3px;flex-wrap:wrap}
 .t{font-size:11px;font-weight:700;padding:2px 7px;border-radius:9px;border:1px solid}
 .tg{color:var(--gr);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.07)}
@@ -81,7 +73,6 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 .tc{color:var(--cy);border-color:rgba(6,182,212,.3);background:rgba(6,182,212,.07)}
 .tr{color:var(--rd);border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.07)}
 .to{color:var(--or);border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.07)}
-.tpi{color:var(--pi);border-color:rgba(236,72,153,.3);background:rgba(236,72,153,.07)}
 .pays{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap}
 .pi{font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;border:1px solid rgba(245,197,24,.3);color:var(--y);background:rgba(245,197,24,.06)}
 .dcb{display:flex;gap:5px;margin-top:9px}
@@ -90,12 +81,12 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 .bi{background:var(--s3);color:var(--mu);border:1px solid var(--brd2);border-radius:8px;padding:8px 11px;font-size:13px;cursor:pointer}
 .rb{font-size:12px;color:var(--y);font-weight:700;margin-left:auto;flex-shrink:0}
 .vbadge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;color:var(--gr);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:7px;padding:1px 5px}
-/* MODAL */
 .modal{display:none;position:fixed;inset:0;background:#000c;z-index:200;align-items:flex-end}
 .modal.on{display:flex}
 .mb{background:var(--s1);border-top:3px solid var(--y);border-radius:20px 20px 0 0;padding:18px;width:100%;max-height:88vh;overflow-y:auto}
 .mc{float:right;background:var(--s3);border:none;color:var(--mu);border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;line-height:30px;text-align:center}
-.ma{width:68px;height:68px;border-radius:14px;background:var(--s3);border:3px solid var(--y);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 8px}
+.ma{width:80px;height:80px;border-radius:14px;background:var(--s3);border:3px solid var(--y);margin:0 auto 8px;overflow:hidden}
+.ma img{width:100%;height:100%;object-fit:cover}
 .mn{font-size:18px;font-weight:900;text-align:center;margin-bottom:2px}
 .mcar{font-size:12px;color:var(--mu);text-align:center;margin-bottom:8px}
 .msec h4{font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 5px;border-bottom:1px solid var(--brd);padding-bottom:3px}
@@ -106,21 +97,19 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 .mcall{flex:1;background:var(--gr);color:#000;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:800;cursor:pointer}
 .mwp{flex:1;background:#25D366;color:#fff;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:800;cursor:pointer}
 .style-box{background:var(--s3);border-left:3px solid var(--or);border-radius:8px;padding:9px 11px;font-size:12px;color:var(--mu);margin:8px 0;line-height:1.5}
-/* RATING */
 .rmodal{display:none;position:fixed;inset:0;background:#000c;z-index:300;align-items:center;justify-content:center;padding:20px}
 .rmodal.on{display:flex}
 .rbox{background:var(--s1);border:2px solid var(--y);border-radius:18px;padding:18px;width:100%;max-width:380px}
 .rbox h3{font-size:16px;font-weight:900;color:var(--y);margin-bottom:3px}
 .rbox p{font-size:12px;color:var(--mu);margin-bottom:14px;line-height:1.5}
 .stars{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
-.star{font-size:34px;cursor:pointer;opacity:.25;transition:opacity .15s}
+.star{font-size:34px;cursor:pointer;opacity:.25}
 .star.on{opacity:1}
 .rta{width:100%;background:var(--s2);border:1px solid var(--brd2);color:var(--tx);border-radius:9px;padding:9px;font-size:13px;margin-bottom:9px;resize:none;height:75px}
 .rta:focus{outline:none;border-color:var(--y)}
 .rnote{background:var(--s3);border-radius:7px;padding:8px 9px;font-size:11px;color:var(--mu);margin-bottom:11px;line-height:1.5}
 .rsub{background:var(--y);color:#000;border:none;border-radius:9px;padding:11px;width:100%;font-size:14px;font-weight:800;cursor:pointer}
 .rcan{background:transparent;color:var(--mu);border:none;padding:7px;width:100%;font-size:13px;cursor:pointer;margin-top:3px}
-/* HOW & JOIN */
 .scroll-page{flex:1;overflow-y:auto;padding:13px}
 .hstep{background:var(--s2);border:1px solid var(--brd);border-radius:13px;padding:13px;margin-bottom:7px;display:flex;gap:11px}
 .hnum{width:34px;height:34px;border-radius:50%;background:var(--y);color:#000;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -137,7 +126,6 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 .btext strong{color:var(--tx)}
 .jbtn{background:var(--y);color:#000;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:900;width:100%;cursor:pointer;margin-top:5px}
 .hcta{background:var(--y);color:#000;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:900;width:100%;cursor:pointer;margin-top:7px}
-/* LOADING */
 .ld{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px}
 .ld.hide{display:none}
 .fish-anim{font-size:50px;animation:sw 1.3s ease-in-out infinite}
@@ -163,8 +151,8 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 </div>
 
 <div class="hero">
-  <h1 id="htitle">🐟 Find Your Driver Directly</h1>
-  <p id="hsub">No commission. No middleman. Just you and your driver.</p>
+  <h1>🐟 Find Your Driver Directly</h1>
+  <p>No commission. No middleman. Just you and your driver.</p>
   <div class="pills">
     <span class="pill pg">✓ Verified Drivers</span>
     <span class="pill py">24/7 Available</span>
@@ -179,7 +167,6 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
   <button class="tab" onclick="showTab('reg')" id="tab-reg">🚕 Join</button>
 </div>
 
-<!-- MAP -->
 <div class="page on" id="page-map" style="overflow:hidden">
   <div class="city-bar">
     <label>City:</label>
@@ -200,13 +187,12 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
   <div class="ctr">
     <div class="ci"><div class="cn" id="cnt-on">0</div><div class="cl">Online</div></div>
     <div class="ci"><div class="cn" id="cnt-city">0</div><div class="cl">In City</div></div>
-    <div class="ci"><div class="cn">10</div><div class="cl">Cities</div></div>
-    <div class="ci"><div class="cn">200</div><div class="cl">Drivers</div></div>
+    <div class="ci"><div class="cn">1</div><div class="cl">Drivers</div></div>
+    <div class="ci"><div class="cn" id="live-ind" style="font-size:11px;color:var(--mu)">—</div><div class="cl">GPS</div></div>
   </div>
   <div class="dlist" id="map-list" style="flex:1;overflow-y:auto;padding:8px"></div>
 </div>
 
-<!-- DRIVERS -->
 <div class="page" id="page-list">
   <div class="srch">
     <input type="text" id="srch" placeholder="Search driver, car, area..." oninput="renderList()">
@@ -222,24 +208,24 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
       <button class="flt" data-f="terminal" onclick="sf('terminal',this)">💳 Terminal</button>
       <button class="flt" data-f="cash" onclick="sf('cash',this)">💵 Cash</button>
     </div>
-    <div class="fs"><span class="fl">Driving style</span>
+    <div class="fs"><span class="fl">Style</span>
       <button class="flt" data-f="sport" onclick="sf('sport',this)">🏎 Sport 0–5s</button>
       <button class="flt" data-f="fast" onclick="sf('fast',this)">⚡ Fast 5–7s</button>
       <button class="flt" data-f="comfort" onclick="sf('comfort',this)">🛋 Comfort</button>
     </div>
-    <div class="fs"><span class="fl">Car type</span>
+    <div class="fs"><span class="fl">Car</span>
       <button class="flt" data-f="electric" onclick="sf('electric',this)">⚡ Electric</button>
       <button class="flt" data-f="suv" onclick="sf('suv',this)">🚙 SUV</button>
       <button class="flt" data-f="minivan" onclick="sf('minivan',this)">🚐 Minivan</button>
       <button class="flt" data-f="sedan" onclick="sf('sedan',this)">🚗 Sedan</button>
     </div>
     <div class="fs"><span class="fl">Language</span>
-      <button class="flt" data-f="len" onclick="sf('len',this)">🇬🇧 English</button>
-      <button class="flt" data-f="lbg" onclick="sf('lbg',this)">🇧🇬 Български</button>
-      <button class="flt" data-f="lcs" onclick="sf('lcs',this)">🇨🇿 Čeština</button>
-      <button class="flt" data-f="lde" onclick="sf('lde',this)">🇩🇪 Deutsch</button>
-      <button class="flt" data-f="lfr" onclick="sf('lfr',this)">🇫🇷 Français</button>
-      <button class="flt" data-f="lru" onclick="sf('lru',this)">🇷🇺 Русский</button>
+      <button class="flt" data-f="len" onclick="sf('len',this)">🇬🇧 EN</button>
+      <button class="flt" data-f="lbg" onclick="sf('lbg',this)">🇧🇬 БГ</button>
+      <button class="flt" data-f="lcs" onclick="sf('lcs',this)">🇨🇿 CS</button>
+      <button class="flt" data-f="lde" onclick="sf('lde',this)">🇩🇪 DE</button>
+      <button class="flt" data-f="lfr" onclick="sf('lfr',this)">🇫🇷 FR</button>
+      <button class="flt" data-f="lru" onclick="sf('lru',this)">🇷🇺 RU</button>
     </div>
     <div class="fs"><span class="fl">Extras</span>
       <button class="flt" data-f="nosmoker" onclick="sf('nosmoker',this)">🚭 No Smoke</button>
@@ -247,28 +233,25 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
       <button class="flt" data-f="pet" onclick="sf('pet',this)">🐾 Pets OK</button>
       <button class="flt" data-f="child" onclick="sf('child',this)">👶 Child Seat</button>
       <button class="flt" data-f="top" onclick="sf('top',this)">⭐ Top Rated</button>
-      <button class="flt" data-f="big" onclick="sf('big',this)">👥 8+ Seats</button>
-      <button class="flt" data-f="notalk" onclick="sf('notalk',this)">🤫 Silent ride</button>
+      <button class="flt" data-f="silent" onclick="sf('silent',this)">🤫 Silent</button>
       <button class="flt" data-f="talk" onclick="sf('talk',this)">💬 Chatty</button>
     </div>
   </div>
   <div class="dlist" id="dlist"></div>
 </div>
 
-<!-- HOW -->
 <div class="page" id="page-how">
   <div class="scroll-page">
-    <div class="hstep"><div class="hnum">1</div><div><h3>Find a Driver</h3><p>Browse verified drivers on the map or list. Use filters for payment, car type, language, and driving style.</p></div></div>
-    <div class="hstep"><div class="hnum">2</div><div><h3>Check the Profile</h3><p>See the driver's photo, car, prices, languages and driving style. Know exactly who to expect.</p></div></div>
-    <div class="hstep"><div class="hnum">3</div><div><h3>Call or WhatsApp Directly</h3><p>Contact your chosen driver directly. No booking fee, no algorithm.</p></div></div>
-    <div class="hstep"><div class="hnum" style="background:var(--or);font-size:16px">⚠️</div><div><h3>Tell Your Driver Your Style</h3><p style="color:var(--or)">Please tell your driver how you prefer to ride (fast/calm/music/silence) when you get in — not after the trip.</p></div></div>
-    <div class="hstep"><div class="hnum">5</div><div><h3>Pay the Driver</h3><p>Cash, card terminal, or Revolut. 100% goes to the driver.</p></div></div>
-    <div class="hstep"><div class="hnum">⭐</div><div><h3>Ratings Are Admin-Verified</h3><p>Rate your driver after the trip. All reviews are checked by our team before publishing — protecting drivers from unfair ratings.</p></div></div>
+    <div class="hstep"><div class="hnum">1</div><div><h3>Find a Driver</h3><p>Browse verified drivers on the map. Filter by payment, car type, language, driving style.</p></div></div>
+    <div class="hstep"><div class="hnum">2</div><div><h3>Check the Profile</h3><p>See photo, car, prices, languages and driving style. Know exactly who to expect.</p></div></div>
+    <div class="hstep"><div class="hnum">3</div><div><h3>Call or WhatsApp</h3><p>Contact your driver directly. No booking fee, no algorithm.</p></div></div>
+    <div class="hstep"><div class="hnum" style="background:var(--or);font-size:16px">⚠️</div><div><h3>Tell Your Driver Your Style</h3><p style="color:var(--or)">Tell your driver how you prefer to ride when you get in — not after the trip.</p></div></div>
+    <div class="hstep"><div class="hnum">5</div><div><h3>Pay the Driver</h3><p>Cash or Revolut. 100% goes to the driver.</p></div></div>
+    <div class="hstep"><div class="hnum">⭐</div><div><h3>Ratings Are Verified</h3><p>All reviews checked by admin before publishing. Protects drivers from unfair ratings.</p></div></div>
     <button class="hcta" onclick="showTab('list')">Find a Driver Now 🐟</button>
   </div>
 </div>
 
-<!-- JOIN -->
 <div class="page" id="page-reg">
   <div class="scroll-page">
     <div style="background:linear-gradient(135deg,#1a1200,#2a1e00);border:2px solid var(--y);border-radius:13px;padding:13px;margin-bottom:8px;text-align:center">
@@ -292,36 +275,30 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <div class="jcard">
       <h3>✅ What You Get</h3>
       <div class="brow"><div class="bicon">📍</div><div class="btext"><strong>Live GPS on Map</strong><br>Clients see you in real time</div></div>
-      <div class="brow"><div class="bicon">🛡️</div><div class="btext"><strong>Driver Protection</strong><br>We protect drivers from bad clients. Ratings reviewed before publishing.</div></div>
+      <div class="brow"><div class="bicon">🛡️</div><div class="btext"><strong>Driver Protection</strong><br>Ratings reviewed before publishing</div></div>
       <div class="brow"><div class="bicon">✅</div><div class="btext"><strong>Verified Badge</strong><br>Vehicle checked against official registries</div></div>
-      <div class="brow"><div class="bicon">📋</div><div class="btext"><strong>Digital Documents</strong><br>Carrier permit and logbook included</div></div>
-      <div class="brow"><div class="bicon">💰</div><div class="btext"><strong>Zero Commission</strong><br>Every cent from the ride is yours. Always.</div></div>
-      <div class="brow"><div class="bicon">🌍</div><div class="btext"><strong>Any City, Any Country</strong><br>No geographic restrictions worldwide</div></div>
+      <div class="brow"><div class="bicon">💰</div><div class="btext"><strong>Zero Commission</strong><br>Every cent from the ride is yours</div></div>
+      <div class="brow"><div class="bicon">🌍</div><div class="btext"><strong>Any City, Any Country</strong><br>No geographic restrictions</div></div>
     </div>
     <div class="jcard">
       <h3>📸 What We Need</h3>
       <div class="brow"><div class="bicon">🤳</div><div class="btext"><strong>Your photo</strong> — clients know who to expect</div></div>
-      <div class="brow"><div class="bicon">🚗</div><div class="btext"><strong>Car photos</strong> — outside, inside, dashboard</div></div>
+      <div class="brow"><div class="bicon">🚗</div><div class="btext"><strong>Car photos</strong> — outside, inside</div></div>
       <div class="brow"><div class="bicon">📱</div><div class="btext"><strong>Phone number</strong> — clients call directly</div></div>
-      <div class="brow"><div class="bicon">🏙️</div><div class="btext"><strong>City & areas</strong> — where you drive</div></div>
-      <p style="font-size:11px;color:var(--mu2);margin-top:9px;line-height:1.5;border-top:1px solid var(--brd);padding-top:7px">🔒 <strong style="color:var(--mu)">GDPR:</strong> Only public profile data collected. No ID, no address, no financials. Delete anytime. Never sold.</p>
+      <p style="font-size:11px;color:var(--mu2);margin-top:9px;line-height:1.5;border-top:1px solid var(--brd);padding-top:7px">🔒 <strong style="color:var(--mu)">GDPR:</strong> Only public profile data. No ID, no address. Delete anytime. Never sold.</p>
     </div>
     <div class="jcard">
       <h3>📱 How to Join</h3>
-      <p style="margin-bottom:9px">Driver registration via our dedicated driver app — under 5 minutes.</p>
-      <div style="background:var(--s3);border:1px solid var(--brd2);border-radius:9px;padding:9px;margin-bottom:7px;text-align:center">
-        <div style="font-size:13px;color:var(--mu)">Driver app — coming soon</div>
-      </div>
+      <p style="margin-bottom:9px">Driver registration via our dedicated driver app.</p>
       <button class="jbtn" onclick="openReg()">Join Waitlist — Free 🐟</button>
     </div>
   </div>
 </div>
 
-<!-- DRIVER MODAL -->
 <div class="modal" id="modal">
   <div class="mb">
     <button class="mc" onclick="closeMod()">✕</button>
-    <div class="ma" id="m-av">🚗</div>
+    <div class="ma" id="m-av"><img id="m-av-img" src="" onerror="this.style.display='none'" style="display:none"><span id="m-av-emoji" style="font-size:30px">🚗</span></div>
     <div class="mn" id="m-name"></div>
     <div class="mcar" id="m-car"></div>
     <div style="text-align:center;margin-bottom:6px" id="m-stars"></div>
@@ -331,7 +308,8 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <div class="msec"><h4>Languages</h4><div id="m-langs"></div></div>
     <div class="msec"><h4>Options</h4><div id="m-opts"></div></div>
     <div class="msec"><h4>Price</h4><div id="m-price" style="font-size:14px;font-weight:700;color:var(--y)"></div></div>
-    <div class="msec"><h4>Areas</h4><div id="m-areas" style="font-size:13px;color:var(--mu)"></div></div><div class="msec"><h4>About the Driver</h4><div id="m-bio" style="font-size:13px;color:var(--mu);line-height:1.6"></div></div>
+    <div class="msec"><h4>Areas</h4><div id="m-areas" style="font-size:13px;color:var(--mu)"></div></div>
+    <div class="msec"><h4>About</h4><div id="m-bio" style="font-size:13px;color:var(--mu);line-height:1.6"></div></div>
     <div class="mbtns">
       <button class="mcall" onclick="doCall()">📞 Call</button>
       <button class="mwp" onclick="doWA()">💬 WhatsApp</button>
@@ -340,11 +318,10 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
   </div>
 </div>
 
-<!-- RATING MODAL -->
 <div class="rmodal" id="rmod">
   <div class="rbox">
     <h3>⭐ Rate Your Driver</h3>
-    <p>Your review will be checked by our admin team before publishing. This protects drivers from unfair ratings.</p>
+    <p>Your review will be checked by admin before publishing. This protects drivers from unfair ratings.</p>
     <div class="stars" id="stars">
       <span class="star" onclick="setStar(1)">★</span>
       <span class="star" onclick="setStar(2)">★</span>
@@ -352,8 +329,8 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
       <span class="star" onclick="setStar(4)">★</span>
       <span class="star" onclick="setStar(5)">★</span>
     </div>
-    <textarea class="rta" id="rcomment" placeholder="Tell us about your experience (optional)..."></textarea>
-    <div class="rnote">🛡️ <strong>Admin review required.</strong> Ratings appear only after verification. Please rate based on facts — not preferences you didn't communicate to the driver.</div>
+    <textarea class="rta" id="rcomment" placeholder="Tell us about your experience..."></textarea>
+    <div class="rnote">🛡️ <strong>Admin review required.</strong> Ratings appear only after verification.</div>
     <button class="rsub" onclick="submitRate()">Submit Review</button>
     <button class="rcan" onclick="closeRate()">Cancel</button>
   </div>
@@ -361,44 +338,37 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const CITIES={sofia:{lat:42.6977,lng:23.3219,zoom:12},zurich:{lat:47.3769,lng:8.5417,zoom:13},berlin:{lat:52.5200,lng:13.4050,zoom:12},london:{lat:51.5074,lng:-0.1278,zoom:12},paris:{lat:48.8566,lng:2.3522,zoom:12},vienna:{lat:48.2082,lng:16.3738,zoom:13},amsterdam:{lat:52.3676,lng:4.9041,zoom:13},barcelona:{lat:41.3851,lng:2.1734,zoom:13},athens:{lat:37.9838,lng:23.7275,zoom:13},rome:{lat:41.9028,lng:12.4964,zoom:12}};
-const DRIVERS=[{"id":1,"name":"Emil M.","avatar":"https://emillion-lab.github.io/FISHTAXI/img/emil_avatar.jpg","photos":["https://emillion-lab.github.io/FISHTAXI/img/emil_car_nevski.jpg","https://emillion-lab.github.io/FISHTAXI/img/emil_car_front.jpg","https://emillion-lab.github.io/FISHTAXI/img/emil_interior.jpg"],"city":"sofia","lat":42.6977,"lng":23.3219,"car":"Tesla Model S","plate":"EA 0526 AB","car_type":"sedan","accel":4.2,"seats":4,"online":true,"rating":5.0,"reviews":0,"payment":["revolut","cash"],"langs":["bg","en","cs","ru"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia — Center, Airport, Ring Road, All districts","phone":"+359878592888","price":"0.75€/km day · 0.85€/km night · Start 1.49€","driving_style":"sport","silent_ok":true,"talk_ok":true,"no_food":true,"no_pets":true,"bio":"Non-smoker. IT specialist. Lived abroad. No animals, food or drinks in the car. Happy to talk or stay silent — your choice. Cannot read minds: please speak up if you want a specific route, feel unwell, or need anything during the ride."}];
-let city='sofia',filt='all',cur=null,star=0,map,mkrs=[];
+const CITIES={sofia:{lat:42.6977,lng:23.3219,zoom:13},zurich:{lat:47.3769,lng:8.5417,zoom:13},berlin:{lat:52.5200,lng:13.4050,zoom:12},london:{lat:51.5074,lng:-0.1278,zoom:12},paris:{lat:48.8566,lng:2.3522,zoom:12},vienna:{lat:48.2082,lng:16.3738,zoom:13},amsterdam:{lat:52.3676,lng:4.9041,zoom:13},barcelona:{lat:41.3851,lng:2.1734,zoom:13},athens:{lat:37.9838,lng:23.7275,zoom:13},rome:{lat:41.9028,lng:12.4964,zoom:12}};
+const WORKER='https://mvr-proxy.mihov-emil.workers.dev';
+const DRIVERS=[{"id":1,"name":"Emil M.","avatar":"https://emillion-lab.github.io/FISHTAXI/img/emil_avatar.jpg","city":"sofia","lat":42.6977,"lng":23.3219,"car":"Tesla Model S","plate":"EA 0526 AB","car_type":"sedan","accel":4.2,"seats":4,"online":false,"rating":5.0,"reviews":0,"payment":["revolut","cash"],"langs":["bg","en","cs","ru"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia — Center, Airport, Ring Road, All districts","phone":"+359878592888","price":"0.75€/km day · 0.85€/km night · Start 1.49€","driving_style":"sport","silent_ok":true,"talk_ok":true,"bio":"Non-smoker. IT specialist. Lived abroad. No animals, food or drinks in the car. Happy to talk or stay silent — your choice. Cannot read minds: please speak up if you want a specific route, feel unwell, or need anything during the ride."}];
+
+let city='sofia',filt='all',cur=null,rstar=0,map,mkrs=[];
+
 function payI(p){return p==='revolut'?'<span class="pi">💜 Revolut</span>':p==='terminal'?'<span class="pi">💳 Terminal</span>':'<span class="pi">💵 Cash</span>'}
-function styleI(d){if(d.accel<5)return{l:'🏎 Sport',c:'var(--pi)',s:`0–100 in ${d.accel}s`};if(d.accel<6.5)return{l:'⚡ Fast',c:'var(--or)',s:`0–100 in ${d.accel}s`};if(d.accel>10)return{l:'🛋 Comfort',c:'var(--cy)',s:'Smooth & relaxed'};return{l:'🚗 Normal',c:'var(--gr)',s:'Balanced'}}
-function carI(d){return d.minivan?'🚐':d.suv?'🚙':d.accel<5?'🏎':d.electric?'🚗':'🚗'}
-function card(d,mini=false){
+function styleI(d){if(d.accel<5)return{l:'🏎 Sport',c:'var(--pi)',s:d.accel+'s'};if(d.accel<6.5)return{l:'⚡ Fast',c:'var(--or)',s:d.accel+'s'};if(d.accel>10)return{l:'🛋 Comfort',c:'var(--cy)',s:'Smooth'};return{l:'🚗 Normal',c:'var(--gr)',s:'Balanced'}}
+function carI(d){return d.minivan?'🚐':d.suv?'🚙':d.accel<5?'🏎':'🚗'}
+
+function card(d,mini){
   const st=styleI(d),ic=carI(d);
   const tags=[];
   if(d.online)tags.push('<span class="t tg">🟢 Online</span>');
   else tags.push('<span class="t" style="color:var(--mu2);border-color:var(--brd)">⚫ Offline</span>');
   if(d.electric)tags.push('<span class="t tc">⚡ EV</span>');
-  if(d.minivan)tags.push(`<span class="t tb">🚐 ${d.seats}p</span>`);
+  if(d.minivan)tags.push('<span class="t tb">🚐 '+d.seats+'p</span>');
   if(d.suv)tags.push('<span class="t tb">🚙 SUV</span>');
-  tags.push(`<span class="t" style="color:${st.c};border-color:${st.c}33;background:${st.c}11">${st.l}</span>`);
+  tags.push('<span class="t" style="color:'+st.c+';border-color:'+st.c+'33;background:'+st.c+'11">'+st.l+'</span>');
   if(d.nosmoker)tags.push('<span class="t ty">🚭</span>');
   if(d.smoking)tags.push('<span class="t tr">🚬</span>');
   if(d.petfriendly)tags.push('<span class="t tp">🐾</span>');
   if(d.childok)tags.push('<span class="t to">👶</span>');
-  return `<div class="dc" onclick="openMod(${d.id})">
-    <div class="dct">
-      <div class="dca">${ic}</div>
-      <div class="dci">
-        <div class="dcn">${d.name} <span class="vbadge">✓</span></div>
-        <div class="dcc">${d.car} · ${d.plate}</div>
-        <div class="tags">${tags.join('')}</div>
-        <div class="pays">${d.payment.map(payI).join('')}</div>
-      </div>
-      <div class="rb">⭐${d.rating}</div>
-    </div>
-    ${!mini?`<div class="dcb">
-      <button class="bc" onclick="event.stopPropagation();qCall(${d.id})">📞 Call</button>
-      <button class="bw" onclick="event.stopPropagation();qWA(${d.id})">💬 WhatsApp</button>
-      <button class="bi">ℹ️</button>
-    </div>`:''}
-  </div>`;
+  const av = d.avatar && d.avatar.startsWith('http')
+    ? '<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.style.display='none'">'
+    : ic;
+  return '<div class="dc" onclick="openMod('+d.id+')"><div class="dct"><div class="dca">'+av+'</div><div class="dci"><div class="dcn">'+d.name+' <span class="vbadge">✓</span></div><div class="dcc">'+d.car+' · '+d.plate+'</div><div class="tags">'+tags.join('')+'</div><div class="pays">'+d.payment.map(payI).join('')+'</div></div><div class="rb">⭐'+d.rating+'</div></div>'+(mini?'':'<div class="dcb"><button class="bc" onclick="event.stopPropagation();qCall('+d.id+')">📞 Call</button><button class="bw" onclick="event.stopPropagation();qWA('+d.id+')">💬 WhatsApp</button><button class="bi">ℹ️</button></div>')+'</div>';
 }
+
 function sf(f,el){filt=f;document.querySelectorAll('.flt').forEach(b=>b.classList.remove('on'));el.classList.add('on');renderList()}
+
 function renderList(){
   const q=(document.getElementById('srch')?.value||'').toLowerCase();
   let ds=DRIVERS.filter(d=>d.city===city);
@@ -414,80 +384,107 @@ function renderList(){
   if(filt==='minivan')ds=ds.filter(d=>d.minivan);
   if(filt==='sedan')ds=ds.filter(d=>!d.suv&&!d.minivan);
   if(filt==='len')ds=ds.filter(d=>d.langs.includes('en'));
+  if(filt==='lbg')ds=ds.filter(d=>d.langs.includes('bg'));
+  if(filt==='lcs')ds=ds.filter(d=>d.langs.includes('cs'));
   if(filt==='lde')ds=ds.filter(d=>d.langs.includes('de'));
   if(filt==='lfr')ds=ds.filter(d=>d.langs.includes('fr'));
   if(filt==='lru')ds=ds.filter(d=>d.langs.includes('ru'));
-  if(filt==='lbg')ds=ds.filter(d=>d.langs.includes('bg'));
-  if(filt==='lcs')ds=ds.filter(d=>d.langs.includes('cs'));
-  if(filt==='notalk')ds=ds.filter(d=>d.silent_ok);
-  if(filt==='talk')ds=ds.filter(d=>d.talk_ok);
   if(filt==='nosmoker')ds=ds.filter(d=>d.nosmoker);
   if(filt==='smoking')ds=ds.filter(d=>d.smoking);
   if(filt==='pet')ds=ds.filter(d=>d.petfriendly);
   if(filt==='child')ds=ds.filter(d=>d.childok);
   if(filt==='top')ds=ds.filter(d=>d.rating>=4.8);
-  if(filt==='big')ds=ds.filter(d=>d.seats>=8);
+  if(filt==='silent')ds=ds.filter(d=>d.silent_ok);
+  if(filt==='talk')ds=ds.filter(d=>d.talk_ok);
   if(q)ds=ds.filter(d=>d.name.toLowerCase().includes(q)||d.car.toLowerCase().includes(q)||d.areas.toLowerCase().includes(q));
   ds.sort((a,b)=>(b.online?1:0)-(a.online?1:0)||b.rating-a.rating);
-  document.getElementById('dlist').innerHTML=ds.map(d=>card(d)).join('')||'<div style="text-align:center;padding:30px;color:var(--mu)">No drivers found</div>';
-  document.getElementById('map-list').innerHTML=ds.slice(0,4).map(d=>card(d,true)).join('');
+  document.getElementById('dlist').innerHTML=ds.map(d=>card(d,false)).join('')||'<div style="text-align:center;padding:30px;color:var(--mu)">No drivers found</div>';
+  document.getElementById('map-list').innerHTML=ds.slice(0,3).map(d=>card(d,true)).join('');
 }
+
 function renderMap(){
   mkrs.forEach(m=>m.remove());mkrs=[];
   DRIVERS.filter(d=>d.city===city).forEach(d=>{
     const ic=carI(d);
-    const m=L.marker([d.lat,d.lng],{icon:L.divIcon({html:`<div style="background:${d.online?'#22c55e':'#444'};border:2px solid #fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 2px 5px #0008">${ic}</div>`,iconSize:[28,28],iconAnchor:[14,14],className:''})}).addTo(map);
-    m.bindPopup(`<b>${d.name}</b><br>${d.car}<br>⭐${d.rating}`);
+    const m=L.marker([d.lat,d.lng],{icon:L.divIcon({html:'<div style="background:'+(d.online?'#22c55e':'#444')+';border:2px solid #fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 2px 5px #0008">'+ic+'</div>',iconSize:[28,28],iconAnchor:[14,14],className:''})}).addTo(map);
+    m.bindPopup('<b>'+d.name+'</b><br>'+d.car+'<br>⭐'+d.rating);
     m.on('click',()=>openMod(d.id));
     mkrs.push(m);
   });
 }
-function changeCity(){
-  city=document.getElementById('city-sel').value;
-  const c=CITIES[city];map.setView([c.lat,c.lng],c.zoom);
-  renderMap();renderList();updCtr();
-}
+
 function updCtr(){
   const ds=DRIVERS.filter(d=>d.city===city);
   document.getElementById('cnt-on').textContent=ds.filter(d=>d.online).length;
   document.getElementById('cnt-city').textContent=ds.length;
 }
-const LM={cs:'🇨🇿 CS',bg:'🇧🇬 BG',en:'🇬🇧 EN',de:'🇩🇪 DE',fr:'🇫🇷 FR',ru:'🇷🇺 RU',el:'🇬🇷 EL',it:'🇮🇹 IT',es:'🇪🇸 ES',nl:'🇳🇱 NL',ca:'CA',hi:'हिं',ar:'عر',tr:'TR',hu:'HU',pl:'PL'};
+
+function changeCity(){
+  city=document.getElementById('city-sel').value;
+  const c=CITIES[city];map.setView([c.lat,c.lng],c.zoom);
+  renderMap();renderList();updCtr();
+}
+
+async function pollGPS(){
+  try{
+    const r=await fetch(WORKER+'/gps');
+    const data=await r.json();
+    if(!data.ok)return;
+    let updated=false;
+    data.drivers.forEach(g=>{
+      const dr=DRIVERS.find(d=>String(d.id)===String(g.driver_id));
+      if(!dr)return;
+      dr.lat=g.lat;dr.lng=g.lng;dr.online=g.online;
+      updated=true;
+    });
+    if(updated){
+      renderMap();renderList();updCtr();
+      const el=document.getElementById('live-ind');
+      if(el)el.innerHTML='<span class="live-dot"></span>Live';
+    }
+  }catch(e){console.log('GPS:',e.message);}
+}
+
+const LM={bg:'🇧🇬 BG',en:'🇬🇧 EN',de:'🇩🇪 DE',fr:'🇫🇷 FR',ru:'🇷🇺 RU',cs:'🇨🇿 CS',el:'🇬🇷 EL',it:'🇮🇹 IT',es:'🇪🇸 ES',nl:'🇳🇱 NL'};
+
 function openMod(id){
   cur=DRIVERS.find(d=>d.id===id);if(!cur)return;
-  const d=cur,st=styleI(d),ic=carI(d);
-  document.getElementById('m-av').textContent=ic;
+  const d=cur,st=styleI(d);
+  const img=document.getElementById('m-av-img');
+  const em=document.getElementById('m-av-emoji');
+  if(d.avatar&&d.avatar.startsWith('http')){img.src=d.avatar;img.style.display='block';em.style.display='none';}
+  else{img.style.display='none';em.style.display='block';em.textContent=carI(d);}
   document.getElementById('m-name').innerHTML=d.name+' <span class="vbadge">✓ Verified</span>';
   document.getElementById('m-car').textContent=d.car+' · '+d.plate;
   document.getElementById('m-stars').innerHTML='<span style="color:var(--y);font-size:18px">'+'★'.repeat(Math.round(d.rating))+'</span> <strong>'+d.rating+'</strong> <span style="color:var(--mu);font-size:12px">('+d.reviews+' reviews)</span>';
-  document.getElementById('m-style').innerHTML='<strong style="color:var(--or)">⚠️ Please tell your driver your preferred style when you get in the car.</strong><br>This driver: <strong style="color:'+st.c+'">'+st.l+' — '+st.s+'</strong>';
-  document.getElementById('m-cardet').innerHTML=`<div class="ir"><span class="ik">Type</span><span class="iv">${d.car_type.toUpperCase()}</span></div><div class="ir"><span class="ik">Seats</span><span class="iv">${d.seats} passengers</span></div><div class="ir"><span class="ik">0–100 km/h</span><span class="iv" style="color:${st.c}">${d.accel}s</span></div><div class="ir"><span class="ik">Electric</span><span class="iv">${d.electric?'✅ Yes':'No'}</span></div>`;
+  document.getElementById('m-style').innerHTML='<strong style="color:var(--or)">⚠️ Tell your driver your preferred style when you get in.</strong><br>This driver: <strong style="color:'+st.c+'">'+st.l+' — '+st.s+'</strong>';
+  document.getElementById('m-cardet').innerHTML='<div class="ir"><span class="ik">Type</span><span class="iv">'+d.car_type.toUpperCase()+'</span></div><div class="ir"><span class="ik">Seats</span><span class="iv">'+d.seats+' passengers</span></div><div class="ir"><span class="ik">0–100 km/h</span><span class="iv" style="color:'+st.c+'">'+d.accel+'s</span></div><div class="ir"><span class="ik">Electric</span><span class="iv">'+(d.electric?'✅ Yes':'No')+'</span></div>';
   document.getElementById('m-pay').innerHTML=d.payment.map(payI).join(' ');
-  document.getElementById('m-langs').innerHTML=d.langs.map(l=>`<span class="t tb">${LM[l]||l}</span>`).join(' ');
+  document.getElementById('m-langs').innerHTML=d.langs.map(l=>'<span class="t tb">'+(LM[l]||l)+'</span>').join(' ');
   const opts=[];
   if(d.nosmoker)opts.push('<span class="t ty">🚭 No smoking</span>');
   if(d.smoking)opts.push('<span class="t tr">🚬 Smoking OK</span>');
   if(d.petfriendly)opts.push('<span class="t tp">🐾 Pets OK</span>');
   if(d.childok)opts.push('<span class="t to">👶 Child seat</span>');
+  if(d.silent_ok)opts.push('<span class="t tc">🤫 Silent OK</span>');
+  if(d.talk_ok)opts.push('<span class="t tg">💬 Chatty OK</span>');
   document.getElementById('m-opts').innerHTML=opts.join(' ')||'—';
   document.getElementById('m-price').textContent=d.price;
   document.getElementById('m-areas').textContent=d.areas;
-  if(document.getElementById('m-bio'))document.getElementById('m-bio').textContent=d.bio||'';
+  document.getElementById('m-bio').textContent=d.bio||'';
   document.getElementById('modal').classList.add('on');
 }
+
 function closeMod(){document.getElementById('modal').classList.remove('on')}
 function doCall(){if(cur)window.location.href='tel:'+cur.phone}
 function doWA(){if(cur)window.open('https://wa.me/'+cur.phone.replace(/[^0-9]/g,''))}
 function qCall(id){const d=DRIVERS.find(x=>x.id===id);if(d)window.location.href='tel:'+d.phone}
 function qWA(id){const d=DRIVERS.find(x=>x.id===id);if(d)window.open('https://wa.me/'+d.phone.replace(/[^0-9]/g,''))}
 function openRateMod(){document.getElementById('rmod').classList.add('on')}
-function closeRate(){document.getElementById('rmod').classList.remove('on');star=0;updStars()}
-function setStar(n){star=n;updStars()}
-function updStars(){document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<star))}
-function submitRate(){if(!star){alert('Please select a rating');return}alert('✅ Thank you! Your review has been submitted for admin approval.
-
-It will appear after verification.');closeRate();closeMod()}
-function openReg(){window.open('mailto:register@fish.taxi?subject=Driver Registration - fish.taxi&body=Name:%0APhone:%0ACity:%0ACar model:%0APlate number:','_blank')}
+function closeRate(){document.getElementById('rmod').classList.remove('on');rstar=0;document.querySelectorAll('.star').forEach(s=>s.classList.remove('on'))}
+function setStar(n){rstar=n;document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<n))}
+function submitRate(){if(!rstar){alert('Please select a rating');return}alert('✅ Thank you! Review submitted for admin approval.');closeRate();closeMod()}
+function openReg(){window.open('mailto:register@fish.taxi?subject=Driver Registration&body=Name:%0APhone:%0ACity:%0ACar:','_blank')}
 function showTab(t){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
@@ -496,46 +493,20 @@ function showTab(t){
   if(t==='map')setTimeout(()=>map&&map.invalidateSize(),100);
 }
 function setLang(l){document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('on',(l==='en'&&b.textContent==='EN')||(l==='bg'&&b.textContent==='БГ')||(l==='de'&&b.textContent==='DE')||(l==='fr'&&b.textContent==='FR')))}
-function reqGPS(){
-  if(!navigator.geolocation)return;
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const {latitude:lt,longitude:ln}=pos.coords;
-    map.setView([lt,ln],14);
-    L.marker([lt,ln],{icon:L.divIcon({html:'<div style="background:var(--bl);border:3px solid #fff;border-radius:50%;width:14px;height:14px;box-shadow:0 0 10px #3b82f680"></div>',iconSize:[14,14],iconAnchor:[7,7],className:''})}).addTo(map).bindPopup('📍 You');
-  },()=>{});
-}
 
-const WORKER='https://mvr-proxy.mihov-emil.workers.dev';
-async function pollGPS(){
-  try{
-    const r=await fetch(WORKER+'/gps');
-    const data=await r.json();
-    if(!data.ok||!data.drivers.length)return;
-    data.drivers.forEach(g=>{
-      const dr=DRIVERS.find(d=>String(d.id)===String(g.driver_id));
-      if(!dr)return;
-      dr.lat=g.lat;dr.lng=g.lng;dr.online=g.online;
-    });
-    renderMap();renderList();updCtr();
-  }catch(e){console.log('GPS poll:',e.message);}
-}
-window.addEventListener('DOMContentLoaded',()=>{
-  const c=CITIES.sofia;
+window.addEventListener('DOMContentLoaded',function(){
+  var c=CITIES.sofia;
   map=L.map('map',{zoomControl:false,attributionControl:false}).setView([c.lat,c.lng],c.zoom);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
   L.control.zoom({position:'topright'}).addTo(map);
-  reqGPS();
-  setTimeout(()=>{
-    renderMap();
-    renderList();
-    updCtr();
-    document.getElementById('ld').classList.add('hide');
-    // Start real GPS polling
-    pollGPS();
-    setInterval(pollGPS, 15000);
-  },1000);
-
+  renderMap();
+  renderList();
+  updCtr();
+  document.getElementById('ld').classList.add('hide');
+  pollGPS();
+  setInterval(pollGPS,15000);
 });
+
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeMod()});
 document.getElementById('rmod').addEventListener('click',function(e){if(e.target===this)closeRate()});
 </script>
