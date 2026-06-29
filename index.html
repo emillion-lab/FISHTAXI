@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>fish.taxi – Find Your Driver Directly</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐟</text></svg>">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
 <style>
 :root{--bg:#080808;--s1:#111;--s2:#1a1a1a;--s3:#242424;--brd:#2e2e2e;--brd2:#3d3d3d;--y:#f5c518;--yd:rgba(245,197,24,.13);--tx:#f0f0f0;--mu:#aaa;--mu2:#666;--gr:#22c55e;--rd:#ef4444;--bl:#3b82f6;--or:#f97316;--pu:#a855f7;--cy:#06b6d4;--pi:#ec4899}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -135,7 +135,12 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 <body>
 
 <div class="ld" id="ld">
-  <div class="fish-anim">🐟</div>
+  <svg width="120" height="80" viewBox="0 0 120 80" style="animation:sw 1.3s ease-in-out infinite">
+    <ellipse cx="55" cy="40" rx="48" ry="28" fill="#f5c518"/>
+    <polygon points="103,40 120,20 120,60" fill="#f5c518"/>
+    <circle cx="30" cy="32" r="5" fill="#000"/>
+    <text x="52" y="46" text-anchor="middle" font-size="16" font-weight="900" fill="#000" font-family="Arial">TAXI</text>
+  </svg>
   <div style="font-size:24px;font-weight:900;color:var(--y)">fish.taxi</div>
   <div style="font-size:13px;color:var(--mu)">Finding drivers near you...</div>
 </div>
@@ -336,7 +341,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
   </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
 const CITIES={sofia:{lat:42.6977,lng:23.3219,zoom:13},zurich:{lat:47.3769,lng:8.5417,zoom:13},berlin:{lat:52.5200,lng:13.4050,zoom:12},london:{lat:51.5074,lng:-0.1278,zoom:12},paris:{lat:48.8566,lng:2.3522,zoom:12},vienna:{lat:48.2082,lng:16.3738,zoom:13},amsterdam:{lat:52.3676,lng:4.9041,zoom:13},barcelona:{lat:41.3851,lng:2.1734,zoom:13},athens:{lat:37.9838,lng:23.7275,zoom:13},rome:{lat:41.9028,lng:12.4964,zoom:12}};
 const WORKER='https://mvr-proxy.mihov-emil.workers.dev';
@@ -494,24 +499,33 @@ function showTab(t){
 }
 function setLang(l){document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('on',(l==='en'&&b.textContent==='EN')||(l==='bg'&&b.textContent==='БГ')||(l==='de'&&b.textContent==='DE')||(l==='fr'&&b.textContent==='FR')))}
 
-// Force hide loading screen after 3s no matter what
-setTimeout(function(){
-  var ld=document.getElementById('ld');
-  if(ld)ld.classList.add('hide');
-},3000);
-
 window.addEventListener('DOMContentLoaded',function(){
-  try{
-    var c=CITIES.sofia;
-    map=L.map('map',{zoomControl:false,attributionControl:false}).setView([c.lat,c.lng],c.zoom);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
-    L.control.zoom({position:'topright'}).addTo(map);
-  }catch(e){console.error('Map init:',e);}
-  try{renderMap();}catch(e){console.error('renderMap:',e);}
-  try{renderList();}catch(e){console.error('renderList:',e);}
-  try{updCtr();}catch(e){console.error('updCtr:',e);}
+  // Hide loading immediately
   document.getElementById('ld').classList.add('hide');
-  try{pollGPS();setInterval(pollGPS,15000);}catch(e){console.error('pollGPS:',e);}
+  renderList();
+  updCtr();
+  pollGPS();
+  setInterval(pollGPS,15000);
+
+  // Load Leaflet async — map appears after JS loads
+  var css=document.createElement('link');
+  css.rel='stylesheet';
+  css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+  document.head.appendChild(css);
+
+  var js=document.createElement('script');
+  js.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+  js.onload=function(){
+    try{
+      var c=CITIES.sofia;
+      map=L.map('map',{zoomControl:false,attributionControl:false}).setView([c.lat,c.lng],c.zoom);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
+      L.control.zoom({position:'topright'}).addTo(map);
+      renderMap();
+    }catch(e){console.error('Map:',e);}
+  };
+  js.onerror=function(){console.log('Leaflet failed to load');};
+  document.body.appendChild(js);
 });
 
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeMod()});
