@@ -330,7 +330,7 @@ function qv(id){var d=DRIVERS.filter(function(x){return x.id===id;})[0];if(d)win
 function card(d,mini){
   var st=stI(d),ic=carI(d);
   var av=(d.avatar&&d.avatar.indexOf('http')===0)
-    ?'<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">'
+    ?'<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=&quot;none&quot;">'
     :ic;
   var tags='';
   if(d.online)tags+='<span class="t tg">🟢 Online</span>';
