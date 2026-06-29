@@ -5,204 +5,191 @@
 <meta name="theme-color" content="#080808">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>fish.taxi – Find Your Driver Directly</title>
-<meta name="description" content="fish.taxi — Book your taxi directly. No commission. Verified drivers. Available 24/7 worldwide.">
-<meta property="og:title" content="fish.taxi – Find Your Driver Directly">
-<meta property="og:description" content="No commission. Verified drivers. Direct contact. 24/7.">
-<meta property="og:image" content="https://emillion-lab.github.io/FISHTAXI/icon-512.png">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="fish.taxi — Book your taxi directly. No commission. Verified drivers. 24/7 worldwide.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐟</text></svg>">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
-:root{--bg:#080808;--s1:#111;--s2:#1a1a1a;--s3:#242424;--brd:#2e2e2e;--brd2:#3d3d3d;--y:#f5c518;--yd:rgba(245,197,24,.13);--tx:#f0f0f0;--mu:#aaa;--mu2:#666;--gr:#22c55e;--rd:#ef4444;--bl:#3b82f6;--or:#f97316;--pu:#a855f7;--cy:#06b6d4}
+:root{--bg:#080808;--s1:#111;--s2:#1a1a1a;--s3:#242424;--brd:#2e2e2e;--brd2:#3d3d3d;--y:#f5c518;--yd:rgba(245,197,24,.13);--tx:#f0f0f0;--mu:#aaa;--mu2:#666;--gr:#22c55e;--rd:#ef4444;--bl:#3b82f6;--or:#f97316;--pu:#a855f7;--cy:#06b6d4;--pi:#ec4899}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{font-size:16px;height:100%}
 body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
-
-/* TOP BAR */
-.top{background:#000;border-bottom:3px solid var(--y);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex-shrink:0;z-index:10}
-.logo{font-size:20px;font-weight:900;letter-spacing:-.5px;display:flex;align-items:center;gap:6px}
+.top{background:#000;border-bottom:3px solid var(--y);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0;z-index:10}
+.logo{font-size:20px;font-weight:900;display:flex;align-items:center;gap:6px}
 .logo span{color:var(--y)}
-.logo-fish{font-size:22px}
-.tagline{font-size:11px;color:var(--mu);font-weight:600;letter-spacing:.5px;text-transform:uppercase}
-
-/* LANG SWITCHER */
-.langs{display:flex;gap:4px}
-.lang-btn{background:var(--s2);border:1px solid var(--brd);color:var(--mu);font-size:11px;font-weight:700;padding:3px 7px;border-radius:6px;cursor:pointer}
+.langs{display:flex;gap:3px}
+.lang-btn{background:var(--s2);border:1px solid var(--brd);color:var(--mu);font-size:11px;font-weight:700;padding:3px 7px;border-radius:6px;cursor:pointer;min-width:32px;text-align:center}
 .lang-btn.active{background:var(--yd);border-color:var(--y);color:var(--y)}
-
-/* HERO BANNER */
-.hero{background:linear-gradient(135deg,#0a0a0a 0%,#111 50%,#0d0d0d 100%);border-bottom:1px solid var(--brd);padding:14px;flex-shrink:0}
-.hero-title{font-size:22px;font-weight:900;color:var(--y);margin-bottom:4px}
-.hero-sub{font-size:13px;color:var(--mu);margin-bottom:10px}
-.hero-pills{display:flex;gap:6px;flex-wrap:wrap}
-.pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid}
+.hero{background:linear-gradient(135deg,#0a0a0a,#111,#0d0d0d);border-bottom:1px solid var(--brd);padding:10px 12px;flex-shrink:0}
+.hero-title{font-size:20px;font-weight:900;color:var(--y);margin-bottom:3px}
+.hero-sub{font-size:12px;color:var(--mu);margin-bottom:8px}
+.hero-pills{display:flex;gap:5px;flex-wrap:wrap}
+.pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;border:1px solid}
 .pill-gr{color:var(--gr);border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.08)}
 .pill-y{color:var(--y);border-color:rgba(245,197,24,.4);background:rgba(245,197,24,.08)}
 .pill-bl{color:var(--bl);border-color:rgba(59,130,246,.4);background:rgba(59,130,246,.08)}
-
-/* TABS */
 .tabs{display:flex;background:var(--s1);border-bottom:2px solid var(--brd);flex-shrink:0}
-.tab{flex:1;padding:10px 4px;font-size:14px;font-weight:800;border:none;background:transparent;color:var(--mu);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s}
+.tab{flex:1;padding:9px 2px;font-size:13px;font-weight:800;border:none;background:transparent;color:var(--mu);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s}
 .tab.on{color:var(--y);border-bottom-color:var(--y)}
-
-/* PAGES */
 .pg{display:none;flex:1;flex-direction:column;overflow:hidden;min-height:0}
 .pg.on{display:flex}
-
-/* MAP */
-#map{height:240px;background:#0d1117;flex-shrink:0;z-index:1}
+#map{height:220px;background:#0d1117;flex-shrink:0}
 .leaflet-container{background:#0d1117!important}
 .leaflet-popup-content-wrapper{background:var(--s2)!important;color:var(--tx)!important;border:1px solid var(--brd2)!important;border-radius:10px!important}
 .leaflet-popup-tip{background:var(--s2)!important}
-
-/* SEARCH BAR */
-.srch{padding:10px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;display:flex;gap:8px}
-.srch input{flex:1;background:var(--s2);border:1px solid var(--brd2);color:var(--tx);border-radius:8px;padding:8px 12px;font-size:14px}
+.city-bar{padding:7px 10px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;display:flex;align-items:center;gap:8px}
+.city-sel{background:var(--s2);border:1px solid var(--brd2);color:var(--tx);border-radius:8px;padding:5px 8px;font-size:13px;font-weight:700;flex:1}
+.city-sel:focus{outline:none;border-color:var(--y)}
+.counter-bar{background:var(--s1);border-bottom:1px solid var(--brd);padding:7px 14px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.counter-item{text-align:center}
+.counter-num{font-size:17px;font-weight:900;color:var(--y)}
+.counter-lbl{font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase}
+.srch{padding:8px 10px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;display:flex;gap:7px}
+.srch input{flex:1;background:var(--s2);border:1px solid var(--brd2);color:var(--tx);border-radius:8px;padding:7px 11px;font-size:14px}
 .srch input:focus{outline:none;border-color:var(--y)}
-.srch-btn{background:var(--y);color:#000;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap}
+.srch-btn{background:var(--y);color:#000;border:none;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:800;cursor:pointer}
 
-/* FILTERS */
-.filters{padding:8px 10px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
-.filters::-webkit-scrollbar{display:none}
-.flt{font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;border:1px solid var(--brd2);background:var(--s2);color:var(--mu);cursor:pointer;white-space:nowrap;transition:all .2s}
+/* FILTERS - bigger text */
+.filters-wrap{background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0}
+.filters-section{padding:5px 8px 3px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;align-items:center}
+.filters-section::-webkit-scrollbar{display:none}
+.flt-label{font-size:10px;color:var(--mu2);font-weight:700;text-transform:uppercase;white-space:nowrap;padding-right:4px;flex-shrink:0}
+.flt{font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px;border:1px solid var(--brd2);background:var(--s2);color:var(--mu);cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
 .flt.on{background:var(--yd);border-color:var(--y);color:var(--y)}
+.flt:active{opacity:.7}
 
-/* DRIVER LIST */
 .dlist{flex:1;overflow-y:auto;padding:8px}
 .dlist::-webkit-scrollbar{width:3px}
 .dlist::-webkit-scrollbar-thumb{background:var(--brd2)}
 
 /* DRIVER CARD */
 .dcard{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:12px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
-.dcard:hover{border-color:var(--y)}
+.dcard:hover,.dcard:active{border-color:var(--y)}
 .dcard-top{display:flex;gap:10px;align-items:flex-start}
-.dcard-avatar{width:54px;height:54px;border-radius:50%;background:var(--s3);border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.dcard-avatar{width:56px;height:56px;border-radius:12px;background:var(--s3);border:2px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
 .dcard-info{flex:1;min-width:0}
-.dcard-name{font-size:16px;font-weight:800;margin-bottom:2px}
-.dcard-car{font-size:13px;color:var(--mu);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dcard-tags{display:flex;gap:4px;flex-wrap:wrap}
-.tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;border:1px solid}
+.dcard-name{font-size:15px;font-weight:800;margin-bottom:1px;display:flex;align-items:center;gap:5px}
+.dcard-car{font-size:12px;color:var(--mu);margin-bottom:5px}
+.dcard-tags{display:flex;gap:3px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:10px;border:1px solid}
 .tag-gr{color:var(--gr);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.07)}
 .tag-y{color:var(--y);border-color:rgba(245,197,24,.3);background:rgba(245,197,24,.07)}
 .tag-bl{color:var(--bl);border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.07)}
 .tag-pu{color:var(--pu);border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.07)}
 .tag-cy{color:var(--cy);border-color:rgba(6,182,212,.3);background:rgba(6,182,212,.07)}
-.dcard-bottom{display:flex;gap:6px;margin-top:10px}
-.btn-call{flex:1;background:var(--gr);color:#000;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
-.btn-wp{flex:1;background:#25D366;color:#fff;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
-.btn-info{background:var(--s3);color:var(--mu);border:1px solid var(--brd2);border-radius:8px;padding:9px 12px;font-size:13px;font-weight:800;cursor:pointer}
-
-/* DIST BADGE */
-.dist{font-size:11px;color:var(--cy);font-weight:700;margin-left:auto;white-space:nowrap}
-
-/* PAYMENT ICONS */
-.pay-icons{display:flex;gap:4px;margin-top:6px}
+.tag-rd{color:var(--rd);border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.07)}
+.tag-or{color:var(--or);border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.07)}
+.tag-pi{color:var(--pi);border-color:rgba(236,72,153,.3);background:rgba(236,72,153,.07)}
+.pay-icons{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap}
 .pay-icon{font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;border:1px solid rgba(245,197,24,.3);color:var(--y);background:rgba(245,197,24,.06)}
-
-/* CITY SELECTOR */
-.city-bar{padding:8px 10px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;display:flex;align-items:center;gap:8px}
-.city-sel{background:var(--s2);border:1px solid var(--brd2);color:var(--tx);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:700;flex:1}
-.city-sel:focus{outline:none;border-color:var(--y)}
-.city-lbl{font-size:12px;color:var(--mu);font-weight:600}
-
-/* HOW IT WORKS PAGE */
-.how-page{flex:1;overflow-y:auto;padding:16px}
-.how-step{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start}
-.how-num{width:38px;height:38px;border-radius:50%;background:var(--y);color:#000;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.how-text h3{font-size:15px;font-weight:800;margin-bottom:4px}
-.how-text p{font-size:13px;color:var(--mu);line-height:1.5}
-.how-cta{background:var(--y);color:#000;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:900;width:100%;cursor:pointer;margin-top:8px}
-.how-divider{text-align:center;font-size:12px;color:var(--mu);margin:12px 0;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
-
-/* DRIVER REGISTER PAGE */
-.reg-page{flex:1;overflow-y:auto;padding:16px}
-.reg-card{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:16px;margin-bottom:10px}
-.reg-card h3{font-size:15px;font-weight:800;margin-bottom:10px;color:var(--y)}
-.reg-card p{font-size:13px;color:var(--mu);line-height:1.5;margin-bottom:8px}
-.price-box{background:var(--s3);border:2px solid var(--y);border-radius:12px;padding:14px;text-align:center;margin:10px 0}
-.price-big{font-size:36px;font-weight:900;color:var(--y)}
-.price-per{font-size:13px;color:var(--mu)}
-.price-vs{font-size:12px;color:var(--rd);margin-top:4px;font-weight:700}
-.reg-btn{background:var(--y);color:#000;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:900;width:100%;cursor:pointer;margin-top:8px}
-.benefit{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}
-.benefit-icon{font-size:18px;flex-shrink:0}
-.benefit-text{font-size:13px;color:var(--mu);line-height:1.4}
-.benefit-text strong{color:var(--tx)}
-
-/* LOADING */
-.ld{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
-.ld.hide{display:none}
-.ld-fish{font-size:56px;animation:swim 1.5s ease-in-out infinite}
-@keyframes swim{0%,100%{transform:translateX(-8px) rotate(-5deg)}50%{transform:translateX(8px) rotate(5deg)}}
-.ld-title{font-size:28px;font-weight:900;color:var(--y)}
-.ld-sub{font-size:14px;color:var(--mu)}
+.dcard-bottom{display:flex;gap:6px;margin-top:10px}
+.btn-call{flex:1;background:var(--gr);color:#000;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:800;cursor:pointer}
+.btn-wp{flex:1;background:#25D366;color:#fff;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:800;cursor:pointer}
+.btn-info{background:var(--s3);color:var(--mu);border:1px solid var(--brd2);border-radius:8px;padding:9px 12px;font-size:13px;cursor:pointer}
+.rating-badge{font-size:12px;color:var(--y);font-weight:700;margin-left:auto;white-space:nowrap}
+.verified{display:inline-flex;align-items:center;gap:2px;font-size:10px;font-weight:700;color:var(--gr);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:1px 5px}
 
 /* MODAL */
-.modal{display:none;position:fixed;inset:0;background:#000a;z-index:200;align-items:flex-end}
+.modal{display:none;position:fixed;inset:0;background:#000c;z-index:200;align-items:flex-end}
 .modal.on{display:flex}
-.modal-box{background:var(--s1);border-top:3px solid var(--y);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:85vh;overflow-y:auto}
+.modal-box{background:var(--s1);border-top:3px solid var(--y);border-radius:20px 20px 0 0;padding:18px;width:100%;max-height:90vh;overflow-y:auto}
 .modal-close{float:right;background:var(--s3);border:none;color:var(--mu);border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;line-height:30px;text-align:center}
-.modal-avatar{width:80px;height:80px;border-radius:50%;background:var(--s3);border:3px solid var(--y);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 12px}
-.modal-name{font-size:20px;font-weight:900;text-align:center;margin-bottom:4px}
-.modal-car{font-size:14px;color:var(--mu);text-align:center;margin-bottom:12px}
-.modal-section{margin-bottom:14px}
-.modal-section h4{font-size:12px;color:var(--mu);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.modal-avatar{width:72px;height:72px;border-radius:14px;background:var(--s3);border:3px solid var(--y);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 10px}
+.modal-name{font-size:19px;font-weight:900;text-align:center;margin-bottom:2px}
+.modal-car{font-size:13px;color:var(--mu);text-align:center;margin-bottom:8px}
+.modal-section{margin-bottom:12px}
+.modal-section h4{font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;border-bottom:1px solid var(--brd);padding-bottom:4px}
 .modal-btns{display:flex;gap:8px;margin-top:14px}
 .modal-call{flex:1;background:var(--gr);color:#000;border:none;border-radius:10px;padding:12px;font-size:15px;font-weight:800;cursor:pointer}
 .modal-wp{flex:1;background:#25D366;color:#fff;border:none;border-radius:10px;padding:12px;font-size:15px;font-weight:800;cursor:pointer}
-.stars{color:var(--y);font-size:18px;letter-spacing:2px}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--brd)}
+.info-row:last-child{border-bottom:none}
+.info-key{font-size:12px;color:var(--mu)}
+.info-val{font-size:13px;font-weight:700}
 
-/* COUNTER */
-.counter-bar{background:var(--s1);border-bottom:1px solid var(--brd);padding:8px 14px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-.counter-item{text-align:center}
-.counter-num{font-size:18px;font-weight:900;color:var(--y)}
-.counter-lbl{font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase}
+/* RATING MODAL */
+.rating-modal{display:none;position:fixed;inset:0;background:#000c;z-index:300;align-items:center;justify-content:center;padding:20px}
+.rating-modal.on{display:flex}
+.rating-box{background:var(--s1);border:2px solid var(--y);border-radius:20px;padding:20px;width:100%;max-width:400px}
+.rating-box h3{font-size:17px;font-weight:900;margin-bottom:4px;color:var(--y)}
+.rating-box p{font-size:12px;color:var(--mu);margin-bottom:16px;line-height:1.5}
+.stars-input{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+.star-btn{font-size:32px;cursor:pointer;opacity:.3;transition:opacity .2s}
+.star-btn.on{opacity:1}
+.rating-comment{width:100%;background:var(--s2);border:1px solid var(--brd2);color:var(--tx);border-radius:10px;padding:10px;font-size:13px;margin-bottom:10px;resize:none;height:80px}
+.rating-comment:focus{outline:none;border-color:var(--y)}
+.rating-notice{background:var(--s3);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--mu);margin-bottom:12px;line-height:1.5}
+.rating-submit{background:var(--y);color:#000;border:none;border-radius:10px;padding:11px;width:100%;font-size:14px;font-weight:800;cursor:pointer}
+.rating-cancel{background:transparent;color:var(--mu);border:none;padding:8px;width:100%;font-size:13px;cursor:pointer;margin-top:4px}
 
-/* VERIFIED BADGE */
-.verified{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;color:var(--gr);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:2px 6px}
+/* GPS NOTICE */
+.gps-bar{background:rgba(59,130,246,.1);border-bottom:1px solid rgba(59,130,246,.3);padding:6px 12px;font-size:11px;color:var(--bl);display:flex;align-items:center;gap:6px;flex-shrink:0}
+.gps-bar button{background:var(--bl);color:#fff;border:none;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer;margin-left:auto}
+
+/* DRIVING STYLE BAR */
+.style-notice{background:var(--s3);border:1px solid var(--brd2);border-radius:10px;padding:10px;margin-bottom:10px;font-size:12px;color:var(--mu);line-height:1.5}
+.style-notice strong{color:var(--or)}
+
+/* HOW PAGE */
+.how-page{flex:1;overflow-y:auto;padding:14px}
+.how-step{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:14px;margin-bottom:8px;display:flex;gap:12px}
+.how-num{width:36px;height:36px;border-radius:50%;background:var(--y);color:#000;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.how-text h3{font-size:14px;font-weight:800;margin-bottom:3px}
+.how-text p{font-size:12px;color:var(--mu);line-height:1.5}
+.how-cta{background:var(--y);color:#000;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:900;width:100%;cursor:pointer;margin-top:8px}
+.divider-label{text-align:center;font-size:11px;color:var(--mu);margin:10px 0;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+
+/* JOIN PAGE */
+.reg-page{flex:1;overflow-y:auto;padding:12px}
+.reg-card{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:14px;margin-bottom:8px}
+.reg-card h3{font-size:14px;font-weight:800;margin-bottom:8px;color:var(--y)}
+.reg-card p{font-size:12px;color:var(--mu);line-height:1.5;margin-bottom:6px}
+.price-box{background:var(--s3);border:2px solid var(--y);border-radius:12px;padding:12px;text-align:center;margin:8px 0}
+.price-big{font-size:34px;font-weight:900;color:var(--y)}
+.benefit{display:flex;gap:8px;margin-bottom:7px}
+.benefit-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.benefit-text{font-size:12px;color:var(--mu);line-height:1.4}
+.benefit-text strong{color:var(--tx)}
+.reg-btn{background:var(--y);color:#000;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:900;width:100%;cursor:pointer;margin-top:6px}
+
+/* LOADING */
+.ld{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.ld.hide{display:none}
+.ld-fish{font-size:52px;animation:swim 1.4s ease-in-out infinite}
+@keyframes swim{0%,100%{transform:translateX(-8px) rotate(-5deg)}50%{transform:translateX(8px) rotate(5deg)}}
+.ld-title{font-size:26px;font-weight:900;color:var(--y)}
 </style>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
 <body>
 
-<!-- LOADING -->
 <div class="ld" id="ld">
   <div class="ld-fish">🐟</div>
   <div class="ld-title">fish.taxi</div>
-  <div class="ld-sub" id="ld-sub">Loading drivers...</div>
+  <div style="font-size:13px;color:var(--mu)">Finding drivers near you...</div>
 </div>
 
-<!-- TOP BAR -->
 <div class="top">
-  <div class="logo">
-    <span class="logo-fish">🐟</span>
-    <span>fish<span style="color:#fff">.</span><span>taxi</span></span>
-  </div>
-  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
-    <div class="langs">
-      <button class="lang-btn active" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" onclick="setLang('bg')">БГ</button>
-      <button class="lang-btn" onclick="setLang('de')">DE</button>
-      <button class="lang-btn" onclick="setLang('fr')">FR</button>
-    </div>
+  <div class="logo">🐟 <span>fish.taxi</span></div>
+  <div class="langs">
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('bg')">БГ</button>
+    <button class="lang-btn" onclick="setLang('de')">DE</button>
+    <button class="lang-btn" onclick="setLang('fr')">FR</button>
   </div>
 </div>
 
-<!-- HERO -->
 <div class="hero">
-  <div class="hero-title" id="hero-title">Find Your Driver Directly 🐟</div>
-  <div class="hero-sub" id="hero-sub">No commission. No middleman. Just you and your driver.</div>
+  <div class="hero-title">🐟 Find Your Driver Directly</div>
+  <div class="hero-sub">No commission. No middleman. Just you and your driver.</div>
   <div class="hero-pills">
-    <span class="pill pill-gr" id="pill-verified">✓ Verified Drivers</span>
-    <span class="pill pill-y" id="pill-247">24/7 Available</span>
-    <span class="pill pill-bl" id="pill-nocomm">Zero Commission</span>
+    <span class="pill pill-gr">✓ Verified Drivers</span>
+    <span class="pill pill-y">24/7 Available</span>
+    <span class="pill pill-bl">Zero Commission</span>
   </div>
 </div>
 
-<!-- TABS -->
 <div class="tabs">
   <button class="tab on" onclick="showTab('map')" id="tab-map">🗺 Map</button>
   <button class="tab" onclick="showTab('list')" id="tab-list">🐟 Drivers</button>
@@ -213,23 +200,26 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 <!-- MAP PAGE -->
 <div class="pg on" id="pg-map" style="overflow:hidden">
   <div class="city-bar">
-    <span class="city-lbl" id="lbl-city">City:</span>
+    <span style="font-size:12px;color:var(--mu);font-weight:600">City:</span>
     <select class="city-sel" id="city-sel" onchange="changeCity()">
-      <option value="sofia">Sofia, Bulgaria 🇧🇬</option>
-      <option value="zurich">Zürich, Switzerland 🇨🇭</option>
-      <option value="berlin">Berlin, Germany 🇩🇪</option>
-      <option value="london">London, UK 🇬🇧</option>
-      <option value="paris">Paris, France 🇫🇷</option>
-      <option value="vienna">Vienna, Austria 🇦🇹</option>
-      <option value="amsterdam">Amsterdam, Netherlands 🇳🇱</option>
-      <option value="barcelona">Barcelona, Spain 🇪🇸</option>
+      <option value="sofia">Sofia 🇧🇬</option>
+      <option value="zurich">Zürich 🇨🇭</option>
+      <option value="berlin">Berlin 🇩🇪</option>
+      <option value="london">London 🇬🇧</option>
+      <option value="paris">Paris 🇫🇷</option>
+      <option value="vienna">Vienna 🇦🇹</option>
+      <option value="amsterdam">Amsterdam 🇳🇱</option>
+      <option value="barcelona">Barcelona 🇪🇸</option>
+      <option value="athens">Athens 🇬🇷</option>
+      <option value="rome">Rome 🇮🇹</option>
     </select>
   </div>
   <div id="map"></div>
   <div class="counter-bar">
-    <div class="counter-item"><div class="counter-num" id="cnt-online">0</div><div class="counter-lbl" id="lbl-online">Online</div></div>
-    <div class="counter-item"><div class="counter-num" id="cnt-total">0</div><div class="counter-lbl" id="lbl-total">Drivers</div></div>
-    <div class="counter-item"><div class="counter-num" id="cnt-city">1</div><div class="counter-lbl" id="lbl-cities">Cities</div></div>
+    <div class="counter-item"><div class="counter-num" id="cnt-online">0</div><div class="counter-lbl">Online</div></div>
+    <div class="counter-item"><div class="counter-num" id="cnt-total">0</div><div class="counter-lbl">In City</div></div>
+    <div class="counter-item"><div class="counter-num">10</div><div class="counter-lbl">Cities</div></div>
+    <div class="counter-item"><div class="counter-num">200</div><div class="counter-lbl">Total</div></div>
   </div>
   <div class="dlist" id="map-dlist" style="flex:1;overflow-y:auto;padding:8px"></div>
 </div>
@@ -237,128 +227,135 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 <!-- DRIVERS PAGE -->
 <div class="pg" id="pg-list">
   <div class="srch">
-    <input type="text" id="srch-inp" placeholder="Search driver, car, area..." oninput="filterDrivers()">
-    <button class="srch-btn" onclick="filterDrivers()" id="btn-search">Search</button>
+    <input type="text" id="srch-inp" placeholder="Search driver, car, area..." oninput="renderDrivers()">
+    <button class="srch-btn" onclick="renderDrivers()">🔍</button>
   </div>
-  <div class="filters" id="filters">
-    <button class="flt on" data-f="all" onclick="setFilter('all',this)">All</button>
-    <button class="flt" data-f="online" onclick="setFilter('online',this)">🟢 Online</button>
-    <button class="flt" data-f="revolut" onclick="setFilter('revolut',this)">💜 Revolut</button>
-    <button class="flt" data-f="terminal" onclick="setFilter('terminal',this)">🖥 Terminal</button>
-    <button class="flt" data-f="cash" onclick="setFilter('cash',this)">💵 Cash</button>
-    <button class="flt" data-f="electric" onclick="setFilter('electric',this)">⚡ Electric</button>
-    <button class="flt" data-f="english" onclick="setFilter('english',this)">🇬🇧 EN</button>
-    <button class="flt" data-f="german" onclick="setFilter('german',this)">🇩🇪 DE</button>
-    <button class="flt" data-f="french" onclick="setFilter('french',this)">🇫🇷 FR</button>
-    <button class="flt" data-f="nosmoker" onclick="setFilter('nosmoker',this)">🚭 No Smoke</button>
-    <button class="flt" data-f="petfriendly" onclick="setFilter('petfriendly',this)">🐾 Pet OK</button>
-    <button class="flt" data-f="childok" onclick="setFilter('childok',this)">👶 Child Seat</button>
-    <button class="flt" data-f="highrated" onclick="setFilter('highrated',this)">⭐ Top Rated</button>
+  <div class="filters-wrap">
+    <div class="filters-section">
+      <span class="flt-label">Status</span>
+      <button class="flt on" data-f="all" onclick="setFilter('all',this)">All</button>
+      <button class="flt" data-f="online" onclick="setFilter('online',this)">🟢 Online</button>
+    </div>
+    <div class="filters-section">
+      <span class="flt-label">Payment</span>
+      <button class="flt" data-f="revolut" onclick="setFilter('revolut',this)">💜 Revolut</button>
+      <button class="flt" data-f="terminal" onclick="setFilter('terminal',this)">🖥 Terminal</button>
+      <button class="flt" data-f="cash" onclick="setFilter('cash',this)">💵 Cash</button>
+    </div>
+    <div class="filters-section">
+      <span class="flt-label">Driving style</span>
+      <button class="flt" data-f="sport" onclick="setFilter('sport',this)">🏎 Sport 0–5s</button>
+      <button class="flt" data-f="fast" onclick="setFilter('fast',this)">⚡ Fast 5–7s</button>
+      <button class="flt" data-f="comfort" onclick="setFilter('comfort',this)">🛋 Comfort</button>
+    </div>
+    <div class="filters-section">
+      <span class="flt-label">Car type</span>
+      <button class="flt" data-f="electric" onclick="setFilter('electric',this)">⚡ Electric</button>
+      <button class="flt" data-f="suv" onclick="setFilter('suv',this)">🚙 SUV</button>
+      <button class="flt" data-f="minivan" onclick="setFilter('minivan',this)">🚐 Minivan</button>
+      <button class="flt" data-f="sedan" onclick="setFilter('sedan',this)">🚗 Sedan</button>
+    </div>
+    <div class="filters-section">
+      <span class="flt-label">Language</span>
+      <button class="flt" data-f="lang_en" onclick="setFilter('lang_en',this)">🇬🇧 English</button>
+      <button class="flt" data-f="lang_de" onclick="setFilter('lang_de',this)">🇩🇪 Deutsch</button>
+      <button class="flt" data-f="lang_fr" onclick="setFilter('lang_fr',this)">🇫🇷 Français</button>
+      <button class="flt" data-f="lang_ru" onclick="setFilter('lang_ru',this)">🇷🇺 Русский</button>
+    </div>
+    <div class="filters-section">
+      <span class="flt-label">Extras</span>
+      <button class="flt" data-f="nosmoker" onclick="setFilter('nosmoker',this)">🚭 No Smoke</button>
+      <button class="flt" data-f="smoking" onclick="setFilter('smoking',this)">🚬 Smoking OK</button>
+      <button class="flt" data-f="petfriendly" onclick="setFilter('petfriendly',this)">🐾 Pets OK</button>
+      <button class="flt" data-f="childok" onclick="setFilter('childok',this)">👶 Child Seat</button>
+      <button class="flt" data-f="highrated" onclick="setFilter('highrated',this)">⭐ Top Rated</button>
+      <button class="flt" data-f="minivan8" onclick="setFilter('minivan8',this)">👥 8 Seats</button>
+    </div>
   </div>
   <div class="dlist" id="dlist"></div>
 </div>
 
-<!-- HOW IT WORKS PAGE -->
+<!-- HOW PAGE -->
 <div class="pg" id="pg-how">
   <div class="how-page">
     <div class="how-step">
       <div class="how-num">1</div>
-      <div class="how-text">
-        <h3 id="how1-title">Find a Driver</h3>
-        <p id="how1-text">Browse verified drivers on the map or list. Filter by payment method, language, car type and more.</p>
-      </div>
+      <div class="how-text"><h3>Find a Driver</h3><p>Browse verified drivers on the map or list. Use filters for payment, car type, language, and driving style.</p></div>
     </div>
     <div class="how-step">
       <div class="how-num">2</div>
-      <div class="how-text">
-        <h3 id="how2-title">Check the Profile</h3>
-        <p id="how2-text">See the driver's photo, car photos, prices, languages spoken and available payment options.</p>
-      </div>
+      <div class="how-text"><h3>Check the Profile</h3><p>See the driver's photo, car photos, prices, languages, driving style and payment options. Know exactly who's coming.</p></div>
     </div>
     <div class="how-step">
       <div class="how-num">3</div>
-      <div class="how-text">
-        <h3 id="how3-title">Call or WhatsApp Directly</h3>
-        <p id="how3-text">Contact your chosen driver directly. No app booking fee. No commission taken. You negotiate directly.</p>
-      </div>
+      <div class="how-text"><h3>Call or WhatsApp</h3><p>Contact your chosen driver directly. No booking fee, no algorithm, no waiting for a match.</p></div>
     </div>
     <div class="how-step">
       <div class="how-num">4</div>
-      <div class="how-text">
-        <h3 id="how4-title">Pay the Driver</h3>
-        <p id="how4-text">Pay by cash, card terminal, or Revolut — whatever the driver offers. 100% goes to the driver.</p>
-      </div>
+      <div class="how-text"><h3>Tell Your Driver Your Style</h3><p style="color:var(--or)">⚠️ Please tell your driver how you prefer to ride (fast/calm/music/silence) when you get in the car — not after the trip.</p></div>
     </div>
-    <div class="how-divider" id="lbl-why">WHY FISH.TAXI?</div>
     <div class="how-step">
-      <div class="how-num">🐟</div>
-      <div class="how-text">
-        <h3 id="why-title">Drivers Keep Everything</h3>
-        <p id="why-text">Traditional dispatch platforms take a large cut of every ride. With fish.taxi, drivers keep 100% — clients call directly, no middleman.</p>
-      </div>
+      <div class="how-num">5</div>
+      <div class="how-text"><h3>Pay the Driver Directly</h3><p>Cash, card terminal, or Revolut — whatever you agreed. 100% goes to the driver.</p></div>
     </div>
-    <button class="how-cta" onclick="showTab('list')" id="btn-find-driver">Find a Driver Now 🐟</button>
+    <div class="divider-label">RATINGS & REVIEWS</div>
+    <div class="how-step">
+      <div class="how-num">⭐</div>
+      <div class="how-text"><h3>Ratings Are Verified</h3><p>After your trip, you can rate your driver and leave a comment. All reviews are reviewed by our team before being published. This protects drivers from unfair ratings.</p></div>
+    </div>
+    <button class="how-cta" onclick="showTab('list')">Find a Driver Now 🐟</button>
   </div>
 </div>
 
-<!-- JOIN AS DRIVER PAGE -->
+<!-- JOIN PAGE -->
 <div class="pg" id="pg-reg">
   <div class="reg-page">
-
-    <!-- BETA BANNER -->
     <div style="background:linear-gradient(135deg,#1a1200,#2a1e00);border:2px solid var(--y);border-radius:14px;padding:14px;margin-bottom:10px;text-align:center">
-      <div style="font-size:22px;font-weight:900;color:var(--y)">🎉 FREE for first 300 drivers</div>
-      <div style="font-size:13px;color:#ccc;margin-top:4px">Join now during our launch period — no payment required</div>
-      <div style="margin-top:10px;background:#0006;border-radius:8px;padding:6px 0">
-        <div style="font-size:11px;color:var(--mu);margin-bottom:4px">SPOTS REMAINING</div>
-        <div style="background:var(--brd);border-radius:6px;height:10px;margin:0 20px;overflow:hidden">
+      <div style="font-size:20px;font-weight:900;color:var(--y)">🎉 FREE for first 300 drivers</div>
+      <div style="font-size:12px;color:#ccc;margin-top:3px">Join now during our launch — no payment required</div>
+      <div style="margin-top:10px;background:#0006;border-radius:8px;padding:5px 0">
+        <div style="font-size:11px;color:var(--mu);margin-bottom:3px">SPOTS REMAINING</div>
+        <div style="background:var(--brd);border-radius:6px;height:8px;margin:0 20px;overflow:hidden">
           <div style="background:var(--y);width:8%;height:100%;border-radius:6px"></div>
         </div>
-        <div style="font-size:12px;color:var(--y);margin-top:4px;font-weight:800">276 / 300 spots left</div>
+        <div style="font-size:12px;color:var(--y);margin-top:3px;font-weight:800">276 / 300 spots left</div>
       </div>
     </div>
-
     <div class="reg-card">
-      <h3 id="reg-title">🚕 Drive with fish.taxi</h3>
-      <p id="reg-sub">The platform where drivers come first. You keep 100% of every ride. Worldwide.</p>
+      <h3>🚕 Drive with fish.taxi</h3>
+      <p>The platform where drivers come first. You keep 100% of every ride.</p>
       <div class="price-box">
-        <div style="font-size:13px;color:var(--mu);margin-bottom:6px;text-decoration:line-through">€20/month after launch</div>
-        <div class="price-big">FREE<span style="font-size:18px"> now</span></div>
-        <div class="price-per" id="price-per">During beta — first 300 drivers worldwide</div>
+        <div style="font-size:12px;color:var(--mu);text-decoration:line-through;margin-bottom:3px">€20/month after launch</div>
+        <div class="price-big">FREE</div>
+        <div style="font-size:12px;color:var(--mu)">Beta — first 300 drivers worldwide</div>
       </div>
     </div>
-
     <div class="reg-card">
-      <h3 id="ben-title">✅ What You Get</h3>
-      <div class="benefit"><div class="benefit-icon">📍</div><div class="benefit-text"><strong id="ben1-t">Live GPS on the Map</strong><br><span id="ben1-s">Clients see exactly where you are in real time</span></div></div>
-      <div class="benefit"><div class="benefit-icon">🛡️</div><div class="benefit-text"><strong id="ben2-t">Driver Protection</strong><br><span id="ben2-s">We protect drivers from bad clients. Your safety matters.</span></div></div>
-      <div class="benefit"><div class="benefit-icon">✅</div><div class="benefit-text"><strong id="ben3-t">Verified Badge</strong><br><span id="ben3-s">Your vehicle verified against official registries</span></div></div>
-      <div class="benefit"><div class="benefit-icon">📋</div><div class="benefit-text"><strong id="ben4-t">Digital Documents</strong><br><span id="ben4-s">Carrier permit and logbook included</span></div></div>
-      <div class="benefit"><div class="benefit-icon">💰</div><div class="benefit-text"><strong id="ben5-t">Zero Commission</strong><br><span id="ben5-s">Every cent from the ride is yours. Always.</span></div></div>
-      <div class="benefit"><div class="benefit-icon">🌍</div><div class="benefit-text"><strong id="ben6-t">Any City, Any Country</strong><br><span id="ben6-s">No geographic restrictions — register from anywhere in the world</span></div></div>
+      <h3>✅ What You Get</h3>
+      <div class="benefit"><div class="benefit-icon">📍</div><div class="benefit-text"><strong>Live GPS on Map</strong><br>Clients see you in real time</div></div>
+      <div class="benefit"><div class="benefit-icon">🛡️</div><div class="benefit-text"><strong>Driver Protection</strong><br>We protect drivers from bad clients. Ratings reviewed before publishing.</div></div>
+      <div class="benefit"><div class="benefit-icon">✅</div><div class="benefit-text"><strong>Verified Badge</strong><br>Vehicle checked against official registries</div></div>
+      <div class="benefit"><div class="benefit-icon">📋</div><div class="benefit-text"><strong>Digital Documents</strong><br>Carrier permit and logbook included</div></div>
+      <div class="benefit"><div class="benefit-icon">💰</div><div class="benefit-text"><strong>Zero Commission</strong><br>Every cent from the ride is yours. Always.</div></div>
+      <div class="benefit"><div class="benefit-icon">🌍</div><div class="benefit-text"><strong>Any City, Any Country</strong><br>No geographic restrictions worldwide</div></div>
     </div>
-
     <div class="reg-card">
-      <h3 style="color:var(--y);margin-bottom:10px">📸 What We Need From You</h3>
-      <div class="benefit"><div class="benefit-icon">🤳</div><div class="benefit-text"><strong>Your photo</strong><br><span style="font-size:13px;color:var(--mu)">So clients know who to expect</span></div></div>
-      <div class="benefit"><div class="benefit-icon">🚗</div><div class="benefit-text"><strong>Photo of your car</strong><br><span style="font-size:13px;color:var(--mu)">Outside and inside — clients choose based on this</span></div></div>
-      <div class="benefit"><div class="benefit-icon">📱</div><div class="benefit-text"><strong>Phone number</strong><br><span style="font-size:13px;color:var(--mu)">Clients call or WhatsApp you directly</span></div></div>
-      <div class="benefit"><div class="benefit-icon">🏙️</div><div class="benefit-text"><strong>Your city & areas</strong><br><span style="font-size:13px;color:var(--mu)">Where you usually drive — no restrictions</span></div></div>
-      <p style="font-size:11px;color:var(--mu2);margin-top:10px;line-height:1.5;border-top:1px solid var(--brd);padding-top:10px">
-        🔒 <strong style="color:var(--mu)">GDPR Notice:</strong> We collect only the information you choose to display publicly on your profile. No personal ID, no address, no financial data. You can request deletion of your profile at any time by contacting us. Data is stored securely and never sold to third parties. By registering you consent to your public profile being visible to clients on fish.taxi.
-      </p>
+      <h3>📸 What We Need</h3>
+      <div class="benefit"><div class="benefit-icon">🤳</div><div class="benefit-text"><strong>Your photo</strong> — so clients know who to expect</div></div>
+      <div class="benefit"><div class="benefit-icon">🚗</div><div class="benefit-text"><strong>Car photos</strong> — outside, inside, dashboard</div></div>
+      <div class="benefit"><div class="benefit-icon">📱</div><div class="benefit-text"><strong>Phone number</strong> — clients call you directly</div></div>
+      <div class="benefit"><div class="benefit-icon">🏙️</div><div class="benefit-text"><strong>City & areas</strong> — where you drive</div></div>
+      <p style="font-size:11px;color:var(--mu2);margin-top:10px;line-height:1.5;border-top:1px solid var(--brd);padding-top:8px">🔒 <strong style="color:var(--mu)">GDPR:</strong> We collect only what you choose to display publicly. No ID, no address, no financial data. Delete anytime. Data never sold.</p>
     </div>
-
     <div class="reg-card">
-      <h3 id="reg-how-title">📱 How to Join</h3>
-      <p id="reg-how-text" style="margin-bottom:12px">Driver registration is done through our dedicated driver app. Simple, fast — under 5 minutes.</p>
-      <div style="background:var(--s3);border:1px solid var(--brd2);border-radius:10px;padding:12px;margin-bottom:10px;text-align:center">
-        <div style="font-size:13px;color:var(--mu);margin-bottom:4px">Driver app coming soon</div>
-        <div style="font-size:11px;color:var(--mu2)">Leave your contact and we'll notify you</div>
+      <h3>📱 How to Join</h3>
+      <p style="margin-bottom:10px">Driver registration via our dedicated driver app. Under 5 minutes.</p>
+      <div style="background:var(--s3);border:1px solid var(--brd2);border-radius:10px;padding:10px;margin-bottom:8px;text-align:center">
+        <div style="font-size:13px;color:var(--mu)">Driver app — coming soon</div>
+        <div style="font-size:11px;color:var(--mu2);margin-top:2px">Leave contact, we notify you</div>
       </div>
-      <button class="reg-btn" onclick="openRegForm()" id="reg-btn">Join Waitlist — Free 🐟</button>
+      <button class="reg-btn" onclick="openRegForm()">Join Waitlist — Free 🐟</button>
     </div>
-
   </div>
 </div>
 
@@ -367,4642 +364,166 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-avatar" id="m-avatar">🚗</div>
-    <div class="modal-name" id="m-name">Driver Name</div>
-    <div class="modal-car" id="m-car">Car Info</div>
-    <div class="stars" id="m-stars">★★★★★</div>
+    <div class="modal-name" id="m-name"></div>
+    <div class="modal-car" id="m-car"></div>
+    <div style="text-align:center;margin-bottom:12px" id="m-rating-row"></div>
+
+    <div class="style-notice" id="m-style-notice"></div>
+
     <div class="modal-section">
-      <h4 id="lbl-payment">Payment</h4>
+      <h4>Car Details</h4>
+      <div id="m-car-details"></div>
+    </div>
+    <div class="modal-section">
+      <h4>Payment</h4>
       <div id="m-payment"></div>
     </div>
     <div class="modal-section">
-      <h4 id="lbl-langs">Languages</h4>
+      <h4>Languages</h4>
       <div id="m-langs"></div>
     </div>
     <div class="modal-section">
-      <h4 id="lbl-options">Options</h4>
+      <h4>Options</h4>
       <div id="m-options"></div>
     </div>
     <div class="modal-section">
-      <h4 id="lbl-areas">Areas</h4>
+      <h4>Pricing</h4>
+      <div id="m-price" style="font-size:14px;font-weight:700;color:var(--y)"></div>
+    </div>
+    <div class="modal-section">
+      <h4>Areas</h4>
       <div id="m-areas" style="font-size:13px;color:var(--mu)"></div>
     </div>
     <div class="modal-btns">
-      <button class="modal-call" id="m-call" onclick="callDriver()">📞 Call</button>
-      <button class="modal-wp" id="m-wp" onclick="whatsappDriver()">💬 WhatsApp</button>
+      <button class="modal-call" onclick="callDriver()">📞 Call</button>
+      <button class="modal-wp" onclick="whatsappDriver()">💬 WhatsApp</button>
     </div>
+    <button onclick="openRating()" style="width:100%;margin-top:8px;background:var(--s3);border:1px solid var(--brd2);color:var(--mu);border-radius:10px;padding:10px;font-size:13px;cursor:pointer">⭐ Rate this driver</button>
+  </div>
+</div>
+
+<!-- RATING MODAL -->
+<div class="rating-modal" id="rating-modal">
+  <div class="rating-box">
+    <h3>⭐ Rate Your Driver</h3>
+    <p>Your review will be checked by our team before publishing. This protects drivers from unfair ratings.</p>
+    <div class="stars-input" id="stars-input">
+      <span class="star-btn" onclick="setStar(1)">★</span>
+      <span class="star-btn" onclick="setStar(2)">★</span>
+      <span class="star-btn" onclick="setStar(3)">★</span>
+      <span class="star-btn" onclick="setStar(4)">★</span>
+      <span class="star-btn" onclick="setStar(5)">★</span>
+    </div>
+    <textarea class="rating-comment" id="rating-comment" placeholder="Tell us about your experience (optional)..."></textarea>
+    <div class="rating-notice">🛡️ <strong>Admin review required.</strong> Your comment will only appear after verification. Unfair or false reviews will not be published. Please rate based on facts, not preferences about driving speed you didn't communicate to the driver.</div>
+    <button class="rating-submit" onclick="submitRating()">Submit Review</button>
+    <button class="rating-cancel" onclick="closeRating()">Cancel</button>
   </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+PYEOF
 
-// ── TRANSLATIONS ────────────────────────────────────────
-const T = {
-  en: {
-    heroTitle: 'Find Your Driver Directly 🐟',
-    heroSub: 'No commission. No middleman. Just you and your driver.',
-    pillVerified: '✓ Verified Drivers', pill247: '24/7 Available', pillNocomm: 'Zero Commission',
-    tabMap: '🗺 Map', tabList: '🐟 Drivers', tabHow: 'ℹ️ How', tabReg: '🚕 Join',
-    lblCity: 'City:', lblOnline: 'Online', lblTotal: 'Drivers', lblCities: 'Cities',
-    searchPlaceholder: 'Search driver, car, area...',
-    btnSearch: 'Search', btnFindDriver: 'Find a Driver Now 🐟',
-    filterAll: 'All', filterOnline: '🟢 Online', filterRevolut: '💳 Revolut',
-    filterTerminal: '🖥 Terminal', filterElectric: '⚡ Electric',
-    filterEnglish: '🇬🇧 English', filterNosmoker: '🚭 No Smoke',
-    filterPet: '🐾 Pet OK', filterChild: '👶 Child Seat',
-    how1T: 'Find a Driver', how1S: 'Browse verified drivers on the map or list. Filter by payment method, language, car type and more.',
-    how2T: 'Check the Profile', how2S: "See the driver's photo, car photos, prices, languages spoken and available payment options.",
-    how3T: 'Call or WhatsApp Directly', how3S: 'Contact your chosen driver directly. No app booking fee. No commission taken.',
-    how4T: 'Pay the Driver', how4S: 'Pay by cash, card terminal, or Revolut — whatever the driver offers. 100% goes to the driver.',
-    whyTitle: 'Drivers Keep Everything', whyText: 'Traditional dispatch takes a large cut of every ride. fish.taxi takes zero — just a small monthly subscription.',
-    regTitle: '🚕 Drive with fish.taxi', regSub: 'Join the platform where drivers come first. No commission on your rides — ever.',
-    pricePer: 'Flat monthly subscription', priceVs: 'vs €600+/mo with traditional dispatch',
-    benTitle: '✅ What You Get',
-    ben1T: 'Live GPS Profile', ben1S: 'Clients see exactly where you are in real time',
-    ben2T: 'Driver Protection', ben2S: 'We protect drivers from bad clients. Your safety matters.',
-    ben3T: 'Verified Badge', ben3S: 'Your vehicle is verified against official registries',
-    ben4T: 'Digital Documents', ben4S: 'Carrier permit and logbook included in subscription',
-    ben5T: 'Zero Commission', ben5S: 'Every cent from the ride is yours. Always.',
-    ben6T: 'Worldwide Platform', ben6S: 'Sofia, Zürich, Berlin, London — one platform',
-    regHowTitle: '📱 How to Join', regHowText: 'Registration is currently free during our beta period. Fill in your details and we\'ll contact you within 24 hours.',
-    regBtn: 'Register as Driver — Free Beta 🐟',
-    lblPayment: 'Payment', lblLangs: 'Languages', lblOptions: 'Options', lblAreas: 'Areas',
-    btnCall: '📞 Call', btnWp: '💬 WhatsApp',
-    ldSub: 'Loading drivers...', lbWhy: 'WHY FISH.TAXI?'
-  },
-  bg: {
-    heroTitle: 'Намери си шофьор директно 🐟',
-    heroSub: 'Без комисионна. Без посредник. Само ти и твоят шофьор.',
-    pillVerified: '✓ Верифицирани', pill247: '24/7 Достъпни', pillNocomm: 'Нула комисионна',
-    tabMap: '🗺 Карта', tabList: '🐟 Шофьори', tabHow: 'ℹ️ Как', tabReg: '🚕 Присъедини',
-    lblCity: 'Град:', lblOnline: 'Онлайн', lblTotal: 'Шофьори', lblCities: 'Градове',
-    searchPlaceholder: 'Търси шофьор, кола, район...',
-    btnSearch: 'Търси', btnFindDriver: 'Намери шофьор 🐟',
-    filterAll: 'Всички', filterOnline: '🟢 Онлайн', filterRevolut: '💳 Revolut',
-    filterTerminal: '🖥 Терминал', filterElectric: '⚡ Електрик',
-    filterEnglish: '🇬🇧 English', filterNosmoker: '🚭 Непушач',
-    filterPet: '🐾 Домашни', filterChild: '👶 Детска седалка',
-    how1T: 'Намери шофьор', how1S: 'Разгледай верифицирани шофьори на картата. Филтрирай по плащане, език, тип кола.',
-    how2T: 'Провери профила', how2S: 'Виж снимката на шофьора, колата, цените и начините на плащане.',
-    how3T: 'Обади се директно', how3S: 'Свържи се директно с избрания шофьор. Без такса за резервация.',
-    how4T: 'Плати на шофьора', how4S: 'Плати с кеш, терминал или Revolut. 100% отива при шофьора.',
-    whyTitle: 'Шофьорите запазват всичко', whyText: 'Традиционните диспечерски вземат голям процент от всеки курс. fish.taxi взима нула — само малък месечен абонамент.',
-    regTitle: '🚕 Карай с fish.taxi', regSub: 'Присъедини се към платформата, където шофьорите са на първо място.',
-    pricePer: 'Фиксиран месечен абонамент', priceVs: 'срещу €600+/мес при традиционните',
-    benTitle: '✅ Какво получаваш',
-    ben1T: 'GPS профил на живо', ben1S: 'Клиентите виждат точно къде си в реално време',
-    ben2T: 'Защита на шофьора', ben2S: 'Защитаваме шофьорите от лоши клиенти.',
-    ben3T: 'Верифициран знак', ben3S: 'Колата ти е верифицирана от официалния регистър',
-    ben4T: 'Дигитални документи', ben4S: 'Документ за превозвач и пътна книжка включени',
-    ben5T: 'Нула комисионна', ben5S: 'Всеки стотинка от курса е твоя. Винаги.',
-    ben6T: 'Световна платформа', ben6S: 'София, Цюрих, Берлин, Лондон — една платформа',
-    regHowTitle: '📱 Как да се присъединиш', regHowText: 'Регистрацията е безплатна по време на бета периода. Попълни данните и ще се свържем с теб до 24 часа.',
-    regBtn: 'Регистрирай се — Безплатна бета 🐟',
-    lblPayment: 'Плащане', lblLangs: 'Езици', lblOptions: 'Опции', lblAreas: 'Райони',
-    btnCall: '📞 Обади се', btnWp: '💬 WhatsApp',
-    ldSub: 'Зареждане на шофьори...', lbWhy: 'ЗАЩО FISH.TAXI?'
-  },
-  de: {
-    heroTitle: 'Finde deinen Fahrer direkt 🐟',
-    heroSub: 'Keine Provision. Kein Mittelsmann. Nur du und dein Fahrer.',
-    pillVerified: '✓ Verifizierte Fahrer', pill247: '24/7 Verfügbar', pillNocomm: 'Null Provision',
-    tabMap: '🗺 Karte', tabList: '🐟 Fahrer', tabHow: 'ℹ️ Wie', tabReg: '🚕 Mitmachen',
-    lblCity: 'Stadt:', lblOnline: 'Online', lblTotal: 'Fahrer', lblCities: 'Städte',
-    searchPlaceholder: 'Fahrer, Auto, Gebiet suchen...',
-    btnSearch: 'Suchen', btnFindDriver: 'Fahrer finden 🐟',
-    filterAll: 'Alle', filterOnline: '🟢 Online', filterRevolut: '💳 Revolut',
-    filterTerminal: '🖥 Terminal', filterElectric: '⚡ Elektro',
-    filterEnglish: '🇬🇧 Englisch', filterNosmoker: '🚭 Nichtraucher',
-    filterPet: '🐾 Haustiere OK', filterChild: '👶 Kindersitz',
-    how1T: 'Fahrer finden', how1S: 'Verifizierte Fahrer auf der Karte oder Liste durchsuchen.',
-    how2T: 'Profil ansehen', how2S: 'Foto, Auto, Preise, Sprachen und Zahlungsoptionen prüfen.',
-    how3T: 'Direkt anrufen', how3S: 'Kontaktieren Sie Ihren Fahrer direkt. Keine Buchungsgebühr.',
-    how4T: 'Fahrer bezahlen', how4S: 'Bar, Kartenterminal oder Revolut. 100% geht an den Fahrer.',
-    whyTitle: 'Fahrer behalten alles', whyText: 'Traditionelle Dienste nehmen einen großen Anteil jeder Fahrt. fish.taxi nimmt null — nur ein kleines monatliches Abo.',
-    regTitle: '🚕 Fahren mit fish.taxi', regSub: 'Trete der Plattform bei, auf der Fahrer an erster Stelle stehen.',
-    pricePer: 'Monatliches Pauschalabo', priceVs: 'vs €600+/Mo bei traditionellen Diensten',
-    benTitle: '✅ Was du bekommst',
-    ben1T: 'Live GPS-Profil', ben1S: 'Kunden sehen genau wo du in Echtzeit bist',
-    ben2T: 'Fahrerschutz', ben2S: 'Wir schützen Fahrer vor schlechten Kunden.',
-    ben3T: 'Verifiziertes Abzeichen', ben3S: 'Ihr Fahrzeug wird gegen offizielle Register geprüft',
-    ben4T: 'Digitale Dokumente', ben4S: 'Beförderungserlaubnis und Fahrtenbuch inklusive',
-    ben5T: 'Null Provision', ben5S: 'Jeder Cent der Fahrt gehört dir. Immer.',
-    ben6T: 'Weltweite Plattform', ben6S: 'Sofia, Zürich, Berlin, London — eine Plattform',
-    regHowTitle: '📱 Wie beitreten', regHowText: 'Die Registrierung ist während unserer Beta-Phase kostenlos.',
-    regBtn: 'Als Fahrer registrieren — Kostenlose Beta 🐟',
-    lblPayment: 'Zahlung', lblLangs: 'Sprachen', lblOptions: 'Optionen', lblAreas: 'Gebiete',
-    btnCall: '📞 Anrufen', btnWp: '💬 WhatsApp',
-    ldSub: 'Fahrer laden...', lbWhy: 'WARUM FISH.TAXI?'
-  },
-  fr: {
-    heroTitle: 'Trouvez votre chauffeur directement 🐟',
-    heroSub: 'Sans commission. Sans intermédiaire. Juste vous et votre chauffeur.',
-    pillVerified: '✓ Chauffeurs vérifiés', pill247: '24/7 Disponible', pillNocomm: 'Zéro commission',
-    tabMap: '🗺 Carte', tabList: '🐟 Chauffeurs', tabHow: 'ℹ️ Comment', tabReg: '🚕 Rejoindre',
-    lblCity: 'Ville:', lblOnline: 'En ligne', lblTotal: 'Chauffeurs', lblCities: 'Villes',
-    searchPlaceholder: 'Chercher chauffeur, voiture, zone...',
-    btnSearch: 'Chercher', btnFindDriver: 'Trouver un chauffeur 🐟',
-    filterAll: 'Tous', filterOnline: '🟢 En ligne', filterRevolut: '💳 Revolut',
-    filterTerminal: '🖥 Terminal', filterElectric: '⚡ Électrique',
-    filterEnglish: '🇬🇧 Anglais', filterNosmoker: '🚭 Non-fumeur',
-    filterPet: '🐾 Animaux OK', filterChild: '👶 Siège enfant',
-    how1T: 'Trouver un chauffeur', how1S: 'Parcourez les chauffeurs vérifiés sur la carte ou la liste.',
-    how2T: 'Vérifier le profil', how2S: 'Voir photo, voiture, prix, langues et modes de paiement.',
-    how3T: 'Appeler directement', how3S: 'Contactez votre chauffeur directement. Sans frais de réservation.',
-    how4T: 'Payer le chauffeur', how4S: 'Espèces, terminal ou Revolut. 100% va au chauffeur.',
-    whyTitle: 'Les chauffeurs gardent tout', whyText: 'Les services traditionnels prennent une grande part de chaque course. fish.taxi prend zéro.',
-    regTitle: '🚕 Conduire avec fish.taxi', regSub: 'Rejoignez la plateforme où les chauffeurs passent en premier.',
-    pricePer: 'Abonnement mensuel forfaitaire', priceVs: 'vs €600+/mois avec dispatch traditionnel',
-    benTitle: '✅ Ce que vous obtenez',
-    ben1T: 'Profil GPS en direct', ben1S: 'Les clients voient exactement où vous êtes en temps réel',
-    ben2T: 'Protection chauffeur', ben2S: 'Nous protégeons les chauffeurs des mauvais clients.',
-    ben3T: 'Badge vérifié', ben3S: 'Votre véhicule est vérifié auprès des registres officiels',
-    ben4T: 'Documents numériques', ben4S: 'Permis transporteur et carnet de bord inclus',
-    ben5T: 'Zéro commission', ben5S: 'Chaque centime de la course est à vous. Toujours.',
-    ben6T: 'Plateforme mondiale', ben6S: 'Sofia, Zurich, Berlin, Londres — une plateforme',
-    regHowTitle: '📱 Comment rejoindre', regHowText: "L'inscription est gratuite pendant notre période bêta.",
-    regBtn: "S'inscrire comme chauffeur — Bêta gratuite 🐟",
-    lblPayment: 'Paiement', lblLangs: 'Langues', lblOptions: 'Options', lblAreas: 'Zones',
-    btnCall: '📞 Appeler', btnWp: '💬 WhatsApp',
-    ldSub: 'Chargement des chauffeurs...', lbWhy: 'POURQUOI FISH.TAXI?'
-  }
-};
+# Now append the JS with drivers data
+python3 << 'EOF'
+import json
 
-let lang = 'en';
+with open('/home/claude/drivers_v2.json', 'r') as f:
+    drivers = json.load(f)
 
-function setLang(l) {
-  lang = l;
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === l || (l==='bg' && b.textContent==='БГ')));
-  const t = T[l];
-  document.getElementById('hero-title').textContent = t.heroTitle;
-  document.getElementById('hero-sub').textContent = t.heroSub;
-  document.getElementById('pill-verified').textContent = t.pillVerified;
-  document.getElementById('pill-247').textContent = t.pill247;
-  document.getElementById('pill-nocomm').textContent = t.pillNocomm;
-  document.getElementById('tab-map').textContent = t.tabMap;
-  document.getElementById('tab-list').textContent = t.tabList;
-  document.getElementById('tab-how').textContent = t.tabHow;
-  document.getElementById('tab-reg').textContent = t.tabReg;
-  document.getElementById('lbl-city').textContent = t.lblCity;
-  document.getElementById('lbl-online').textContent = t.lblOnline;
-  document.getElementById('lbl-total').textContent = t.lblTotal;
-  document.getElementById('lbl-cities').textContent = t.lblCities;
-  document.getElementById('srch-inp').placeholder = t.searchPlaceholder;
-  document.getElementById('btn-search').textContent = t.btnSearch;
-  document.getElementById('btn-find-driver').textContent = t.btnFindDriver;
-  document.getElementById('how1-title').textContent = t.how1T;
-  document.getElementById('how1-text').textContent = t.how1S;
-  document.getElementById('how2-title').textContent = t.how2T;
-  document.getElementById('how2-text').textContent = t.how2S;
-  document.getElementById('how3-title').textContent = t.how3T;
-  document.getElementById('how3-text').textContent = t.how3S;
-  document.getElementById('how4-title').textContent = t.how4T;
-  document.getElementById('how4-text').textContent = t.how4S;
-  document.getElementById('why-title').textContent = t.whyTitle;
-  document.getElementById('why-text').textContent = t.whyText;
-  document.getElementById('lbl-why').textContent = t.lbWhy;
-  document.getElementById('reg-title').textContent = t.regTitle;
-  document.getElementById('reg-sub').textContent = t.regSub;
-  document.getElementById('price-per').textContent = t.pricePer;
-  document.getElementById('price-vs').textContent = t.priceVs;
-  document.getElementById('ben-title').textContent = t.benTitle;
-  document.getElementById('ben1-t').textContent = t.ben1T;
-  document.getElementById('ben1-s').textContent = t.ben1S;
-  document.getElementById('ben2-t').textContent = t.ben2T;
-  document.getElementById('ben2-s').textContent = t.ben2S;
-  document.getElementById('ben3-t').textContent = t.ben3T;
-  document.getElementById('ben3-s').textContent = t.ben3S;
-  document.getElementById('ben4-t').textContent = t.ben4T;
-  document.getElementById('ben4-s').textContent = t.ben4S;
-  document.getElementById('ben5-t').textContent = t.ben5T;
-  document.getElementById('ben5-s').textContent = t.ben5S;
-  document.getElementById('ben6-t').textContent = t.ben6T;
-  document.getElementById('ben6-s').textContent = t.ben6S;
-  document.getElementById('reg-how-title').textContent = t.regHowTitle;
-  document.getElementById('reg-how-text').textContent = t.regHowText;
-  document.getElementById('reg-btn').textContent = t.regBtn;
-  renderDrivers();
-}
+js_drivers = "const DRIVERS = " + json.dumps(drivers, ensure_ascii=False) + ";\n"
 
-// ── CITY CENTERS ─────────────────────────────────────────
+cities_js = """
 const CITIES = {
-  sofia:  { lat: 42.6977, lng: 23.3219, zoom: 12, label: 'Sofia 🇧🇬' },
-  zurich: { lat: 47.3769, lng: 8.5417,  zoom: 13, label: 'Zürich 🇨🇭' },
-  berlin: { lat: 52.5200, lng: 13.4050, zoom: 12, label: 'Berlin 🇩🇪' },
-  london: { lat: 51.5074, lng: -0.1278, zoom: 12, label: 'London 🇬🇧' },
-  paris:   { lat: 48.8566, lng: 2.3522,  zoom: 12, label: 'Paris 🇫🇷' },
-  vienna:  { lat: 48.2082, lng: 16.3738, zoom: 13, label: 'Vienna 🇦🇹' },
-  amsterdam:{ lat: 52.3676, lng: 4.9041,  zoom: 13, label: 'Amsterdam 🇳🇱' },
-  barcelona:{ lat: 41.3851, lng: 2.1734,  zoom: 13, label: 'Barcelona 🇪🇸' },
+  sofia:     {lat:42.6977,lng:23.3219,zoom:12},
+  zurich:    {lat:47.3769,lng:8.5417, zoom:13},
+  berlin:    {lat:52.5200,lng:13.4050,zoom:12},
+  london:    {lat:51.5074,lng:-0.1278,zoom:12},
+  paris:     {lat:48.8566,lng:2.3522, zoom:12},
+  vienna:    {lat:48.2082,lng:16.3738,zoom:13},
+  amsterdam: {lat:52.3676,lng:4.9041, zoom:13},
+  barcelona: {lat:41.3851,lng:2.1734, zoom:13},
+  athens:    {lat:37.9838,lng:23.7275,zoom:13},
+  rome:      {lat:41.9028,lng:12.4964,zoom:12},
 };
+"""
 
-// ── DEMO DRIVERS ─────────────────────────────────────────
-const DRIVERS = [
-  {
-    "id": 1,
-    "name": "Emil M.",
-    "avatar": "🚗",
-    "city": "sofia",
-    "lat": 42.7387,
-    "lng": 23.2829,
-    "car": "Tesla Model S • СА1037ВВ",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 21,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "bg",
-      "en"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000007",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 2,
-    "name": "Ivan P.",
-    "avatar": "🚙",
-    "city": "sofia",
-    "lat": 42.6697,
-    "lng": 23.2829,
-    "car": "Mercedes E220 • СА1074СС",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 29,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "bg"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000014",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 3,
-    "name": "Stefan K.",
-    "avatar": "🚕",
-    "city": "sofia",
-    "lat": 42.6557,
-    "lng": 23.3239,
-    "car": "Toyota Camry • СА1111АА",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 37,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "bg",
-      "ru"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000021",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 4,
-    "name": "Georgi D.",
-    "avatar": "🏎",
-    "city": "sofia",
-    "lat": 42.6797,
-    "lng": 23.3499,
-    "car": "BMW 520 • СА1148ВВ",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 45,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "bg",
-      "en",
-      "ru"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000028",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 5,
-    "name": "Petar A.",
-    "avatar": "🚐",
-    "city": "sofia",
-    "lat": 42.7207,
-    "lng": 23.3199,
-    "car": "Volkswagen Passat • СА1185СС",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 53,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "bg",
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000035",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 6,
-    "name": "Nikolay V.",
-    "avatar": "🚗",
-    "city": "sofia",
-    "lat": 42.6527,
-    "lng": 23.2769,
-    "car": "Skoda Octavia • СА1222АА",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 61,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "bg",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000042",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 7,
-    "name": "Martin T.",
-    "avatar": "🚙",
-    "city": "sofia",
-    "lat": 42.6727,
-    "lng": 23.3469,
-    "car": "Honda Accord • СА1259ВВ",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 69,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "bg"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000049",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 8,
-    "name": "Dimitar H.",
-    "avatar": "🚕",
-    "city": "sofia",
-    "lat": 42.6997,
-    "lng": 23.3679,
-    "car": "Hyundai Sonata • СА1296СС",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 77,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "bg",
-      "ru"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000056",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 9,
-    "name": "Boyko R.",
-    "avatar": "🏎",
-    "city": "sofia",
-    "lat": 42.7077,
-    "lng": 23.3649,
-    "car": "Kia Optima • СА1333АА",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 85,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "bg",
-      "en",
-      "ru"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000063",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 10,
-    "name": "Todor S.",
-    "avatar": "🚐",
-    "city": "sofia",
-    "lat": 42.6787,
-    "lng": 23.2829,
-    "car": "Ford Mondeo • СА1370ВВ",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 93,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "bg",
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000070",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 11,
-    "name": "Plamen N.",
-    "avatar": "🚗",
-    "city": "sofia",
-    "lat": 42.7007,
-    "lng": 23.2859,
-    "car": "Tesla Model S • СА1407СС",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 101,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "bg",
-      "en"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000077",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 12,
-    "name": "Kiril M.",
-    "avatar": "🚙",
-    "city": "sofia",
-    "lat": 42.6587,
-    "lng": 23.3399,
-    "car": "Mercedes E220 • СА1444АА",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 109,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "bg"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000084",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 13,
-    "name": "Hristo B.",
-    "avatar": "🚕",
-    "city": "sofia",
-    "lat": 42.7047,
-    "lng": 23.3249,
-    "car": "Toyota Camry • СА1481ВВ",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 117,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "bg",
-      "ru"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000091",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 14,
-    "name": "Vasil G.",
-    "avatar": "🏎",
-    "city": "sofia",
-    "lat": 42.7197,
-    "lng": 23.3249,
-    "car": "BMW 520 • СА1518СС",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 125,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "bg",
-      "en",
-      "ru"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000098",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 15,
-    "name": "Angel I.",
-    "avatar": "🚐",
-    "city": "sofia",
-    "lat": 42.7237,
-    "lng": 23.2899,
-    "car": "Volkswagen Passat • СА1555АА",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 133,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "bg",
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000105",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 16,
-    "name": "Rumen C.",
-    "avatar": "🚗",
-    "city": "sofia",
-    "lat": 42.7277,
-    "lng": 23.3419,
-    "car": "Skoda Octavia • СА1592ВВ",
-    "online": false,
-    "rating": 4.5,
-    "reviews": 141,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "bg",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000112",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 17,
-    "name": "Stoyan F.",
-    "avatar": "🚙",
-    "city": "sofia",
-    "lat": 42.6677,
-    "lng": 23.2869,
-    "car": "Honda Accord • СА1629СС",
-    "online": false,
-    "rating": 4.6,
-    "reviews": 149,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "bg"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000119",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 18,
-    "name": "Lyubomir E.",
-    "avatar": "🚕",
-    "city": "sofia",
-    "lat": 42.7167,
-    "lng": 23.3319,
-    "car": "Hyundai Sonata • СА1666АА",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 157,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "bg",
-      "ru"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000126",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 19,
-    "name": "Kaloyan Z.",
-    "avatar": "🏎",
-    "city": "sofia",
-    "lat": 42.7267,
-    "lng": 23.3589,
-    "car": "Kia Optima • СА1703ВВ",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 165,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "bg",
-      "en",
-      "ru"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000133",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 20,
-    "name": "Svetoslav L.",
-    "avatar": "🚐",
-    "city": "sofia",
-    "lat": 42.7017,
-    "lng": 23.3539,
-    "car": "Ford Mondeo • СА1740СС",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 173,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "bg",
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Sofia + surroundings",
-    "phone": "+359810000140",
-    "price": "Starting from 1.20 лв/km"
-  },
-  {
-    "id": 21,
-    "name": "Hans B.",
-    "avatar": "🚗",
-    "city": "zurich",
-    "lat": 47.3769,
-    "lng": 8.5617,
-    "car": "BMW 5 Series • ZH·107·CD",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 41,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000147",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 22,
-    "name": "Klaus M.",
-    "avatar": "🚙",
-    "city": "zurich",
-    "lat": 47.4219,
-    "lng": 8.5207,
-    "car": "Mercedes E-Class • ZH·114·AB",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 49,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "fr",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000154",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 23,
-    "name": "Werner S.",
-    "avatar": "🚕",
-    "city": "zurich",
-    "lat": 47.3339,
-    "lng": 8.5407,
-    "car": "Tesla Model 3 • ZH·121·CD",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 57,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de"
-    ],
-    "electric": true,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000161",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 24,
-    "name": "Friedrich K.",
-    "avatar": "🏎",
-    "city": "zurich",
-    "lat": 47.3479,
-    "lng": 8.5277,
-    "car": "Audi A6 • ZH·128·AB",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 65,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en",
-      "it"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000168",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 25,
-    "name": "Günter H.",
-    "avatar": "🚐",
-    "city": "zurich",
-    "lat": 47.4179,
-    "lng": 8.5047,
-    "car": "Volkswagen Passat • ZH·135·CD",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 73,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000175",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 26,
-    "name": "Dieter L.",
-    "avatar": "🚗",
-    "city": "zurich",
-    "lat": 47.4229,
-    "lng": 8.5457,
-    "car": "Volvo V90 • ZH·142·AB",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 81,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000182",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 27,
-    "name": "Helmut W.",
-    "avatar": "🚙",
-    "city": "zurich",
-    "lat": 47.3929,
-    "lng": 8.5297,
-    "car": "Lexus ES • ZH·149·CD",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 89,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "fr",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000189",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 28,
-    "name": "Bernhard R.",
-    "avatar": "🚕",
-    "city": "zurich",
-    "lat": 47.4219,
-    "lng": 8.5437,
-    "car": "Mercedes S-Class • ZH·156·AB",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 97,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000196",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 29,
-    "name": "Wolfgang T.",
-    "avatar": "🏎",
-    "city": "zurich",
-    "lat": 47.3799,
-    "lng": 8.4977,
-    "car": "Porsche Cayenne • ZH·163·CD",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 105,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "en",
-      "it"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000203",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 30,
-    "name": "Manfred A.",
-    "avatar": "🚐",
-    "city": "zurich",
-    "lat": 47.3839,
-    "lng": 8.5057,
-    "car": "Tesla Model X • ZH·170·AB",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 113,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "fr"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000210",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 31,
-    "name": "Jürgen P.",
-    "avatar": "🚗",
-    "city": "zurich",
-    "lat": 47.3949,
-    "lng": 8.5287,
-    "car": "BMW 5 Series • ZH·177·CD",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 121,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000217",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 32,
-    "name": "Rudolf N.",
-    "avatar": "🚙",
-    "city": "zurich",
-    "lat": 47.3529,
-    "lng": 8.5037,
-    "car": "Mercedes E-Class • ZH·184·AB",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 129,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "fr",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000224",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 33,
-    "name": "Gerhard F.",
-    "avatar": "🚕",
-    "city": "zurich",
-    "lat": 47.4089,
-    "lng": 8.5157,
-    "car": "Tesla Model 3 • ZH·191·CD",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 137,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000231",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 34,
-    "name": "Heinrich C.",
-    "avatar": "🏎",
-    "city": "zurich",
-    "lat": 47.3929,
-    "lng": 8.5567,
-    "car": "Audi A6 • ZH·198·AB",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 145,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en",
-      "it"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000238",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 35,
-    "name": "Siegfried D.",
-    "avatar": "🚐",
-    "city": "zurich",
-    "lat": 47.3799,
-    "lng": 8.5407,
-    "car": "Volkswagen Passat • ZH·205·CD",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 153,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000245",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 36,
-    "name": "Horst E.",
-    "avatar": "🚗",
-    "city": "zurich",
-    "lat": 47.3389,
-    "lng": 8.5867,
-    "car": "Volvo V90 • ZH·212·AB",
-    "online": false,
-    "rating": 4.5,
-    "reviews": 161,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000252",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 37,
-    "name": "Erich G.",
-    "avatar": "🚙",
-    "city": "zurich",
-    "lat": 47.3669,
-    "lng": 8.4977,
-    "car": "Lexus ES • ZH·219·CD",
-    "online": false,
-    "rating": 4.6,
-    "reviews": 169,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "fr",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000259",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 38,
-    "name": "Konrad I.",
-    "avatar": "🚕",
-    "city": "zurich",
-    "lat": 47.3739,
-    "lng": 8.5277,
-    "car": "Mercedes S-Class • ZH·226·AB",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 177,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000266",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 39,
-    "name": "Alfred J.",
-    "avatar": "🏎",
-    "city": "zurich",
-    "lat": 47.3889,
-    "lng": 8.4977,
-    "car": "Porsche Cayenne • ZH·233·CD",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 185,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en",
-      "it"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000273",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 40,
-    "name": "Otto V.",
-    "avatar": "🚐",
-    "city": "zurich",
-    "lat": 47.3409,
-    "lng": 8.5637,
-    "car": "Tesla Model X • ZH·240·AB",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 193,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "fr"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Zurich + surroundings",
-    "phone": "+417910000280",
-    "price": "Starting from 4.50 CHF/km"
-  },
-  {
-    "id": 41,
-    "name": "Hans B.",
-    "avatar": "🚗",
-    "city": "berlin",
-    "lat": 52.503,
-    "lng": 13.447,
-    "car": "VW Passat • B·CD·1013",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 61,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000287",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 42,
-    "name": "Klaus M.",
-    "avatar": "🚙",
-    "city": "berlin",
-    "lat": 52.554,
-    "lng": 13.402,
-    "car": "Mercedes C-Class • B·EF·1026",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 69,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000294",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 43,
-    "name": "Werner S.",
-    "avatar": "🚕",
-    "city": "berlin",
-    "lat": 52.531,
-    "lng": 13.388,
-    "car": "BMW 3 Series • B·AB·1039",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 77,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "tr",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000301",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 44,
-    "name": "Friedrich K.",
-    "avatar": "🏎",
-    "city": "berlin",
-    "lat": 52.546,
-    "lng": 13.394,
-    "car": "Audi A4 • B·CD·1052",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 85,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en",
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000308",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 45,
-    "name": "Günter H.",
-    "avatar": "🚐",
-    "city": "berlin",
-    "lat": 52.487,
-    "lng": 13.39,
-    "car": "Tesla Model 3 • B·EF·1065",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 93,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "ru"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000315",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 46,
-    "name": "Dieter L.",
-    "avatar": "🚗",
-    "city": "berlin",
-    "lat": 52.478,
-    "lng": 13.431,
-    "car": "Ford Mondeo • B·AB·1078",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 101,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000322",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 47,
-    "name": "Helmut W.",
-    "avatar": "🚙",
-    "city": "berlin",
-    "lat": 52.562,
-    "lng": 13.415,
-    "car": "Skoda Superb • B·CD·1091",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 109,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000329",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 48,
-    "name": "Bernhard R.",
-    "avatar": "🚕",
-    "city": "berlin",
-    "lat": 52.525,
-    "lng": 13.422,
-    "car": "Opel Insignia • B·EF·1104",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 117,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "tr",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000336",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 49,
-    "name": "Wolfgang T.",
-    "avatar": "🏎",
-    "city": "berlin",
-    "lat": 52.519,
-    "lng": 13.453,
-    "car": "Toyota Avensis • B·AB·1117",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 125,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "en",
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000343",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 50,
-    "name": "Manfred A.",
-    "avatar": "🚐",
-    "city": "berlin",
-    "lat": 52.527,
-    "lng": 13.38,
-    "car": "Hyundai i40 • B·CD·1130",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 83,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "ru"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000350",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 51,
-    "name": "Jürgen P.",
-    "avatar": "🚗",
-    "city": "berlin",
-    "lat": 52.561,
-    "lng": 13.419,
-    "car": "VW Passat • B·EF·1143",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 91,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000357",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 52,
-    "name": "Rudolf N.",
-    "avatar": "🚙",
-    "city": "berlin",
-    "lat": 52.563,
-    "lng": 13.405,
-    "car": "Mercedes C-Class • B·AB·1156",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 99,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000364",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 53,
-    "name": "Gerhard F.",
-    "avatar": "🚕",
-    "city": "berlin",
-    "lat": 52.544,
-    "lng": 13.368,
-    "car": "BMW 3 Series • B·CD·1169",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 107,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "tr",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000371",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 54,
-    "name": "Heinrich C.",
-    "avatar": "🏎",
-    "city": "berlin",
-    "lat": 52.491,
-    "lng": 13.444,
-    "car": "Audi A4 • B·EF·1182",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 115,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en",
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000378",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 55,
-    "name": "Siegfried D.",
-    "avatar": "🚐",
-    "city": "berlin",
-    "lat": 52.541,
-    "lng": 13.406,
-    "car": "Tesla Model 3 • B·AB·1195",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 123,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "ru"
-    ],
-    "electric": true,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000385",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 56,
-    "name": "Horst E.",
-    "avatar": "🚗",
-    "city": "berlin",
-    "lat": 52.548,
-    "lng": 13.371,
-    "car": "Ford Mondeo • B·CD·1208",
-    "online": false,
-    "rating": 4.5,
-    "reviews": 131,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000392",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 57,
-    "name": "Erich G.",
-    "avatar": "🚙",
-    "city": "berlin",
-    "lat": 52.501,
-    "lng": 13.377,
-    "car": "Skoda Superb • B·EF·1221",
-    "online": false,
-    "rating": 4.6,
-    "reviews": 139,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000399",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 58,
-    "name": "Konrad I.",
-    "avatar": "🚕",
-    "city": "berlin",
-    "lat": 52.57,
-    "lng": 13.444,
-    "car": "Opel Insignia • B·AB·1234",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 147,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "tr",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000406",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 59,
-    "name": "Alfred J.",
-    "avatar": "🏎",
-    "city": "berlin",
-    "lat": 52.554,
-    "lng": 13.435,
-    "car": "Toyota Avensis • B·CD·1247",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 155,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en",
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000413",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 60,
-    "name": "Otto V.",
-    "avatar": "🚐",
-    "city": "berlin",
-    "lat": 52.48,
-    "lng": 13.404,
-    "car": "Hyundai i40 • B·EF·1260",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 163,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "ru"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Berlin + surroundings",
-    "phone": "+491510000420",
-    "price": "Starting from 2.50 €/km"
-  },
-  {
-    "id": 61,
-    "name": "James W.",
-    "avatar": "🚗",
-    "city": "london",
-    "lat": 51.5454,
-    "lng": -0.0908,
-    "car": "Toyota Prius • CD11 HIJ",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 31,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "London + surroundings",
-    "phone": "+447710000427",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 62,
-    "name": "John S.",
-    "avatar": "🚙",
-    "city": "london",
-    "lat": 51.5174,
-    "lng": -0.1248,
-    "car": "Ford Galaxy • AB12 EFG",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 39,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "London + surroundings",
-    "phone": "+447710000434",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 63,
-    "name": "Robert B.",
-    "avatar": "🚕",
-    "city": "london",
-    "lat": 51.5384,
-    "lng": -0.1418,
-    "car": "Mercedes Vito • CD13 HIJ",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 47,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "en",
-      "hi"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "London + surroundings",
-    "phone": "+447710000441",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 64,
-    "name": "Michael D.",
-    "avatar": "🏎",
-    "city": "london",
-    "lat": 51.5434,
-    "lng": -0.1378,
-    "car": "Vauxhall Insignia • AB14 EFG",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 55,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "ar"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "London + surroundings",
-    "phone": "+447710000448",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 65,
-    "name": "William J.",
-    "avatar": "🚐",
-    "city": "london",
-    "lat": 51.4844,
-    "lng": -0.1778,
-    "car": "BMW 5 Series • CD15 HIJ",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 63,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "pl"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "London + surroundings",
-    "phone": "+447710000455",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 66,
-    "name": "David A.",
-    "avatar": "🚗",
-    "city": "london",
-    "lat": 51.5524,
-    "lng": -0.1768,
-    "car": "Hyundai Ioniq • AB16 EFG",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 71,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "en"
-    ],
-    "electric": true,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "London + surroundings",
-    "phone": "+447710000462",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 67,
-    "name": "Richard N.",
-    "avatar": "🚙",
-    "city": "london",
-    "lat": 51.5204,
-    "lng": -0.1318,
-    "car": "Tesla Model 3 • CD17 HIJ",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 79,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "fr"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "London + surroundings",
-    "phone": "+447710000469",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 68,
-    "name": "Joseph H.",
-    "avatar": "🚕",
-    "city": "london",
-    "lat": 51.5234,
-    "lng": -0.0868,
-    "car": "Kia e-Niro • AB18 EFG",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 87,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "hi"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "London + surroundings",
-    "phone": "+447710000476",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 69,
-    "name": "Thomas C.",
-    "avatar": "🏎",
-    "city": "london",
-    "lat": 51.4654,
-    "lng": -0.1488,
-    "car": "VW Passat • CD19 HIJ",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 95,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "en",
-      "ar"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "London + surroundings",
-    "phone": "+447710000483",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 70,
-    "name": "Charles F.",
-    "avatar": "🚐",
-    "city": "london",
-    "lat": 51.4744,
-    "lng": -0.1378,
-    "car": "Skoda Octavia • AB20 EFG",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 103,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "pl"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "London + surroundings",
-    "phone": "+447710000490",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 71,
-    "name": "Christopher E.",
-    "avatar": "🚗",
-    "city": "london",
-    "lat": 51.5384,
-    "lng": -0.1638,
-    "car": "Toyota Prius • CD21 HIJ",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 111,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "London + surroundings",
-    "phone": "+447710000497",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 72,
-    "name": "Daniel G.",
-    "avatar": "🚙",
-    "city": "london",
-    "lat": 51.5434,
-    "lng": -0.1098,
-    "car": "Ford Galaxy • AB22 EFG",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 119,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "en",
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "London + surroundings",
-    "phone": "+447710000504",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 73,
-    "name": "Matthew I.",
-    "avatar": "🚕",
-    "city": "london",
-    "lat": 51.4934,
-    "lng": -0.1078,
-    "car": "Mercedes Vito • CD23 HIJ",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 127,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "hi"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "London + surroundings",
-    "phone": "+447710000511",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 74,
-    "name": "Anthony K.",
-    "avatar": "🏎",
-    "city": "london",
-    "lat": 51.5034,
-    "lng": -0.1178,
-    "car": "Vauxhall Insignia • AB24 EFG",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 135,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "ar"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "London + surroundings",
-    "phone": "+447710000518",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 75,
-    "name": "Mark L.",
-    "avatar": "🚐",
-    "city": "london",
-    "lat": 51.5334,
-    "lng": -0.1368,
-    "car": "BMW 5 Series • CD25 HIJ",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 143,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "en",
-      "pl"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "London + surroundings",
-    "phone": "+447710000525",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 76,
-    "name": "Donald P.",
-    "avatar": "🚗",
-    "city": "london",
-    "lat": 51.4634,
-    "lng": -0.1648,
-    "car": "Hyundai Ioniq • AB26 EFG",
-    "online": false,
-    "rating": 4.5,
-    "reviews": 151,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "en"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "London + surroundings",
-    "phone": "+447710000532",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 77,
-    "name": "Steven Q.",
-    "avatar": "🚙",
-    "city": "london",
-    "lat": 51.4634,
-    "lng": -0.1668,
-    "car": "Tesla Model 3 • CD27 HIJ",
-    "online": false,
-    "rating": 4.6,
-    "reviews": 159,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "fr"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "London + surroundings",
-    "phone": "+447710000539",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 78,
-    "name": "Paul R.",
-    "avatar": "🚕",
-    "city": "london",
-    "lat": 51.5434,
-    "lng": -0.1678,
-    "car": "Kia e-Niro • AB28 EFG",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 167,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "en",
-      "hi"
-    ],
-    "electric": true,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "London + surroundings",
-    "phone": "+447710000546",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 79,
-    "name": "Andrew T.",
-    "avatar": "🏎",
-    "city": "london",
-    "lat": 51.5294,
-    "lng": -0.1328,
-    "car": "VW Passat • CD29 HIJ",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 175,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "ar"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "London + surroundings",
-    "phone": "+447710000553",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 80,
-    "name": "Kenneth U.",
-    "avatar": "🚐",
-    "city": "london",
-    "lat": 51.4694,
-    "lng": -0.1358,
-    "car": "Skoda Octavia • AB30 EFG",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 183,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "pl"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "London + surroundings",
-    "phone": "+447710000560",
-    "price": "Starting from 3.20 £/km"
-  },
-  {
-    "id": 81,
-    "name": "Pierre D.",
-    "avatar": "🚗",
-    "city": "paris",
-    "lat": 48.8316,
-    "lng": 2.3492,
-    "car": "Peugeot 508 • CD-107-GH",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 51,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "fr",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000567",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 82,
-    "name": "Jean L.",
-    "avatar": "🚙",
-    "city": "paris",
-    "lat": 48.8426,
-    "lng": 2.3362,
-    "car": "Renault Talisman • AB-114-EF",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 59,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000574",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 83,
-    "name": "Michel B.",
-    "avatar": "🚕",
-    "city": "paris",
-    "lat": 48.8176,
-    "lng": 2.3112,
-    "car": "Citroën C5 • CD-121-GH",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 67,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "fr",
-      "ar",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000581",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 84,
-    "name": "François M.",
-    "avatar": "🏎",
-    "city": "paris",
-    "lat": 48.8936,
-    "lng": 2.3702,
-    "car": "Mercedes E-Class • AB-128-EF",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 75,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "fr",
-      "es"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000588",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 85,
-    "name": "Philippe R.",
-    "avatar": "🚐",
-    "city": "paris",
-    "lat": 48.8606,
-    "lng": 2.3782,
-    "car": "Tesla Model 3 • CD-135-GH",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 83,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "fr",
-      "en",
-      "de"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000595",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 86,
-    "name": "Jacques T.",
-    "avatar": "🚗",
-    "city": "paris",
-    "lat": 48.8976,
-    "lng": 2.3402,
-    "car": "BMW 5 Series • AB-142-EF",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 91,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "fr",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000602",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 87,
-    "name": "Alain N.",
-    "avatar": "🚙",
-    "city": "paris",
-    "lat": 48.8196,
-    "lng": 2.3042,
-    "car": "Audi A6 • CD-149-GH",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 99,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000609",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 88,
-    "name": "Bernard C.",
-    "avatar": "🚕",
-    "city": "paris",
-    "lat": 48.8546,
-    "lng": 2.3852,
-    "car": "Volkswagen Passat • AB-156-EF",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 107,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "fr",
-      "ar",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000616",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 89,
-    "name": "Claude F.",
-    "avatar": "🏎",
-    "city": "paris",
-    "lat": 48.8836,
-    "lng": 2.3172,
-    "car": "Toyota Camry • CD-163-GH",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 115,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "fr",
-      "es"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000623",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 90,
-    "name": "René G.",
-    "avatar": "🚐",
-    "city": "paris",
-    "lat": 48.8406,
-    "lng": 2.3262,
-    "car": "DS 9 • AB-170-EF",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 123,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "fr",
-      "en",
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000630",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 91,
-    "name": "André H.",
-    "avatar": "🚗",
-    "city": "paris",
-    "lat": 48.8446,
-    "lng": 2.3682,
-    "car": "Peugeot 508 • CD-177-GH",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 131,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "fr",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000637",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 92,
-    "name": "Henri I.",
-    "avatar": "🚙",
-    "city": "paris",
-    "lat": 48.8096,
-    "lng": 2.3112,
-    "car": "Renault Talisman • AB-184-EF",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 139,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000644",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 93,
-    "name": "Louis J.",
-    "avatar": "🚕",
-    "city": "paris",
-    "lat": 48.8166,
-    "lng": 2.3762,
-    "car": "Citroën C5 • CD-191-GH",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 147,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "fr",
-      "ar",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000651",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 94,
-    "name": "Marcel K.",
-    "avatar": "🏎",
-    "city": "paris",
-    "lat": 48.8586,
-    "lng": 2.3212,
-    "car": "Mercedes E-Class • AB-198-EF",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 155,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "fr",
-      "es"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000658",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 95,
-    "name": "Paul O.",
-    "avatar": "🚐",
-    "city": "paris",
-    "lat": 48.8386,
-    "lng": 2.3112,
-    "car": "Tesla Model 3 • CD-205-GH",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 163,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "fr",
-      "en",
-      "de"
-    ],
-    "electric": true,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000665",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 96,
-    "name": "Roger Q.",
-    "avatar": "🚗",
-    "city": "paris",
-    "lat": 48.8906,
-    "lng": 2.3452,
-    "car": "BMW 5 Series • AB-212-EF",
-    "online": false,
-    "rating": 4.5,
-    "reviews": 171,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "fr",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000672",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 97,
-    "name": "Robert S.",
-    "avatar": "🚙",
-    "city": "paris",
-    "lat": 48.8506,
-    "lng": 2.3882,
-    "car": "Audi A6 • CD-219-GH",
-    "online": false,
-    "rating": 4.6,
-    "reviews": 179,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000679",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 98,
-    "name": "Charles U.",
-    "avatar": "🚕",
-    "city": "paris",
-    "lat": 48.8356,
-    "lng": 2.3552,
-    "car": "Volkswagen Passat • AB-226-EF",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 187,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "fr",
-      "ar",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000686",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 99,
-    "name": "Georges W.",
-    "avatar": "🏎",
-    "city": "paris",
-    "lat": 48.8696,
-    "lng": 2.3652,
-    "car": "Toyota Camry • CD-233-GH",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 195,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "fr",
-      "es"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000693",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 100,
-    "name": "Émile X.",
-    "avatar": "🚐",
-    "city": "paris",
-    "lat": 48.8916,
-    "lng": 2.3922,
-    "car": "DS 9 • AB-240-EF",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 153,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "fr",
-      "en",
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Paris + surroundings",
-    "phone": "+336110000700",
-    "price": "Starting from 2.10 €/km"
-  },
-  {
-    "id": 101,
-    "name": "Hans B.",
-    "avatar": "🚗",
-    "city": "vienna",
-    "lat": 48.2582,
-    "lng": 16.3948,
-    "car": "Mercedes E-Class • W 111CD",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 21,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000707",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 102,
-    "name": "Klaus M.",
-    "avatar": "🚙",
-    "city": "vienna",
-    "lat": 48.2382,
-    "lng": 16.3858,
-    "car": "BMW 5 Series • W 122AB",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 29,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000714",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 103,
-    "name": "Werner S.",
-    "avatar": "🚕",
-    "city": "vienna",
-    "lat": 48.1612,
-    "lng": 16.3778,
-    "car": "Audi A6 • W 133CD",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 37,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "hu",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000721",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 104,
-    "name": "Friedrich K.",
-    "avatar": "🏎",
-    "city": "vienna",
-    "lat": 48.1762,
-    "lng": 16.3498,
-    "car": "VW Passat • W 144AB",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 45,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "it",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000728",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 105,
-    "name": "Günter H.",
-    "avatar": "🚐",
-    "city": "vienna",
-    "lat": 48.1602,
-    "lng": 16.3608,
-    "car": "Tesla Model 3 • W 155CD",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 53,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "fr"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000735",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 106,
-    "name": "Dieter L.",
-    "avatar": "🚗",
-    "city": "vienna",
-    "lat": 48.2282,
-    "lng": 16.3568,
-    "car": "Skoda Superb • W 166AB",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 61,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000742",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 107,
-    "name": "Helmut W.",
-    "avatar": "🚙",
-    "city": "vienna",
-    "lat": 48.1712,
-    "lng": 16.3678,
-    "car": "Volvo V60 • W 177CD",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 69,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000749",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 108,
-    "name": "Bernhard R.",
-    "avatar": "🚕",
-    "city": "vienna",
-    "lat": 48.1862,
-    "lng": 16.3348,
-    "car": "Ford Mondeo • W 188AB",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 77,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "hu",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000756",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 109,
-    "name": "Wolfgang T.",
-    "avatar": "🏎",
-    "city": "vienna",
-    "lat": 48.2562,
-    "lng": 16.3598,
-    "car": "Opel Insignia • W 199CD",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 85,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "it",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000763",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 110,
-    "name": "Manfred A.",
-    "avatar": "🚐",
-    "city": "vienna",
-    "lat": 48.2162,
-    "lng": 16.4048,
-    "car": "Hyundai Sonata • W 210AB",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 93,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000770",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 111,
-    "name": "Jürgen P.",
-    "avatar": "🚗",
-    "city": "vienna",
-    "lat": 48.2352,
-    "lng": 16.3578,
-    "car": "Mercedes E-Class • W 221CD",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 101,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000777",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 112,
-    "name": "Rudolf N.",
-    "avatar": "🚙",
-    "city": "vienna",
-    "lat": 48.2022,
-    "lng": 16.3858,
-    "car": "BMW 5 Series • W 232AB",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 109,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000784",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 113,
-    "name": "Gerhard F.",
-    "avatar": "🚕",
-    "city": "vienna",
-    "lat": 48.2552,
-    "lng": 16.3738,
-    "car": "Audi A6 • W 243CD",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 117,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "hu",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000791",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 114,
-    "name": "Heinrich C.",
-    "avatar": "🏎",
-    "city": "vienna",
-    "lat": 48.2112,
-    "lng": 16.3958,
-    "car": "VW Passat • W 254AB",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 125,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "it",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000798",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 115,
-    "name": "Siegfried D.",
-    "avatar": "🚐",
-    "city": "vienna",
-    "lat": 48.1962,
-    "lng": 16.3918,
-    "car": "Tesla Model 3 • W 265CD",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 133,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "fr"
-    ],
-    "electric": true,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000805",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 116,
-    "name": "Horst E.",
-    "avatar": "🚗",
-    "city": "vienna",
-    "lat": 48.2032,
-    "lng": 16.4188,
-    "car": "Skoda Superb • W 276AB",
-    "online": false,
-    "rating": 4.5,
-    "reviews": 141,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000812",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 117,
-    "name": "Erich G.",
-    "avatar": "🚙",
-    "city": "vienna",
-    "lat": 48.1922,
-    "lng": 16.3578,
-    "car": "Volvo V60 • W 287CD",
-    "online": false,
-    "rating": 4.6,
-    "reviews": 149,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000819",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 118,
-    "name": "Konrad I.",
-    "avatar": "🚕",
-    "city": "vienna",
-    "lat": 48.2082,
-    "lng": 16.3938,
-    "car": "Ford Mondeo • W 298AB",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 157,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "de",
-      "hu",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000826",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 119,
-    "name": "Alfred J.",
-    "avatar": "🏎",
-    "city": "vienna",
-    "lat": 48.1742,
-    "lng": 16.4208,
-    "car": "Opel Insignia • W 309CD",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 165,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "it",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000833",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 120,
-    "name": "Otto V.",
-    "avatar": "🚐",
-    "city": "vienna",
-    "lat": 48.2242,
-    "lng": 16.3358,
-    "car": "Hyundai Sonata • W 320AB",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 173,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "de",
-      "fr"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Vienna + surroundings",
-    "phone": "+436910000840",
-    "price": "Starting from 2.30 €/km"
-  },
-  {
-    "id": 121,
-    "name": "Jan V.",
-    "avatar": "🚗",
-    "city": "amsterdam",
-    "lat": 52.3576,
-    "lng": 4.8981,
-    "car": "Tesla Model 3 • CD-109-GH",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 41,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "nl",
-      "en"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000847",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 122,
-    "name": "Pieter D.",
-    "avatar": "🚙",
-    "city": "amsterdam",
-    "lat": 52.3836,
-    "lng": 4.9061,
-    "car": "Peugeot 508 • AB-118-EF",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 49,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "nl"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000854",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 123,
-    "name": "Hendrik B.",
-    "avatar": "🚕",
-    "city": "amsterdam",
-    "lat": 52.4046,
-    "lng": 4.8941,
-    "car": "BMW 5 Series • CD-127-GH",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 57,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "nl",
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000861",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 124,
-    "name": "Cornelis M.",
-    "avatar": "🏎",
-    "city": "amsterdam",
-    "lat": 52.3196,
-    "lng": 4.9401,
-    "car": "Mercedes E-Class • AB-136-EF",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 65,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "fr",
-      "nl"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000868",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 125,
-    "name": "Johannes S.",
-    "avatar": "🚐",
-    "city": "amsterdam",
-    "lat": 52.3546,
-    "lng": 4.8781,
-    "car": "VW Passat • CD-145-GH",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 73,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "nl"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000875",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 126,
-    "name": "Willem T.",
-    "avatar": "🚗",
-    "city": "amsterdam",
-    "lat": 52.3346,
-    "lng": 4.9411,
-    "car": "Toyota Prius • AB-154-EF",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 81,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "nl",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000882",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 127,
-    "name": "Gerrit N.",
-    "avatar": "🚙",
-    "city": "amsterdam",
-    "lat": 52.3316,
-    "lng": 4.8741,
-    "car": "Renault Talisman • CD-163-GH",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 89,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "nl"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000889",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 128,
-    "name": "Dirk F.",
-    "avatar": "🚕",
-    "city": "amsterdam",
-    "lat": 52.3616,
-    "lng": 4.9301,
-    "car": "Volvo S90 • AB-172-EF",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 97,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "nl",
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000896",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 129,
-    "name": "Jacob C.",
-    "avatar": "🏎",
-    "city": "amsterdam",
-    "lat": 52.3856,
-    "lng": 4.9431,
-    "car": "Audi A6 • CD-181-GH",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 105,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "en",
-      "fr",
-      "nl"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000903",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 130,
-    "name": "Adriaan G.",
-    "avatar": "🚐",
-    "city": "amsterdam",
-    "lat": 52.3436,
-    "lng": 4.9281,
-    "car": "Skoda Superb • AB-190-EF",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 113,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "nl"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000910",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 131,
-    "name": "Maarten H.",
-    "avatar": "🚗",
-    "city": "amsterdam",
-    "lat": 52.3786,
-    "lng": 4.8581,
-    "car": "Tesla Model 3 • CD-199-GH",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 121,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "nl",
-      "en"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000917",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 132,
-    "name": "Sjoerd I.",
-    "avatar": "🚙",
-    "city": "amsterdam",
-    "lat": 52.3576,
-    "lng": 4.9391,
-    "car": "Peugeot 508 • AB-208-EF",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 129,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "en",
-      "nl"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000924",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 133,
-    "name": "Klaas J.",
-    "avatar": "🚕",
-    "city": "amsterdam",
-    "lat": 52.3886,
-    "lng": 4.8751,
-    "car": "BMW 5 Series • CD-217-GH",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 137,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "nl",
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000931",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 134,
-    "name": "Leendert K.",
-    "avatar": "🏎",
-    "city": "amsterdam",
-    "lat": 52.3546,
-    "lng": 4.9271,
-    "car": "Mercedes E-Class • AB-226-EF",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 145,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "fr",
-      "nl"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000938",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 135,
-    "name": "Arjan L.",
-    "avatar": "🚐",
-    "city": "amsterdam",
-    "lat": 52.3586,
-    "lng": 4.8761,
-    "car": "VW Passat • CD-235-GH",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 153,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "nl"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000945",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 136,
-    "name": "Bas O.",
-    "avatar": "🚗",
-    "city": "amsterdam",
-    "lat": 52.3856,
-    "lng": 4.8871,
-    "car": "Toyota Prius • AB-244-EF",
-    "online": false,
-    "rating": 4.5,
-    "reviews": 161,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "nl",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000952",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 137,
-    "name": "Ruud P.",
-    "avatar": "🚙",
-    "city": "amsterdam",
-    "lat": 52.3406,
-    "lng": 4.8991,
-    "car": "Renault Talisman • CD-253-GH",
-    "online": false,
-    "rating": 4.6,
-    "reviews": 169,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "nl"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000959",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 138,
-    "name": "Floris Q.",
-    "avatar": "🚕",
-    "city": "amsterdam",
-    "lat": 52.4006,
-    "lng": 4.8891,
-    "car": "Volvo S90 • AB-262-EF",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 177,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "nl",
-      "de",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000966",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 139,
-    "name": "Thijs R.",
-    "avatar": "🏎",
-    "city": "amsterdam",
-    "lat": 52.3606,
-    "lng": 4.9091,
-    "car": "Audi A6 • CD-271-GH",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 185,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "en",
-      "fr",
-      "nl"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000973",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 140,
-    "name": "Niels U.",
-    "avatar": "🚐",
-    "city": "amsterdam",
-    "lat": 52.3676,
-    "lng": 4.9521,
-    "car": "Skoda Superb • AB-280-EF",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 193,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "nl"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Amsterdam + surroundings",
-    "phone": "+316210000980",
-    "price": "Starting from 2.40 €/km"
-  },
-  {
-    "id": 141,
-    "name": "Carlos G.",
-    "avatar": "🚗",
-    "city": "barcelona",
-    "lat": 41.3451,
-    "lng": 2.1874,
-    "car": "Mercedes E-Class • 1017 DEF",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 61,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "es",
-      "ca",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110000987",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 142,
-    "name": "José M.",
-    "avatar": "🚙",
-    "city": "barcelona",
-    "lat": 41.3791,
-    "lng": 2.1504,
-    "car": "BMW 5 Series • 1034 ABC",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 69,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "es",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110000994",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 143,
-    "name": "Antonio R.",
-    "avatar": "🚕",
-    "city": "barcelona",
-    "lat": 41.4341,
-    "lng": 2.1814,
-    "car": "Audi A6 • 1051 DEF",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 77,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "ca",
-      "es"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001001",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 144,
-    "name": "Manuel S.",
-    "avatar": "🏎",
-    "city": "barcelona",
-    "lat": 41.3801,
-    "lng": 2.1284,
-    "car": "Tesla Model 3 • 1068 ABC",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 85,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "es",
-      "fr",
-      "en"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001008",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 145,
-    "name": "Francisco T.",
-    "avatar": "🚐",
-    "city": "barcelona",
-    "lat": 41.4201,
-    "lng": 2.1924,
-    "car": "Toyota Camry • 1085 DEF",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 93,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "es",
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001015",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 146,
-    "name": "David N.",
-    "avatar": "🚗",
-    "city": "barcelona",
-    "lat": 41.3961,
-    "lng": 2.2044,
-    "car": "VW Passat • 1102 ABC",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 101,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "es",
-      "ca",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001022",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 147,
-    "name": "Juan F.",
-    "avatar": "🚙",
-    "city": "barcelona",
-    "lat": 41.4121,
-    "lng": 2.1794,
-    "car": "Peugeot 508 • 1119 DEF",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 109,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "es",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001029",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 148,
-    "name": "Luis C.",
-    "avatar": "🚕",
-    "city": "barcelona",
-    "lat": 41.3681,
-    "lng": 2.1694,
-    "car": "SEAT León • 1136 ABC",
-    "online": true,
-    "rating": 4.7,
-    "reviews": 117,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "ca",
-      "es"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001036",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 149,
-    "name": "Miguel H.",
-    "avatar": "🏎",
-    "city": "barcelona",
-    "lat": 41.4211,
-    "lng": 2.2164,
-    "car": "Hyundai Ioniq • 1153 DEF",
-    "online": true,
-    "rating": 4.8,
-    "reviews": 125,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "es",
-      "fr",
-      "en"
-    ],
-    "electric": true,
-    "nosmoker": false,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001043",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 150,
-    "name": "Alejandro I.",
-    "avatar": "🚐",
-    "city": "barcelona",
-    "lat": 41.3401,
-    "lng": 2.2074,
-    "car": "Ford Mondeo • 1170 ABC",
-    "online": true,
-    "rating": 4.9,
-    "reviews": 83,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "es",
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001050",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 151,
-    "name": "Pedro J.",
-    "avatar": "🚗",
-    "city": "barcelona",
-    "lat": 41.3751,
-    "lng": 2.1694,
-    "car": "Mercedes E-Class • 1187 DEF",
-    "online": true,
-    "rating": 4.5,
-    "reviews": 91,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "es",
-      "ca",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001057",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 152,
-    "name": "Fernando K.",
-    "avatar": "🚙",
-    "city": "barcelona",
-    "lat": 41.4111,
-    "lng": 2.1814,
-    "car": "BMW 5 Series • 1204 ABC",
-    "online": true,
-    "rating": 4.6,
-    "reviews": 99,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "es",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001064",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 153,
-    "name": "Pablo L.",
-    "avatar": "🚕",
-    "city": "barcelona",
-    "lat": 41.4131,
-    "lng": 2.1484,
-    "car": "Audi A6 • 1221 DEF",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 107,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "ca",
-      "es"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": true,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001071",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 154,
-    "name": "Javier O.",
-    "avatar": "🏎",
-    "city": "barcelona",
-    "lat": 41.3381,
-    "lng": 2.1554,
-    "car": "Tesla Model 3 • 1238 ABC",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 115,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "es",
-      "fr",
-      "en"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001078",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 155,
-    "name": "Sergio P.",
-    "avatar": "🚐",
-    "city": "barcelona",
-    "lat": 41.4061,
-    "lng": 2.1304,
-    "car": "Toyota Camry • 1255 DEF",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 123,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "es",
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001085",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 156,
-    "name": "Álvaro Q.",
-    "avatar": "🚗",
-    "city": "barcelona",
-    "lat": 41.3701,
-    "lng": 2.2084,
-    "car": "VW Passat • 1272 ABC",
-    "online": false,
-    "rating": 4.5,
-    "reviews": 131,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "es",
-      "ca",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001092",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 157,
-    "name": "Andrés R.",
-    "avatar": "🚙",
-    "city": "barcelona",
-    "lat": 41.3621,
-    "lng": 2.2134,
-    "car": "Peugeot 508 • 1289 DEF",
-    "online": false,
-    "rating": 4.6,
-    "reviews": 139,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "es",
-      "en"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": true,
-    "childok": false,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001099",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 158,
-    "name": "Rafael S.",
-    "avatar": "🚕",
-    "city": "barcelona",
-    "lat": 41.3731,
-    "lng": 2.1834,
-    "car": "SEAT León • 1306 ABC",
-    "online": false,
-    "rating": 4.7,
-    "reviews": 147,
-    "payment": [
-      "revolut",
-      "cash"
-    ],
-    "langs": [
-      "ca",
-      "es"
-    ],
-    "electric": false,
-    "nosmoker": false,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001106",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 159,
-    "name": "Eduardo T.",
-    "avatar": "🏎",
-    "city": "barcelona",
-    "lat": 41.4051,
-    "lng": 2.1984,
-    "car": "Hyundai Ioniq • 1323 DEF",
-    "online": false,
-    "rating": 4.8,
-    "reviews": 155,
-    "payment": [
-      "revolut",
-      "terminal"
-    ],
-    "langs": [
-      "es",
-      "fr",
-      "en"
-    ],
-    "electric": true,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": true,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001113",
-    "price": "Starting from 1.90 €/km"
-  },
-  {
-    "id": 160,
-    "name": "Ricardo U.",
-    "avatar": "🚐",
-    "city": "barcelona",
-    "lat": 41.4081,
-    "lng": 2.1594,
-    "car": "Ford Mondeo • 1340 ABC",
-    "online": false,
-    "rating": 4.9,
-    "reviews": 163,
-    "payment": [
-      "cash",
-      "terminal"
-    ],
-    "langs": [
-      "es",
-      "de"
-    ],
-    "electric": false,
-    "nosmoker": true,
-    "petfriendly": false,
-    "childok": false,
-    "areas": "Barcelona + surroundings",
-    "phone": "+346110001120",
-    "price": "Starting from 1.90 €/km"
-  }
-];
-
+main_js = """
 let currentCity = 'sofia';
 let activeFilter = 'all';
 let currentDriver = null;
+let currentStar = 0;
 let map, markers = [];
+let userLat = null, userLng = null;
 
-function changeCity() {
-  currentCity = document.getElementById('city-sel').value;
-  const c = CITIES[currentCity];
-  map.setView([c.lat, c.lng], c.zoom);
-  renderMap();
-  renderDrivers();
-  updateCounters();
+// GPS
+function requestGPS() {
+  if(!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(pos => {
+    userLat = pos.coords.latitude;
+    userLng = pos.coords.longitude;
+    map.setView([userLat, userLng], 14);
+    L.marker([userLat, userLng], {
+      icon: L.divIcon({html:'<div style="background:var(--bl);border:3px solid #fff;border-radius:50%;width:16px;height:16px;box-shadow:0 0 10px #3b82f680"></div>',iconSize:[16,16],iconAnchor:[8,8],className:''})
+    }).addTo(map).bindPopup('📍 You are here');
+  }, () => {});
 }
 
-function updateCounters() {
-  const cityDrivers = DRIVERS.filter(d => d.city === currentCity);
-  const online = cityDrivers.filter(d => d.online).length;
-  document.getElementById('cnt-online').textContent = online;
-  document.getElementById('cnt-total').textContent = cityDrivers.length;
-  document.getElementById('cnt-city').textContent = Object.keys(CITIES).length;
-}
-
-function getPayIcon(p) {
+function payIcon(p) {
   if(p==='revolut') return '<span class="pay-icon">💜 Revolut</span>';
   if(p==='terminal') return '<span class="pay-icon">🖥 Terminal</span>';
   if(p==='cash') return '<span class="pay-icon">💵 Cash</span>';
   return '';
 }
 
-function driverCard(d, compact=false) {
-  const tags = [];
-  if(d.online) tags.push('<span class="tag tag-gr">🟢 Online</span>');
-  if(d.electric) tags.push('<span class="tag tag-cy">⚡ Electric</span>');
-  if(d.nosmoker) tags.push('<span class="tag tag-y">🚭 No Smoke</span>');
-  if(d.petfriendly) tags.push('<span class="tag tag-pu">🐾 Pet OK</span>');
-  if(d.childok) tags.push('<span class="tag tag-bl">👶 Child OK</span>');
-  const pays = d.payment.map(getPayIcon).join(' ');
-  return `
-    <div class="dcard" onclick="openModal(${d.id})">
-      <div class="dcard-top">
-        <div class="dcard-avatar">${d.avatar}</div>
-        <div class="dcard-info">
-          <div class="dcard-name">${d.name} <span class="verified">✓ Verified</span></div>
-          <div class="dcard-car">${d.car}</div>
-          <div class="dcard-tags">${tags.join('')}</div>
-          <div class="pay-icons" style="margin-top:5px">${pays}</div>
-        </div>
-        <div class="dist">⭐${d.rating}</div>
-      </div>
-      ${!compact ? `<div class="dcard-bottom">
-        <button class="btn-call" onclick="event.stopPropagation();callDriver(${d.id})">📞 ${T[lang].btnCall.replace('📞 ','')}</button>
-        <button class="btn-wp" onclick="event.stopPropagation();whatsappDriver(${d.id})">💬 WhatsApp</button>
-        <button class="btn-info">ℹ️</button>
-      </div>` : ''}
-    </div>`;
+function styleLabel(d) {
+  if(d.accel < 5) return {label:'🏎 Sport', color:'var(--pi)', desc:`0–100 in ${d.accel}s`};
+  if(d.accel < 6.5) return {label:'⚡ Fast', color:'var(--or)', desc:`0–100 in ${d.accel}s`};
+  if(d.accel > 10) return {label:'🛋 Comfort', color:'var(--cy)', desc:'Smooth & relaxed'};
+  return {label:'🚗 Normal', color:'var(--gr)', desc:'Balanced driving'};
 }
 
-function filterDrivers() {
-  renderDrivers();
+function carIcon(d) {
+  if(d.minivan) return '🚐';
+  if(d.suv) return '🚙';
+  if(d.accel < 5) return '🏎';
+  if(d.electric) return '🚗';
+  return '🚗';
+}
+
+function driverCard(d, compact=false) {
+  const style = styleLabel(d);
+  const tags = [];
+  if(d.online) tags.push('<span class="tag tag-gr">🟢 Online</span>');
+  else tags.push('<span class="tag" style="color:var(--mu2);border-color:var(--brd)">⚫ Offline</span>');
+  if(d.electric) tags.push('<span class="tag tag-cy">⚡ Electric</span>');
+  if(d.minivan) tags.push('<span class="tag tag-bl">🚐 ' + d.seats + ' seats</span>');
+  if(d.suv) tags.push('<span class="tag tag-bl">🚙 SUV</span>');
+  tags.push('<span class="tag" style="color:' + style.color + ';border-color:' + style.color + '33;background:' + style.color + '11">' + style.label + '</span>');
+  if(d.nosmoker) tags.push('<span class="tag tag-y">🚭</span>');
+  if(d.smoking) tags.push('<span class="tag tag-rd">🚬 OK</span>');
+  if(d.petfriendly) tags.push('<span class="tag tag-pu">🐾</span>');
+  if(d.childok) tags.push('<span class="tag tag-or">👶</span>');
+  const pays = d.payment.map(payIcon).join('');
+  const icon = carIcon(d);
+  return `<div class="dcard" onclick="openModal(${d.id})">
+    <div class="dcard-top">
+      <div class="dcard-avatar">${icon}</div>
+      <div class="dcard-info">
+        <div class="dcard-name">${d.name} <span class="verified">✓</span></div>
+        <div class="dcard-car">${d.car} · ${d.plate}</div>
+        <div class="dcard-tags">${tags.join('')}</div>
+        <div class="pay-icons">${pays}</div>
+      </div>
+      <div class="rating-badge">⭐${d.rating}</div>
+    </div>
+    ${!compact ? `<div class="dcard-bottom">
+      <button class="btn-call" onclick="event.stopPropagation();quickCall(${d.id})">📞 Call</button>
+      <button class="btn-wp" onclick="event.stopPropagation();quickWA(${d.id})">💬 WhatsApp</button>
+      <button class="btn-info">ℹ️</button>
+    </div>` : ''}
+  </div>`;
 }
 
 function setFilter(f, el) {
@@ -5013,109 +534,175 @@ function setFilter(f, el) {
 }
 
 function renderDrivers() {
-  const q = (document.getElementById('srch-inp')?.value || '').toLowerCase();
+  const q = (document.getElementById('srch-inp')?.value||'').toLowerCase();
   let drivers = DRIVERS.filter(d => d.city === currentCity);
-  if(activeFilter === 'online') drivers = drivers.filter(d => d.online);
-  if(activeFilter === 'revolut') drivers = drivers.filter(d => d.payment.includes('revolut'));
-  if(activeFilter === 'terminal') drivers = drivers.filter(d => d.payment.includes('terminal'));
-  if(activeFilter === 'cash') drivers = drivers.filter(d => d.payment.includes('cash'));
-  if(activeFilter === 'electric') drivers = drivers.filter(d => d.electric);
-  if(activeFilter === 'english') drivers = drivers.filter(d => d.langs.includes('en'));
-  if(activeFilter === 'german') drivers = drivers.filter(d => d.langs.includes('de'));
-  if(activeFilter === 'french') drivers = drivers.filter(d => d.langs.includes('fr'));
-  if(activeFilter === 'nosmoker') drivers = drivers.filter(d => d.nosmoker);
-  if(activeFilter === 'petfriendly') drivers = drivers.filter(d => d.petfriendly);
-  if(activeFilter === 'childok') drivers = drivers.filter(d => d.childok);
-  if(activeFilter === 'highrated') drivers = drivers.filter(d => d.rating >= 4.8);
-  if(q) drivers = drivers.filter(d =>
-    d.name.toLowerCase().includes(q) || d.car.toLowerCase().includes(q) || d.areas.toLowerCase().includes(q)
+  const f = activeFilter;
+  if(f==='online') drivers = drivers.filter(d=>d.online);
+  if(f==='revolut') drivers = drivers.filter(d=>d.payment.includes('revolut'));
+  if(f==='terminal') drivers = drivers.filter(d=>d.payment.includes('terminal'));
+  if(f==='cash') drivers = drivers.filter(d=>d.payment.includes('cash'));
+  if(f==='sport') drivers = drivers.filter(d=>d.sport);
+  if(f==='fast') drivers = drivers.filter(d=>d.fast && !d.sport);
+  if(f==='comfort') drivers = drivers.filter(d=>d.comfort);
+  if(f==='electric') drivers = drivers.filter(d=>d.electric);
+  if(f==='suv') drivers = drivers.filter(d=>d.suv);
+  if(f==='minivan') drivers = drivers.filter(d=>d.minivan);
+  if(f==='sedan') drivers = drivers.filter(d=>!d.suv && !d.minivan);
+  if(f==='lang_en') drivers = drivers.filter(d=>d.langs.includes('en'));
+  if(f==='lang_de') drivers = drivers.filter(d=>d.langs.includes('de'));
+  if(f==='lang_fr') drivers = drivers.filter(d=>d.langs.includes('fr'));
+  if(f==='lang_ru') drivers = drivers.filter(d=>d.langs.includes('ru'));
+  if(f==='nosmoker') drivers = drivers.filter(d=>d.nosmoker);
+  if(f==='smoking') drivers = drivers.filter(d=>d.smoking);
+  if(f==='petfriendly') drivers = drivers.filter(d=>d.petfriendly);
+  if(f==='childok') drivers = drivers.filter(d=>d.childok);
+  if(f==='highrated') drivers = drivers.filter(d=>d.rating>=4.8);
+  if(f==='minivan8') drivers = drivers.filter(d=>d.seats>=8);
+  if(q) drivers = drivers.filter(d=>
+    d.name.toLowerCase().includes(q)||d.car.toLowerCase().includes(q)||d.areas.toLowerCase().includes(q)
   );
-  const html = drivers.map(d => driverCard(d)).join('') ||
-    '<div style="text-align:center;padding:30px;color:var(--mu)">No drivers found</div>';
+  // Online first
+  drivers.sort((a,b) => (b.online?1:0)-(a.online?1:0) || b.rating-a.rating);
+  const html = drivers.map(d=>driverCard(d)).join('') ||
+    '<div style="text-align:center;padding:30px;color:var(--mu)">No drivers found with this filter</div>';
   document.getElementById('dlist').innerHTML = html;
-  document.getElementById('map-dlist').innerHTML = drivers.slice(0,3).map(d => driverCard(d, true)).join('');
+  document.getElementById('map-dlist').innerHTML = drivers.slice(0,4).map(d=>driverCard(d,true)).join('');
+}
+
+function changeCity() {
+  currentCity = document.getElementById('city-sel').value;
+  const c = CITIES[currentCity];
+  map.setView([c.lat,c.lng],c.zoom);
+  renderMap();
+  renderDrivers();
+  const cd = DRIVERS.filter(d=>d.city===currentCity);
+  document.getElementById('cnt-online').textContent = cd.filter(d=>d.online).length;
+  document.getElementById('cnt-total').textContent = cd.length;
 }
 
 function renderMap() {
-  markers.forEach(m => m.remove());
-  markers = [];
-  const cityDrivers = DRIVERS.filter(d => d.city === currentCity);
-  cityDrivers.forEach(d => {
-    const icon = L.divIcon({
-      html: `<div style="background:${d.online?'#22c55e':'#666'};border:2px solid #fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px #0008">${d.avatar}</div>`,
-      iconSize:[32,32], iconAnchor:[16,16], className:''
-    });
-    const m = L.marker([d.lat, d.lng], {icon}).addTo(map);
+  markers.forEach(m=>m.remove());
+  markers=[];
+  DRIVERS.filter(d=>d.city===currentCity).forEach(d=>{
+    const icon = carIcon(d);
+    const m = L.marker([d.lat,d.lng],{
+      icon: L.divIcon({
+        html:`<div style="background:${d.online?'#22c55e':'#444'};border:2px solid #fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px #0008">${icon}</div>`,
+        iconSize:[30,30],iconAnchor:[15,15],className:''
+      })
+    }).addTo(map);
     m.bindPopup(`<b>${d.name}</b><br>${d.car}<br>⭐${d.rating}`);
-    m.on('click', () => openModal(d.id));
+    m.on('click',()=>openModal(d.id));
     markers.push(m);
   });
 }
 
 function openModal(id) {
-  currentDriver = DRIVERS.find(d => d.id === id);
+  currentDriver = DRIVERS.find(d=>d.id===id);
   if(!currentDriver) return;
   const d = currentDriver;
-  document.getElementById('m-avatar').textContent = d.avatar;
-  document.getElementById('m-name').innerHTML = `${d.name} <span class="verified">✓</span>`;
-  document.getElementById('m-car').textContent = d.car;
-  document.getElementById('m-stars').textContent = '★'.repeat(Math.round(d.rating)) + ' ' + d.rating;
-  document.getElementById('m-payment').innerHTML = d.payment.map(getPayIcon).join(' ');
-  const langMap = {bg:'🇧🇬 BG', en:'🇬🇧 EN', de:'🇩🇪 DE', fr:'🇫🇷 FR', ru:'🇷🇺 RU'};
-  document.getElementById('m-langs').innerHTML = d.langs.map(l => `<span class="tag tag-bl">${langMap[l]||l}</span>`).join(' ');
+  const style = styleLabel(d);
+  document.getElementById('m-avatar').textContent = carIcon(d);
+  document.getElementById('m-name').innerHTML = d.name + ' <span class="verified">✓ Verified</span>';
+  document.getElementById('m-car').textContent = d.car + ' · ' + d.plate;
+  document.getElementById('m-rating-row').innerHTML = 
+    `<span style="color:var(--y);font-size:20px">${'★'.repeat(Math.round(d.rating))}</span> <span style="font-weight:800">${d.rating}</span> <span style="color:var(--mu);font-size:12px">(${d.reviews} reviews)</span>`;
+  
+  document.getElementById('m-style-notice').innerHTML = 
+    `<strong style="color:var(--or)">⚠️ Please tell your driver your preferred riding style when you get in the car.</strong><br>
+    This driver's style: <strong style="color:${style.color}">${style.label} — ${style.desc}</strong>`;
+
+  document.getElementById('m-car-details').innerHTML = `
+    <div class="info-row"><span class="info-key">Type</span><span class="info-val">${d.car_type.toUpperCase()}</span></div>
+    <div class="info-row"><span class="info-key">Seats</span><span class="info-val">${d.seats} passengers</span></div>
+    <div class="info-row"><span class="info-key">0–100 km/h</span><span class="info-val" style="color:${style.color}">${d.accel}s</span></div>
+    <div class="info-row"><span class="info-key">Electric</span><span class="info-val">${d.electric?'✅ Yes':'No'}</span></div>
+  `;
+  document.getElementById('m-payment').innerHTML = d.payment.map(payIcon).join(' ');
+  const langMap = {bg:'🇧🇬 BG',en:'🇬🇧 EN',de:'🇩🇪 DE',fr:'🇫🇷 FR',ru:'🇷🇺 RU',el:'🇬🇷 EL',it:'🇮🇹 IT',es:'🇪🇸 ES',nl:'🇳🇱 NL',ca:'Català',hi:'हिं',ar:'عربي',tr:'TR',hu:'HU',pl:'PL'};
+  document.getElementById('m-langs').innerHTML = d.langs.map(l=>`<span class="tag tag-bl">${langMap[l]||l}</span>`).join(' ');
   const opts = [];
-  if(d.electric) opts.push('<span class="tag tag-cy">⚡ Electric</span>');
-  if(d.nosmoker) opts.push('<span class="tag tag-y">🚭 No Smoke</span>');
-  if(d.petfriendly) opts.push('<span class="tag tag-pu">🐾 Pet OK</span>');
-  if(d.childok) opts.push('<span class="tag tag-bl">👶 Child OK</span>');
-  document.getElementById('m-options').innerHTML = opts.join(' ') || '—';
+  if(d.nosmoker) opts.push('<span class="tag tag-y">🚭 No smoking</span>');
+  if(d.smoking) opts.push('<span class="tag tag-rd">🚬 Smoking OK</span>');
+  if(d.petfriendly) opts.push('<span class="tag tag-pu">🐾 Pets OK</span>');
+  if(d.childok) opts.push('<span class="tag tag-or">👶 Child seat</span>');
+  document.getElementById('m-options').innerHTML = opts.join(' ')||'—';
+  document.getElementById('m-price').textContent = d.price;
   document.getElementById('m-areas').textContent = d.areas;
-  document.getElementById('m-call').textContent = T[lang].btnCall;
-  document.getElementById('m-wp').textContent = T[lang].btnWp;
   document.getElementById('modal').classList.add('on');
 }
 
-function closeModal() { document.getElementById('modal').classList.remove('on'); }
+function closeModal(){document.getElementById('modal').classList.remove('on')}
+function callDriver(){if(currentDriver)window.location.href='tel:'+currentDriver.phone}
+function whatsappDriver(){if(currentDriver)window.open('https://wa.me/'+currentDriver.phone.replace(/[^0-9]/g,''))}
+function quickCall(id){const d=DRIVERS.find(x=>x.id===id);if(d)window.location.href='tel:'+d.phone}
+function quickWA(id){const d=DRIVERS.find(x=>x.id===id);if(d)window.open('https://wa.me/'+d.phone.replace(/[^0-9]/g,''))}
 
-function callDriver(id) {
-  const d = id ? DRIVERS.find(x=>x.id===id) : currentDriver;
-  if(d) window.location.href = 'tel:' + d.phone;
+function openRating(){document.getElementById('rating-modal').classList.add('on')}
+function closeRating(){document.getElementById('rating-modal').classList.remove('on');currentStar=0;updateStars()}
+function setStar(n){currentStar=n;updateStars()}
+function updateStars(){
+  document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('on',i<currentStar));
+}
+function submitRating(){
+  if(!currentStar){alert('Please select a rating');return}
+  const comment = document.getElementById('rating-comment').value;
+  alert('✅ Thank you! Your review has been submitted for admin approval.\\n\\nIt will appear on the profile after verification.');
+  closeRating();
+  closeModal();
 }
 
-function whatsappDriver(id) {
-  const d = id ? DRIVERS.find(x=>x.id===id) : currentDriver;
-  if(d) window.open('https://wa.me/' + d.phone.replace(/[^0-9]/g,''));
+function openRegForm(){
+  window.open('mailto:register@fish.taxi?subject=Driver Registration&body=Name:%0APhone:%0ACity:%0ACar:%0A','_blank');
 }
 
-function openRegForm() {
-  window.open('mailto:register@fish.taxi?subject=Driver Registration - fish.taxi&body=Name:%0APhone:%0ACity:%0ACar:%0APlate number:', '_blank');
-}
-
-function showTab(t) {
-  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+function showTab(t){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
   document.getElementById('pg-'+t).classList.add('on');
   document.getElementById('tab-'+t).classList.add('on');
+  if(t==='map') setTimeout(()=>map&&map.invalidateSize(),100);
 }
 
-// ── INIT ─────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  const c = CITIES.sofia;
-  map = L.map('map', {zoomControl:false, attributionControl:false}).setView([c.lat, c.lng], c.zoom);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:19}).addTo(map);
-  L.control.zoom({position:'topright'}).addTo(map);
+function setLang(l){
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',
+    (l==='en'&&b.textContent==='EN')||(l==='bg'&&b.textContent==='БГ')||(l==='de'&&b.textContent==='DE')||(l==='fr'&&b.textContent==='FR')
+  ));
+}
 
-  setTimeout(() => {
+window.addEventListener('DOMContentLoaded',()=>{
+  const c = CITIES.sofia;
+  map = L.map('map',{zoomControl:false,attributionControl:false}).setView([c.lat,c.lng],c.zoom);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
+  L.control.zoom({position:'topright'}).addTo(map);
+  
+  // Request GPS
+  requestGPS();
+
+  setTimeout(()=>{
     renderMap();
     renderDrivers();
-    updateCounters();
+    const cd = DRIVERS.filter(d=>d.city==='sofia');
+    document.getElementById('cnt-online').textContent = cd.filter(d=>d.online).length;
+    document.getElementById('cnt-total').textContent = cd.length;
     document.getElementById('ld').classList.add('hide');
-  }, 1200);
+  },1200);
 });
 
-document.getElementById('modal').addEventListener('click', function(e) {
-  if(e.target === this) closeModal();
-});
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal()});
+document.getElementById('rating-modal').addEventListener('click',function(e){if(e.target===this)closeRating()});
 </script>
 </body>
 </html>
+"""
+
+with open('/home/claude/fishtaxi_v3.html', 'r') as f:
+    html = f.read()
+
+html = html + js_drivers + cities_js + main_js
+
+with open('/home/claude/fishtaxi_v3.html', 'w', encoding='utf-8') as f:
+    f.write(html)
+
+print(f"Final size: {len(html)} chars ({len(html)//1024}KB)")
+EOF
