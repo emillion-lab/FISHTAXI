@@ -327,7 +327,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <div class="msec"><h4>Languages</h4><div id="m-langs"></div></div>
     <div class="msec"><h4>Options</h4><div id="m-opts"></div></div>
     <div class="msec"><h4>Price</h4><div id="m-price" style="font-size:14px;font-weight:700;color:var(--y)"></div></div>
-    <div class="msec"><h4>Areas</h4><div id="m-areas" style="font-size:13px;color:var(--mu)"></div></div>
+    <div class="msec"><h4>Areas</h4><div id="m-areas" style="font-size:13px;color:var(--mu)"></div></div><div class="msec"><h4>About the Driver</h4><div id="m-bio" style="font-size:13px;color:var(--mu);line-height:1.6"></div></div>
     <div class="mbtns">
       <button class="mcall" onclick="doCall()">📞 Call</button>
       <button class="mwp" onclick="doWA()">💬 WhatsApp</button>
@@ -358,7 +358,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const CITIES={sofia:{lat:42.6977,lng:23.3219,zoom:12},zurich:{lat:47.3769,lng:8.5417,zoom:13},berlin:{lat:52.5200,lng:13.4050,zoom:12},london:{lat:51.5074,lng:-0.1278,zoom:12},paris:{lat:48.8566,lng:2.3522,zoom:12},vienna:{lat:48.2082,lng:16.3738,zoom:13},amsterdam:{lat:52.3676,lng:4.9041,zoom:13},barcelona:{lat:41.3851,lng:2.1734,zoom:13},athens:{lat:37.9838,lng:23.7275,zoom:13},rome:{lat:41.9028,lng:12.4964,zoom:12}};
-const DRIVERS=[{"id":1,"name":"Emil M.","avatar":"https://emillion-lab.github.io/FISHTAXI/img/emil_avatar.jpg","photos":["https://emillion-lab.github.io/FISHTAXI/img/emil_car_nevski.jpg","https://emillion-lab.github.io/FISHTAXI/img/emil_car_front.jpg","https://emillion-lab.github.io/FISHTAXI/img/emil_interior.jpg"],"city":"sofia","lat":42.6977,"lng":23.3219,"car":"Tesla Model S","plate":"EA 0526 AB","car_type":"sedan","accel":4.2,"seats":4,"online":true,"rating":5.0,"reviews":0,"payment":["revolut","cash"],"langs":["bg","en","cs","ru"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia — Center, Airport, Ring Road, All districts","phone":"+359878592888","price":"0.75€/km day · 0.85€/km night · Start 1.49€","driving_style":"sport","bio":"Tesla Model S electric taxi in Sofia. Professional, punctual, non-smoking. Airport transfers a specialty."}];
+const DRIVERS=[{"id":1,"name":"Emil M.","avatar":"https://emillion-lab.github.io/FISHTAXI/img/emil_avatar.jpg","photos":["https://emillion-lab.github.io/FISHTAXI/img/emil_car_nevski.jpg","https://emillion-lab.github.io/FISHTAXI/img/emil_car_front.jpg","https://emillion-lab.github.io/FISHTAXI/img/emil_interior.jpg"],"city":"sofia","lat":42.6977,"lng":23.3219,"car":"Tesla Model S","plate":"EA 0526 AB","car_type":"sedan","accel":4.2,"seats":4,"online":true,"rating":5.0,"reviews":0,"payment":["revolut","cash"],"langs":["bg","en","cs","ru"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia — Center, Airport, Ring Road, All districts","phone":"+359878592888","price":"0.75€/km day · 0.85€/km night · Start 1.49€","driving_style":"sport","bio":"Non-smoker. IT specialist. Lived abroad. No animals, food or drinks in the car. Happy to talk or stay silent — your choice. Cannot read minds: please speak up if you want a specific route, feel unwell, or need anything during the ride."}];
 let city='sofia',filt='all',cur=null,star=0,map,mkrs=[];
 function payI(p){return p==='revolut'?'<span class="pi">💜 Revolut</span>':p==='terminal'?'<span class="pi">💳 Terminal</span>':'<span class="pi">💵 Cash</span>'}
 function styleI(d){if(d.accel<5)return{l:'🏎 Sport',c:'var(--pi)',s:`0–100 in ${d.accel}s`};if(d.accel<6.5)return{l:'⚡ Fast',c:'var(--or)',s:`0–100 in ${d.accel}s`};if(d.accel>10)return{l:'🛋 Comfort',c:'var(--cy)',s:'Smooth & relaxed'};return{l:'🚗 Normal',c:'var(--gr)',s:'Balanced'}}
@@ -464,6 +464,7 @@ function openMod(id){
   document.getElementById('m-opts').innerHTML=opts.join(' ')||'—';
   document.getElementById('m-price').textContent=d.price;
   document.getElementById('m-areas').textContent=d.areas;
+  if(document.getElementById('m-bio'))document.getElementById('m-bio').textContent=d.bio||'';
   document.getElementById('modal').classList.add('on');
 }
 function closeMod(){document.getElementById('modal').classList.remove('on')}
