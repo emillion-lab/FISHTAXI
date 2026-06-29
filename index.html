@@ -86,6 +86,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
 .hcta{background:var(--y);color:#000;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:900;width:100%;cursor:pointer;margin-top:7px}
 .map-placeholder{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--mu);font-size:14px}
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
 <body>
 
@@ -217,7 +218,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
     <div class="mh">About</div><div id="mbio" style="font-size:13px;color:var(--mu);line-height:1.6"></div>
     <div class="mbtns">
       <button class="mcall" onclick="doCall()">📞 Call</button>
-      <button class="mwp" onclick="doWA()">💬 WhatsApp</button>
+      <button class="mwp" onclick="doVB()">💬 Viber</button>
     </div>
   </div>
 </div>
@@ -265,7 +266,7 @@ function card(d){
   h+='</div><div class="rb">'+d.rating+'</div></div>';
   h+='<div class="dcb">';
   h+='<button class="bc" onclick="event.stopPropagation();qc('+d.id+')">Call</button>';
-  h+='<button class="bw" onclick="event.stopPropagation();qw('+d.id+')">WhatsApp</button>';
+  h+='<button class="bw" style="background:#7360f2" onclick="event.stopPropagation();qw('+d.id+')">Viber</button>';
   h+='</div></div>';
   return h;
 }
@@ -328,7 +329,7 @@ function openMod(id){
 
 function closeMod(){document.getElementById('modal').className='modal';}
 function doCall(){if(cur) window.location.href='tel:'+cur.phone;}
-function doWA(){if(cur) window.open('https://wa.me/'+cur.phone.replace(/[^0-9]/g,''));}
+function doVB(){if(cur) window.open('https://wa.me/'+cur.phone.replace(/[^0-9]/g,''));}
 
 function showTab(t){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
@@ -351,7 +352,7 @@ function pollGPS(){
       if(!dr) return;
       dr.lat=g.lat;dr.lng=g.lng;dr.online=g.online;
     });
-    render();if(typeof renderMap==='function')renderMap();
+    render();renderMap();
   }).catch(function(){});
 }
 
