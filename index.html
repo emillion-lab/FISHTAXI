@@ -5,70 +5,91 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#080808">
 <title>fish.taxi</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐟</text></svg>">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#080808;--s1:#111;--s2:#1a1a1a;--s3:#242424;--brd:#2e2e2e;--y:#f5c518;--tx:#f0f0f0;--mu:#aaa;--gr:#22c55e;--rd:#ef4444;--bl:#3b82f6;--or:#f97316;--pu:#a855f7;--cy:#06b6d4;--pi:#ec4899}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#080808;--s1:#111;--s2:#1a1a1a;--s3:#242424;--brd:#2e2e2e;--y:#f5c518;--tx:#f0f0f0;--mu:#aaa;--mu2:#555;--gr:#22c55e;--rd:#ef4444;--bl:#3b82f6;--or:#f97316;--pu:#a855f7;--cy:#06b6d4;--pi:#ec4899}
 html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;overflow:hidden;display:flex;flex-direction:column}
-.top{background:#000;border-bottom:3px solid var(--y);height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0}
-.logo{font-size:19px;font-weight:900;color:var(--y)}
-.hero{background:#0a0a0a;border-bottom:1px solid var(--brd);padding:9px 12px;flex-shrink:0}
-.hero h1{font-size:18px;font-weight:900;color:var(--y);margin-bottom:2px}
-.hero p{font-size:12px;color:var(--mu)}
+.top{background:#000;border-bottom:3px solid var(--y);height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0}
+.logo{font-size:18px;font-weight:900;color:var(--y)}
 .tabs{display:flex;background:var(--s1);border-bottom:2px solid var(--brd);flex-shrink:0}
-.tab{flex:1;padding:9px 2px;font-size:13px;font-weight:800;border:none;background:transparent;color:var(--mu);cursor:pointer;border-bottom:3px solid transparent}
+.tab{flex:1;padding:8px 2px;font-size:12px;font-weight:800;border:none;background:transparent;color:var(--mu);cursor:pointer;border-bottom:3px solid transparent}
 .tab.on{color:var(--y);border-bottom-color:var(--y)}
 .page{display:none;flex:1;flex-direction:column;overflow:hidden;min-height:0}
 .page.on{display:flex}
+
+/* MAP */
+#map{height:300px;background:#0d1117;flex-shrink:0}
+.leaflet-container{background:#0d1117!important}
+.leaflet-popup-content-wrapper{background:var(--s2)!important;color:var(--tx)!important;border:1px solid var(--brd)!important;border-radius:10px!important}
+.leaflet-popup-tip{background:var(--s2)!important}
+
+/* SEARCH */
 .srch{padding:7px 10px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;display:flex;gap:7px}
 .srch input{flex:1;background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:7px 11px;font-size:14px}
 .srch input:focus{outline:none;border-color:var(--y)}
+
+/* FILTERS */
 .fw{background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0}
 .fs{padding:4px 8px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;align-items:center}
 .fs::-webkit-scrollbar{display:none}
-.fl{font-size:10px;color:var(--mu);font-weight:700;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
-.flt{font-size:13px;font-weight:700;padding:6px 13px;border-radius:20px;border:1px solid var(--brd);background:var(--s2);color:var(--mu);cursor:pointer;white-space:nowrap;flex-shrink:0}
+.fl{font-size:10px;color:var(--mu2);font-weight:700;text-transform:uppercase;white-space:nowrap;flex-shrink:0;letter-spacing:.5px}
+.flt{font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;border:1px solid var(--brd);background:var(--s2);color:var(--mu);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
 .flt.on{background:rgba(245,197,24,.13);border-color:var(--y);color:var(--y)}
+.flt:active{opacity:.7}
+
+/* CARDS */
 .dlist{flex:1;overflow-y:auto;padding:8px}
-.dc{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:11px;margin-bottom:7px;cursor:pointer}
+.dc{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:11px;margin-bottom:7px;cursor:pointer;transition:border-color .15s}
 .dc:active{border-color:var(--y)}
 .dct{display:flex;gap:9px;align-items:flex-start}
-.dca{width:54px;height:54px;border-radius:12px;background:var(--s3);border:2px solid var(--brd);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px}
+.dca{width:56px;height:56px;border-radius:12px;background:var(--s3);border:2px solid var(--brd);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px}
 .dca img{width:100%;height:100%;object-fit:cover}
 .dci{flex:1;min-width:0}
-.dcn{font-size:15px;font-weight:800;margin-bottom:1px}
-.dcc{font-size:12px;color:var(--mu);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dcn{font-size:15px;font-weight:800;margin-bottom:1px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.dcc{font-size:12px;color:var(--mu);margin-bottom:5px}
 .tags{display:flex;gap:3px;flex-wrap:wrap}
 .t{font-size:11px;font-weight:700;padding:2px 7px;border-radius:9px;border:1px solid}
 .tg{color:var(--gr);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.07)}
-.ty{color:var(--y);border-color:rgba(245,197,24,.3);background:var(--y-bg,rgba(245,197,24,.07))}
+.ty{color:var(--y);border-color:rgba(245,197,24,.3);background:rgba(245,197,24,.07)}
 .tb{color:var(--bl);border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.07)}
 .tc{color:var(--cy);border-color:rgba(6,182,212,.3);background:rgba(6,182,212,.07)}
+.tr{color:var(--rd);border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.07)}
+.tp{color:var(--pu);border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.07)}
+.to{color:var(--or);border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.07)}
 .tpi{color:var(--pi);border-color:rgba(236,72,153,.3);background:rgba(236,72,153,.07)}
-.pays{display:flex;gap:3px;margin-top:4px}
-.pi{font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;border:1px solid rgba(245,197,24,.3);color:var(--y);background:rgba(245,197,24,.06)}
+.pays{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap}
+.pi2{font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;border:1px solid rgba(245,197,24,.3);color:var(--y);background:rgba(245,197,24,.06)}
 .rb{font-size:12px;color:var(--y);font-weight:700;margin-left:auto;flex-shrink:0}
-.vb{font-size:10px;font-weight:700;color:var(--gr);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:7px;padding:1px 5px}
+.vb{font-size:10px;font-weight:700;color:var(--gr);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:7px;padding:1px 5px;white-space:nowrap}
 .dcb{display:flex;gap:5px;margin-top:9px}
 .bc{flex:1;background:var(--gr);color:#000;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:800;cursor:pointer}
-.bw{flex:1;background:#25D366;color:#fff;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:800;cursor:pointer}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;align-items:flex-end}
+.bv{flex:1;background:#7360f2;color:#fff;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:800;cursor:pointer}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:flex-end}
 .modal.on{display:flex}
-.mb{background:var(--s1);border-top:3px solid var(--y);border-radius:20px 20px 0 0;padding:18px;width:100%;max-height:85vh;overflow-y:auto}
+.mb{background:var(--s1);border-top:3px solid var(--y);border-radius:20px 20px 0 0;padding:18px;width:100%;max-height:88vh;overflow-y:auto}
 .mc{float:right;background:var(--s3);border:none;color:var(--mu);border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;line-height:30px;text-align:center}
-.ma{width:80px;height:80px;border-radius:14px;background:var(--s3);border:3px solid var(--y);margin:0 auto 8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:32px}
-.ma img{width:100%;height:100%;object-fit:cover}
-.mn{font-size:18px;font-weight:900;text-align:center;margin-bottom:2px}
-.mc2{font-size:12px;color:var(--mu);text-align:center;margin-bottom:8px}
-.mh{font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 5px;border-bottom:1px solid var(--brd);padding-bottom:3px}
+.mav{width:80px;height:80px;border-radius:14px;background:var(--s3);border:3px solid var(--y);margin:0 auto 10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:32px}
+.mav img{width:100%;height:100%;object-fit:cover}
+.mn{font-size:19px;font-weight:900;text-align:center;margin-bottom:2px}
+.mc2{font-size:12px;color:var(--mu);text-align:center;margin-bottom:6px}
+.mh{font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:12px 0 5px;border-bottom:1px solid var(--brd);padding-bottom:3px}
 .ir{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--brd)}
+.ir:last-child{border:none}
 .ik{font-size:12px;color:var(--mu)}
 .iv{font-size:13px;font-weight:700}
-.mbtns{display:flex;gap:8px;margin-top:12px}
+.mbtns{display:flex;gap:8px;margin-top:14px}
 .mcall{flex:1;background:var(--gr);color:#000;border:none;border-radius:10px;padding:12px;font-size:15px;font-weight:800;cursor:pointer}
-.mwp{flex:1;background:#25D366;color:#fff;border:none;border-radius:10px;padding:12px;font-size:15px;font-weight:800;cursor:pointer}
+.mvib{flex:1;background:#7360f2;color:#fff;border:none;border-radius:10px;padding:12px;font-size:15px;font-weight:800;cursor:pointer}
 .sbox{background:var(--s3);border-left:3px solid var(--or);border-radius:8px;padding:9px 11px;font-size:12px;color:var(--mu);margin:8px 0;line-height:1.5}
+
+/* HOW & JOIN */
 .scroll-page{flex:1;overflow-y:auto;padding:13px}
 .hs{background:var(--s2);border:1px solid var(--brd);border-radius:13px;padding:13px;margin-bottom:7px;display:flex;gap:11px}
 .hn{width:34px;height:34px;border-radius:50%;background:var(--y);color:#000;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -82,33 +103,24 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
 .bi2{font-size:15px;flex-shrink:0}
 .bt{font-size:12px;color:var(--mu);line-height:1.4}
 .bt strong{color:var(--tx)}
-.jbtn{background:var(--y);color:#000;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:900;width:100%;cursor:pointer}
-.hcta{background:var(--y);color:#000;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:900;width:100%;cursor:pointer;margin-top:7px}
-.map-placeholder{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--mu);font-size:14px}
+.jbtn,.hcta{background:var(--y);color:#000;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:900;width:100%;cursor:pointer;margin-top:7px}
 </style>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
 <div class="top">
   <div class="logo">🐟 fish.taxi</div>
-  <div style="font-size:11px;color:var(--mu)" id="live-status">—</div>
-</div>
-
-<div class="hero">
-  <h1>🐟 Find Your Driver Directly</h1>
-  <p>No commission · No middleman · Direct contact 24/7</p>
+  <div id="gps-status" style="font-size:11px;color:var(--mu)"></div>
 </div>
 
 <div class="tabs">
   <button class="tab on" onclick="showTab('list')" id="tab-list">🐟 Drivers</button>
   <button class="tab" onclick="showTab('map')" id="tab-map">🗺 Map</button>
-  <button class="tab" onclick="showTab('how')" id="tab-how">ℹ️ How</button>
+  <button class="tab" onclick="showTab('how')" id="tab-how">ℹ How</button>
   <button class="tab" onclick="showTab('reg')" id="tab-reg">🚕 Join</button>
 </div>
 
-<!-- DRIVERS TAB -->
+<!-- DRIVERS -->
 <div class="page on" id="page-list">
   <div class="srch">
     <input type="text" id="srch" placeholder="Search driver, car, area..." oninput="render()">
@@ -117,83 +129,123 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
     <div class="fs"><span class="fl">Status</span>
       <button class="flt on" onclick="sf('all',this)">All</button>
       <button class="flt" onclick="sf('online',this)">🟢 Online</button>
+      <button class="flt" onclick="sf('offline',this)">⚫ Offline</button>
     </div>
     <div class="fs"><span class="fl">Payment</span>
       <button class="flt" onclick="sf('revolut',this)">💜 Revolut</button>
       <button class="flt" onclick="sf('cash',this)">💵 Cash</button>
+      <button class="flt" onclick="sf('terminal',this)">💳 Terminal</button>
     </div>
-    <div class="fs"><span class="fl">Style</span>
-      <button class="flt" onclick="sf('sport',this)">🏎 Sport</button>
-      <button class="flt" onclick="sf('fast',this)">⚡ Fast</button>
+    <div class="fs"><span class="fl">Driving Style</span>
+      <button class="flt" onclick="sf('sport',this)">🏎 Sport 0-5s</button>
+      <button class="flt" onclick="sf('fast',this)">⚡ Fast 5-7s</button>
+      <button class="flt" onclick="sf('normal',this)">🚗 Normal</button>
       <button class="flt" onclick="sf('comfort',this)">🛋 Comfort</button>
     </div>
-    <div class="fs"><span class="fl">Car</span>
+    <div class="fs"><span class="fl">Car Type</span>
       <button class="flt" onclick="sf('electric',this)">⚡ Electric</button>
       <button class="flt" onclick="sf('sedan',this)">🚗 Sedan</button>
       <button class="flt" onclick="sf('suv',this)">🚙 SUV</button>
-      <button class="flt" onclick="sf('minivan',this)">🚐 Minivan</button>
+      <button class="flt" onclick="sf('minivan',this)">🚐 Minivan 7+</button>
+      <button class="flt" onclick="sf('luxury',this)">👑 Luxury</button>
+    </div>
+    <div class="fs"><span class="fl">Atmosphere</span>
+      <button class="flt" onclick="sf('silent',this)">🤫 Silent ride</button>
+      <button class="flt" onclick="sf('talk',this)">💬 Chatty</button>
+      <button class="flt" onclick="sf('music',this)">🎵 Music OK</button>
+      <button class="flt" onclick="sf('chalga',this)">🎶 Chalga OK</button>
+      <button class="flt" onclick="sf('nomusic',this)">🔇 No Music</button>
+    </div>
+    <div class="fs"><span class="fl">Comfort</span>
+      <button class="flt" onclick="sf('nosmoker',this)">🚭 No Smoking</button>
+      <button class="flt" onclick="sf('smoking',this)">🚬 Smoking OK</button>
+      <button class="flt" onclick="sf('pet',this)">🐾 Pets OK</button>
+      <button class="flt" onclick="sf('child',this)">👶 Child Seat</button>
+      <button class="flt" onclick="sf('ac',this)">❄️ A/C</button>
+      <button class="flt" onclick="sf('wheelchair',this)">♿ Wheelchair</button>
     </div>
     <div class="fs"><span class="fl">Language</span>
-      <button class="flt" onclick="sf('lbg',this)">🇧🇬 БГ</button>
+      <button class="flt" onclick="sf('lbg',this)">🇧🇬 BG</button>
       <button class="flt" onclick="sf('len',this)">🇬🇧 EN</button>
-      <button class="flt" onclick="sf('lcs',this)">🇨🇿 CS</button>
-      <button class="flt" onclick="sf('lru',this)">🇷🇺 RU</button>
       <button class="flt" onclick="sf('lde',this)">🇩🇪 DE</button>
       <button class="flt" onclick="sf('lfr',this)">🇫🇷 FR</button>
+      <button class="flt" onclick="sf('lru',this)">🇷🇺 RU</button>
+      <button class="flt" onclick="sf('lcs',this)">🇨🇿 CS</button>
+      <button class="flt" onclick="sf('lit',this)">🇮🇹 IT</button>
+      <button class="flt" onclick="sf('les',this)">🇪🇸 ES</button>
+      <button class="flt" onclick="sf('ltr',this)">🇹🇷 TR</button>
+      <button class="flt" onclick="sf('lar',this)">🇸🇦 AR</button>
+      <button class="flt" onclick="sf('lzh',this)">🇨🇳 ZH</button>
     </div>
     <div class="fs"><span class="fl">Extras</span>
-      <button class="flt" onclick="sf('nosmoker',this)">🚭 No Smoke</button>
-      <button class="flt" onclick="sf('silent',this)">🤫 Silent</button>
-      <button class="flt" onclick="sf('talk',this)">💬 Chatty</button>
+      <button class="flt" onclick="sf('airport',this)">✈️ Airport</button>
+      <button class="flt" onclick="sf('longdist',this)">🛣️ Long Distance</button>
+      <button class="flt" onclick="sf('night',this)">🌙 Night Rides</button>
+      <button class="flt" onclick="sf('business',this)">💼 Business</button>
+      <button class="flt" onclick="sf('verified',this)">✅ Verified</button>
       <button class="flt" onclick="sf('top',this)">⭐ Top Rated</button>
+      <button class="flt" onclick="sf('new',this)">🆕 New Driver</button>
     </div>
   </div>
   <div class="dlist" id="dlist"></div>
 </div>
 
-<!-- MAP TAB -->
-<div class="page" id="page-map" style="overflow:hidden;flex-direction:column">
-  <div id="map" style="height:320px;background:#0d1117;flex-shrink:0"></div>
+<!-- MAP -->
+<div class="page" id="page-map" style="overflow:hidden">
+  <div id="map"></div>
   <div id="map-list" style="flex:1;overflow-y:auto;padding:8px"></div>
 </div>
 
-<!-- HOW TAB -->
+<!-- HOW -->
 <div class="page" id="page-how">
   <div class="scroll-page">
-    <div class="hs"><div class="hn">1</div><div><h3>Find a Driver</h3><p>Browse verified drivers. Filter by payment, car type, language, driving style.</p></div></div>
-    <div class="hs"><div class="hn">2</div><div><h3>Check the Profile</h3><p>See photo, car, prices, languages and driving style.</p></div></div>
-    <div class="hs"><div class="hn">3</div><div><h3>Call or WhatsApp Directly</h3><p>Contact your driver directly. No booking fee, no algorithm.</p></div></div>
-    <div class="hs"><div class="hn" style="background:var(--or);font-size:16px">⚠️</div><div><h3>Tell Your Driver Your Style</h3><p style="color:var(--or)">Tell your driver how you prefer to ride when you get in — not after the trip.</p></div></div>
-    <div class="hs"><div class="hn">5</div><div><h3>Pay the Driver</h3><p>Cash or Revolut. 100% goes to the driver.</p></div></div>
+    <div class="hs"><div class="hn">1</div><div><h3>Find a Driver</h3><p>Browse verified drivers. Use filters for payment, car type, language, driving style, atmosphere.</p></div></div>
+    <div class="hs"><div class="hn">2</div><div><h3>Check the Profile</h3><p>See photo, car, prices, languages and driving style. Know exactly who to expect.</p></div></div>
+    <div class="hs"><div class="hn">3</div><div><h3>Call or Viber Directly</h3><p>Contact your driver directly. No booking fee, no algorithm, no commission.</p></div></div>
+    <div class="hs"><div class="hn" style="background:var(--or);font-size:16px">⚠</div><div><h3>Tell Your Driver Your Style</h3><p style="color:var(--or)">Tell your driver how you prefer to ride when you get in — not after the trip. Music, silence, speed, route.</p></div></div>
+    <div class="hs"><div class="hn">5</div><div><h3>Pay the Driver</h3><p>Cash, Revolut or card terminal. 100% goes to the driver — zero commission.</p></div></div>
     <div class="hs"><div class="hn">⭐</div><div><h3>Ratings Are Verified</h3><p>All reviews checked by admin before publishing. Protects drivers from unfair ratings.</p></div></div>
     <button class="hcta" onclick="showTab('list')">Find a Driver Now 🐟</button>
   </div>
 </div>
 
-<!-- JOIN TAB -->
+<!-- JOIN -->
 <div class="page" id="page-reg">
   <div class="scroll-page">
-    <div style="background:linear-gradient(135deg,#1a1200,#2a1e00);border:2px solid var(--y);border-radius:13px;padding:13px;margin-bottom:8px;text-align:center">
-      <div style="font-size:19px;font-weight:900;color:var(--y)">🎉 FREE for first 300 drivers</div>
+    <div style="background:linear-gradient(135deg,#1a1200,#2a1e00);border:2px solid var(--y);border-radius:13px;padding:14px;margin-bottom:8px;text-align:center">
+      <div style="font-size:20px;font-weight:900;color:var(--y)">🎉 FREE for first 300 drivers</div>
       <div style="font-size:12px;color:#ccc;margin-top:3px">Join now — no payment required</div>
-      <div style="margin-top:9px;background:#0006;border-radius:7px;padding:5px 0">
+      <div style="margin-top:10px;background:#0006;border-radius:7px;padding:6px 0">
         <div style="font-size:10px;color:var(--mu);margin-bottom:3px">SPOTS REMAINING</div>
-        <div style="background:var(--brd);border-radius:5px;height:8px;margin:0 16px;overflow:hidden"><div style="background:var(--y);width:8%;height:100%"></div></div>
+        <div style="background:var(--brd);border-radius:5px;height:8px;margin:0 20px;overflow:hidden"><div style="background:var(--y);width:8%;height:100%"></div></div>
         <div style="font-size:12px;color:var(--y);margin-top:3px;font-weight:800">276 / 300 left</div>
       </div>
     </div>
-    <div class="jc"><h3>🚕 Drive with fish.taxi</h3><p>Keep 100% of every ride. Zero commission. Ever.</p>
-      <div class="pbox"><div style="font-size:12px;color:var(--mu);text-decoration:line-through">€20/month after launch</div><div style="font-size:32px;font-weight:900;color:var(--y)">FREE</div><div style="font-size:12px;color:var(--mu)">Beta — first 300 drivers worldwide</div></div>
+    <div class="jc"><h3>🚕 Drive with fish.taxi</h3><p>The platform where drivers come first. Keep 100% of every ride. Forever.</p>
+      <div class="pbox"><div style="font-size:12px;color:var(--mu);text-decoration:line-through">€20/month after launch</div><div style="font-size:34px;font-weight:900;color:var(--y)">FREE</div><div style="font-size:12px;color:var(--mu)">Beta — first 300 drivers worldwide</div></div>
     </div>
     <div class="jc"><h3>✅ What You Get</h3>
       <div class="br"><div class="bi2">📍</div><div class="bt"><strong>Live GPS on Map</strong><br>Clients see you in real time</div></div>
-      <div class="br"><div class="bi2">🛡️</div><div class="bt"><strong>Driver Protection</strong><br>Ratings reviewed before publishing</div></div>
-      <div class="br"><div class="bi2">💰</div><div class="bt"><strong>Zero Commission</strong><br>Every cent from the ride is yours</div></div>
-      <div class="br"><div class="bi2">🌍</div><div class="bt"><strong>Any City, Any Country</strong><br>No geographic restrictions</div></div>
-      <p style="font-size:11px;color:var(--mu);margin-top:9px;border-top:1px solid var(--brd);padding-top:7px">🔒 GDPR: Only public profile data. No ID, no address. Delete anytime.</p>
+      <div class="br"><div class="bi2">🛡️</div><div class="bt"><strong>Driver Protection</strong><br>Ratings reviewed before publishing. Bad clients reported.</div></div>
+      <div class="br"><div class="bi2">✅</div><div class="bt"><strong>Verified Badge</strong><br>Vehicle checked against official registries</div></div>
+      <div class="br"><div class="bi2">📋</div><div class="bt"><strong>Digital Documents</strong><br>Carrier permit and logbook included</div></div>
+      <div class="br"><div class="bi2">💰</div><div class="bt"><strong>Zero Commission</strong><br>Every cent from the ride is yours. Always.</div></div>
+      <div class="br"><div class="bi2">🌍</div><div class="bt"><strong>Any City, Any Country</strong><br>Sofia, Zurich, Berlin, London — one platform</div></div>
     </div>
-    <div class="jc"><h3>📱 How to Join</h3><p style="margin-bottom:9px">Driver registration via our dedicated driver app.</p>
-      <button class="jbtn" onclick="window.open('mailto:register@fish.taxi?subject=Driver Registration&body=Name:%0APhone:%0ACity:%0ACar:')">Join Waitlist — Free 🐟</button>
+    <div class="jc"><h3>📸 What We Need</h3>
+      <div class="br"><div class="bi2">🤳</div><div class="bt"><strong>Your photo</strong> — clients know who to expect</div></div>
+      <div class="br"><div class="bi2">🚗</div><div class="bt"><strong>Car photos</strong> — outside, inside, dashboard</div></div>
+      <div class="br"><div class="bi2">📱</div><div class="bt"><strong>Phone number</strong> — clients call/Viber directly</div></div>
+      <div class="br"><div class="bi2">🏙️</div><div class="bt"><strong>City and areas</strong> — where you drive</div></div>
+      <p style="font-size:11px;color:var(--mu2);margin-top:10px;line-height:1.5;border-top:1px solid var(--brd);padding-top:8px">🔒 <strong style="color:var(--mu)">GDPR:</strong> Only public profile data collected. No ID, no address, no financials. Delete anytime. Never sold to third parties.</p>
+    </div>
+    <div class="jc"><h3>📱 How to Join</h3>
+      <p style="margin-bottom:10px">Driver registration via our dedicated driver app. Under 5 minutes.</p>
+      <div style="background:var(--s3);border:1px solid var(--brd);border-radius:10px;padding:10px;text-align:center;margin-bottom:8px">
+        <div style="font-size:13px;color:var(--mu)">Driver app — coming soon</div>
+        <div style="font-size:11px;color:var(--mu2);margin-top:2px">Leave your contact and we will notify you</div>
+      </div>
+      <button class="jbtn" onclick="window.open('mailto:register@fish.taxi?subject=Driver%20Registration%20-%20fish.taxi&body=Name:%0APhone:%0ACity:%0ACar:')">Join Waitlist — Free 🐟</button>
     </div>
   </div>
 </div>
@@ -202,105 +254,188 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
 <div class="modal" id="modal">
   <div class="mb">
     <button class="mc" onclick="closeMod()">✕</button>
-    <div class="ma" id="mav">🚗</div>
+    <div class="mav" id="mav">🚗</div>
     <div class="mn" id="mname"></div>
-    <div class="mc2" id="mcar"></div>
-    <div style="text-align:center;margin-bottom:6px" id="mstars"></div>
+    <div class="mc2" id="mcar2"></div>
+    <div style="text-align:center;margin-bottom:8px" id="mstars"></div>
     <div class="sbox" id="mstyle"></div>
     <div class="mh">Car Details</div><div id="mcardet"></div>
     <div class="mh">Payment</div><div id="mpay"></div>
     <div class="mh">Languages</div><div id="mlangs"></div>
-    <div class="mh">Options</div><div id="mopts"></div>
+    <div class="mh">Options & Atmosphere</div><div id="mopts"></div>
     <div class="mh">Price</div><div id="mprice" style="font-size:14px;font-weight:700;color:var(--y)"></div>
     <div class="mh">Areas</div><div id="mareas" style="font-size:13px;color:var(--mu)"></div>
-    <div class="mh">About</div><div id="mbio" style="font-size:13px;color:var(--mu);line-height:1.6"></div>
+    <div class="mh">About the Driver</div><div id="mbio" style="font-size:13px;color:var(--mu);line-height:1.6"></div>
     <div class="mbtns">
       <button class="mcall" onclick="doCall()">📞 Call</button>
-      <button class="mwp" onclick="doVB()">💬 Viber</button>
+      <button class="mvib" onclick="doVib()">💬 Viber</button>
     </div>
+    <button onclick="openRate()" style="width:100%;margin-top:8px;background:var(--s3);border:1px solid var(--brd);color:var(--mu);border-radius:9px;padding:9px;font-size:13px;cursor:pointer">⭐ Rate this driver</button>
   </div>
 </div>
 
 <script>
-
 var WORKER='https://mvr-proxy.mihov-emil.workers.dev';
-var DRIVERS=[{"id":1,"name":"Emil M.","avatar":"https://emillion-lab.github.io/FISHTAXI/img/emil_avatar.jpg","city":"sofia","lat":42.6977,"lng":23.3219,"car":"Tesla Model S","plate":"EA 0526 AB","car_type":"sedan","accel":4.2,"seats":4,"online":false,"rating":5.0,"reviews":0,"payment":["revolut","cash"],"langs":["bg","en","cs","ru"],"electric":true,"nosmoker":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia - Center, Airport, All districts","phone":"+359878592888","price":"0.75 EUR/km day","silent_ok":true,"talk_ok":true,"bio":"Non-smoker. IT specialist. No animals or food. Talk or silent - your choice."}];
+var DRIVERS=[{
+  "id":1,"name":"Emil M.",
+  "avatar":"https://emillion-lab.github.io/FISHTAXI/img/emil_avatar.jpg",
+  "city":"sofia","lat":42.6977,"lng":23.3219,
+  "car":"Tesla Model S","plate":"EA 0526 AB",
+  "car_type":"sedan","accel":4.2,"seats":4,
+  "online":false,"rating":5.0,"reviews":0,
+  "payment":["revolut","cash"],
+  "langs":["bg","en","cs","ru"],
+  "electric":true,"smoking":false,"nosmoker":true,
+  "petfriendly":false,"childok":false,
+  "sport":true,"fast":true,"comfort":false,
+  "minivan":false,"suv":false,"luxury":false,
+  "ac":true,"music":true,"chalga":false,"nomusic":false,
+  "silent_ok":true,"talk_ok":true,
+  "airport":true,"longdist":true,"night":true,"business":true,
+  "wheelchair":false,"verified":true,
+  "areas":"Sofia — Center, Airport, Ring Road, All districts",
+  "phone":"+359878592888",
+  "price":"0.75 EUR/km day / 0.85 EUR/km night / Start 1.49 EUR",
+  "bio":"Non-smoker. IT specialist. Lived abroad. No animals, food or drinks in the car. Happy to talk or stay silent. Please speak up if you want a specific route or feel unwell."
+}];
 
-var filt='all',cur=null,map=null,mkrs=[],mapReady=false;
+var filt='all', cur=null, map=null, mkrs=[], mapReady=false;
+
+var LM={bg:'🇧🇬 BG',en:'🇬🇧 EN',de:'🇩🇪 DE',fr:'🇫🇷 FR',ru:'🇷🇺 RU',cs:'🇨🇿 CS',it:'🇮🇹 IT',es:'🇪🇸 ES',tr:'🇹🇷 TR',ar:'🇸🇦 AR',zh:'🇨🇳 ZH'};
 
 function payI(p){
-  if(p==='revolut') return '<span class="pi">Revolut</span>';
-  return '<span class="pi">Cash</span>';
+  if(p==='revolut')return '<span class="pi2">💜 Revolut</span>';
+  if(p==='terminal')return '<span class="pi2">💳 Terminal</span>';
+  return '<span class="pi2">💵 Cash</span>';
 }
 
 function stI(d){
-  if(d.accel<5) return {l:'Sport',c:'var(--pi)',s:d.accel+'s'};
-  if(d.accel<6.5) return {l:'Fast',c:'var(--or)',s:d.accel+'s'};
-  return {l:'Normal',c:'var(--gr)',s:'OK'};
+  if(d.accel<5)return{l:'🏎 Sport',c:'var(--pi)',s:d.accel+'s 0-100'};
+  if(d.accel<6.5)return{l:'⚡ Fast',c:'var(--or)',s:d.accel+'s 0-100'};
+  if(d.comfort)return{l:'🛋 Comfort',c:'var(--cy)',s:'Smooth ride'};
+  return{l:'🚗 Normal',c:'var(--gr)',s:'Balanced'};
 }
 
-function carI(d){return d.minivan?'Bus':d.suv?'SUV':'Car';}
+function carI(d){
+  if(d.minivan)return '🚐';
+  if(d.suv)return '🚙';
+  if(d.luxury)return '👑';
+  if(d.accel<5)return '🏎';
+  return '🚗';
+}
 
-function qc(id){var dr=DRIVERS.filter(function(x){return x.id===id;})[0];if(dr)window.location.href='tel:'+dr.phone;}
-function qw(id){var dr=DRIVERS.filter(function(x){return x.id===id;})[0];if(dr)window.open('viber://chat?number='+dr.phone.replace(/[^0-9]/g,''));}
+function qc(id){var d=DRIVERS.filter(function(x){return x.id===id;})[0];if(d)window.location.href='tel:'+d.phone;}
+function qv(id){var d=DRIVERS.filter(function(x){return x.id===id;})[0];if(d)window.open('viber://chat?number='+d.phone.replace(/[^0-9]/g,''));}
 
-function card(d){
-  var st=stI(d);
+function card(d,mini){
+  var st=stI(d),ic=carI(d);
+  var av=(d.avatar&&d.avatar.indexOf('http')===0)
+    ?'<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">'
+    :ic;
   var tags='';
-  if(d.online) tags+='<span class="t tg">Online</span>';
-  else tags+='<span class="t" style="color:var(--mu);border-color:var(--brd)">Offline</span>';
-  if(d.electric) tags+='<span class="t tc">EV</span>';
-  tags+='<span class="t" style="color:'+st.c+'">'+st.l+'</span>';
-  if(d.nosmoker) tags+='<span class="t ty">No Smoke</span>';
+  if(d.online)tags+='<span class="t tg">🟢 Online</span>';
+  else tags+='<span class="t" style="color:var(--mu2);border-color:var(--brd)">⚫ Offline</span>';
+  if(d.electric)tags+='<span class="t tc">⚡ EV</span>';
+  if(d.luxury)tags+='<span class="t ty">👑 Luxury</span>';
+  if(d.minivan)tags+='<span class="t tb">🚐 '+d.seats+'p</span>';
+  if(d.suv)tags+='<span class="t tb">🚙 SUV</span>';
+  tags+='<span class="t" style="color:'+st.c+';border-color:'+st.c+'44;background:'+st.c+'11">'+st.l+'</span>';
+  if(d.nosmoker)tags+='<span class="t ty">🚭</span>';
+  if(d.smoking)tags+='<span class="t tr">🚬</span>';
+  if(d.petfriendly)tags+='<span class="t tp">🐾</span>';
+  if(d.childok)tags+='<span class="t to">👶</span>';
+  if(d.silent_ok)tags+='<span class="t tc">🤫</span>';
+  if(d.airport)tags+='<span class="t tb">✈️</span>';
   var pays=d.payment.map(payI).join('');
-  var h='<div class="dc" onclick="openMod('+d.id+')">';
-  h+='<div class="dct">';
-  h+='<div class="dca"><img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=String.fromCharCode(110,111,110,101)"></div>';
-  h+='<div class="dci">';
-  h+='<div class="dcn">'+d.name+' <span class="vb">OK</span></div>';
-  h+='<div class="dcc">'+d.car+' / '+d.plate+'</div>';
-  h+='<div class="tags">'+tags+'</div>';
-  h+='<div class="pays">'+pays+'</div>';
-  h+='</div><div class="rb">'+d.rating+'</div></div>';
-  h+='<div class="dcb">';
-  h+='<button class="bc" onclick="event.stopPropagation();qc('+d.id+')">Call</button>';
-  h+='<button class="bw" style="background:#7360f2" onclick="event.stopPropagation();qw('+d.id+')">Viber</button>';
-  h+='</div></div>';
-  return h;
+  var html='<div class="dc" onclick="openMod('+d.id+')">';
+  html+='<div class="dct"><div class="dca">'+av+'</div>';
+  html+='<div class="dci">';
+  html+='<div class="dcn">'+d.name+' <span class="vb">✓ Verified</span></div>';
+  html+='<div class="dcc">'+d.car+' &middot; '+d.plate+'</div>';
+  html+='<div class="tags">'+tags+'</div>';
+  html+='<div class="pays">'+pays+'</div>';
+  html+='</div><div class="rb">&#11088; '+d.rating+'</div></div>';
+  if(!mini){
+    html+='<div class="dcb">';
+    html+='<button class="bc" onclick="event.stopPropagation();qc('+d.id+')">📞 Call</button>';
+    html+='<button class="bv" onclick="event.stopPropagation();qv('+d.id+')">💬 Viber</button>';
+    html+='</div>';
+  }
+  html+='</div>';
+  return html;
 }
 
-function sf(f,el){filt=f;document.querySelectorAll('.flt').forEach(function(b){b.classList.remove('on');});el.classList.add('on');render();}
+function sf(f,el){
+  filt=f;
+  document.querySelectorAll('.flt').forEach(function(b){b.classList.remove('on');});
+  el.classList.add('on');
+  render();
+}
 
 function render(){
   var q=(document.getElementById('srch').value||'').toLowerCase();
-  var ds=DRIVERS.filter(function(d){return d.city==='sofia';});
-  if(filt==='online') ds=ds.filter(function(d){return d.online;});
-  if(filt==='revolut') ds=ds.filter(function(d){return d.payment.indexOf('revolut')>=0;});
-  if(filt==='cash') ds=ds.filter(function(d){return d.payment.indexOf('cash')>=0;});
-  if(filt==='sport') ds=ds.filter(function(d){return d.sport;});
-  if(filt==='fast') ds=ds.filter(function(d){return d.fast&&!d.sport;});
-  if(filt==='electric') ds=ds.filter(function(d){return d.electric;});
-  if(filt==='sedan') ds=ds.filter(function(d){return !d.suv&&!d.minivan;});
-  if(filt==='lbg') ds=ds.filter(function(d){return d.langs.indexOf('bg')>=0;});
-  if(filt==='len') ds=ds.filter(function(d){return d.langs.indexOf('en')>=0;});
-  if(filt==='lcs') ds=ds.filter(function(d){return d.langs.indexOf('cs')>=0;});
-  if(filt==='lru') ds=ds.filter(function(d){return d.langs.indexOf('ru')>=0;});
-  if(filt==='nosmoker') ds=ds.filter(function(d){return d.nosmoker;});
-  if(filt==='silent') ds=ds.filter(function(d){return d.silent_ok;});
-  if(filt==='talk') ds=ds.filter(function(d){return d.talk_ok;});
-  if(filt==='top') ds=ds.filter(function(d){return d.rating>=4.8;});
-  if(q) ds=ds.filter(function(d){return d.name.toLowerCase().indexOf(q)>=0||d.car.toLowerCase().indexOf(q)>=0;});
+  var ds=DRIVERS.slice();
+  if(filt==='online')ds=ds.filter(function(d){return d.online;});
+  if(filt==='offline')ds=ds.filter(function(d){return !d.online;});
+  if(filt==='revolut')ds=ds.filter(function(d){return d.payment.indexOf('revolut')>=0;});
+  if(filt==='cash')ds=ds.filter(function(d){return d.payment.indexOf('cash')>=0;});
+  if(filt==='terminal')ds=ds.filter(function(d){return d.payment.indexOf('terminal')>=0;});
+  if(filt==='sport')ds=ds.filter(function(d){return d.sport;});
+  if(filt==='fast')ds=ds.filter(function(d){return d.fast&&!d.sport;});
+  if(filt==='normal')ds=ds.filter(function(d){return !d.sport&&!d.fast&&!d.comfort;});
+  if(filt==='comfort')ds=ds.filter(function(d){return d.comfort;});
+  if(filt==='electric')ds=ds.filter(function(d){return d.electric;});
+  if(filt==='sedan')ds=ds.filter(function(d){return !d.suv&&!d.minivan&&!d.luxury;});
+  if(filt==='suv')ds=ds.filter(function(d){return d.suv;});
+  if(filt==='minivan')ds=ds.filter(function(d){return d.minivan;});
+  if(filt==='luxury')ds=ds.filter(function(d){return d.luxury;});
+  if(filt==='silent')ds=ds.filter(function(d){return d.silent_ok;});
+  if(filt==='talk')ds=ds.filter(function(d){return d.talk_ok;});
+  if(filt==='music')ds=ds.filter(function(d){return d.music;});
+  if(filt==='chalga')ds=ds.filter(function(d){return d.chalga;});
+  if(filt==='nomusic')ds=ds.filter(function(d){return d.nomusic;});
+  if(filt==='nosmoker')ds=ds.filter(function(d){return d.nosmoker;});
+  if(filt==='smoking')ds=ds.filter(function(d){return d.smoking;});
+  if(filt==='pet')ds=ds.filter(function(d){return d.petfriendly;});
+  if(filt==='child')ds=ds.filter(function(d){return d.childok;});
+  if(filt==='ac')ds=ds.filter(function(d){return d.ac;});
+  if(filt==='wheelchair')ds=ds.filter(function(d){return d.wheelchair;});
+  if(filt==='lbg')ds=ds.filter(function(d){return d.langs.indexOf('bg')>=0;});
+  if(filt==='len')ds=ds.filter(function(d){return d.langs.indexOf('en')>=0;});
+  if(filt==='lde')ds=ds.filter(function(d){return d.langs.indexOf('de')>=0;});
+  if(filt==='lfr')ds=ds.filter(function(d){return d.langs.indexOf('fr')>=0;});
+  if(filt==='lru')ds=ds.filter(function(d){return d.langs.indexOf('ru')>=0;});
+  if(filt==='lcs')ds=ds.filter(function(d){return d.langs.indexOf('cs')>=0;});
+  if(filt==='lit')ds=ds.filter(function(d){return d.langs.indexOf('it')>=0;});
+  if(filt==='les')ds=ds.filter(function(d){return d.langs.indexOf('es')>=0;});
+  if(filt==='ltr')ds=ds.filter(function(d){return d.langs.indexOf('tr')>=0;});
+  if(filt==='lar')ds=ds.filter(function(d){return d.langs.indexOf('ar')>=0;});
+  if(filt==='lzh')ds=ds.filter(function(d){return d.langs.indexOf('zh')>=0;});
+  if(filt==='airport')ds=ds.filter(function(d){return d.airport;});
+  if(filt==='longdist')ds=ds.filter(function(d){return d.longdist;});
+  if(filt==='night')ds=ds.filter(function(d){return d.night;});
+  if(filt==='business')ds=ds.filter(function(d){return d.business;});
+  if(filt==='verified')ds=ds.filter(function(d){return d.verified;});
+  if(filt==='top')ds=ds.filter(function(d){return d.rating>=4.8;});
+  if(filt==='new')ds=ds.filter(function(d){return d.reviews<10;});
+  if(q)ds=ds.filter(function(d){return d.name.toLowerCase().indexOf(q)>=0||d.car.toLowerCase().indexOf(q)>=0||d.areas.toLowerCase().indexOf(q)>=0;});
   ds.sort(function(a,b){return (b.online?1:0)-(a.online?1:0)||b.rating-a.rating;});
-  document.getElementById('dlist').innerHTML=ds.length?ds.map(card).join(''):'<div style="text-align:center;padding:30px;color:var(--mu)">No drivers found</div>';
-  var ml=document.getElementById('map-list');if(ml)ml.innerHTML=ds.slice(0,3).map(card).join('');
-  
+  var dl=document.getElementById('dlist');
+  if(dl)dl.innerHTML=ds.length?ds.map(function(d){return card(d,false);}).join(''):'<div style="text-align:center;padding:30px;color:var(--mu)">No drivers found with this filter</div>';
+  var ml=document.getElementById('map-list');
+  if(ml)ml.innerHTML=ds.slice(0,3).map(function(d){return card(d,true);}).join('');
 }
 
 function renderMap(){
-  if(!mapReady) return;
-  mkrs.forEach(function(m){m.remove();});mkrs=[];
+  if(!mapReady||!map)return;
+  mkrs.forEach(function(m){try{m.remove();}catch(e){}});mkrs=[];
   DRIVERS.forEach(function(d){
-    var m=L.marker([d.lat,d.lng],{icon:L.divIcon({html:'<div style="background:'+(d.online?'#22c55e':'#555')+';border:2px solid #fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center">🚗</div>',iconSize:[28,28],iconAnchor:[14,14],className:''})}).addTo(map);
+    var ic=carI(d);
+    var m=L.marker([d.lat,d.lng],{icon:L.divIcon({
+      html:'<div style="background:'+(d.online?'#22c55e':'#555')+';border:2px solid #fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 6px #0008">'+ic+'</div>',
+      iconSize:[32,32],iconAnchor:[16,16],className:''
+    })}).addTo(map);
+    m.bindPopup('<b>'+d.name+'</b><br>'+d.car+'<br>&#11088; '+d.rating);
     m.on('click',function(){openMod(d.id);});
     mkrs.push(m);
   });
@@ -308,17 +443,40 @@ function renderMap(){
 
 function openMod(id){
   cur=DRIVERS.filter(function(d){return d.id===id;})[0];
-  if(!cur) return;
+  if(!cur)return;
   var d=cur,st=stI(d);
-  document.getElementById('mav').innerHTML='<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover">';
-  document.getElementById('mname').textContent=d.name;
-  document.getElementById('mcar2').textContent=d.car+' / '+d.plate;
-  document.getElementById('mstars').textContent=d.rating+' stars';
-  document.getElementById('mstyle').textContent='Style: '+st.l+' ('+st.s+')';
-  document.getElementById('mcardet').textContent='Electric: '+(d.electric?'Yes':'No');
+  var mav=document.getElementById('mav');
+  if(d.avatar&&d.avatar.indexOf('http')===0){
+    mav.innerHTML='<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover" onerror="this.parentNode.textContent='🚗'">';
+  } else { mav.textContent=carI(d); }
+  document.getElementById('mname').innerHTML=d.name+' <span class="vb">✓ Verified</span>';
+  document.getElementById('mcar2').textContent=d.car+' · '+d.plate;
+  document.getElementById('mstars').innerHTML='<span style="color:var(--y);font-size:20px">'+'★'.repeat(Math.round(d.rating))+'</span> <strong>'+d.rating+'</strong> <span style="color:var(--mu);font-size:12px">('+d.reviews+' reviews)</span>';
+  document.getElementById('mstyle').innerHTML='<strong style="color:var(--or)">⚠ Tell your driver your preferred style when you get in the car.</strong><br>This driver: <strong style="color:'+st.c+'">'+st.l+' — '+st.s+'</strong>';
+  document.getElementById('mcardet').innerHTML=
+    '<div class="ir"><span class="ik">Type</span><span class="iv">'+d.car_type.toUpperCase()+'</span></div>'+
+    '<div class="ir"><span class="ik">Seats</span><span class="iv">'+d.seats+' passengers</span></div>'+
+    '<div class="ir"><span class="ik">0-100 km/h</span><span class="iv" style="color:'+st.c+'">'+d.accel+'s</span></div>'+
+    '<div class="ir"><span class="ik">Electric</span><span class="iv">'+(d.electric?'✅ Yes':'No')+'</span></div>'+
+    '<div class="ir"><span class="ik">A/C</span><span class="iv">'+(d.ac?'✅ Yes':'—')+'</span></div>';
   document.getElementById('mpay').innerHTML=d.payment.map(payI).join(' ');
-  document.getElementById('mlangs').textContent=d.langs.join(', ');
-  document.getElementById('mopts').textContent=d.nosmoker?'No smoking, Silent OK, Chatty OK':'';
+  document.getElementById('mlangs').innerHTML=d.langs.map(function(l){return '<span class="t tb">'+(LM[l]||l)+'</span>';}).join(' ');
+  var opts=[];
+  if(d.nosmoker)opts.push('<span class="t ty">🚭 No smoking</span>');
+  if(d.smoking)opts.push('<span class="t tr">🚬 Smoking OK</span>');
+  if(d.petfriendly)opts.push('<span class="t tp">🐾 Pets OK</span>');
+  if(d.childok)opts.push('<span class="t to">👶 Child seat</span>');
+  if(d.silent_ok)opts.push('<span class="t tc">🤫 Silent OK</span>');
+  if(d.talk_ok)opts.push('<span class="t tg">💬 Chatty OK</span>');
+  if(d.music)opts.push('<span class="t tp">🎵 Music OK</span>');
+  if(d.chalga)opts.push('<span class="t tpi">🎶 Chalga OK</span>');
+  if(d.nomusic)opts.push('<span class="t ty">🔇 No music</span>');
+  if(d.airport)opts.push('<span class="t tb">✈️ Airport</span>');
+  if(d.longdist)opts.push('<span class="t tb">🛣️ Long distance</span>');
+  if(d.night)opts.push('<span class="t tc">🌙 Night rides</span>');
+  if(d.business)opts.push('<span class="t ty">💼 Business</span>');
+  if(d.wheelchair)opts.push('<span class="t tg">♿ Wheelchair</span>');
+  document.getElementById('mopts').innerHTML=opts.join(' ')||'—';
   document.getElementById('mprice').textContent=d.price;
   document.getElementById('mareas').textContent=d.areas;
   document.getElementById('mbio').textContent=d.bio||'';
@@ -326,64 +484,45 @@ function openMod(id){
 }
 
 function closeMod(){document.getElementById('modal').className='modal';}
-function doCall(){if(cur) window.location.href='tel:'+cur.phone;}
-function doVB(){if(cur) window.open('https://wa.me/'+cur.phone.replace(/[^0-9]/g,''));}
+function doCall(){if(cur)window.location.href='tel:'+cur.phone;}
+function doVib(){if(cur)window.open('viber://chat?number='+cur.phone.replace(/[^0-9]/g,''));}
+function openRate(){alert('Rating system coming soon.');}
 
-
-var mapReady=false,map,mkrs=[];
-function renderMap(){
-  if(!mapReady||!map)return;
-  mkrs.forEach(function(m){try{m.remove();}catch(e){}});mkrs=[];
-  DRIVERS.forEach(function(d){
-    var m=L.marker([d.lat,d.lng],{icon:L.divIcon({
-      html:'<div style="background:'+(d.online?'#22c55e':'#555')+';border:2px solid #fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:15px">&#128663;</div>',
-      iconSize:[30,30],iconAnchor:[15,15],className:''
-    })}).addTo(map);
-    m.bindPopup('<b>'+d.name+'</b><br>'+d.car);
-    m.on('click',function(){openMod(d.id);});
-    mkrs.push(m);
-  });
-  var ml=document.getElementById('map-list');
-  if(ml)ml.innerHTML=DRIVERS.map(function(d){return card(d,true);}).join('');
-}
-function initMap(){
-  if(mapReady)return;
-  if(typeof L==='undefined')return;
-  mapReady=true;
-  map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],13);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
-  renderMap();
-}
 function showTab(t){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
   document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});
   document.getElementById('page-'+t).classList.add('on');
   document.getElementById('tab-'+t).classList.add('on');
-  if(t==='map'&&!mapReady&&typeof L!=='undefined'){
-    mapReady=true;
-    map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],13);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
-    renderMap();
+  if(t==='map'){
+    if(!mapReady&&typeof L!=='undefined'){
+      mapReady=true;
+      map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],13);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
+      renderMap();
+    }
+    setTimeout(function(){if(map)map.invalidateSize();},300);
   }
 }
 
 function pollGPS(){
   fetch(WORKER+'/gps').then(function(r){return r.json();}).then(function(data){
-    if(!data.ok) return;
+    if(!data.ok||!data.drivers.length)return;
     data.drivers.forEach(function(g){
       var dr=DRIVERS.filter(function(d){return String(d.id)===String(g.driver_id);})[0];
-      if(!dr) return;
+      if(!dr)return;
       dr.lat=g.lat;dr.lng=g.lng;dr.online=g.online;
     });
     render();renderMap();
+    var el=document.getElementById('gps-status');
+    if(el){var on=DRIVERS.filter(function(d){return d.online;}).length;el.textContent=on>0?'🟢 '+on+' online':'';}
   }).catch(function(){});
 }
 
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeMod();});
+
 render();
 pollGPS();
 setInterval(pollGPS,15000);
-
 </script>
 </body>
 </html>
