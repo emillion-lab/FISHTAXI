@@ -494,17 +494,24 @@ function showTab(t){
 }
 function setLang(l){document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('on',(l==='en'&&b.textContent==='EN')||(l==='bg'&&b.textContent==='БГ')||(l==='de'&&b.textContent==='DE')||(l==='fr'&&b.textContent==='FR')))}
 
+// Force hide loading screen after 3s no matter what
+setTimeout(function(){
+  var ld=document.getElementById('ld');
+  if(ld)ld.classList.add('hide');
+},3000);
+
 window.addEventListener('DOMContentLoaded',function(){
-  var c=CITIES.sofia;
-  map=L.map('map',{zoomControl:false,attributionControl:false}).setView([c.lat,c.lng],c.zoom);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
-  L.control.zoom({position:'topright'}).addTo(map);
-  renderMap();
-  renderList();
-  updCtr();
+  try{
+    var c=CITIES.sofia;
+    map=L.map('map',{zoomControl:false,attributionControl:false}).setView([c.lat,c.lng],c.zoom);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
+    L.control.zoom({position:'topright'}).addTo(map);
+  }catch(e){console.error('Map init:',e);}
+  try{renderMap();}catch(e){console.error('renderMap:',e);}
+  try{renderList();}catch(e){console.error('renderList:',e);}
+  try{updCtr();}catch(e){console.error('updCtr:',e);}
   document.getElementById('ld').classList.add('hide');
-  pollGPS();
-  setInterval(pollGPS,15000);
+  try{pollGPS();setInterval(pollGPS,15000);}catch(e){console.error('pollGPS:',e);}
 });
 
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeMod()});
