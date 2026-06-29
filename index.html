@@ -228,7 +228,7 @@ var DRIVERS=[{"id":1,"name":"Emil M.","avatar":"https://emillion-lab.github.io/F
 
 var filt='all',cur=null;
 
-function payI(p){return p==='revolut'?'<span class="pi">\u{1F49C} Revolut</span>':'<span class="pi">\u{1F4B5} Cash</span>';}
+function payI(p){return p==='revolut'?'<span class="pi">💜 Revolut</span>':'<span class="pi">💵 Cash</span>';}
 function stI(d){if(d.accel<5)return{l:'\uD83C\uDFCE Sport',c:'var(--pi)',s:d.accel+'s'};if(d.accel<6.5)return{l:'\u26A1 Fast',c:'var(--or)',s:d.accel+'s'};return{l:'\uD83D\uDE97 Normal',c:'var(--gr)',s:'Balanced'};}
 
 function card(d){
@@ -260,6 +260,8 @@ function sf(f,el){
   render();
 }
 
+function qc(id){var d=DRIVERS.filter(function(x){return x.id===id;})[0];if(d)window.location.href='tel:'+d.phone;}
+function qw(id){var d=DRIVERS.filter(function(x){return x.id===id;})[0];if(d)window.open('https://wa.me/'+d.phone.replace(/[^0-9]/g,''));}
 function render(){
   var q=(document.getElementById('srch').value||'').toLowerCase();
   var ds=DRIVERS.filter(function(d){return d.city==='sofia';});
