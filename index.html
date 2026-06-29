@@ -110,7 +110,19 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
 
 <div class="top">
   <div class="logo">🐟 fish.taxi</div>
-  <div id="gps-status" style="font-size:11px;color:var(--mu)"></div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div id="gps-status" style="font-size:11px;color:var(--mu)"></div>
+    <select id="lang-sel" onchange="setLang(this.value)" style="background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:4px 8px;font-size:12px;font-weight:700;cursor:pointer">
+      <option value="en">🇬🇧 EN</option>
+      <option value="bg">🇧🇬 БГ</option>
+      <option value="de">🇩🇪 DE</option>
+      <option value="fr">🇫🇷 FR</option>
+      <option value="ru">🇷🇺 RU</option>
+      <option value="it">🇮🇹 IT</option>
+      <option value="es">🇪🇸 ES</option>
+      <option value="tr">🇹🇷 TR</option>
+    </select>
+  </div>
 </div>
 
 <div class="tabs">
@@ -127,42 +139,42 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
   </div>
   <div class="fw">
     <div class="fs"><span class="fl">Status</span>
-      <button class="flt on" onclick="sf('all',this)">All</button>
-      <button class="flt" onclick="sf('online',this)">🟢 Online</button>
-      <button class="flt" onclick="sf('offline',this)">⚫ Offline</button>
+      <button class="flt on" onclick="sf('all',this)" data-f='all'>All</button>
+      <button class="flt" onclick="sf('online',this)" data-f='online'>🟢 Online</button>
+      <button class="flt" onclick="sf('offline',this)" data-f='offline'>⚫ Offline</button>
     </div>
     <div class="fs"><span class="fl">Payment</span>
-      <button class="flt" onclick="sf('revolut',this)">💜 Revolut</button>
-      <button class="flt" onclick="sf('cash',this)">💵 Cash</button>
-      <button class="flt" onclick="sf('terminal',this)">💳 Terminal</button>
+      <button class="flt" onclick="sf('revolut',this)" data-f='revolut'>💜 Revolut</button>
+      <button class="flt" onclick="sf('cash',this)" data-f='cash'>💵 Cash</button>
+      <button class="flt" onclick="sf('terminal',this)" data-f='terminal'>💳 Terminal</button>
     </div>
     <div class="fs"><span class="fl">Driving Style</span>
-      <button class="flt" onclick="sf('sport',this)">🏎 Sport 0-5s</button>
-      <button class="flt" onclick="sf('fast',this)">⚡ Fast 5-7s</button>
-      <button class="flt" onclick="sf('normal',this)">🚗 Normal</button>
-      <button class="flt" onclick="sf('comfort',this)">🛋 Comfort</button>
+      <button class="flt" onclick="sf('sport',this)" data-f='sport'>🏎 Sport 0-5s</button>
+      <button class="flt" onclick="sf('fast',this)" data-f='fast'>⚡ Fast 5-7s</button>
+      <button class="flt" onclick="sf('normal',this)" data-f='normal'>🚗 Normal</button>
+      <button class="flt" onclick="sf('comfort',this)" data-f='comfort'>🛋 Comfort</button>
     </div>
     <div class="fs"><span class="fl">Car Type</span>
-      <button class="flt" onclick="sf('electric',this)">⚡ Electric</button>
-      <button class="flt" onclick="sf('sedan',this)">🚗 Sedan</button>
-      <button class="flt" onclick="sf('suv',this)">🚙 SUV</button>
-      <button class="flt" onclick="sf('minivan',this)">🚐 Minivan 7+</button>
-      <button class="flt" onclick="sf('luxury',this)">👑 Luxury</button>
+      <button class="flt" onclick="sf('electric',this)" data-f='electric'>⚡ Electric</button>
+      <button class="flt" onclick="sf('sedan',this)" data-f='sedan'>🚗 Sedan</button>
+      <button class="flt" onclick="sf('suv',this)" data-f='suv'>🚙 SUV</button>
+      <button class="flt" onclick="sf('minivan',this)" data-f='minivan'>🚐 Minivan 7+</button>
+      <button class="flt" onclick="sf('luxury',this)" data-f='luxury'>👑 Luxury</button>
     </div>
     <div class="fs"><span class="fl">Atmosphere</span>
-      <button class="flt" onclick="sf('silent',this)">🤫 Silent ride</button>
-      <button class="flt" onclick="sf('talk',this)">💬 Chatty</button>
-      <button class="flt" onclick="sf('music',this)">🎵 Music OK</button>
-      <button class="flt" onclick="sf('chalga',this)">🎶 Chalga OK</button>
-      <button class="flt" onclick="sf('nomusic',this)">🔇 No Music</button>
+      <button class="flt" onclick="sf('silent',this)" data-f='silent'>🤫 Silent ride</button>
+      <button class="flt" onclick="sf('talk',this)" data-f='talk'>💬 Chatty</button>
+      <button class="flt" onclick="sf('music',this)" data-f='music'>🎵 Music OK</button>
+      <button class="flt" onclick="sf('chalga',this)" data-f='chalga'>🎶 Chalga OK</button>
+      <button class="flt" onclick="sf('nomusic',this)" data-f='nomusic'>🔇 No Music</button>
     </div>
     <div class="fs"><span class="fl">Comfort</span>
-      <button class="flt" onclick="sf('nosmoker',this)">🚭 No Smoking</button>
-      <button class="flt" onclick="sf('smoking',this)">🚬 Smoking OK</button>
-      <button class="flt" onclick="sf('pet',this)">🐾 Pets OK</button>
-      <button class="flt" onclick="sf('child',this)">👶 Child Seat</button>
-      <button class="flt" onclick="sf('ac',this)">❄️ A/C</button>
-      <button class="flt" onclick="sf('wheelchair',this)">♿ Wheelchair</button>
+      <button class="flt" onclick="sf('nosmoker',this)" data-f='nosmoker'>🚭 No Smoking</button>
+      <button class="flt" onclick="sf('smoking',this)" data-f='smoking'>🚬 Smoking OK</button>
+      <button class="flt" onclick="sf('pet',this)" data-f='pet'>🐾 Pets OK</button>
+      <button class="flt" onclick="sf('child',this)" data-f='child'>👶 Child Seat</button>
+      <button class="flt" onclick="sf('ac',this)" data-f='ac'>❄️ A/C</button>
+      <button class="flt" onclick="sf('wheelchair',this)" data-f='wheelchair'>♿ Wheelchair</button>
     </div>
     <div class="fs"><span class="fl">Language</span>
       <button class="flt" onclick="sf('lbg',this)">🇧🇬 BG</button>
@@ -178,13 +190,13 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
       <button class="flt" onclick="sf('lzh',this)">🇨🇳 ZH</button>
     </div>
     <div class="fs"><span class="fl">Extras</span>
-      <button class="flt" onclick="sf('airport',this)">✈️ Airport</button>
-      <button class="flt" onclick="sf('longdist',this)">🛣️ Long Distance</button>
-      <button class="flt" onclick="sf('night',this)">🌙 Night Rides</button>
-      <button class="flt" onclick="sf('business',this)">💼 Business</button>
-      <button class="flt" onclick="sf('verified',this)">✅ Verified</button>
-      <button class="flt" onclick="sf('top',this)">⭐ Top Rated</button>
-      <button class="flt" onclick="sf('new',this)">🆕 New Driver</button>
+      <button class="flt" onclick="sf('airport',this)" data-f='airport'>✈️ Airport</button>
+      <button class="flt" onclick="sf('longdist',this)" data-f='longdist'>🛣️ Long Distance</button>
+      <button class="flt" onclick="sf('night',this)" data-f='night'>🌙 Night Rides</button>
+      <button class="flt" onclick="sf('business',this)" data-f='business'>💼 Business</button>
+      <button class="flt" onclick="sf('verified',this)" data-f='verified'>✅ Verified</button>
+      <button class="flt" onclick="sf('top',this)" data-f='top'>⭐ Top Rated</button>
+      <button class="flt" onclick="sf('new',this)" data-f='new'>🆕 New Driver</button>
     </div>
   </div>
   <div class="dlist" id="dlist"></div>
@@ -298,6 +310,190 @@ var DRIVERS=[{
   "price":"0.75 EUR/km day / 0.85 EUR/km night / Start 1.49 EUR",
   "bio":"Non-smoker. IT specialist. Lived abroad. No animals, food or drinks in the car. Happy to talk or stay silent. Please speak up if you want a specific route or feel unwell."
 }];
+
+
+var T={
+  en:{
+    logo:'🐟 fish.taxi',
+    tagline:'Find Your Driver Directly',
+    tabMap:'🗺 Map',tabList:'🐟 Drivers',tabHow:'ℹ How',tabReg:'🚕 Join',
+    search:'Search driver, car, area...',
+    sStatus:'Status',sPayment:'Payment',sStyle:'Driving Style',sCar:'Car Type',
+    sAtm:'Atmosphere',sComfort:'Comfort',sLang:'Language',sExtras:'Extras',
+    fAll:'All',fOnline:'🟢 Online',fOffline:'⚫ Offline',
+    fRevolut:'💜 Revolut',fCash:'💵 Cash',fTerminal:'💳 Terminal',
+    fSport:'🏎 Sport 0-5s',fFast:'⚡ Fast 5-7s',fNormal:'🚗 Normal',fComfort:'🛋 Comfort',
+    fElectric:'⚡ Electric',fSedan:'🚗 Sedan',fSuv:'🚙 SUV',fMinivan:'🚐 Minivan 7+',fLuxury:'👑 Luxury',
+    fSilent:'🤫 Silent',fTalk:'💬 Chatty',fMusic:'🎵 Music OK',fChalga:'🎶 Chalga OK',fNomusic:'🔇 No Music',
+    fNosmoker:'🚭 No Smoking',fSmoking:'🚬 Smoking OK',fPet:'🐾 Pets OK',fChild:'👶 Child Seat',fAc:'❄️ A/C',fWheel:'♿ Wheelchair',
+    fAirport:'✈️ Airport',fLong:'🛣️ Long Distance',fNight:'🌙 Night',fBiz:'💼 Business',fVerified:'✅ Verified',fTop:'⭐ Top Rated',fNew:'🆕 New',
+    btnCall:'📞 Call',btnVib:'💬 Viber',
+    noDrivers:'No drivers found with this filter',
+    online:'Online',offline:'Offline',
+    howTitle:'How it works',joinTitle:'Join as Driver'
+  },
+  bg:{
+    logo:'🐟 fish.taxi',
+    tagline:'Намери си шофьор директно',
+    tabMap:'🗺 Карта',tabList:'🐟 Шофьори',tabHow:'ℹ Как',tabReg:'🚕 Присъедини',
+    search:'Търси шофьор, кола, район...',
+    sStatus:'Статус',sPayment:'Плащане',sStyle:'Стил на каране',sCar:'Тип кола',
+    sAtm:'Атмосфера',sComfort:'Комфорт',sLang:'Език',sExtras:'Допълнителни',
+    fAll:'Всички',fOnline:'🟢 Онлайн',fOffline:'⚫ Офлайн',
+    fRevolut:'💜 Revolut',fCash:'💵 Кеш',fTerminal:'💳 Терминал',
+    fSport:'🏎 Спортно 0-5s',fFast:'⚡ Бързо 5-7s',fNormal:'🚗 Нормално',fComfort:'🛋 Комфорт',
+    fElectric:'⚡ Електрик',fSedan:'🚗 Седан',fSuv:'🚙 SUV',fMinivan:'🚐 Миниван 7+',fLuxury:'👑 Луксозно',
+    fSilent:'🤫 Тишина',fTalk:'💬 Разговори',fMusic:'🎵 Музика OK',fChalga:'🎶 Чалга OK',fNomusic:'🔇 Без музика',
+    fNosmoker:'🚭 Непушач',fSmoking:'🚬 Пушене OK',fPet:'🐾 Домашни',fChild:'👶 Детска седалка',fAc:'❄️ Климатик',fWheel:'♿ Инвалидна количка',
+    fAirport:'✈️ Летище',fLong:'🛣️ Дълъг маршрут',fNight:'🌙 Нощни',fBiz:'💼 Бизнес',fVerified:'✅ Верифициран',fTop:'⭐ Топ рейтинг',fNew:'🆕 Нов',
+    btnCall:'📞 Обади се',btnVib:'💬 Viber',
+    noDrivers:'Няма намерени шофьори',
+    online:'Онлайн',offline:'Офлайн',
+    howTitle:'Как работи',joinTitle:'Присъедини се'
+  },
+  de:{
+    logo:'🐟 fish.taxi',
+    tagline:'Finde deinen Fahrer direkt',
+    tabMap:'🗺 Karte',tabList:'🐟 Fahrer',tabHow:'ℹ Wie',tabReg:'🚕 Beitreten',
+    search:'Fahrer, Auto, Gebiet suchen...',
+    sStatus:'Status',sPayment:'Zahlung',sStyle:'Fahrstil',sCar:'Autotyp',
+    sAtm:'Atmosphäre',sComfort:'Komfort',sLang:'Sprache',sExtras:'Extras',
+    fAll:'Alle',fOnline:'🟢 Online',fOffline:'⚫ Offline',
+    fRevolut:'💜 Revolut',fCash:'💵 Bar',fTerminal:'💳 Terminal',
+    fSport:'🏎 Sport 0-5s',fFast:'⚡ Schnell 5-7s',fNormal:'🚗 Normal',fComfort:'🛋 Komfort',
+    fElectric:'⚡ Elektro',fSedan:'🚗 Limousine',fSuv:'🚙 SUV',fMinivan:'🚐 Minivan 7+',fLuxury:'👑 Luxus',
+    fSilent:'🤫 Leise',fTalk:'💬 Gesprächig',fMusic:'🎵 Musik OK',fChalga:'🎶 Chalga OK',fNomusic:'🔇 Keine Musik',
+    fNosmoker:'🚭 Nichtraucher',fSmoking:'🚬 Rauchen OK',fPet:'🐾 Haustiere',fChild:'👶 Kindersitz',fAc:'❄️ Klima',fWheel:'♿ Rollstuhl',
+    fAirport:'✈️ Flughafen',fLong:'🛣️ Fernfahrt',fNight:'🌙 Nacht',fBiz:'💼 Business',fVerified:'✅ Verifiziert',fTop:'⭐ Top',fNew:'🆕 Neu',
+    btnCall:'📞 Anrufen',btnVib:'💬 Viber',
+    noDrivers:'Keine Fahrer gefunden',
+    online:'Online',offline:'Offline'
+  },
+  fr:{
+    logo:'🐟 fish.taxi',
+    tagline:'Trouvez votre chauffeur directement',
+    tabMap:'🗺 Carte',tabList:'🐟 Chauffeurs',tabHow:'ℹ Comment',tabReg:'🚕 Rejoindre',
+    search:'Chercher chauffeur, voiture...',
+    sStatus:'Statut',sPayment:'Paiement',sStyle:'Style de conduite',sCar:'Type de voiture',
+    sAtm:'Atmosphère',sComfort:'Confort',sLang:'Langue',sExtras:'Extras',
+    fAll:'Tous',fOnline:'🟢 En ligne',fOffline:'⚫ Hors ligne',
+    fRevolut:'💜 Revolut',fCash:'💵 Espèces',fTerminal:'💳 Terminal',
+    fSport:'🏎 Sport 0-5s',fFast:'⚡ Rapide 5-7s',fNormal:'🚗 Normal',fComfort:'🛋 Confort',
+    fElectric:'⚡ Électrique',fSedan:'🚗 Berline',fSuv:'🚙 SUV',fMinivan:'🚐 Monospace 7+',fLuxury:'👑 Luxe',
+    fSilent:'🤫 Silencieux',fTalk:'💬 Bavard',fMusic:'🎵 Musique OK',fChalga:'🎶 Chalga OK',fNomusic:'🔇 Sans musique',
+    fNosmoker:'🚭 Non-fumeur',fSmoking:'🚬 Fumeur OK',fPet:'🐾 Animaux',fChild:'👶 Siège enfant',fAc:'❄️ Clim',fWheel:'♿ Fauteuil',
+    fAirport:'✈️ Aéroport',fLong:'🛣️ Longue distance',fNight:'🌙 Nuit',fBiz:'💼 Business',fVerified:'✅ Vérifié',fTop:'⭐ Top',fNew:'🆕 Nouveau',
+    btnCall:'📞 Appeler',btnVib:'💬 Viber',
+    noDrivers:'Aucun chauffeur trouvé',
+    online:'En ligne',offline:'Hors ligne'
+  },
+  ru:{
+    logo:'🐟 fish.taxi',
+    tagline:'Найди водителя напрямую',
+    tabMap:'🗺 Карта',tabList:'🐟 Водители',tabHow:'ℹ Как',tabReg:'🚕 Вступить',
+    search:'Поиск водителя, авто, района...',
+    sStatus:'Статус',sPayment:'Оплата',sStyle:'Стиль вождения',sCar:'Тип авто',
+    sAtm:'Атмосфера',sComfort:'Комфорт',sLang:'Язык',sExtras:'Дополнительно',
+    fAll:'Все',fOnline:'🟢 Онлайн',fOffline:'⚫ Офлайн',
+    fRevolut:'💜 Revolut',fCash:'💵 Наличные',fTerminal:'💳 Терминал',
+    fSport:'🏎 Спорт 0-5s',fFast:'⚡ Быстро 5-7s',fNormal:'🚗 Нормально',fComfort:'🛋 Комфорт',
+    fElectric:'⚡ Электро',fSedan:'🚗 Седан',fSuv:'🚙 SUV',fMinivan:'🚐 Минивэн 7+',fLuxury:'👑 Люкс',
+    fSilent:'🤫 Тишина',fTalk:'💬 Общение',fMusic:'🎵 Музыка OK',fChalga:'🎶 Чалга OK',fNomusic:'🔇 Без музыки',
+    fNosmoker:'🚭 Некурящий',fSmoking:'🚬 Курение OK',fPet:'🐾 Животные',fChild:'👶 Детское кресло',fAc:'❄️ Кондиционер',fWheel:'♿ Коляска',
+    fAirport:'✈️ Аэропорт',fLong:'🛣️ Дальние',fNight:'🌙 Ночные',fBiz:'💼 Бизнес',fVerified:'✅ Верифицирован',fTop:'⭐ Топ',fNew:'🆕 Новый',
+    btnCall:'📞 Звонить',btnVib:'💬 Viber',
+    noDrivers:'Водители не найдены',
+    online:'Онлайн',offline:'Офлайн'
+  },
+  it:{
+    logo:'🐟 fish.taxi',
+    tagline:'Trova il tuo autista direttamente',
+    tabMap:'🗺 Mappa',tabList:'🐟 Autisti',tabHow:'ℹ Come',tabReg:'🚕 Unisciti',
+    search:'Cerca autista, auto, zona...',
+    sStatus:'Stato',sPayment:'Pagamento',sStyle:'Stile di guida',sCar:'Tipo auto',
+    sAtm:'Atmosfera',sComfort:'Comfort',sLang:'Lingua',sExtras:'Extra',
+    fAll:'Tutti',fOnline:'🟢 Online',fOffline:'⚫ Offline',
+    fRevolut:'💜 Revolut',fCash:'💵 Contanti',fTerminal:'💳 Terminale',
+    fSport:'🏎 Sport 0-5s',fFast:'⚡ Veloce 5-7s',fNormal:'🚗 Normale',fComfort:'🛋 Comfort',
+    fElectric:'⚡ Elettrico',fSedan:'🚗 Berlina',fSuv:'🚙 SUV',fMinivan:'🚐 Monovolume 7+',fLuxury:'👑 Lusso',
+    fSilent:'🤫 Silenzioso',fTalk:'💬 Chiacchierone',fMusic:'🎵 Musica OK',fChalga:'🎶 Chalga OK',fNomusic:'🔇 Senza musica',
+    fNosmoker:'🚭 Non fumatore',fSmoking:'🚬 Fumo OK',fPet:'🐾 Animali',fChild:'👶 Seggiolino',fAc:'❄️ Aria cond.',fWheel:'♿ Sedia a rotelle',
+    fAirport:'✈️ Aeroporto',fLong:'🛣️ Lunga distanza',fNight:'🌙 Notturno',fBiz:'💼 Business',fVerified:'✅ Verificato',fTop:'⭐ Top',fNew:'🆕 Nuovo',
+    btnCall:'📞 Chiama',btnVib:'💬 Viber',
+    noDrivers:'Nessun autista trovato',
+    online:'Online',offline:'Offline'
+  },
+  es:{
+    logo:'🐟 fish.taxi',
+    tagline:'Encuentra tu conductor directamente',
+    tabMap:'🗺 Mapa',tabList:'🐟 Conductores',tabHow:'ℹ Cómo',tabReg:'🚕 Unirse',
+    search:'Buscar conductor, coche, zona...',
+    sStatus:'Estado',sPayment:'Pago',sStyle:'Estilo de conducción',sCar:'Tipo de coche',
+    sAtm:'Atmósfera',sComfort:'Confort',sLang:'Idioma',sExtras:'Extras',
+    fAll:'Todos',fOnline:'🟢 Online',fOffline:'⚫ Offline',
+    fRevolut:'💜 Revolut',fCash:'💵 Efectivo',fTerminal:'💳 Terminal',
+    fSport:'🏎 Sport 0-5s',fFast:'⚡ Rápido 5-7s',fNormal:'🚗 Normal',fComfort:'🛋 Confort',
+    fElectric:'⚡ Eléctrico',fSedan:'🚗 Sedán',fSuv:'🚙 SUV',fMinivan:'🚐 Monovolumen 7+',fLuxury:'👑 Lujo',
+    fSilent:'🤫 Silencioso',fTalk:'💬 Conversador',fMusic:'🎵 Música OK',fChalga:'🎶 Chalga OK',fNomusic:'🔇 Sin música',
+    fNosmoker:'🚭 No fumador',fSmoking:'🚬 Fumar OK',fPet:'🐾 Mascotas',fChild:'👶 Silla niño',fAc:'❄️ Aire acond.',fWheel:'♿ Silla de ruedas',
+    fAirport:'✈️ Aeropuerto',fLong:'🛣️ Larga distancia',fNight:'🌙 Nocturno',fBiz:'💼 Negocios',fVerified:'✅ Verificado',fTop:'⭐ Top',fNew:'🆕 Nuevo',
+    btnCall:'📞 Llamar',btnVib:'💬 Viber',
+    noDrivers:'No se encontraron conductores',
+    online:'Online',offline:'Offline'
+  },
+  tr:{
+    logo:'🐟 fish.taxi',
+    tagline:'Sürücünü doğrudan bul',
+    tabMap:'🗺 Harita',tabList:'🐟 Sürücüler',tabHow:'ℹ Nasıl',tabReg:'🚕 Katıl',
+    search:'Sürücü, araba, bölge ara...',
+    sStatus:'Durum',sPayment:'Ödeme',sStyle:'Sürüş stili',sCar:'Araç tipi',
+    sAtm:'Atmosfer',sComfort:'Konfor',sLang:'Dil',sExtras:'Ekstra',
+    fAll:'Tümü',fOnline:'🟢 Çevrimiçi',fOffline:'⚫ Çevrimdışı',
+    fRevolut:'💜 Revolut',fCash:'💵 Nakit',fTerminal:'💳 Terminal',
+    fSport:'🏎 Spor 0-5s',fFast:'⚡ Hızlı 5-7s',fNormal:'🚗 Normal',fComfort:'🛋 Konfor',
+    fElectric:'⚡ Elektrik',fSedan:'🚗 Sedan',fSuv:'🚙 SUV',fMinivan:'🚐 Minivan 7+',fLuxury:'👑 Lüks',
+    fSilent:'🤫 Sessiz',fTalk:'💬 Konuşkan',fMusic:'🎵 Müzik OK',fChalga:'🎶 Chalga OK',fNomusic:'🔇 Müziksiz',
+    fNosmoker:'🚭 Sigara içmez',fSmoking:'🚬 Sigara OK',fPet:'🐾 Evcil hayvan',fChild:'👶 Çocuk koltuğu',fAc:'❄️ Klima',fWheel:'♿ Tekerlekli sandalye',
+    fAirport:'✈️ Havalimanı',fLong:'🛣️ Uzun mesafe',fNight:'🌙 Gece',fBiz:'💼 İş',fVerified:'✅ Doğrulandı',fTop:'⭐ En iyi',fNew:'🆕 Yeni',
+    btnCall:'📞 Ara',btnVib:'💬 Viber',
+    noDrivers:'Sürücü bulunamadı',
+    online:'Çevrimiçi',offline:'Çevrimdışı'
+  }
+};
+var lang='en';
+
+function setLang(l){
+  lang=l;
+  var t=T[l]||T.en;
+  // Tabs
+  document.getElementById('tab-map').textContent=t.tabMap;
+  document.getElementById('tab-list').textContent=t.tabList;
+  document.getElementById('tab-how').textContent=t.tabHow;
+  document.getElementById('tab-reg').textContent=t.tabReg;
+  // Search
+  var si=document.getElementById('srch');
+  if(si)si.placeholder=t.search;
+  // Filter labels
+  var fls=document.querySelectorAll('.fl');
+  var labels=[t.sStatus,t.sPayment,t.sStyle,t.sCar,t.sAtm,t.sComfort,t.sLang,t.sExtras];
+  fls.forEach(function(el,i){if(labels[i])el.textContent=labels[i];});
+  // Filter buttons
+  var fm={
+    'all':t.fAll,'online':t.fOnline,'offline':t.fOffline,
+    'revolut':t.fRevolut,'cash':t.fCash,'terminal':t.fTerminal,
+    'sport':t.fSport,'fast':t.fFast,'normal':t.fNormal,'comfort':t.fComfort,
+    'electric':t.fElectric,'sedan':t.fSedan,'suv':t.fSuv,'minivan':t.fMinivan,'luxury':t.fLuxury,
+    'silent':t.fSilent,'talk':t.fTalk,'music':t.fMusic,'chalga':t.fChalga,'nomusic':t.fNomusic,
+    'nosmoker':t.fNosmoker,'smoking':t.fSmoking,'pet':t.fPet,'child':t.fChild,'ac':t.fAc,'wheelchair':t.fWheel,
+    'airport':t.fAirport,'longdist':t.fLong,'night':t.fNight,'business':t.fBiz,
+    'verified':t.fVerified,'top':t.fTop,'new':t.fNew
+  };
+  document.querySelectorAll('.flt').forEach(function(b){
+    var f=b.getAttribute('data-f');
+    if(f&&fm[f])b.textContent=fm[f];
+  });
+  render();
+}
 
 var filt='all', cur=null, map=null, mkrs=[], mapReady=false;
 
