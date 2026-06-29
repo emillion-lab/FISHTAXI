@@ -197,7 +197,11 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     </select>
   </div>
   <div id="map"></div>
-  <div class="ctr">
+  <div style="background:var(--s1);border-bottom:1px solid var(--brd);padding:4px 12px;flex-shrink:0;display:flex;align-items:center;gap:6px">
+  <span id="live-indicator" style="display:none;font-size:12px;font-weight:700;color:var(--gr);align-items:center;gap:4px">🟢 Live GPS</span>
+  <span style="font-size:11px;color:var(--mu2);margin-left:auto">Updates every 15s</span>
+</div>
+<div class="ctr">
     <div class="ci"><div class="cn" id="cnt-on">0</div><div class="cl">Online</div></div>
     <div class="ci"><div class="cn" id="cnt-city">0</div><div class="cl">In City</div></div>
     <div class="ci"><div class="cn">10</div><div class="cl">Cities</div></div>
@@ -504,6 +508,41 @@ function reqGPS(){
     L.marker([lt,ln],{icon:L.divIcon({html:'<div style="background:var(--bl);border:3px solid #fff;border-radius:50%;width:14px;height:14px;box-shadow:0 0 10px #3b82f680"></div>',iconSize:[14,14],iconAnchor:[7,7],className:''})}).addTo(map).bindPopup('📍 You');
   },()=>{});
 }
+const WORKER_URL = 'https://mvr-proxy.mihov-emil.workers.dev';
+
+async function fetchRealGPS() {
+  try {
+    const res = await fetch(WORKER_URL + '/gps');
+    const data = await res.json();
+    if (!data.ok || !data.drivers.length) return;
+
+    // Update Emil's position from real GPS
+    data.drivers.forEach(gps => {
+      const driver = DRIVERS.find(d => String(d.id) === String(gps.driver_id));
+      if (!driver) return;
+      driver.lat = gps.lat;
+      driver.lng = gps.lng;
+      driver.online = gps.online;
+      driver._live = true;
+      driver._seconds_ago = gps.seconds_ago;
+    });
+
+    // Re-render map markers with real positions
+    renderMap();
+    renderList();
+    updCtr();
+
+    // Show live indicator
+    const liveEl = document.getElementById('live-indicator');
+    if (liveEl) {
+      liveEl.style.display = 'flex';
+      liveEl.textContent = '🟢 Live GPS';
+    }
+  } catch(e) {
+    console.log('GPS fetch error:', e.message);
+  }
+}
+
 window.addEventListener('DOMContentLoaded',()=>{
   const c=CITIES.sofia;
   map=L.map('map',{zoomControl:false,attributionControl:false}).setView([c.lat,c.lng],c.zoom);
@@ -511,6 +550,11 @@ window.addEventListener('DOMContentLoaded',()=>{
   L.control.zoom({position:'topright'}).addTo(map);
   reqGPS();
   setTimeout(()=>{renderMap();renderList();updCtr();document.getElementById('ld').classList.add('hide')},1000);
+
+  // Poll real GPS from Worker every 15 seconds
+  fetchRealGPS();
+  setInterval(fetchRealGPS, 15000);
+
 });
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeMod()});
 document.getElementById('rmod').addEventListener('click',function(e){if(e.target===this)closeRate()});
