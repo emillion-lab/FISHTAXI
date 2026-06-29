@@ -223,101 +223,103 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
 </div>
 
 <script>
+
 var WORKER='https://mvr-proxy.mihov-emil.workers.dev';
-var DRIVERS=[{"id":1,"name":"Emil M.","avatar":"https://emillion-lab.github.io/FISHTAXI/img/emil_avatar.jpg","city":"sofia","lat":42.6977,"lng":23.3219,"car":"Tesla Model S","plate":"EA 0526 AB","car_type":"sedan","accel":4.2,"seats":4,"online":false,"rating":5.0,"reviews":0,"payment":["revolut","cash"],"langs":["bg","en","cs","ru"],"electric":true,"smoking":false,"nosmoker":true,"petfriendly":false,"childok":false,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia — Center, Airport, Ring Road, All districts","phone":"+359878592888","price":"0.75\u20ac/km day \u00b7 0.85\u20ac/km night \u00b7 Start 1.49\u20ac","driving_style":"sport","silent_ok":true,"talk_ok":true,"bio":"Non-smoker. IT specialist. Lived abroad. No animals, food or drinks in the car. Happy to talk or stay silent. Please speak up if you want a specific route or feel unwell."}];
+var DRIVERS=[{"id":1,"name":"Emil M.","avatar":"https://emillion-lab.github.io/FISHTAXI/img/emil_avatar.jpg","city":"sofia","lat":42.6977,"lng":23.3219,"car":"Tesla Model S","plate":"EA 0526 AB","car_type":"sedan","accel":4.2,"seats":4,"online":false,"rating":5.0,"reviews":0,"payment":["revolut","cash"],"langs":["bg","en","cs","ru"],"electric":true,"nosmoker":true,"sport":true,"fast":true,"comfort":false,"minivan":false,"suv":false,"areas":"Sofia - Center, Airport, All districts","phone":"+359878592888","price":"0.75 EUR/km day","silent_ok":true,"talk_ok":true,"bio":"Non-smoker. IT specialist. No animals or food. Talk or silent - your choice."}];
 
-var filt='all',cur=null;
+var filt='all',cur=null,map=null,mkrs=[],mapReady=false;
 
-function payI(p){if(p==='revolut')return '<span class="pi">&#128156; Revolut</span>';if(p==='terminal')return '<span class="pi">&#128179; Terminal</span>';return '<span class="pi">&#128181; Cash</span>';} Revolut</span>':'<span class="pi">\u{1F4B5} Cash</span>';}
-function stI(d){if(d.accel<5)return{l:'\uD83C\uDFCE Sport',c:'var(--pi)',s:d.accel+'s'};if(d.accel<6.5)return{l:'\u26A1 Fast',c:'var(--or)',s:d.accel+'s'};return{l:'\uD83D\uDE97 Normal',c:'var(--gr)',s:'Balanced'};}
+function payI(p){
+  if(p==='revolut') return '<span class="pi">Revolut</span>';
+  return '<span class="pi">Cash</span>';
+}
 
-function qc(id){var d=DRIVERS.filter(function(x){return x.id===id;})[0];if(d)window.location.href='tel:'+d.phone;}
-function qw(id){var d=DRIVERS.filter(function(x){return x.id===id;})[0];if(d)window.open('https://wa.me/'+d.phone.replace(/[^0-9]/g,''));}
+function stI(d){
+  if(d.accel<5) return {l:'Sport',c:'var(--pi)',s:d.accel+'s'};
+  if(d.accel<6.5) return {l:'Fast',c:'var(--or)',s:d.accel+'s'};
+  return {l:'Normal',c:'var(--gr)',s:'OK'};
+}
+
+function carI(d){return d.minivan?'Bus':d.suv?'SUV':'Car';}
+
+function qc(id){var dr=DRIVERS.filter(function(x){return x.id===id;})[0];if(dr)window.location.href='tel:'+dr.phone;}
+function qw(id){var dr=DRIVERS.filter(function(x){return x.id===id;})[0];if(dr)window.open('https://wa.me/'+dr.phone.replace(/[^0-9]/g,''));}
+
 function card(d){
   var st=stI(d);
-  var av=d.avatar?'<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">':'🚗';
   var tags='';
-  if(d.online)tags+='<span class="t tg">Online</span>';
+  if(d.online) tags+='<span class="t tg">Online</span>';
   else tags+='<span class="t" style="color:var(--mu);border-color:var(--brd)">Offline</span>';
-  if(d.electric)tags+='<span class="t tc">EV</span>';
+  if(d.electric) tags+='<span class="t tc">EV</span>';
   tags+='<span class="t" style="color:'+st.c+'">'+st.l+'</span>';
-  if(d.nosmoker)tags+='<span class="t ty">No Smoke</span>';
+  if(d.nosmoker) tags+='<span class="t ty">No Smoke</span>';
   var pays=d.payment.map(payI).join('');
-  var html='<div class="dc" onclick="openMod('+d.id+')">';
-  html+='<div class="dct">';
-  html+='<div class="dca">'+av+'</div>';
-  html+='<div class="dci">';
-  html+='<div class="dcn">'+d.name+' <span class="vb">&#10003;</span></div>';
-  html+='<div class="dcc">'+d.car+' / '+d.plate+'</div>';
-  html+='<div class="tags">'+tags+'</div>';
-  html+='<div class="pays">'+pays+'</div>';
-  html+='</div>';
-  html+='<div class="rb">&#11088;'+d.rating+'</div>';
-  html+='</div>';
-  html+='<div class="dcb">';
-  html+='<button class="bc" onclick="event.stopPropagation();qc('+d.id+')">Call</button>';
-  html+='<button class="bw" onclick="event.stopPropagation();qw('+d.id+')">WhatsApp</button>';
-  html+='</div></div>';
-  return html;
+  var h='<div class="dc" onclick="openMod('+d.id+')">';
+  h+='<div class="dct">';
+  h+='<div class="dca"><img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=String.fromCharCode(110,111,110,101)"></div>';
+  h+='<div class="dci">';
+  h+='<div class="dcn">'+d.name+' <span class="vb">OK</span></div>';
+  h+='<div class="dcc">'+d.car+' / '+d.plate+'</div>';
+  h+='<div class="tags">'+tags+'</div>';
+  h+='<div class="pays">'+pays+'</div>';
+  h+='</div><div class="rb">'+d.rating+'</div></div>';
+  h+='<div class="dcb">';
+  h+='<button class="bc" onclick="event.stopPropagation();qc('+d.id+')">Call</button>';
+  h+='<button class="bw" onclick="event.stopPropagation();qw('+d.id+')">WhatsApp</button>';
+  h+='</div></div>';
+  return h;
 }
 
-function sf(f,el){
-  filt=f;
-  document.querySelectorAll('.flt').forEach(function(b){b.classList.remove('on');});
-  el.classList.add('on');
-  render();
-}
+function sf(f,el){filt=f;document.querySelectorAll('.flt').forEach(function(b){b.classList.remove('on');});el.classList.add('on');render();}
 
 function render(){
   var q=(document.getElementById('srch').value||'').toLowerCase();
   var ds=DRIVERS.filter(function(d){return d.city==='sofia';});
-  if(filt==='online')ds=ds.filter(function(d){return d.online;});
-  if(filt==='revolut')ds=ds.filter(function(d){return d.payment.indexOf('revolut')>=0;});
-  if(filt==='cash')ds=ds.filter(function(d){return d.payment.indexOf('cash')>=0;});
-  if(filt==='sport')ds=ds.filter(function(d){return d.sport;});
-  if(filt==='fast')ds=ds.filter(function(d){return d.fast&&!d.sport;});
-  if(filt==='comfort')ds=ds.filter(function(d){return d.comfort;});
-  if(filt==='electric')ds=ds.filter(function(d){return d.electric;});
-  if(filt==='sedan')ds=ds.filter(function(d){return !d.suv&&!d.minivan;});
-  if(filt==='suv')ds=ds.filter(function(d){return d.suv;});
-  if(filt==='minivan')ds=ds.filter(function(d){return d.minivan;});
-  if(filt==='lbg')ds=ds.filter(function(d){return d.langs.indexOf('bg')>=0;});
-  if(filt==='len')ds=ds.filter(function(d){return d.langs.indexOf('en')>=0;});
-  if(filt==='lcs')ds=ds.filter(function(d){return d.langs.indexOf('cs')>=0;});
-  if(filt==='lru')ds=ds.filter(function(d){return d.langs.indexOf('ru')>=0;});
-  if(filt==='lde')ds=ds.filter(function(d){return d.langs.indexOf('de')>=0;});
-  if(filt==='lfr')ds=ds.filter(function(d){return d.langs.indexOf('fr')>=0;});
-  if(filt==='nosmoker')ds=ds.filter(function(d){return d.nosmoker;});
-  if(filt==='silent')ds=ds.filter(function(d){return d.silent_ok;});
-  if(filt==='talk')ds=ds.filter(function(d){return d.talk_ok;});
-  if(filt==='top')ds=ds.filter(function(d){return d.rating>=4.8;});
-  if(q)ds=ds.filter(function(d){return d.name.toLowerCase().indexOf(q)>=0||d.car.toLowerCase().indexOf(q)>=0;});
+  if(filt==='online') ds=ds.filter(function(d){return d.online;});
+  if(filt==='revolut') ds=ds.filter(function(d){return d.payment.indexOf('revolut')>=0;});
+  if(filt==='cash') ds=ds.filter(function(d){return d.payment.indexOf('cash')>=0;});
+  if(filt==='sport') ds=ds.filter(function(d){return d.sport;});
+  if(filt==='fast') ds=ds.filter(function(d){return d.fast&&!d.sport;});
+  if(filt==='electric') ds=ds.filter(function(d){return d.electric;});
+  if(filt==='sedan') ds=ds.filter(function(d){return !d.suv&&!d.minivan;});
+  if(filt==='lbg') ds=ds.filter(function(d){return d.langs.indexOf('bg')>=0;});
+  if(filt==='len') ds=ds.filter(function(d){return d.langs.indexOf('en')>=0;});
+  if(filt==='lcs') ds=ds.filter(function(d){return d.langs.indexOf('cs')>=0;});
+  if(filt==='lru') ds=ds.filter(function(d){return d.langs.indexOf('ru')>=0;});
+  if(filt==='nosmoker') ds=ds.filter(function(d){return d.nosmoker;});
+  if(filt==='silent') ds=ds.filter(function(d){return d.silent_ok;});
+  if(filt==='talk') ds=ds.filter(function(d){return d.talk_ok;});
+  if(filt==='top') ds=ds.filter(function(d){return d.rating>=4.8;});
+  if(q) ds=ds.filter(function(d){return d.name.toLowerCase().indexOf(q)>=0||d.car.toLowerCase().indexOf(q)>=0;});
   ds.sort(function(a,b){return (b.online?1:0)-(a.online?1:0)||b.rating-a.rating;});
   document.getElementById('dlist').innerHTML=ds.length?ds.map(card).join(''):'<div style="text-align:center;padding:30px;color:var(--mu)">No drivers found</div>';
+  document.getElementById('map-list').innerHTML=ds.slice(0,3).map(card).join('');
+  document.getElementById('cnt-on').textContent=DRIVERS.filter(function(d){return d.online;}).length;
 }
 
-var LM={bg:'🇧🇬 BG',en:'🇬🇧 EN',de:'🇩🇪 DE',fr:'🇫🇷 FR',ru:'🇷🇺 RU',cs:'🇨🇿 CS'};
+function renderMap(){
+  if(!mapReady) return;
+  mkrs.forEach(function(m){m.remove();});mkrs=[];
+  DRIVERS.forEach(function(d){
+    var m=L.marker([d.lat,d.lng],{icon:L.divIcon({html:'<div style="background:'+(d.online?'#22c55e':'#555')+';border:2px solid #fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center">🚗</div>',iconSize:[28,28],iconAnchor:[14,14],className:''})}).addTo(map);
+    m.on('click',function(){openMod(d.id);});
+    mkrs.push(m);
+  });
+}
 
 function openMod(id){
   cur=DRIVERS.filter(function(d){return d.id===id;})[0];
-  if(!cur)return;
+  if(!cur) return;
   var d=cur,st=stI(d);
-  var mav=document.getElementById('mav');
-  if(d.avatar&&d.avatar.startsWith('http')){
-    mav.innerHTML='<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover" onerror="this.parentNode.textContent='🚗'">';
-  } else { mav.textContent='🚗'; }
-  document.getElementById('mname').innerHTML=d.name+' <span class="vb">✓ Verified</span>';
-  document.getElementById('mcar').textContent=d.car+' · '+d.plate;
-  document.getElementById('mstars').innerHTML='<span style="color:var(--y);font-size:18px">'+'★'.repeat(Math.round(d.rating))+'</span> <strong>'+d.rating+'</strong> <span style="color:var(--mu);font-size:12px">('+d.reviews+' reviews)</span>';
-  document.getElementById('mstyle').innerHTML='<strong style="color:var(--or)">⚠️ Tell your driver your preferred style when you get in the car.</strong><br>This driver: <strong style="color:'+st.c+'">'+st.l+' — '+st.s+'</strong>';
-  document.getElementById('mcardet').innerHTML='<div class="ir"><span class="ik">Type</span><span class="iv">'+d.car_type.toUpperCase()+'</span></div><div class="ir"><span class="ik">Seats</span><span class="iv">'+d.seats+'</span></div><div class="ir"><span class="ik">0–100km/h</span><span class="iv" style="color:'+st.c+'">'+d.accel+'s</span></div><div class="ir"><span class="ik">Electric</span><span class="iv">'+(d.electric?'✅ Yes':'No')+'</span></div>';
+  document.getElementById('mav').innerHTML='<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover">';
+  document.getElementById('mname').textContent=d.name;
+  document.getElementById('mcar2').textContent=d.car+' / '+d.plate;
+  document.getElementById('mstars').textContent=d.rating+' stars';
+  document.getElementById('mstyle').textContent='Style: '+st.l+' ('+st.s+')';
+  document.getElementById('mcardet').textContent='Electric: '+(d.electric?'Yes':'No');
   document.getElementById('mpay').innerHTML=d.payment.map(payI).join(' ');
-  document.getElementById('mlangs').innerHTML=d.langs.map(function(l){return '<span class="t tb">'+(LM[l]||l)+'</span>';}).join(' ');
-  var opts=[];
-  if(d.nosmoker)opts.push('<span class="t ty">🚭 No smoking</span>');
-  if(d.silent_ok)opts.push('<span class="t tc">🤫 Silent OK</span>');
-  if(d.talk_ok)opts.push('<span class="t tg">💬 Chatty OK</span>');
-  document.getElementById('mopts').innerHTML=opts.join(' ')||'—';
+  document.getElementById('mlangs').textContent=d.langs.join(', ');
+  document.getElementById('mopts').textContent=d.nosmoker?'No smoking, Silent OK, Chatty OK':'';
   document.getElementById('mprice').textContent=d.price;
   document.getElementById('mareas').textContent=d.areas;
   document.getElementById('mbio').textContent=d.bio||'';
@@ -325,60 +327,38 @@ function openMod(id){
 }
 
 function closeMod(){document.getElementById('modal').className='modal';}
-function doCall(){if(cur)window.location.href='tel:'+cur.phone;}
-function doWA(){if(cur)window.open('https://wa.me/'+cur.phone.replace(/[^0-9]/g,''));}
+function doCall(){if(cur) window.location.href='tel:'+cur.phone;}
+function doWA(){if(cur) window.open('https://wa.me/'+cur.phone.replace(/[^0-9]/g,''));}
 
 function showTab(t){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
   document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});
   document.getElementById('page-'+t).classList.add('on');
   document.getElementById('tab-'+t).classList.add('on');
-  if(t==='map')initMap();
-}
-
-var mapInit=false,map,mkrs=[];
-function initMap(){
-  if(mapInit)return;
-  var mp=document.getElementById('page-map');
-  mp.innerHTML='<div id="map" style="flex:1;min-height:0"></div>';
-  var css=document.createElement('link');
-  css.rel='stylesheet';css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-  document.head.appendChild(css);
-  var js=document.createElement('script');
-  js.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-  js.onload=function(){
-    mapInit=true;
+  if(t==='map'&&!mapReady&&typeof L!=='undefined'){
+    mapReady=true;
     map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],13);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
-    DRIVERS.forEach(function(d){
-      var m=L.marker([d.lat,d.lng],{icon:L.divIcon({html:'<div style="background:'+(d.online?'#22c55e':'#555')+';border:2px solid #fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:13px">🚗</div>',iconSize:[28,28],iconAnchor:[14,14],className:''})}).addTo(map);
-      m.on('click',function(){openMod(d.id);});
-    });
-  };
-  document.body.appendChild(js);
+    renderMap();
+  }
 }
 
 function pollGPS(){
   fetch(WORKER+'/gps').then(function(r){return r.json();}).then(function(data){
-    if(!data.ok)return;
-    var updated=false;
+    if(!data.ok) return;
     data.drivers.forEach(function(g){
       var dr=DRIVERS.filter(function(d){return String(d.id)===String(g.driver_id);})[0];
-      if(!dr)return;
-      dr.lat=g.lat;dr.lng=g.lng;dr.online=g.online;updated=true;
+      if(!dr) return;
+      dr.lat=g.lat;dr.lng=g.lng;dr.online=g.online;
     });
-    if(updated){
-      render();
-      var el=document.getElementById('live-status');
-      if(el)el.textContent=data.online>0?'🟢 Live':'⚫ Offline';
-    }
+    render();renderMap();
   }).catch(function(){});
 }
 
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeMod();});
-
 render();
-// GPS poll disabled for now
+pollGPS();
+setInterval(pollGPS,15000);
 
 </script>
 </body>
