@@ -87,6 +87,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
 .map-placeholder{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--mu);font-size:14px}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -352,15 +353,11 @@ function renderMap(){
 }
 function initMap(){
   if(mapReady)return;
-  var s=document.createElement('script');
-  s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-  s.onload=function(){
-    mapReady=true;
-    map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],13);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
-    renderMap();
-  };
-  document.body.appendChild(s);
+  if(typeof L==='undefined')return;
+  mapReady=true;
+  map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],13);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
+  renderMap();
 }
 function showTab(t){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
