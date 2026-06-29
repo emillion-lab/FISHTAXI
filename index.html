@@ -231,26 +231,34 @@ var filt='all',cur=null;
 function payI(p){if(p==='revolut')return '<span class="pi">&#128156; Revolut</span>';if(p==='terminal')return '<span class="pi">&#128179; Terminal</span>';return '<span class="pi">&#128181; Cash</span>';} Revolut</span>':'<span class="pi">\u{1F4B5} Cash</span>';}
 function stI(d){if(d.accel<5)return{l:'\uD83C\uDFCE Sport',c:'var(--pi)',s:d.accel+'s'};if(d.accel<6.5)return{l:'\u26A1 Fast',c:'var(--or)',s:d.accel+'s'};return{l:'\uD83D\uDE97 Normal',c:'var(--gr)',s:'Balanced'};}
 
+function qc(id){var d=DRIVERS.filter(function(x){return x.id===id;})[0];if(d)window.location.href='tel:'+d.phone;}
+function qw(id){var d=DRIVERS.filter(function(x){return x.id===id;})[0];if(d)window.open('https://wa.me/'+d.phone.replace(/[^0-9]/g,''));}
 function card(d){
   var st=stI(d);
-  var av=d.avatar&&d.avatar.startsWith('http')?'<img src="'+d.avatar+'" onerror="this.style.display='none'">':'🚗';
+  var av=d.avatar?'<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">':'🚗';
   var tags='';
-  if(d.online)tags+='<span class="t tg">🟢 Online</span>';
-  else tags+='<span class="t" style="color:var(--mu);border-color:var(--brd)">⚫ Offline</span>';
-  if(d.electric)tags+='<span class="t tc">⚡ EV</span>';
-  tags+='<span class="t" style="color:'+st.c+';border-color:'+st.c+'44;background:'+st.c+'11">'+st.l+'</span>';
-  if(d.nosmoker)tags+='<span class="t ty">🚭</span>';
-  return '<div class="dc" onclick="openMod('+d.id+')">'
-    +'<div class="dct"><div class="dca">'+av+'</div>'
-    +'<div class="dci"><div class="dcn">'+d.name+' <span class="vb">✓</span></div>'
-    +'<div class="dcc">'+d.car+' · '+d.plate+'</div>'
-    +'<div class="tags">'+tags+'</div>'
-    +'<div class="pays">'+d.payment.map(payI).join('')+'</div>'
-    +'</div><div class="rb">⭐'+d.rating+'</div></div>'
-    +'<div class="dcb">'
-    +'<button class="bc" onclick="event.stopPropagation();window.location.href='tel:'+d.phone+''">📞 Call</button>'
-    +'<button class="bw" onclick="event.stopPropagation();window.open('https://wa.me/'+d.phone.replace(/[^0-9]/g,'')+"'"+")">💬 WhatsApp</button>"
-    +'</div></div>';
+  if(d.online)tags+='<span class="t tg">Online</span>';
+  else tags+='<span class="t" style="color:var(--mu);border-color:var(--brd)">Offline</span>';
+  if(d.electric)tags+='<span class="t tc">EV</span>';
+  tags+='<span class="t" style="color:'+st.c+'">'+st.l+'</span>';
+  if(d.nosmoker)tags+='<span class="t ty">No Smoke</span>';
+  var pays=d.payment.map(payI).join('');
+  var html='<div class="dc" onclick="openMod('+d.id+')">';
+  html+='<div class="dct">';
+  html+='<div class="dca">'+av+'</div>';
+  html+='<div class="dci">';
+  html+='<div class="dcn">'+d.name+' <span class="vb">&#10003;</span></div>';
+  html+='<div class="dcc">'+d.car+' / '+d.plate+'</div>';
+  html+='<div class="tags">'+tags+'</div>';
+  html+='<div class="pays">'+pays+'</div>';
+  html+='</div>';
+  html+='<div class="rb">&#11088;'+d.rating+'</div>';
+  html+='</div>';
+  html+='<div class="dcb">';
+  html+='<button class="bc" onclick="event.stopPropagation();qc('+d.id+')">Call</button>';
+  html+='<button class="bw" onclick="event.stopPropagation();qw('+d.id+')">WhatsApp</button>';
+  html+='</div></div>';
+  return html;
 }
 
 function sf(f,el){
