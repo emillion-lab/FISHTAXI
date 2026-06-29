@@ -293,7 +293,7 @@ function render(){
   if(q) ds=ds.filter(function(d){return d.name.toLowerCase().indexOf(q)>=0||d.car.toLowerCase().indexOf(q)>=0;});
   ds.sort(function(a,b){return (b.online?1:0)-(a.online?1:0)||b.rating-a.rating;});
   document.getElementById('dlist').innerHTML=ds.length?ds.map(card).join(''):'<div style="text-align:center;padding:30px;color:var(--mu)">No drivers found</div>';
-  document.getElementById('map-list').innerHTML=ds.slice(0,3).map(card).join('');
+  var ml=document.getElementById('map-list');if(ml)ml.innerHTML=ds.slice(0,3).map(card).join('');
   document.getElementById('cnt-on').textContent=DRIVERS.filter(function(d){return d.online;}).length;
 }
 
@@ -351,7 +351,7 @@ function pollGPS(){
       if(!dr) return;
       dr.lat=g.lat;dr.lng=g.lng;dr.online=g.online;
     });
-    render();renderMap();
+    render();if(typeof renderMap==='function')renderMap();
   }).catch(function(){});
 }
 
