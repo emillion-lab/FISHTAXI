@@ -124,7 +124,6 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
       <option value="ru">🇷🇺 RU</option>
       <option value="it">🇮🇹 IT</option>
       <option value="es">🇪🇸 ES</option>
-      <option value="tr">🇹🇷 TR</option>
     </select>
   </div>
 </div>
@@ -222,20 +221,20 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
 
 <!-- HOW -->
 <div class="page" id="page-how">
-  <div class="scroll-page">
-    <div class="hs"><div class="hn">1</div><div><h3>Find a Driver</h3><p>Browse verified drivers. Use filters for payment, car type, language, driving style, atmosphere.</p></div></div>
-    <div class="hs"><div class="hn">2</div><div><h3>Check the Profile</h3><p>See photo, car, prices, languages and driving style. Know exactly who to expect.</p></div></div>
-    <div class="hs"><div class="hn">3</div><div><h3>Call or Viber Directly</h3><p>Contact your driver directly. No booking fee, no algorithm, no commission.</p></div></div>
-    <div class="hs"><div class="hn" style="background:var(--or);font-size:16px">⚠</div><div><h3>Tell Your Driver Your Style</h3><p style="color:var(--or)">Tell your driver how you prefer to ride when you get in — not after the trip. Music, silence, speed, route.</p></div></div>
-    <div class="hs"><div class="hn">5</div><div><h3>Pay the Driver</h3><p>Cash, Revolut or card terminal. 100% goes to the driver — zero commission.</p></div></div>
-    <div class="hs"><div class="hn">⭐</div><div><h3>Ratings Are Verified</h3><p>All reviews checked by admin before publishing. Protects drivers from unfair ratings.</p></div></div>
-    <button class="hcta" onclick="showTab('list')">Find a Driver Now 🐟</button>
+  <div class="scroll-page" id="how-content">
+    <div class="hs"><div class="hn">1</div><div><h3 id="h-t1">Find a Driver</h3><p id="h-p1">Browse verified drivers. Use filters for payment, car type, language, driving style, atmosphere.</p></div></div>
+    <div class="hs"><div class="hn">2</div><div><h3 id="h-t2">Check the Profile</h3><p id="h-p2">See photo, car, prices, languages and driving style. Know exactly who to expect.</p></div></div>
+    <div class="hs"><div class="hn">3</div><div><h3 id="h-t3">Call or Viber Directly</h3><p id="h-p3">Contact your driver directly. No booking fee, no algorithm, no commission.</p></div></div>
+    <div class="hs"><div class="hn" style="background:var(--or);font-size:16px">⚠</div><div><h3 id="h-t4">Tell Your Driver Your Style</h3><p id="h-p4" style="color:var(--or)">Tell your driver how you prefer to ride when you get in — not after the trip. Music, silence, speed, route.</p></div></div>
+    <div class="hs"><div class="hn">5</div><div><h3 id="h-t5">Pay the Driver</h3><p id="h-p5">Cash, Revolut or card terminal. 100% goes to the driver — zero commission.</p></div></div>
+    <div class="hs"><div class="hn">⭐</div><div><h3 id="h-t6">Ratings Are Verified</h3><p id="h-p6">All reviews checked by admin before publishing. Protects drivers from unfair ratings.</p></div></div>
+    <button class="hcta" id="h-cta" onclick="showTab('list')">Find a Driver Now 🐟</button>
   </div>
 </div>
 
 <!-- JOIN -->
 <div class="page" id="page-reg">
-  <div class="scroll-page">
+  <div class="scroll-page" id="reg-content">
     <div style="background:linear-gradient(135deg,#1a1200,#2a1e00);border:2px solid var(--y);border-radius:13px;padding:14px;margin-bottom:8px;text-align:center">
       <div style="font-size:20px;font-weight:900;color:var(--y)">🎉 FREE for first 300 drivers</div>
       <div style="font-size:12px;color:#ccc;margin-top:3px">Join now — no payment required</div>
@@ -387,7 +386,8 @@ var T={
     lblMusic:"🎵 Preferred music",lblTip:"💰 Planned tip (optional)",
     optNoPref:"No preference",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classical",optJazz:"🎷 Jazz",optElectronic:"🎧 Electronic",optNoMusic:"🔇 No music",optNoTip:"No tip planned",optSmallTip:"A small tip",optFairTip:"A fair tip — thanks for coming far",optGenTip:"A generous tip",
     sumFast:"Can drive fast",sumCalm:"or calmly — your choice",sumTalkSilent:"happy to talk or stay silent",sumTalk:"enjoys conversation",sumSilent:"prefers quiet rides",sumMusic:"plays",
-    pbHurry:"⏱ I'm in a hurry",pbRelax:"😌 Take it easy",pbSilent:"🤫 Prefer silence",pbTalk:"💬 Happy to chat",pbNomusic:"🔇 No music",pbAc:"❄️ A/C please",pbLuggage:"🧳 Have luggage",btnCallM:"📞 Call",btnVibOrd:"💬 Order via Viber",locDefault:"Location will be shared with driver"
+    pbHurry:"⏱ I'm in a hurry",pbRelax:"😌 Take it easy",pbSilent:"🤫 Prefer silence",pbTalk:"💬 Happy to chat",pbNomusic:"🔇 No music",pbAc:"❄️ A/C please",pbLuggage:"🧳 Have luggage",btnCallM:"📞 Call",btnVibOrd:"💬 Order via Viber",locDefault:"Location will be shared with driver",
+    hT1:"Find a Driver",hP1:"Browse verified drivers. Use filters for payment, car type, language, driving style, atmosphere.",hT2:"Check the Profile",hP2:"See photo, car, prices, languages and driving style. Know exactly who to expect.",hT3:"Call or Viber Directly",hP3:"Contact your driver directly. No booking fee, no algorithm, no commission.",hT4:"Tell Your Driver Your Style",hP4:"Tell your driver how you prefer to ride when you get in. Music, silence, speed, route.",hT5:"Pay the Driver",hP5:"Cash, Revolut or card terminal. 100% goes to the driver, zero commission.",hT6:"Ratings Are Verified",hP6:"All reviews checked by admin before publishing. Protects drivers from unfair ratings.",hCta:"Find a Driver Now"
   },
   bg:{
     logo:'🐟 fish.taxi',
@@ -412,7 +412,8 @@ var T={
     lblMusic:"🎵 Предпочитана музика",lblTip:"💰 Планиран бакшиш (по избор)",
     optNoPref:"Без предпочитание",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Класика",optJazz:"🎷 Джаз",optElectronic:"🎧 Електронна",optNoMusic:"🔇 Без музика",optNoTip:"Без бакшиш",optSmallTip:"Малък бакшиш",optFairTip:"Достоен бакшиш — благодаря за дългия път",optGenTip:"Щедър бакшиш",
     sumFast:"Може да кара бързо",sumCalm:"или спокойно — твой избор",sumTalkSilent:"може да говори или да мълчи",sumTalk:"обича разговори",sumSilent:"предпочита тишина",sumMusic:"пуска",
-    pbHurry:"⏱ Бързам",pbRelax:"😌 Спокойно",pbSilent:"🤫 Предпочитам тишина",pbTalk:"💬 Обичам разговори",pbNomusic:"🔇 Без музика",pbAc:"❄️ Климатик моля",pbLuggage:"🧳 Имам багаж",btnCallM:"📞 Обади се",btnVibOrd:"💬 Поръчай през Viber",locDefault:"Локацията ще се сподели с шофьора"
+    pbHurry:"⏱ Бързам",pbRelax:"😌 Спокойно",pbSilent:"🤫 Предпочитам тишина",pbTalk:"💬 Обичам разговори",pbNomusic:"🔇 Без музика",pbAc:"❄️ Климатик моля",pbLuggage:"🧳 Имам багаж",btnCallM:"📞 Обади се",btnVibOrd:"💬 Поръчай през Viber",locDefault:"Локацията ще се сподели с шофьора",
+    hT1:"Намери шофьор",hP1:"Разгледай верифицирани шофьори. Филтрирай по плащане, тип кола, език, стил на каране, атмосфера.",hT2:"Провери профила",hP2:"Виж снимка, кола, цени, езици и стил на каране. Знай точно кого да очакваш.",hT3:"Обади се или пиши във Viber",hP3:"Свържи се директно с шофьора. Без такса за резервация, без алгоритъм, без комисионна.",hT4:"Кажи на шофьора стила си",hP4:"Кажи на шофьора как предпочиташ да пътуваш още при качване. Музика, тишина, скорост, маршрут.",hT5:"Плати на шофьора",hP5:"В брой, Revolut или терминал. 100% отива при шофьора, нула комисионна.",hT6:"Оценките са верифицирани",hP6:"Всички отзиви се проверяват от администратор преди публикуване. Защитава шофьорите от нечестни оценки.",hCta:"Намери шофьор сега"
   },
   de:{
     logo:'🐟 fish.taxi',
@@ -436,7 +437,8 @@ var T={
     lblMusic:"🎵 Bevorzugte Musik",lblTip:"💰 Geplantes Trinkgeld (optional)",
     optNoPref:"Keine Präferenz",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klassik",optJazz:"🎷 Jazz",optElectronic:"🎧 Elektronisch",optNoMusic:"🔇 Keine Musik",optNoTip:"Kein Trinkgeld geplant",optSmallTip:"Ein kleines Trinkgeld",optFairTip:"Ein faires Trinkgeld — danke fürs Kommen",optGenTip:"Ein großzügiges Trinkgeld",
     sumFast:"Kann schnell fahren",sumCalm:"oder ruhig — Ihre Wahl",sumTalkSilent:"redet gerne oder bleibt still",sumTalk:"genießt Gespräche",sumSilent:"bevorzugt Ruhe",sumMusic:"spielt",
-    pbHurry:"⏱ Ich habe es eilig",pbRelax:"😌 Ruhig angehen",pbSilent:"🤫 Stille bevorzugt",pbTalk:"💬 Gerne ein Gespräch",pbNomusic:"🔇 Keine Musik",pbAc:"❄️ Klima bitte",pbLuggage:"🧳 Habe Gepäck",btnCallM:"📞 Anrufen",btnVibOrd:"💬 Über Viber bestellen",locDefault:"Standort wird mit dem Fahrer geteilt"
+    pbHurry:"⏱ Ich habe es eilig",pbRelax:"😌 Ruhig angehen",pbSilent:"🤫 Stille bevorzugt",pbTalk:"💬 Gerne ein Gespräch",pbNomusic:"🔇 Keine Musik",pbAc:"❄️ Klima bitte",pbLuggage:"🧳 Habe Gepäck",btnCallM:"📞 Anrufen",btnVibOrd:"💬 Über Viber bestellen",locDefault:"Standort wird mit dem Fahrer geteilt",
+    hT1:"Fahrer finden",hP1:"Verifizierte Fahrer durchsuchen. Filtern Sie nach Zahlung, Fahrzeugtyp, Sprache, Fahrstil, Atmosphäre.",hT2:"Profil prüfen",hP2:"Foto, Auto, Preise, Sprachen und Fahrstil ansehen. Wissen Sie genau, wen Sie erwarten.",hT3:"Direkt anrufen oder Viber",hP3:"Kontaktieren Sie Ihren Fahrer direkt. Keine Buchungsgebühr, kein Algorithmus, keine Provision.",hT4:"Sagen Sie Ihrem Fahrer Ihren Stil",hP4:"Sagen Sie Ihrem Fahrer beim Einsteigen, wie Sie fahren möchten. Musik, Stille, Tempo, Route.",hT5:"Fahrer bezahlen",hP5:"Bar, Revolut oder Kartenterminal. 100% gehen an den Fahrer, keine Provision.",hT6:"Bewertungen sind verifiziert",hP6:"Alle Bewertungen werden vor der Veröffentlichung von einem Administrator geprüft. Schützt Fahrer vor unfairen Bewertungen.",hCta:"Jetzt Fahrer finden"
   },
   fr:{
     logo:'🐟 fish.taxi',
@@ -460,7 +462,8 @@ var T={
     lblMusic:"🎵 Musique préférée",lblTip:"💰 Pourboire prévu (optionnel)",
     optNoPref:"Aucune préférence",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classique",optJazz:"🎷 Jazz",optElectronic:"🎧 Électronique",optNoMusic:"🔇 Sans musique",optNoTip:"Pas de pourboire prévu",optSmallTip:"Un petit pourboire",optFairTip:"Un pourboire juste — merci de venir de loin",optGenTip:"Un généreux pourboire",
     sumFast:"Peut conduire vite",sumCalm:"ou calmement — votre choix",sumTalkSilent:"aime parler ou rester silencieux",sumTalk:"aime discuter",sumSilent:"préfère le calme",sumMusic:"joue",
-    pbHurry:"⏱ Je suis pressé",pbRelax:"😌 Tranquillement",pbSilent:"🤫 Préfère le silence",pbTalk:"💬 Content de discuter",pbNomusic:"🔇 Sans musique",pbAc:"❄️ Clim svp",pbLuggage:"🧳 Avec bagages",btnCallM:"📞 Appeler",btnVibOrd:"💬 Commander via Viber",locDefault:"La localisation sera partagée avec le chauffeur"
+    pbHurry:"⏱ Je suis pressé",pbRelax:"😌 Tranquillement",pbSilent:"🤫 Préfère le silence",pbTalk:"💬 Content de discuter",pbNomusic:"🔇 Sans musique",pbAc:"❄️ Clim svp",pbLuggage:"🧳 Avec bagages",btnCallM:"📞 Appeler",btnVibOrd:"💬 Commander via Viber",locDefault:"La localisation sera partagée avec le chauffeur",
+    hT1:"Trouver un chauffeur",hP1:"Parcourez les chauffeurs vérifiés. Filtrez par paiement, type de voiture, langue, style de conduite, ambiance.",hT2:"Vérifier le profil",hP2:"Voyez photo, voiture, prix, langues et style de conduite. Sachez exactement qui attendre.",hT3:"Appeler ou Viber directement",hP3:"Contactez votre chauffeur directement. Pas de frais de réservation, pas d'algorithme, pas de commission.",hT4:"Dites votre style au chauffeur",hP4:"Dites a votre chauffeur comment vous preferez voyager en montant. Musique, silence, vitesse, itineraire.",hT5:"Payer le chauffeur",hP5:"Especes, Revolut ou terminal de carte. 100% va au chauffeur, zero commission.",hT6:"Les avis sont verifies",hP6:"Tous les avis sont verifies par un administrateur avant publication. Protege les chauffeurs des avis injustes.",hCta:"Trouver un chauffeur maintenant"
   },
   ru:{
     logo:'🐟 fish.taxi',
@@ -484,7 +487,8 @@ var T={
     lblMusic:"🎵 Предпочитаемая музыка",lblTip:"💰 Планируемые чаевые (необязательно)",
     optNoPref:"Без предпочтений",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Классика",optJazz:"🎷 Джаз",optElectronic:"🎧 Электронная",optNoMusic:"🔇 Без музыки",optNoTip:"Без чаевых",optSmallTip:"Небольшие чаевые",optFairTip:"Достойные чаевые — спасибо за долгий путь",optGenTip:"Щедрые чаевые",
     sumFast:"Может ехать быстро",sumCalm:"или спокойно — ваш выбор",sumTalkSilent:"любит поговорить или помолчать",sumTalk:"любит общение",sumSilent:"предпочитает тишину",sumMusic:"играет",
-    pbHurry:"⏱ Я тороплюсь",pbRelax:"😌 Спокойно",pbSilent:"🤫 Предпочитаю тишину",pbTalk:"💬 Рад пообщаться",pbNomusic:"🔇 Без музыки",pbAc:"❄️ Кондиционер",pbLuggage:"🧳 Есть багаж",btnCallM:"📞 Позвонить",btnVibOrd:"💬 Заказать через Viber",locDefault:"Местоположение будет передано водителю"
+    pbHurry:"⏱ Я тороплюсь",pbRelax:"😌 Спокойно",pbSilent:"🤫 Предпочитаю тишину",pbTalk:"💬 Рад пообщаться",pbNomusic:"🔇 Без музыки",pbAc:"❄️ Кондиционер",pbLuggage:"🧳 Есть багаж",btnCallM:"📞 Позвонить",btnVibOrd:"💬 Заказать через Viber",locDefault:"Местоположение будет передано водителю",
+    hT1:"Найти водителя",hP1:"Просмотрите проверенных водителей. Фильтруйте по оплате, типу авто, языку, стилю вождения, атмосфере.",hT2:"Проверить профиль",hP2:"Посмотрите фото, машину, цены, языки и стиль вождения. Точно знайте, кого ожидать.",hT3:"Позвонить или написать в Viber",hP3:"Свяжитесь с водителем напрямую. Без платы за бронирование, без алгоритма, без комиссии.",hT4:"Скажите водителю свой стиль",hP4:"Скажите водителю, как вы предпочитаете ехать, при посадке. Музыка, тишина, скорость, маршрут.",hT5:"Оплатить водителю",hP5:"Наличные, Revolut или терминал. 100% идет водителю, нулевая комиссия.",hT6:"Оценки проверены",hP6:"Все отзывы проверяются администратором перед публикацией. Защищает водителей от несправедливых оценок.",hCta:"Найти водителя сейчас"
   },
   it:{
     logo:'🐟 fish.taxi',
@@ -508,7 +512,8 @@ var T={
     lblMusic:"🎵 Musica preferita",lblTip:"💰 Mancia pianificata (opzionale)",
     optNoPref:"Nessuna preferenza",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classica",optJazz:"🎷 Jazz",optElectronic:"🎧 Elettronica",optNoMusic:"🔇 Senza musica",optNoTip:"Nessuna mancia prevista",optSmallTip:"Una piccola mancia",optFairTip:"Una mancia equa — grazie per essere venuto da lontano",optGenTip:"Una generosa mancia",
     sumFast:"Puo guidare veloce",sumCalm:"o con calma — la tua scelta",sumTalkSilent:"felice di parlare o stare in silenzio",sumTalk:"ama conversare",sumSilent:"preferisce silenzio",sumMusic:"suona",
-    pbHurry:"⏱ Ho fretta",pbRelax:"😌 Con calma",pbSilent:"🤫 Preferisco il silenzio",pbTalk:"💬 Felice di chiacchierare",pbNomusic:"🔇 Senza musica",pbAc:"❄️ Aria cond. prego",pbLuggage:"🧳 Ho bagagli",btnCallM:"📞 Chiama",btnVibOrd:"💬 Ordina via Viber",locDefault:"La posizione sara condivisa con l'autista"
+    pbHurry:"⏱ Ho fretta",pbRelax:"😌 Con calma",pbSilent:"🤫 Preferisco il silenzio",pbTalk:"💬 Felice di chiacchierare",pbNomusic:"🔇 Senza musica",pbAc:"❄️ Aria cond. prego",pbLuggage:"🧳 Ho bagagli",btnCallM:"📞 Chiama",btnVibOrd:"💬 Ordina via Viber",locDefault:"La posizione sara condivisa con l'autista",
+    hT1:"Trova un autista",hP1:"Sfoglia autisti verificati. Filtra per pagamento, tipo di auto, lingua, stile di guida, atmosfera.",hT2:"Controlla il profilo",hP2:"Vedi foto, auto, prezzi, lingue e stile di guida. Sai esattamente chi aspettarti.",hT3:"Chiama o scrivi su Viber",hP3:"Contatta direttamente il tuo autista. Nessuna commissione di prenotazione, nessun algoritmo, nessuna commissione.",hT4:"Di il tuo stile al tuo autista",hP4:"Di al tuo autista come preferisci viaggiare quando sali. Musica, silenzio, velocita, percorso.",hT5:"Paga l'autista",hP5:"Contanti, Revolut o terminale carta. Il 100% va all'autista, zero commissioni.",hT6:"Le valutazioni sono verificate",hP6:"Tutte le recensioni sono controllate da un amministratore prima della pubblicazione. Protegge gli autisti da valutazioni ingiuste.",hCta:"Trova un autista ora"
   },
   es:{
     logo:'🐟 fish.taxi',
@@ -532,32 +537,10 @@ var T={
     lblMusic:"🎵 Música preferida",lblTip:"💰 Propina planeada (opcional)",
     optNoPref:"Sin preferencia",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Clásica",optJazz:"🎷 Jazz",optElectronic:"🎧 Electrónica",optNoMusic:"🔇 Sin música",optNoTip:"Sin propina planeada",optSmallTip:"Una pequeña propina",optFairTip:"Una propina justa — gracias por venir desde lejos",optGenTip:"Una generosa propina",
     sumFast:"Puede conducir rapido",sumCalm:"o con calma — tu eleccion",sumTalkSilent:"feliz de hablar o guardar silencio",sumTalk:"disfruta conversar",sumSilent:"prefiere silencio",sumMusic:"reproduce",
-    pbHurry:"⏱ Tengo prisa",pbRelax:"😌 Con calma",pbSilent:"🤫 Prefiero silencio",pbTalk:"💬 Encantado de charlar",pbNomusic:"🔇 Sin música",pbAc:"❄️ A/C por favor",pbLuggage:"🧳 Tengo equipaje",btnCallM:"📞 Llamar",btnVibOrd:"💬 Pedir por Viber",locDefault:"La ubicación se compartirá con el conductor"
+    pbHurry:"⏱ Tengo prisa",pbRelax:"😌 Con calma",pbSilent:"🤫 Prefiero silencio",pbTalk:"💬 Encantado de charlar",pbNomusic:"🔇 Sin música",pbAc:"❄️ A/C por favor",pbLuggage:"🧳 Tengo equipaje",btnCallM:"📞 Llamar",btnVibOrd:"💬 Pedir por Viber",locDefault:"La ubicación se compartirá con el conductor",
+    hT1:"Encuentra un conductor",hP1:"Explora conductores verificados. Filtra por pago, tipo de coche, idioma, estilo de conduccion, ambiente.",hT2:"Revisa el perfil",hP2:"Mira foto, coche, precios, idiomas y estilo de conduccion. Sabe exactamente a quien esperar.",hT3:"Llama o escribe por Viber",hP3:"Contacta a tu conductor directamente. Sin tarifa de reserva, sin algoritmo, sin comision.",hT4:"Dile a tu conductor tu estilo",hP4:"Dile a tu conductor como prefieres viajar al subir. Musica, silencio, velocidad, ruta.",hT5:"Paga al conductor",hP5:"Efectivo, Revolut o terminal de tarjeta. El 100% va al conductor, cero comision.",hT6:"Las calificaciones estan verificadas",hP6:"Todas las resenas son revisadas por un administrador antes de publicarse. Protege a los conductores de calificaciones injustas.",hCta:"Encuentra un conductor ahora"
   },
-  tr:{
-    logo:'🐟 fish.taxi',
-    tagline:'Sürücünü doğrudan bul',
-    tabMap:'🗺 Harita',tabList:'🐟 Sürücüler',tabHow:'ℹ Nasıl',tabReg:'🚕 Katıl',
-    search:'Sürücü, araba, bölge ara...',
-    sStatus:'Durum',sPayment:'Ödeme',sStyle:'Sürüş stili',sCar:'Araç tipi',
-    sAtm:'Atmosfer',sComfort:'Konfor',sLang:'Dil',sExtras:'Ekstra',
-    fAll:'Tümü',fOnline:'🟢 Çevrimiçi',fOffline:'⚫ Çevrimdışı',
-    fRevolut:'💜 Revolut',fCash:'💵 Nakit',fTerminal:'💳 Terminal',
-    fSport:'🏎 Spor 0-5s',fFast:'⚡ Hızlı 5-7s',fNormal:'🚗 Normal',fComfort:'🛋 Konfor',
-    fElectric:'⚡ Elektrik',fSedan:'🚗 Sedan',fSuv:'🚙 SUV',fMinivan:'🚐 Minivan 7+',fLuxury:'👑 Lüks',
-    fSilent:'🤫 Sessiz',fTalk:'💬 Konuşkan',fMusic:'🎵 Müzik OK',fChalga:'🎶 Chalga OK',fNomusic:'🔇 Müziksiz',
-    fNosmoker:'🚭 Sigara içmez',fSmoking:'🚬 Sigara OK',fPet:'🐾 Evcil hayvan',fChild:'👶 Çocuk koltuğu',fAc:'❄️ Klima',fWheel:'♿ Tekerlekli sandalye',
-    fAirport:'✈️ Havalimanı',fLong:'🛣️ Uzun mesafe',fNight:'🌙 Gece',fBiz:'💼 İş',fVerified:'✅ Doğrulandı',fTop:'⭐ En iyi',fNew:'🆕 Yeni',
-    btnCall:'📞 Ara',btnVib:'💬 Viber',
-    noDrivers:'Sürücü bulunamadı',
-    online:'Çevrimiçi',offline:'Çevrimdışı',
-    mVerified:"✓ Doğrulandi",mReviews:"değerlendirme",mWarn:"Binerken sürücünüze tercih ettiğiniz hızı söyleyin",mCalmOpt:"İstek üzerine sakin sürüş",mCarDet:"Araç Detaylari",mType:"Tip",mSeats:"Koltuk",mPassengers:"yolcu",mAccel:"0-100 km/h",mElectric:"Elektrikli",mAC:"Klima",mYes:"Evet",mPayment:"Ödeme",mLangs:"Diller",mOpts:"Seçenekler ve Atmosfer",mPrice:"Fiyat",mAreas:"Bölgeler",mAbout:"Sürücü Hakkinda",mRate:"Sürücüyü değerlendir",mViewProfile:"Profili görüntüle",
-    mBeforeOrder:"Sipariş vermeden önce",
-    lblMusic:"🎵 Tercih edilen müzik",lblTip:"💰 Planlanan bahşiş (isteğe bağlı)",
-    optNoPref:"Tercih yok",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klasik",optJazz:"🎷 Caz",optElectronic:"🎧 Elektronik",optNoMusic:"🔇 Müzik yok",optNoTip:"Bahşiş planlanmadı",optSmallTip:"Küçük bir bahşiş",optFairTip:"Adil bir bahşiş — uzaktan geldiğiniz için teşekkürler",optGenTip:"Cömert bir bahşiş",
-    sumFast:"Hizli surebilir",sumCalm:"veya sakin — sizin seciminiz",sumTalkSilent:"konusmaktan veya sessiz kalmaktan mutlu",sumTalk:"sohbeti sever",sumSilent:"sessizligi tercih eder",sumMusic:"calar",
-    pbHurry:"⏱ Acelem var",pbRelax:"😌 Sakin sürün",pbSilent:"🤫 Sessizligi tercih ederim",pbTalk:"💬 Sohbet etmekten mutluluk duyarim",pbNomusic:"🔇 Müzik yok",pbAc:"❄️ Klima lütfen",pbLuggage:"🧳 Bagajim var",btnCallM:"📞 Ara",btnVibOrd:"💬 Viber ile sipariş ver",locDefault:"Konum sürücüyle paylaşılacak"
-  }
+
 };
 var lang='en';
 
@@ -698,6 +681,9 @@ function sf(f,el){
   var bc=document.getElementById('btn-call');if(bc&&t.btnCallM)bc.textContent=t.btnCallM;
   var bv=document.getElementById('btn-vibord');if(bv&&t.btnVibOrd)bv.textContent=t.btnVibOrd;
   var lt3=document.getElementById('loc-text');if(lt3&&t.locDefault)lt3.textContent=t.locDefault;
+  var howMap={'h-t1':t.hT1,'h-p1':t.hP1,'h-t2':t.hT2,'h-p2':t.hP2,'h-t3':t.hT3,'h-p3':t.hP3,'h-t4':t.hT4,'h-p4':t.hP4,'h-t5':t.hT5,'h-p5':t.hP5,'h-t6':t.hT6,'h-p6':t.hP6};
+  Object.keys(howMap).forEach(function(id){var el=document.getElementById(id);if(el&&howMap[id])el.textContent=howMap[id];});
+  var hcta=document.getElementById('h-cta');if(hcta&&t.hCta)hcta.textContent=t.hCta+' \uD83D\uDC1F';
   var optMap={
     'opt-music-none':t.optNoPref,'opt-music-pop':t.optPop,'opt-music-chalga':t.optChalga,
     'opt-music-rock':t.optRock,'opt-music-classical':t.optClassical,'opt-music-jazz':t.optJazz,
