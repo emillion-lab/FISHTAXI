@@ -728,6 +728,11 @@ function sf(f,el){
     var el=document.getElementById(id);
     if(el&&optMap[id])el.textContent=optMap[id];
   });
+  // Force redraw of select dropdowns (Android Chrome rendering fix)
+  ['order-music','order-tip'].forEach(function(selId){
+    var sel=document.getElementById(selId);
+    if(sel){var v=sel.value;sel.style.display='none';sel.offsetHeight;sel.style.display='';sel.value=v;}
+  });
   render();
 }
 
