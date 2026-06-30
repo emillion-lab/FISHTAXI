@@ -536,7 +536,7 @@ var theme=localStorage.getItem('fishtaxi_theme')||'light';
 
 function getTileUrl(){
   return theme==='dark'
-    ?'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+    ?'https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png'
     :'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 }
 
@@ -550,7 +550,7 @@ function applyTheme(){
   }
   if(map&&tileLayer){
     map.removeLayer(tileLayer);
-    tileLayer=L.tileLayer(getTileUrl(),{maxZoom:19}).addTo(map);
+    tileLayer=L.tileLayer(getTileUrl(),{maxZoom:20}).addTo(map);
   }
 }
 
@@ -862,7 +862,7 @@ function initMapOnce(){
   if(mapReady||typeof L==='undefined')return;
   mapReady=true;
   map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],15);
-  tileLayer=L.tileLayer(getTileUrl(),{maxZoom:19}).addTo(map);
+  tileLayer=L.tileLayer(getTileUrl(),{maxZoom:20}).addTo(map);
   renderMap();
 }
 
