@@ -719,9 +719,6 @@ function sf(f,el){
   });
   var rjb=document.getElementById('r-joinbtn');if(rjb&&t.rJoinbtn)rjb.textContent=t.rJoinbtn+' \uD83D\uDC1F';
   var optMap={
-    'opt-music-none':t.optNoPref,'opt-music-pop':t.optPop,'opt-music-chalga':t.optChalga,
-    'opt-music-rock':t.optRock,'opt-music-classical':t.optClassical,'opt-music-jazz':t.optJazz,
-    'opt-music-electronic':t.optElectronic,'opt-music-nopref':t.optNoMusic,
     'opt-tip-none':t.optNoTip,'opt-tip-small':t.optSmallTip,'opt-tip-fair':t.optFairTip,'opt-tip-generous':t.optGenTip
   };
   Object.keys(optMap).forEach(function(id){
@@ -729,7 +726,7 @@ function sf(f,el){
     if(el&&optMap[id])el.textContent=optMap[id];
   });
   // Force redraw of select dropdowns (Android Chrome rendering fix)
-  ['order-music','order-tip'].forEach(function(selId){
+  ['order-tip'].forEach(function(selId){
     var sel=document.getElementById(selId);
     if(sel){var v=sel.value;sel.style.display='none';sel.offsetHeight;sel.style.display='';sel.value=v;}
   });
