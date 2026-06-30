@@ -1032,9 +1032,11 @@ window.addEventListener('appinstalled',function(){
   var btn=document.getElementById('install-btn');
   if(btn)btn.style.display='none';
 });
+// Service worker disabled - was causing cross-origin fetch issues with images
+// Unregister any existing service worker (cleanup from previous version)
 if('serviceWorker' in navigator){
-  window.addEventListener('load',function(){
-    navigator.serviceWorker.register('sw.js').catch(function(e){console.log('SW failed:',e);});
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    regs.forEach(function(reg){reg.unregister();});
   });
 }
 </script>
