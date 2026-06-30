@@ -853,14 +853,17 @@ function showTab(t){
   document.getElementById('page-'+t).classList.add('on');
   document.getElementById('tab-'+t).classList.add('on');
   if(t==='map'){
-    if(!mapReady&&typeof L!=='undefined'){
-      mapReady=true;
-      map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],13);
-      tileLayer=L.tileLayer(getTileUrl(),{maxZoom:19}).addTo(map);
-      renderMap();
-    }
+    initMapOnce();
     setTimeout(function(){if(map)map.invalidateSize();},300);
   }
+}
+
+function initMapOnce(){
+  if(mapReady||typeof L==='undefined')return;
+  mapReady=true;
+  map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],13);
+  tileLayer=L.tileLayer(getTileUrl(),{maxZoom:19}).addTo(map);
+  renderMap();
 }
 
 function pollGPS(){
@@ -884,12 +887,7 @@ render();
 pollGPS();
 setInterval(pollGPS,15000);
 // Init map immediately on load
-if(typeof L!=='undefined'){
-  mapReady=true;
-  map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],13);
-  tileLayer=L.tileLayer(getTileUrl(),{maxZoom:19}).addTo(map);
-  renderMap();
-}
+initMapOnce();
 </script>
 </body>
 </html>
