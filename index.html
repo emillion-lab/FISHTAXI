@@ -303,23 +303,23 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
     <div style="margin-bottom:8px">
       <label style="font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;display:block;margin-bottom:4px" id="lbl-musicstyle">🎵 Preferred music</label>
       <select id="order-music" style="width:100%;background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:7px;font-size:13px">
-        <option value="">No preference</option>
-        <option value="pop">🎤 Pop</option>
-        <option value="chalga">🎶 Chalga</option>
-        <option value="rock">🎸 Rock</option>
-        <option value="classical">🎻 Classical</option>
-        <option value="jazz">🎷 Jazz</option>
-        <option value="electronic">🎧 Electronic</option>
-        <option value="none">🔇 No music</option>
+        <option value="" id="opt-music-none">No preference</option>
+        <option value="pop" id="opt-music-pop">🎤 Pop</option>
+        <option value="chalga" id="opt-music-chalga">🎶 Chalga</option>
+        <option value="rock" id="opt-music-rock">🎸 Rock</option>
+        <option value="classical" id="opt-music-classical">🎻 Classical</option>
+        <option value="jazz" id="opt-music-jazz">🎷 Jazz</option>
+        <option value="electronic" id="opt-music-electronic">🎧 Electronic</option>
+        <option value="none" id="opt-music-nopref">🔇 No music</option>
       </select>
     </div>
     <div style="margin-bottom:10px">
       <label style="font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;display:block;margin-bottom:4px" id="lbl-tip">💰 Planned tip (optional)</label>
       <select id="order-tip" style="width:100%;background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:7px;font-size:13px">
-        <option value="">No tip planned</option>
-        <option value="small">A small tip</option>
-        <option value="fair">A fair tip — thanks for coming far</option>
-        <option value="generous">A generous tip</option>
+        <option value="" id="opt-tip-none">No tip planned</option>
+        <option value="small" id="opt-tip-small">A small tip</option>
+        <option value="fair" id="opt-tip-fair">A fair tip — thanks for coming far</option>
+        <option value="generous" id="opt-tip-generous">A generous tip</option>
       </select>
     </div>
     <div id="loc-status" style="font-size:11px;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:6px">
@@ -382,7 +382,8 @@ var T={
     howTitle:'How it works',joinTitle:'Join as Driver',
     mVerified:"✓ Verified",mReviews:"reviews",mWarn:"Tell your driver your preferred pace when you get in",mCalmOpt:"Calm driving available on request",mCarDet:"Car Details",mType:"Type",mSeats:"Seats",mPassengers:"passengers",mAccel:"0-100 km/h",mElectric:"Electric",mAC:"A/C",mYes:"Yes",mPayment:"Payment",mLangs:"Languages",mOpts:"Options & Atmosphere",mPrice:"Price",mAreas:"Areas",mAbout:"About the Driver",mRate:"Rate this driver",mViewProfile:"View Profile",
     mBeforeOrder:"Before You Order",
-    lblMusic:"🎵 Preferred music",lblTip:"💰 Planned tip (optional)"
+    lblMusic:"🎵 Preferred music",lblTip:"💰 Planned tip (optional)",
+    optNoPref:"No preference",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classical",optJazz:"🎷 Jazz",optElectronic:"🎧 Electronic",optNoMusic:"🔇 No music",optNoTip:"No tip planned",optSmallTip:"A small tip",optFairTip:"A fair tip — thanks for coming far",optGenTip:"A generous tip"
   },
   bg:{
     logo:'🐟 fish.taxi',
@@ -404,7 +405,8 @@ var T={
     howTitle:'Как работи',joinTitle:'Присъедини се',
     mVerified:"✓ Верифициран",mReviews:"отзива",mWarn:"Кажи на шофьора предпочитания темп при качване",mCalmOpt:"Спокойно каране при поискване",mCarDet:"Детайли на колата",mType:"Тип",mSeats:"Места",mPassengers:"пътници",mAccel:"0-100 км/ч",mElectric:"Електрическа",mAC:"Климатик",mYes:"Да",mPayment:"Плащане",mLangs:"Езици",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Райони",mAbout:"За шофьора",mRate:"Оцени шофьора",mViewProfile:"Виж профил",
     mBeforeOrder:"Преди да поръчаш",
-    lblMusic:"🎵 Предпочитана музика",lblTip:"💰 Планиран бакшиш (по избор)"
+    lblMusic:"🎵 Предпочитана музика",lblTip:"💰 Планиран бакшиш (по избор)",
+    optNoPref:"Без предпочитание",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Класика",optJazz:"🎷 Джаз",optElectronic:"🎧 Електронна",optNoMusic:"🔇 Без музика",optNoTip:"Без бакшиш",optSmallTip:"Малък бакшиш",optFairTip:"Достоен бакшиш — благодаря за дългия път",optGenTip:"Щедър бакшиш"
   },
   de:{
     logo:'🐟 fish.taxi',
@@ -425,7 +427,8 @@ var T={
     online:'Online',offline:'Offline',
     mVerified:"✓ Verifiziert",mReviews:"Bewertungen",mWarn:"Sagen Sie Ihrem Fahrer Ihr bevorzugtes Tempo beim Einsteigen",mCalmOpt:"Ruhiges Fahren auf Anfrage",mCarDet:"Fahrzeugdetails",mType:"Typ",mSeats:"Sitze",mPassengers:"Passagiere",mAccel:"0-100 km/h",mElectric:"Elektrisch",mAC:"Klima",mYes:"Ja",mPayment:"Zahlung",mLangs:"Sprachen",mOpts:"Optionen & Atmosphäre",mPrice:"Preis",mAreas:"Gebiete",mAbout:"Über den Fahrer",mRate:"Fahrer bewerten",mViewProfile:"Profil ansehen",
     mBeforeOrder:"Vor der Bestellung",
-    lblMusic:"🎵 Bevorzugte Musik",lblTip:"💰 Geplantes Trinkgeld (optional)"
+    lblMusic:"🎵 Bevorzugte Musik",lblTip:"💰 Geplantes Trinkgeld (optional)",
+    optNoPref:"Keine Präferenz",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klassik",optJazz:"🎷 Jazz",optElectronic:"🎧 Elektronisch",optNoMusic:"🔇 Keine Musik",optNoTip:"Kein Trinkgeld geplant",optSmallTip:"Ein kleines Trinkgeld",optFairTip:"Ein faires Trinkgeld — danke fürs Kommen",optGenTip:"Ein großzügiges Trinkgeld"
   },
   fr:{
     logo:'🐟 fish.taxi',
@@ -446,7 +449,8 @@ var T={
     online:'En ligne',offline:'Hors ligne',
     mVerified:"✓ Vérifié",mReviews:"avis",mWarn:"Dites à votre chauffeur votre rythme préféré en montant",mCalmOpt:"Conduite calme sur demande",mCarDet:"Détails du véhicule",mType:"Type",mSeats:"Places",mPassengers:"passagers",mAccel:"0-100 km/h",mElectric:"Électrique",mAC:"Clim",mYes:"Oui",mPayment:"Paiement",mLangs:"Langues",mOpts:"Options et ambiance",mPrice:"Prix",mAreas:"Zones",mAbout:"À propos du chauffeur",mRate:"Évaluer ce chauffeur",mViewProfile:"Voir le profil",
     mBeforeOrder:"Avant de commander",
-    lblMusic:"🎵 Musique préférée",lblTip:"💰 Pourboire prévu (optionnel)"
+    lblMusic:"🎵 Musique préférée",lblTip:"💰 Pourboire prévu (optionnel)",
+    optNoPref:"Aucune préférence",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classique",optJazz:"🎷 Jazz",optElectronic:"🎧 Électronique",optNoMusic:"🔇 Sans musique",optNoTip:"Pas de pourboire prévu",optSmallTip:"Un petit pourboire",optFairTip:"Un pourboire juste — merci de venir de loin",optGenTip:"Un généreux pourboire"
   },
   ru:{
     logo:'🐟 fish.taxi',
@@ -467,7 +471,8 @@ var T={
     online:'Онлайн',offline:'Офлайн',
     mVerified:"✓ Подтвержден",mReviews:"отзывов",mWarn:"Скажите водителю предпочитаемый темп при посадке",mCalmOpt:"Спокойная езда по запросу",mCarDet:"Детали автомобиля",mType:"Тип",mSeats:"Места",mPassengers:"пассажиров",mAccel:"0-100 км/ч",mElectric:"Электро",mAC:"Кондиционер",mYes:"Да",mPayment:"Оплата",mLangs:"Языки",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Районы",mAbout:"О водителе",mRate:"Оценить водителя",mViewProfile:"Смотреть профиль",
     mBeforeOrder:"Перед заказом",
-    lblMusic:"🎵 Предпочитаемая музыка",lblTip:"💰 Планируемые чаевые (необязательно)"
+    lblMusic:"🎵 Предпочитаемая музыка",lblTip:"💰 Планируемые чаевые (необязательно)",
+    optNoPref:"Без предпочтений",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Классика",optJazz:"🎷 Джаз",optElectronic:"🎧 Электронная",optNoMusic:"🔇 Без музыки",optNoTip:"Без чаевых",optSmallTip:"Небольшие чаевые",optFairTip:"Достойные чаевые — спасибо за долгий путь",optGenTip:"Щедрые чаевые"
   },
   it:{
     logo:'🐟 fish.taxi',
@@ -488,7 +493,8 @@ var T={
     online:'Online',offline:'Offline',
     mVerified:"✓ Verificato",mReviews:"recensioni",mWarn:"Di al tuo autista il ritmo preferito quando sali",mCalmOpt:"Guida calma su richiesta",mCarDet:"Dettagli auto",mType:"Tipo",mSeats:"Posti",mPassengers:"passeggeri",mAccel:"0-100 km/h",mElectric:"Elettrico",mAC:"Aria cond.",mYes:"Si",mPayment:"Pagamento",mLangs:"Lingue",mOpts:"Opzioni e atmosfera",mPrice:"Prezzo",mAreas:"Zone",mAbout:"Sull autista",mRate:"Valuta autista",mViewProfile:"Vedi profilo",
     mBeforeOrder:"Prima di ordinare",
-    lblMusic:"🎵 Musica preferita",lblTip:"💰 Mancia pianificata (opzionale)"
+    lblMusic:"🎵 Musica preferita",lblTip:"💰 Mancia pianificata (opzionale)",
+    optNoPref:"Nessuna preferenza",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classica",optJazz:"🎷 Jazz",optElectronic:"🎧 Elettronica",optNoMusic:"🔇 Senza musica",optNoTip:"Nessuna mancia prevista",optSmallTip:"Una piccola mancia",optFairTip:"Una mancia equa — grazie per essere venuto da lontano",optGenTip:"Una generosa mancia"
   },
   es:{
     logo:'🐟 fish.taxi',
@@ -509,7 +515,8 @@ var T={
     online:'Online',offline:'Offline',
     mVerified:"✓ Verificado",mReviews:"reseñas",mWarn:"Dile a tu conductor tu ritmo preferido al subir",mCalmOpt:"Conducción tranquila bajo petición",mCarDet:"Detalles del coche",mType:"Tipo",mSeats:"Asientos",mPassengers:"pasajeros",mAccel:"0-100 km/h",mElectric:"Eléctrico",mAC:"A/C",mYes:"Sí",mPayment:"Pago",mLangs:"Idiomas",mOpts:"Opciones y ambiente",mPrice:"Precio",mAreas:"Zonas",mAbout:"Sobre el conductor",mRate:"Calificar conductor",mViewProfile:"Ver perfil",
     mBeforeOrder:"Antes de pedir",
-    lblMusic:"🎵 Música preferida",lblTip:"💰 Propina planeada (opcional)"
+    lblMusic:"🎵 Música preferida",lblTip:"💰 Propina planeada (opcional)",
+    optNoPref:"Sin preferencia",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Clásica",optJazz:"🎷 Jazz",optElectronic:"🎧 Electrónica",optNoMusic:"🔇 Sin música",optNoTip:"Sin propina planeada",optSmallTip:"Una pequeña propina",optFairTip:"Una propina justa — gracias por venir desde lejos",optGenTip:"Una generosa propina"
   },
   tr:{
     logo:'🐟 fish.taxi',
@@ -530,7 +537,8 @@ var T={
     online:'Çevrimiçi',offline:'Çevrimdışı',
     mVerified:"✓ Doğrulandi",mReviews:"değerlendirme",mWarn:"Binerken sürücünüze tercih ettiğiniz hızı söyleyin",mCalmOpt:"İstek üzerine sakin sürüş",mCarDet:"Araç Detaylari",mType:"Tip",mSeats:"Koltuk",mPassengers:"yolcu",mAccel:"0-100 km/h",mElectric:"Elektrikli",mAC:"Klima",mYes:"Evet",mPayment:"Ödeme",mLangs:"Diller",mOpts:"Seçenekler ve Atmosfer",mPrice:"Fiyat",mAreas:"Bölgeler",mAbout:"Sürücü Hakkinda",mRate:"Sürücüyü değerlendir",mViewProfile:"Profili görüntüle",
     mBeforeOrder:"Sipariş vermeden önce",
-    lblMusic:"🎵 Tercih edilen müzik",lblTip:"💰 Planlanan bahşiş (isteğe bağlı)"
+    lblMusic:"🎵 Tercih edilen müzik",lblTip:"💰 Planlanan bahşiş (isteğe bağlı)",
+    optNoPref:"Tercih yok",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klasik",optJazz:"🎷 Caz",optElectronic:"🎧 Elektronik",optNoMusic:"🔇 Müzik yok",optNoTip:"Bahşiş planlanmadı",optSmallTip:"Küçük bir bahşiş",optFairTip:"Adil bir bahşiş — uzaktan geldiğiniz için teşekkürler",optGenTip:"Cömert bir bahşiş"
   }
 };
 var lang='en';
@@ -667,6 +675,16 @@ function sf(f,el){
   el.classList.add('on');
   var rb=document.getElementById('rate-btn');
   if(rb)rb.textContent='⭐ '+t.mRate;
+  var optMap={
+    'opt-music-none':t.optNoPref,'opt-music-pop':t.optPop,'opt-music-chalga':t.optChalga,
+    'opt-music-rock':t.optRock,'opt-music-classical':t.optClassical,'opt-music-jazz':t.optJazz,
+    'opt-music-electronic':t.optElectronic,'opt-music-nopref':t.optNoMusic,
+    'opt-tip-none':t.optNoTip,'opt-tip-small':t.optSmallTip,'opt-tip-fair':t.optFairTip,'opt-tip-generous':t.optGenTip
+  };
+  Object.keys(optMap).forEach(function(id){
+    var el=document.getElementById(id);
+    if(el&&optMap[id])el.textContent=optMap[id];
+  });
   render();
 }
 
