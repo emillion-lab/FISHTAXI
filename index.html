@@ -310,6 +310,8 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
         <option value="classical" id="opt-music-classical">🎻 Classical</option>
         <option value="jazz" id="opt-music-jazz">🎷 Jazz</option>
         <option value="electronic" id="opt-music-electronic">🎧 Electronic</option>
+        <option value="chillout" id="opt-music-chillout">🌅 Chillout</option>
+        <option value="lounge" id="opt-music-lounge">🛋 Lounge</option>
         <option value="none" id="opt-music-nopref">🔇 No music</option>
       </select>
     </div>
@@ -351,7 +353,7 @@ var DRIVERS=[{
   "ac":true,"music":true,"chalga":false,"nomusic":false,
   "silent_ok":true,"talk_ok":true,"calm_ok":true,
   "terminal":true,
-  "music_pop":true,"music_chalga":false,"music_rock":true,"music_classical":true,"music_jazz":true,"music_electronic":true,
+  "music_pop":false,"music_chalga":false,"music_rock":false,"music_classical":false,"music_jazz":true,"music_electronic":true,"music_chillout":true,"music_lounge":true,
   "airport":true,"longdist":true,"night":true,"business":true,
   "wheelchair":false,"verified":true,
   "areas":"Sofia — Center, Airport, Ring Road, All districts",
@@ -383,7 +385,8 @@ var T={
     mVerified:"✓ Verified",mReviews:"reviews",mWarn:"Tell your driver your preferred pace when you get in",mCalmOpt:"Calm driving available on request",mCarDet:"Car Details",mType:"Type",mSeats:"Seats",mPassengers:"passengers",mAccel:"0-100 km/h",mElectric:"Electric",mAC:"A/C",mYes:"Yes",mPayment:"Payment",mLangs:"Languages",mOpts:"Options & Atmosphere",mPrice:"Price",mAreas:"Areas",mAbout:"About the Driver",mRate:"Rate this driver",mViewProfile:"View Profile",
     mBeforeOrder:"Before You Order",
     lblMusic:"🎵 Preferred music",lblTip:"💰 Planned tip (optional)",
-    optNoPref:"No preference",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classical",optJazz:"🎷 Jazz",optElectronic:"🎧 Electronic",optNoMusic:"🔇 No music",optNoTip:"No tip planned",optSmallTip:"A small tip",optFairTip:"A fair tip — thanks for coming far",optGenTip:"A generous tip"
+    optNoPref:"No preference",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classical",optJazz:"🎷 Jazz",optElectronic:"🎧 Electronic",optNoMusic:"🔇 No music",optNoTip:"No tip planned",optSmallTip:"A small tip",optFairTip:"A fair tip — thanks for coming far",optGenTip:"A generous tip",
+    sumFast:"Can drive fast",sumCalm:"or calmly — your choice",sumTalkSilent:"happy to talk or stay silent",sumTalk:"enjoys conversation",sumSilent:"prefers quiet rides",sumMusic:"plays"
   },
   bg:{
     logo:'🐟 fish.taxi',
@@ -406,7 +409,8 @@ var T={
     mVerified:"✓ Верифициран",mReviews:"отзива",mWarn:"Кажи на шофьора предпочитания темп при качване",mCalmOpt:"Спокойно каране при поискване",mCarDet:"Детайли на колата",mType:"Тип",mSeats:"Места",mPassengers:"пътници",mAccel:"0-100 км/ч",mElectric:"Електрическа",mAC:"Климатик",mYes:"Да",mPayment:"Плащане",mLangs:"Езици",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Райони",mAbout:"За шофьора",mRate:"Оцени шофьора",mViewProfile:"Виж профил",
     mBeforeOrder:"Преди да поръчаш",
     lblMusic:"🎵 Предпочитана музика",lblTip:"💰 Планиран бакшиш (по избор)",
-    optNoPref:"Без предпочитание",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Класика",optJazz:"🎷 Джаз",optElectronic:"🎧 Електронна",optNoMusic:"🔇 Без музика",optNoTip:"Без бакшиш",optSmallTip:"Малък бакшиш",optFairTip:"Достоен бакшиш — благодаря за дългия път",optGenTip:"Щедър бакшиш"
+    optNoPref:"Без предпочитание",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Класика",optJazz:"🎷 Джаз",optElectronic:"🎧 Електронна",optNoMusic:"🔇 Без музика",optNoTip:"Без бакшиш",optSmallTip:"Малък бакшиш",optFairTip:"Достоен бакшиш — благодаря за дългия път",optGenTip:"Щедър бакшиш",
+    sumFast:"Може да кара бързо",sumCalm:"или спокойно — твой избор",sumTalkSilent:"може да говори или да мълчи",sumTalk:"обича разговори",sumSilent:"предпочита тишина",sumMusic:"пуска"
   },
   de:{
     logo:'🐟 fish.taxi',
@@ -428,7 +432,8 @@ var T={
     mVerified:"✓ Verifiziert",mReviews:"Bewertungen",mWarn:"Sagen Sie Ihrem Fahrer Ihr bevorzugtes Tempo beim Einsteigen",mCalmOpt:"Ruhiges Fahren auf Anfrage",mCarDet:"Fahrzeugdetails",mType:"Typ",mSeats:"Sitze",mPassengers:"Passagiere",mAccel:"0-100 km/h",mElectric:"Elektrisch",mAC:"Klima",mYes:"Ja",mPayment:"Zahlung",mLangs:"Sprachen",mOpts:"Optionen & Atmosphäre",mPrice:"Preis",mAreas:"Gebiete",mAbout:"Über den Fahrer",mRate:"Fahrer bewerten",mViewProfile:"Profil ansehen",
     mBeforeOrder:"Vor der Bestellung",
     lblMusic:"🎵 Bevorzugte Musik",lblTip:"💰 Geplantes Trinkgeld (optional)",
-    optNoPref:"Keine Präferenz",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klassik",optJazz:"🎷 Jazz",optElectronic:"🎧 Elektronisch",optNoMusic:"🔇 Keine Musik",optNoTip:"Kein Trinkgeld geplant",optSmallTip:"Ein kleines Trinkgeld",optFairTip:"Ein faires Trinkgeld — danke fürs Kommen",optGenTip:"Ein großzügiges Trinkgeld"
+    optNoPref:"Keine Präferenz",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klassik",optJazz:"🎷 Jazz",optElectronic:"🎧 Elektronisch",optNoMusic:"🔇 Keine Musik",optNoTip:"Kein Trinkgeld geplant",optSmallTip:"Ein kleines Trinkgeld",optFairTip:"Ein faires Trinkgeld — danke fürs Kommen",optGenTip:"Ein großzügiges Trinkgeld",
+    sumFast:"Kann schnell fahren",sumCalm:"oder ruhig — Ihre Wahl",sumTalkSilent:"redet gerne oder bleibt still",sumTalk:"genießt Gespräche",sumSilent:"bevorzugt Ruhe",sumMusic:"spielt"
   },
   fr:{
     logo:'🐟 fish.taxi',
@@ -450,7 +455,8 @@ var T={
     mVerified:"✓ Vérifié",mReviews:"avis",mWarn:"Dites à votre chauffeur votre rythme préféré en montant",mCalmOpt:"Conduite calme sur demande",mCarDet:"Détails du véhicule",mType:"Type",mSeats:"Places",mPassengers:"passagers",mAccel:"0-100 km/h",mElectric:"Électrique",mAC:"Clim",mYes:"Oui",mPayment:"Paiement",mLangs:"Langues",mOpts:"Options et ambiance",mPrice:"Prix",mAreas:"Zones",mAbout:"À propos du chauffeur",mRate:"Évaluer ce chauffeur",mViewProfile:"Voir le profil",
     mBeforeOrder:"Avant de commander",
     lblMusic:"🎵 Musique préférée",lblTip:"💰 Pourboire prévu (optionnel)",
-    optNoPref:"Aucune préférence",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classique",optJazz:"🎷 Jazz",optElectronic:"🎧 Électronique",optNoMusic:"🔇 Sans musique",optNoTip:"Pas de pourboire prévu",optSmallTip:"Un petit pourboire",optFairTip:"Un pourboire juste — merci de venir de loin",optGenTip:"Un généreux pourboire"
+    optNoPref:"Aucune préférence",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classique",optJazz:"🎷 Jazz",optElectronic:"🎧 Électronique",optNoMusic:"🔇 Sans musique",optNoTip:"Pas de pourboire prévu",optSmallTip:"Un petit pourboire",optFairTip:"Un pourboire juste — merci de venir de loin",optGenTip:"Un généreux pourboire",
+    sumFast:"Peut conduire vite",sumCalm:"ou calmement — votre choix",sumTalkSilent:"aime parler ou rester silencieux",sumTalk:"aime discuter",sumSilent:"préfère le calme",sumMusic:"joue"
   },
   ru:{
     logo:'🐟 fish.taxi',
@@ -472,7 +478,8 @@ var T={
     mVerified:"✓ Подтвержден",mReviews:"отзывов",mWarn:"Скажите водителю предпочитаемый темп при посадке",mCalmOpt:"Спокойная езда по запросу",mCarDet:"Детали автомобиля",mType:"Тип",mSeats:"Места",mPassengers:"пассажиров",mAccel:"0-100 км/ч",mElectric:"Электро",mAC:"Кондиционер",mYes:"Да",mPayment:"Оплата",mLangs:"Языки",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Районы",mAbout:"О водителе",mRate:"Оценить водителя",mViewProfile:"Смотреть профиль",
     mBeforeOrder:"Перед заказом",
     lblMusic:"🎵 Предпочитаемая музыка",lblTip:"💰 Планируемые чаевые (необязательно)",
-    optNoPref:"Без предпочтений",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Классика",optJazz:"🎷 Джаз",optElectronic:"🎧 Электронная",optNoMusic:"🔇 Без музыки",optNoTip:"Без чаевых",optSmallTip:"Небольшие чаевые",optFairTip:"Достойные чаевые — спасибо за долгий путь",optGenTip:"Щедрые чаевые"
+    optNoPref:"Без предпочтений",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Классика",optJazz:"🎷 Джаз",optElectronic:"🎧 Электронная",optNoMusic:"🔇 Без музыки",optNoTip:"Без чаевых",optSmallTip:"Небольшие чаевые",optFairTip:"Достойные чаевые — спасибо за долгий путь",optGenTip:"Щедрые чаевые",
+    sumFast:"Может ехать быстро",sumCalm:"или спокойно — ваш выбор",sumTalkSilent:"любит поговорить или помолчать",sumTalk:"любит общение",sumSilent:"предпочитает тишину",sumMusic:"играет"
   },
   it:{
     logo:'🐟 fish.taxi',
@@ -494,7 +501,8 @@ var T={
     mVerified:"✓ Verificato",mReviews:"recensioni",mWarn:"Di al tuo autista il ritmo preferito quando sali",mCalmOpt:"Guida calma su richiesta",mCarDet:"Dettagli auto",mType:"Tipo",mSeats:"Posti",mPassengers:"passeggeri",mAccel:"0-100 km/h",mElectric:"Elettrico",mAC:"Aria cond.",mYes:"Si",mPayment:"Pagamento",mLangs:"Lingue",mOpts:"Opzioni e atmosfera",mPrice:"Prezzo",mAreas:"Zone",mAbout:"Sull autista",mRate:"Valuta autista",mViewProfile:"Vedi profilo",
     mBeforeOrder:"Prima di ordinare",
     lblMusic:"🎵 Musica preferita",lblTip:"💰 Mancia pianificata (opzionale)",
-    optNoPref:"Nessuna preferenza",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classica",optJazz:"🎷 Jazz",optElectronic:"🎧 Elettronica",optNoMusic:"🔇 Senza musica",optNoTip:"Nessuna mancia prevista",optSmallTip:"Una piccola mancia",optFairTip:"Una mancia equa — grazie per essere venuto da lontano",optGenTip:"Una generosa mancia"
+    optNoPref:"Nessuna preferenza",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classica",optJazz:"🎷 Jazz",optElectronic:"🎧 Elettronica",optNoMusic:"🔇 Senza musica",optNoTip:"Nessuna mancia prevista",optSmallTip:"Una piccola mancia",optFairTip:"Una mancia equa — grazie per essere venuto da lontano",optGenTip:"Una generosa mancia",
+    sumFast:"Puo guidare veloce",sumCalm:"o con calma — la tua scelta",sumTalkSilent:"felice di parlare o stare in silenzio",sumTalk:"ama conversare",sumSilent:"preferisce silenzio",sumMusic:"suona"
   },
   es:{
     logo:'🐟 fish.taxi',
@@ -516,7 +524,8 @@ var T={
     mVerified:"✓ Verificado",mReviews:"reseñas",mWarn:"Dile a tu conductor tu ritmo preferido al subir",mCalmOpt:"Conducción tranquila bajo petición",mCarDet:"Detalles del coche",mType:"Tipo",mSeats:"Asientos",mPassengers:"pasajeros",mAccel:"0-100 km/h",mElectric:"Eléctrico",mAC:"A/C",mYes:"Sí",mPayment:"Pago",mLangs:"Idiomas",mOpts:"Opciones y ambiente",mPrice:"Precio",mAreas:"Zonas",mAbout:"Sobre el conductor",mRate:"Calificar conductor",mViewProfile:"Ver perfil",
     mBeforeOrder:"Antes de pedir",
     lblMusic:"🎵 Música preferida",lblTip:"💰 Propina planeada (opcional)",
-    optNoPref:"Sin preferencia",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Clásica",optJazz:"🎷 Jazz",optElectronic:"🎧 Electrónica",optNoMusic:"🔇 Sin música",optNoTip:"Sin propina planeada",optSmallTip:"Una pequeña propina",optFairTip:"Una propina justa — gracias por venir desde lejos",optGenTip:"Una generosa propina"
+    optNoPref:"Sin preferencia",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Clásica",optJazz:"🎷 Jazz",optElectronic:"🎧 Electrónica",optNoMusic:"🔇 Sin música",optNoTip:"Sin propina planeada",optSmallTip:"Una pequeña propina",optFairTip:"Una propina justa — gracias por venir desde lejos",optGenTip:"Una generosa propina",
+    sumFast:"Puede conducir rapido",sumCalm:"o con calma — tu eleccion",sumTalkSilent:"feliz de hablar o guardar silencio",sumTalk:"disfruta conversar",sumSilent:"prefiere silencio",sumMusic:"reproduce"
   },
   tr:{
     logo:'🐟 fish.taxi',
@@ -538,7 +547,8 @@ var T={
     mVerified:"✓ Doğrulandi",mReviews:"değerlendirme",mWarn:"Binerken sürücünüze tercih ettiğiniz hızı söyleyin",mCalmOpt:"İstek üzerine sakin sürüş",mCarDet:"Araç Detaylari",mType:"Tip",mSeats:"Koltuk",mPassengers:"yolcu",mAccel:"0-100 km/h",mElectric:"Elektrikli",mAC:"Klima",mYes:"Evet",mPayment:"Ödeme",mLangs:"Diller",mOpts:"Seçenekler ve Atmosfer",mPrice:"Fiyat",mAreas:"Bölgeler",mAbout:"Sürücü Hakkinda",mRate:"Sürücüyü değerlendir",mViewProfile:"Profili görüntüle",
     mBeforeOrder:"Sipariş vermeden önce",
     lblMusic:"🎵 Tercih edilen müzik",lblTip:"💰 Planlanan bahşiş (isteğe bağlı)",
-    optNoPref:"Tercih yok",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klasik",optJazz:"🎷 Caz",optElectronic:"🎧 Elektronik",optNoMusic:"🔇 Müzik yok",optNoTip:"Bahşiş planlanmadı",optSmallTip:"Küçük bir bahşiş",optFairTip:"Adil bir bahşiş — uzaktan geldiğiniz için teşekkürler",optGenTip:"Cömert bir bahşiş"
+    optNoPref:"Tercih yok",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klasik",optJazz:"🎷 Caz",optElectronic:"🎧 Elektronik",optNoMusic:"🔇 Müzik yok",optNoTip:"Bahşiş planlanmadı",optSmallTip:"Küçük bir bahşiş",optFairTip:"Adil bir bahşiş — uzaktan geldiğiniz için teşekkürler",optGenTip:"Cömert bir bahşiş",
+    sumFast:"Hizli surebilir",sumCalm:"veya sakin — sizin seciminiz",sumTalkSilent:"konusmaktan veya sessiz kalmaktan mutlu",sumTalk:"sohbeti sever",sumSilent:"sessizligi tercih eder",sumMusic:"calar"
   }
 };
 var lang='en';
@@ -782,7 +792,23 @@ function openMod(id){
   document.getElementById('mname').innerHTML=d.name+' <span class="vb">'+t.mVerified+'</span>';
   document.getElementById('mcar2').textContent=d.car+' · '+d.plate;
   document.getElementById('mstars').innerHTML='<span style="color:var(--y);font-size:20px">'+'★'.repeat(Math.round(d.rating))+'</span> <strong>'+d.rating+'</strong> <span style="color:var(--mu);font-size:12px">('+d.reviews+' '+t.mReviews+')</span>';
-  document.getElementById('mstyle').innerHTML='<strong style="color:var(--or)">&#9888; '+t.mWarn+'.</strong><br>'+t.mCarDet+': <strong style="color:'+st.c+'">'+st.l+' &mdash; '+st.s+'</strong>'+(d.calm_ok?' <span style="color:var(--gr)">&middot; '+t.mCalmOpt+'</span>':'');
+  var summaryParts=[];
+  if(d.sport)summaryParts.push((t.sumFast||'Can drive fast')+' ('+d.accel+'s 0-100)');
+  if(d.calm_ok)summaryParts.push(t.sumCalm||'or calmly &mdash; your choice');
+  if(d.talk_ok&&d.silent_ok)summaryParts.push(t.sumTalkSilent||'happy to talk or stay silent');
+  else if(d.talk_ok)summaryParts.push(t.sumTalk||'enjoys conversation');
+  else if(d.silent_ok)summaryParts.push(t.sumSilent||'prefers quiet rides');
+  var musicGenres=[];
+  if(d.music_chillout)musicGenres.push('Chillout');
+  if(d.music_lounge)musicGenres.push('Lounge');
+  if(d.music_pop)musicGenres.push('Pop');
+  if(d.music_chalga)musicGenres.push('Chalga');
+  if(d.music_rock)musicGenres.push('Rock');
+  if(d.music_classical)musicGenres.push('Classical');
+  if(d.music_jazz)musicGenres.push('Jazz');
+  if(d.music_electronic)musicGenres.push('Electronic');
+  if(musicGenres.length)summaryParts.push((t.sumMusic||'plays')+' '+musicGenres.join(', '));
+  document.getElementById('mstyle').innerHTML='<strong style="color:'+st.c+'">'+st.l+'</strong> &mdash; '+summaryParts.join(' &middot; ')+'.<br><span style="color:var(--or);font-size:11px">&#9888; '+t.mWarn+'.</span>';
   document.getElementById('mcardet').innerHTML=
     '<div class="ir"><span class="ik">'+t.mType+'</span><span class="iv">'+d.car_type.toUpperCase()+'</span></div>'+
     '<div class="ir"><span class="ik">'+t.mSeats+'</span><span class="iv">'+d.seats+' '+t.mPassengers+'</span></div>'+
@@ -868,7 +894,7 @@ function requestLocationForOrder(cb){
   );
 }
 
-var MUSIC_LABELS={pop:'Pop',chalga:'Chalga',rock:'Rock',classical:'Classical',jazz:'Jazz',electronic:'Electronic',none:'No music'};
+var MUSIC_LABELS={pop:'Pop',chalga:'Chalga',rock:'Rock',classical:'Classical',jazz:'Jazz',electronic:'Electronic',chillout:'Chillout',lounge:'Lounge',none:'No music'};
 var TIP_LABELS={small:'A small tip',fair:'A fair tip — thanks for coming far',generous:'A generous tip'};
 
 function buildOrderMessage(lat,lng){
