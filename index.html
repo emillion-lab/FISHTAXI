@@ -292,13 +292,13 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
     <div class="mh" id="mh-about">About the Driver</div><div id="mbio" style="font-size:13px;color:var(--mu);line-height:1.6"></div>
     <div class="mh" id="mh-order">Before You Order</div>
     <div id="order-prefs" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-      <button class="pref-btn" data-pref="hurry" onclick="togglePref(this,'hurry')">⏱ I'm in a hurry</button>
-      <button class="pref-btn" data-pref="relax" onclick="togglePref(this,'relax')">😌 Take it easy</button>
-      <button class="pref-btn" data-pref="silent" onclick="togglePref(this,'silent')">🤫 Prefer silence</button>
-      <button class="pref-btn" data-pref="talk" onclick="togglePref(this,'talk')">💬 Happy to chat</button>
-      <button class="pref-btn" data-pref="nomusic" onclick="togglePref(this,'nomusic')">🔇 No music</button>
-      <button class="pref-btn" data-pref="ac" onclick="togglePref(this,'ac')">❄️ A/C please</button>
-      <button class="pref-btn" data-pref="luggage" onclick="togglePref(this,'luggage')">🧳 Have luggage</button>
+      <button class="pref-btn" id="pb-hurry" data-pref="hurry" onclick="togglePref(this,'hurry')">⏱ I'm in a hurry</button>
+      <button class="pref-btn" id="pb-relax" data-pref="relax" onclick="togglePref(this,'relax')">😌 Take it easy</button>
+      <button class="pref-btn" id="pb-silent" data-pref="silent" onclick="togglePref(this,'silent')">🤫 Prefer silence</button>
+      <button class="pref-btn" id="pb-talk" data-pref="talk" onclick="togglePref(this,'talk')">💬 Happy to chat</button>
+      <button class="pref-btn" id="pb-nomusic" data-pref="nomusic" onclick="togglePref(this,'nomusic')">🔇 No music</button>
+      <button class="pref-btn" id="pb-ac" data-pref="ac" onclick="togglePref(this,'ac')">❄️ A/C please</button>
+      <button class="pref-btn" id="pb-luggage" data-pref="luggage" onclick="togglePref(this,'luggage')">🧳 Have luggage</button>
     </div>
     <div style="margin-bottom:8px">
       <label style="font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;display:block;margin-bottom:4px" id="lbl-musicstyle">🎵 Preferred music</label>
@@ -325,11 +325,11 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
       </select>
     </div>
     <div id="loc-status" style="font-size:11px;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:6px">
-      <span id="loc-icon">📍</span><span id="loc-text">Location will be shared with driver</span>
+      <span id="loc-icon">📍</span><span id="loc-text" data-default="1">Location will be shared with driver</span>
     </div>
     <div class="mbtns">
-      <button class="mcall" onclick="doCall()">📞 Call</button>
-      <button class="mvib" onclick="doVibOrder()">💬 Order via Viber</button>
+      <button class="mcall" id="btn-call" onclick="doCall()">📞 Call</button>
+      <button class="mvib" id="btn-vibord" onclick="doVibOrder()">💬 Order via Viber</button>
     </div>
     <button onclick="openRate()" id="rate-btn" style="width:100%;margin-top:8px;background:var(--s3);border:1px solid var(--brd);color:var(--mu);border-radius:9px;padding:9px;font-size:13px;cursor:pointer">⭐ Rate this driver</button>
   </div>
@@ -386,7 +386,8 @@ var T={
     mBeforeOrder:"Before You Order",
     lblMusic:"🎵 Preferred music",lblTip:"💰 Planned tip (optional)",
     optNoPref:"No preference",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classical",optJazz:"🎷 Jazz",optElectronic:"🎧 Electronic",optNoMusic:"🔇 No music",optNoTip:"No tip planned",optSmallTip:"A small tip",optFairTip:"A fair tip — thanks for coming far",optGenTip:"A generous tip",
-    sumFast:"Can drive fast",sumCalm:"or calmly — your choice",sumTalkSilent:"happy to talk or stay silent",sumTalk:"enjoys conversation",sumSilent:"prefers quiet rides",sumMusic:"plays"
+    sumFast:"Can drive fast",sumCalm:"or calmly — your choice",sumTalkSilent:"happy to talk or stay silent",sumTalk:"enjoys conversation",sumSilent:"prefers quiet rides",sumMusic:"plays",
+    pbHurry:"⏱ I'm in a hurry",pbRelax:"😌 Take it easy",pbSilent:"🤫 Prefer silence",pbTalk:"💬 Happy to chat",pbNomusic:"🔇 No music",pbAc:"❄️ A/C please",pbLuggage:"🧳 Have luggage",btnCallM:"📞 Call",btnVibOrd:"💬 Order via Viber",locDefault:"Location will be shared with driver"
   },
   bg:{
     logo:'🐟 fish.taxi',
@@ -410,7 +411,8 @@ var T={
     mBeforeOrder:"Преди да поръчаш",
     lblMusic:"🎵 Предпочитана музика",lblTip:"💰 Планиран бакшиш (по избор)",
     optNoPref:"Без предпочитание",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Класика",optJazz:"🎷 Джаз",optElectronic:"🎧 Електронна",optNoMusic:"🔇 Без музика",optNoTip:"Без бакшиш",optSmallTip:"Малък бакшиш",optFairTip:"Достоен бакшиш — благодаря за дългия път",optGenTip:"Щедър бакшиш",
-    sumFast:"Може да кара бързо",sumCalm:"или спокойно — твой избор",sumTalkSilent:"може да говори или да мълчи",sumTalk:"обича разговори",sumSilent:"предпочита тишина",sumMusic:"пуска"
+    sumFast:"Може да кара бързо",sumCalm:"или спокойно — твой избор",sumTalkSilent:"може да говори или да мълчи",sumTalk:"обича разговори",sumSilent:"предпочита тишина",sumMusic:"пуска",
+    pbHurry:"⏱ Бързам",pbRelax:"😌 Спокойно",pbSilent:"🤫 Предпочитам тишина",pbTalk:"💬 Обичам разговори",pbNomusic:"🔇 Без музика",pbAc:"❄️ Климатик моля",pbLuggage:"🧳 Имам багаж",btnCallM:"📞 Обади се",btnVibOrd:"💬 Поръчай през Viber",locDefault:"Локацията ще се сподели с шофьора"
   },
   de:{
     logo:'🐟 fish.taxi',
@@ -433,7 +435,8 @@ var T={
     mBeforeOrder:"Vor der Bestellung",
     lblMusic:"🎵 Bevorzugte Musik",lblTip:"💰 Geplantes Trinkgeld (optional)",
     optNoPref:"Keine Präferenz",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klassik",optJazz:"🎷 Jazz",optElectronic:"🎧 Elektronisch",optNoMusic:"🔇 Keine Musik",optNoTip:"Kein Trinkgeld geplant",optSmallTip:"Ein kleines Trinkgeld",optFairTip:"Ein faires Trinkgeld — danke fürs Kommen",optGenTip:"Ein großzügiges Trinkgeld",
-    sumFast:"Kann schnell fahren",sumCalm:"oder ruhig — Ihre Wahl",sumTalkSilent:"redet gerne oder bleibt still",sumTalk:"genießt Gespräche",sumSilent:"bevorzugt Ruhe",sumMusic:"spielt"
+    sumFast:"Kann schnell fahren",sumCalm:"oder ruhig — Ihre Wahl",sumTalkSilent:"redet gerne oder bleibt still",sumTalk:"genießt Gespräche",sumSilent:"bevorzugt Ruhe",sumMusic:"spielt",
+    pbHurry:"⏱ Ich habe es eilig",pbRelax:"😌 Ruhig angehen",pbSilent:"🤫 Stille bevorzugt",pbTalk:"💬 Gerne ein Gespräch",pbNomusic:"🔇 Keine Musik",pbAc:"❄️ Klima bitte",pbLuggage:"🧳 Habe Gepäck",btnCallM:"📞 Anrufen",btnVibOrd:"💬 Über Viber bestellen",locDefault:"Standort wird mit dem Fahrer geteilt"
   },
   fr:{
     logo:'🐟 fish.taxi',
@@ -456,7 +459,8 @@ var T={
     mBeforeOrder:"Avant de commander",
     lblMusic:"🎵 Musique préférée",lblTip:"💰 Pourboire prévu (optionnel)",
     optNoPref:"Aucune préférence",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classique",optJazz:"🎷 Jazz",optElectronic:"🎧 Électronique",optNoMusic:"🔇 Sans musique",optNoTip:"Pas de pourboire prévu",optSmallTip:"Un petit pourboire",optFairTip:"Un pourboire juste — merci de venir de loin",optGenTip:"Un généreux pourboire",
-    sumFast:"Peut conduire vite",sumCalm:"ou calmement — votre choix",sumTalkSilent:"aime parler ou rester silencieux",sumTalk:"aime discuter",sumSilent:"préfère le calme",sumMusic:"joue"
+    sumFast:"Peut conduire vite",sumCalm:"ou calmement — votre choix",sumTalkSilent:"aime parler ou rester silencieux",sumTalk:"aime discuter",sumSilent:"préfère le calme",sumMusic:"joue",
+    pbHurry:"⏱ Je suis pressé",pbRelax:"😌 Tranquillement",pbSilent:"🤫 Préfère le silence",pbTalk:"💬 Content de discuter",pbNomusic:"🔇 Sans musique",pbAc:"❄️ Clim svp",pbLuggage:"🧳 Avec bagages",btnCallM:"📞 Appeler",btnVibOrd:"💬 Commander via Viber",locDefault:"La localisation sera partagée avec le chauffeur"
   },
   ru:{
     logo:'🐟 fish.taxi',
@@ -479,7 +483,8 @@ var T={
     mBeforeOrder:"Перед заказом",
     lblMusic:"🎵 Предпочитаемая музыка",lblTip:"💰 Планируемые чаевые (необязательно)",
     optNoPref:"Без предпочтений",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Классика",optJazz:"🎷 Джаз",optElectronic:"🎧 Электронная",optNoMusic:"🔇 Без музыки",optNoTip:"Без чаевых",optSmallTip:"Небольшие чаевые",optFairTip:"Достойные чаевые — спасибо за долгий путь",optGenTip:"Щедрые чаевые",
-    sumFast:"Может ехать быстро",sumCalm:"или спокойно — ваш выбор",sumTalkSilent:"любит поговорить или помолчать",sumTalk:"любит общение",sumSilent:"предпочитает тишину",sumMusic:"играет"
+    sumFast:"Может ехать быстро",sumCalm:"или спокойно — ваш выбор",sumTalkSilent:"любит поговорить или помолчать",sumTalk:"любит общение",sumSilent:"предпочитает тишину",sumMusic:"играет",
+    pbHurry:"⏱ Я тороплюсь",pbRelax:"😌 Спокойно",pbSilent:"🤫 Предпочитаю тишину",pbTalk:"💬 Рад пообщаться",pbNomusic:"🔇 Без музыки",pbAc:"❄️ Кондиционер",pbLuggage:"🧳 Есть багаж",btnCallM:"📞 Позвонить",btnVibOrd:"💬 Заказать через Viber",locDefault:"Местоположение будет передано водителю"
   },
   it:{
     logo:'🐟 fish.taxi',
@@ -502,7 +507,8 @@ var T={
     mBeforeOrder:"Prima di ordinare",
     lblMusic:"🎵 Musica preferita",lblTip:"💰 Mancia pianificata (opzionale)",
     optNoPref:"Nessuna preferenza",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classica",optJazz:"🎷 Jazz",optElectronic:"🎧 Elettronica",optNoMusic:"🔇 Senza musica",optNoTip:"Nessuna mancia prevista",optSmallTip:"Una piccola mancia",optFairTip:"Una mancia equa — grazie per essere venuto da lontano",optGenTip:"Una generosa mancia",
-    sumFast:"Puo guidare veloce",sumCalm:"o con calma — la tua scelta",sumTalkSilent:"felice di parlare o stare in silenzio",sumTalk:"ama conversare",sumSilent:"preferisce silenzio",sumMusic:"suona"
+    sumFast:"Puo guidare veloce",sumCalm:"o con calma — la tua scelta",sumTalkSilent:"felice di parlare o stare in silenzio",sumTalk:"ama conversare",sumSilent:"preferisce silenzio",sumMusic:"suona",
+    pbHurry:"⏱ Ho fretta",pbRelax:"😌 Con calma",pbSilent:"🤫 Preferisco il silenzio",pbTalk:"💬 Felice di chiacchierare",pbNomusic:"🔇 Senza musica",pbAc:"❄️ Aria cond. prego",pbLuggage:"🧳 Ho bagagli",btnCallM:"📞 Chiama",btnVibOrd:"💬 Ordina via Viber",locDefault:"La posizione sara condivisa con l'autista"
   },
   es:{
     logo:'🐟 fish.taxi',
@@ -525,7 +531,8 @@ var T={
     mBeforeOrder:"Antes de pedir",
     lblMusic:"🎵 Música preferida",lblTip:"💰 Propina planeada (opcional)",
     optNoPref:"Sin preferencia",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Clásica",optJazz:"🎷 Jazz",optElectronic:"🎧 Electrónica",optNoMusic:"🔇 Sin música",optNoTip:"Sin propina planeada",optSmallTip:"Una pequeña propina",optFairTip:"Una propina justa — gracias por venir desde lejos",optGenTip:"Una generosa propina",
-    sumFast:"Puede conducir rapido",sumCalm:"o con calma — tu eleccion",sumTalkSilent:"feliz de hablar o guardar silencio",sumTalk:"disfruta conversar",sumSilent:"prefiere silencio",sumMusic:"reproduce"
+    sumFast:"Puede conducir rapido",sumCalm:"o con calma — tu eleccion",sumTalkSilent:"feliz de hablar o guardar silencio",sumTalk:"disfruta conversar",sumSilent:"prefiere silencio",sumMusic:"reproduce",
+    pbHurry:"⏱ Tengo prisa",pbRelax:"😌 Con calma",pbSilent:"🤫 Prefiero silencio",pbTalk:"💬 Encantado de charlar",pbNomusic:"🔇 Sin música",pbAc:"❄️ A/C por favor",pbLuggage:"🧳 Tengo equipaje",btnCallM:"📞 Llamar",btnVibOrd:"💬 Pedir por Viber",locDefault:"La ubicación se compartirá con el conductor"
   },
   tr:{
     logo:'🐟 fish.taxi',
@@ -548,7 +555,8 @@ var T={
     mBeforeOrder:"Sipariş vermeden önce",
     lblMusic:"🎵 Tercih edilen müzik",lblTip:"💰 Planlanan bahşiş (isteğe bağlı)",
     optNoPref:"Tercih yok",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klasik",optJazz:"🎷 Caz",optElectronic:"🎧 Elektronik",optNoMusic:"🔇 Müzik yok",optNoTip:"Bahşiş planlanmadı",optSmallTip:"Küçük bir bahşiş",optFairTip:"Adil bir bahşiş — uzaktan geldiğiniz için teşekkürler",optGenTip:"Cömert bir bahşiş",
-    sumFast:"Hizli surebilir",sumCalm:"veya sakin — sizin seciminiz",sumTalkSilent:"konusmaktan veya sessiz kalmaktan mutlu",sumTalk:"sohbeti sever",sumSilent:"sessizligi tercih eder",sumMusic:"calar"
+    sumFast:"Hizli surebilir",sumCalm:"veya sakin — sizin seciminiz",sumTalkSilent:"konusmaktan veya sessiz kalmaktan mutlu",sumTalk:"sohbeti sever",sumSilent:"sessizligi tercih eder",sumMusic:"calar",
+    pbHurry:"⏱ Acelem var",pbRelax:"😌 Sakin sürün",pbSilent:"🤫 Sessizligi tercih ederim",pbTalk:"💬 Sohbet etmekten mutluluk duyarim",pbNomusic:"🔇 Müzik yok",pbAc:"❄️ Klima lütfen",pbLuggage:"🧳 Bagajim var",btnCallM:"📞 Ara",btnVibOrd:"💬 Viber ile sipariş ver",locDefault:"Konum sürücüyle paylaşılacak"
   }
 };
 var lang='en';
@@ -685,6 +693,11 @@ function sf(f,el){
   el.classList.add('on');
   var rb=document.getElementById('rate-btn');
   if(rb)rb.textContent='⭐ '+t.mRate;
+  var pbMap={'pb-hurry':t.pbHurry,'pb-relax':t.pbRelax,'pb-silent':t.pbSilent,'pb-talk':t.pbTalk,'pb-nomusic':t.pbNomusic,'pb-ac':t.pbAc,'pb-luggage':t.pbLuggage};
+  Object.keys(pbMap).forEach(function(id){var el=document.getElementById(id);if(el&&pbMap[id])el.textContent=pbMap[id];});
+  var bc=document.getElementById('btn-call');if(bc&&t.btnCallM)bc.textContent=t.btnCallM;
+  var bv=document.getElementById('btn-vibord');if(bv&&t.btnVibOrd)bv.textContent=t.btnVibOrd;
+  var lt3=document.getElementById('loc-text');if(lt3&&t.locDefault)lt3.textContent=t.locDefault;
   var optMap={
     'opt-music-none':t.optNoPref,'opt-music-pop':t.optPop,'opt-music-chalga':t.optChalga,
     'opt-music-rock':t.optRock,'opt-music-classical':t.optClassical,'opt-music-jazz':t.optJazz,
