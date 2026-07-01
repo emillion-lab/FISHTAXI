@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#080808">
 <title>fish.taxi</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="https://emillion-lab.github.io/FISHTAXI/img/icon-192.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐟</text></svg>">
 <link rel="apple-touch-icon" href="https://emillion-lab.github.io/FISHTAXI/img/icon-180.png">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -119,14 +119,14 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
     <button onclick="installApp()" id="install-btn" style="display:none;background:var(--taxiY);border:none;color:#000;border-radius:8px;padding:5px 9px;font-size:12px;cursor:pointer;font-weight:700">📲 Install</button>
     <button onclick="toggleTheme()" id="theme-btn" style="background:var(--taxiY);border:none;color:#000;border-radius:8px;padding:5px 9px;font-size:14px;cursor:pointer;font-weight:700">🌙</button>
     <div id="gps-status" style="font-size:11px;color:var(--mu)"></div>
-    <select id="lang-sel" onchange="setLang(this.value)" style="background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:4px 10px;font-size:16px;font-weight:700;cursor:pointer">
-      <option value="en">🇬🇧</option>
-      <option value="bg">🇧🇬</option>
-      <option value="de">🇩🇪</option>
-      <option value="fr">🇫🇷</option>
-      <option value="ru">🇷🇺</option>
-      <option value="it">🇮🇹</option>
-      <option value="es">🇪🇸</option>
+    <select id="lang-sel" onchange="setLang(this.value)" style="background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:4px 10px;font-size:15px;font-weight:700;cursor:pointer">
+      <option value="en">🇬🇧 English</option>
+      <option value="bg">🇧🇬 Български</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="ru">🇷🇺 Русский</option>
+      <option value="it">🇮🇹 Italiano</option>
+      <option value="es">🇪🇸 Español</option>
     </select>
   </div>
 </div>
@@ -560,10 +560,11 @@ var T={
   },
 
 };
-var lang='en';
+var lang=localStorage.getItem('fishtaxi-lang')||'bg';
 
 function setLang(l){
   lang=l;
+  localStorage.setItem('fishtaxi-lang',l);
   var t=T[l]||T.en;
   // Tabs
   document.getElementById('tab-map').textContent=t.tabMap;
@@ -882,6 +883,8 @@ function openMod(id){
   document.getElementById('mh-about').textContent=t.mAbout;
   document.getElementById('modal').className='modal on';
   setLang(lang);
+  var sel=document.getElementById('lang-sel');
+  if(sel) sel.value=lang;
 }
 
 function closeMod(){document.getElementById('modal').className='modal';}
