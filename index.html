@@ -915,7 +915,7 @@ function qv(id){var d=DRIVERS.filter(function(x){return x.id===id;})[0];if(d)win
 
 function card(d,mini){
   var st=stI(d),ic=carI(d);
-  var av=(d.avatar&&d.avatar.indexOf('http')===0)
+  var av=d.avatar
     ?'<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=&quot;none&quot;">'
     :ic;
   var tags='';
@@ -1056,7 +1056,7 @@ function openMod(id){
   var od=document.getElementById('order-date');if(od){var today=new Date();od.min=today.toISOString().slice(0,10);od.value='';}
   var ot=document.getElementById('order-time');if(ot)ot.value='';
   var mav=document.getElementById('mav');
-  if(d.avatar&&d.avatar.indexOf('http')===0){
+  if(d.avatar){
     var img=document.createElement('img');img.src=d.avatar;img.style.cssText='width:100%;height:100%;object-fit:cover';mav.innerHTML='';mav.appendChild(img);
   } else { mav.textContent=carI(d); }
   document.getElementById('mname').innerHTML=d.name+' <span class="vb">'+t.mVerified+'</span>';
