@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#080808">
 <title>fish.taxi</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐟</text></svg>">
+<link rel="icon" href="favicon.png">
 <link rel="apple-touch-icon" href="https://emillion-lab.github.io/FISHTAXI/img/icon-180.png">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -133,7 +133,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
 
 <div class="tabs">
   <button class="tab on" onclick="showTab('map')" id="tab-map">🗺 Map</button>
-  <button class="tab" onclick="showTab('list')" id="tab-list">🐟 Drivers</button>
+  <button class="tab" onclick="showTab('list')" id="tab-list"><img src="img/icon-192.png" style="height:14px;vertical-align:-2px;object-fit:contain;margin-right:3px" alt="">Drivers</button>
   <button class="tab" onclick="showTab('how')" id="tab-how">ℹ How</button>
   <button class="tab" onclick="showTab('reg')" id="tab-reg">🚕 Join</button>
 </div>
@@ -231,7 +231,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
     <div class="hs"><div class="hn" style="background:var(--or);font-size:16px">⚠</div><div><h3 id="h-t4">Tell Your Driver Your Style</h3><p id="h-p4" style="color:var(--or)">Tell your driver how you prefer to ride when you get in — not after the trip. Music, silence, speed, route.</p></div></div>
     <div class="hs"><div class="hn">5</div><div><h3 id="h-t5">Pay the Driver</h3><p id="h-p5">Cash, Revolut or card terminal. 100% goes to the driver — zero commission.</p></div></div>
     <div class="hs"><div class="hn">⭐</div><div><h3 id="h-t6">Ratings Are Verified</h3><p id="h-p6">All reviews checked by admin before publishing. Protects drivers from unfair ratings.</p></div></div>
-    <button class="hcta" id="h-cta" onclick="showTab('list')">Find a Driver Now 🐟</button>
+    <button class="hcta" id="h-cta" onclick="showTab('list')">Find a Driver Now <img src="img/icon-192.png" style="height:16px;vertical-align:-3px;object-fit:contain" alt=""></button>
   </div>
 </div>
 
@@ -271,7 +271,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
         <div id="r-soon" style="font-size:13px;color:var(--mu)">Driver app — coming soon</div>
         <div id="r-notify" style="font-size:11px;color:var(--mu2);margin-top:2px">Leave your contact and we will notify you</div>
       </div>
-      <button class="jbtn" id="r-joinbtn" onclick="window.open('mailto:register@fish.taxi?subject=Driver%20Registration%20-%20fish.taxi&body=Name:%0APhone:%0ACity:%0ACar:')">Join Waitlist — Free 🐟</button>
+      <button class="jbtn" id="r-joinbtn" onclick="window.open('mailto:register@fish.taxi?subject=Driver%20Registration%20-%20fish.taxi&body=Name:%0APhone:%0ACity:%0ACar:')">Join Waitlist — Free <img src="img/icon-192.png" style="height:16px;vertical-align:-3px;object-fit:contain" alt=""></button>
     </div>
   </div>
 </div>
@@ -370,7 +370,7 @@ var T={
   en:{
     logo:'🐟 fish.taxi',
     tagline:'Find Your Driver Directly',
-    tabMap:'🗺 Map',tabList:'🐟 Drivers',tabHow:'ℹ How',tabReg:'🚕 Join',
+    tabMap:'🗺 Map',tabList:'Drivers',tabHow:'ℹ How',tabReg:'🚕 Join',
     search:'Search driver, car, area...',
     sStatus:'Status',sPayment:'Payment',sStyle:'Driving Style',sCar:'Car Type',
     sAtm:'Atmosphere',sComfort:'Comfort',sLang:'Language',sExtras:'Extras',
@@ -403,7 +403,7 @@ var T={
   bg:{
     logo:'🐟 fish.taxi',
     tagline:'Намери си шофьор директно',
-    tabMap:'🗺 Карта',tabList:'🐟 Шофьори',tabHow:'ℹ Как',tabReg:'🚕 Присъедини се',
+    tabMap:'🗺 Карта',tabList:'Шофьори',tabHow:'ℹ Как',tabReg:'🚕 Присъедини се',
     search:'Търси шофьор, кола, район...',
     sStatus:'Статус',sPayment:'Плащане',sStyle:'Стил на каране',sCar:'Тип кола',
     sAtm:'Атмосфера',sComfort:'Комфорт',sLang:'Език',sExtras:'Допълнителни',
@@ -456,7 +456,7 @@ var T={
   de:{
     logo:'🐟 fish.taxi',
     tagline:'Finde deinen Fahrer direkt',
-    tabMap:'🗺 Karte',tabList:'🐟 Fahrer',tabHow:'ℹ Wie',tabReg:'🚕 Beitreten',
+    tabMap:'🗺 Karte',tabList:'Fahrer',tabHow:'ℹ Wie',tabReg:'🚕 Beitreten',
     search:'Fahrer, Auto, Gebiet suchen...',
     sStatus:'Status',sPayment:'Zahlung',sStyle:'Fahrstil',sCar:'Autotyp',
     sAtm:'Atmosphäre',sComfort:'Komfort',sLang:'Sprache',sExtras:'Extras',
@@ -508,7 +508,7 @@ var T={
   fr:{
     logo:'🐟 fish.taxi',
     tagline:'Trouvez votre chauffeur directement',
-    tabMap:'🗺 Carte',tabList:'🐟 Chauffeurs',tabHow:'ℹ Comment',tabReg:'🚕 Rejoindre',
+    tabMap:'🗺 Carte',tabList:'Chauffeurs',tabHow:'ℹ Comment',tabReg:'🚕 Rejoindre',
     search:'Chercher chauffeur, voiture...',
     sStatus:'Statut',sPayment:'Paiement',sStyle:'Style de conduite',sCar:'Type de voiture',
     sAtm:'Atmosphère',sComfort:'Confort',sLang:'Langue',sExtras:'Extras',
@@ -560,7 +560,7 @@ var T={
   ru:{
     logo:'🐟 fish.taxi',
     tagline:'Найди водителя напрямую',
-    tabMap:'🗺 Карта',tabList:'🐟 Водители',tabHow:'ℹ Как',tabReg:'🚕 Вступить',
+    tabMap:'🗺 Карта',tabList:'Водители',tabHow:'ℹ Как',tabReg:'🚕 Вступить',
     search:'Поиск водителя, авто, района...',
     sStatus:'Статус',sPayment:'Оплата',sStyle:'Стиль вождения',sCar:'Тип авто',
     sAtm:'Атмосфера',sComfort:'Комфорт',sLang:'Язык',sExtras:'Дополнительно',
@@ -612,7 +612,7 @@ var T={
   it:{
     logo:'🐟 fish.taxi',
     tagline:'Trova il tuo autista direttamente',
-    tabMap:'🗺 Mappa',tabList:'🐟 Autisti',tabHow:'ℹ Come',tabReg:'🚕 Unisciti',
+    tabMap:'🗺 Mappa',tabList:'Autisti',tabHow:'ℹ Come',tabReg:'🚕 Unisciti',
     search:'Cerca autista, auto, zona...',
     sStatus:'Stato',sPayment:'Pagamento',sStyle:'Stile di guida',sCar:'Tipo auto',
     sAtm:'Atmosfera',sComfort:'Comfort',sLang:'Lingua',sExtras:'Extra',
@@ -664,7 +664,7 @@ var T={
   es:{
     logo:'🐟 fish.taxi',
     tagline:'Encuentra tu conductor directamente',
-    tabMap:'🗺 Mapa',tabList:'🐟 Conductores',tabHow:'ℹ Cómo',tabReg:'🚕 Unirse',
+    tabMap:'🗺 Mapa',tabList:'Conductores',tabHow:'ℹ Cómo',tabReg:'🚕 Unirse',
     search:'Buscar conductor, coche, zona...',
     sStatus:'Estado',sPayment:'Pago',sStyle:'Estilo de conducción',sCar:'Tipo de coche',
     sAtm:'Atmósfera',sComfort:'Confort',sLang:'Idioma',sExtras:'Extras',
@@ -723,7 +723,7 @@ function setLang(l){
   var t=T[l]||T.en;
   // Tabs
   document.getElementById('tab-map').textContent=t.tabMap;
-  document.getElementById('tab-list').textContent=t.tabList;
+  document.getElementById('tab-list').innerHTML='<img src="img/icon-192.png" style="height:14px;vertical-align:-2px;object-fit:contain;margin-right:3px" alt="">'+t.tabList;
   document.getElementById('tab-how').textContent=t.tabHow;
   document.getElementById('tab-reg').textContent=t.tabReg;
   // Search
@@ -757,7 +757,7 @@ function setLang(l){
   var lt3=document.getElementById('loc-text');if(lt3&&t.locDefault)lt3.textContent=t.locDefault;
   var howMap={'h-t1':t.hT1,'h-p1':t.hP1,'h-t2':t.hT2,'h-p2':t.hP2,'h-t3':t.hT3,'h-p3':t.hP3,'h-t4':t.hT4,'h-p4':t.hP4,'h-t5':t.hT5,'h-p5':t.hP5,'h-t6':t.hT6,'h-p6':t.hP6};
   Object.keys(howMap).forEach(function(id){var el=document.getElementById(id);if(el&&howMap[id])el.textContent=howMap[id];});
-  var hcta=document.getElementById('h-cta');if(hcta&&t.hCta)hcta.textContent=t.hCta+' \uD83D\uDC1F';
+  var hcta=document.getElementById('h-cta');if(hcta&&t.hCta)hcta.innerHTML=t.hCta+' <img src="img/icon-192.png" style="height:16px;vertical-align:-3px;object-fit:contain" alt="">';
   var regMap={'r-free':'\uD83C\uDF89 '+t.rFree,'r-joinnow':t.rJoinnow,'r-spots':t.rSpots,'r-spotsleft':t.rSpotsleft,
     'r-h1':'\uD83D\uDE95 '+t.rH1,'r-p1':t.rP1,'r-after':t.rAfter,'r-beta':t.rBeta,
     'r-h2':'\u2705 '+t.rH2,'r-b1t':t.rB1t,'r-b1s':t.rB1s,'r-b2t':t.rB2t,'r-b2s':t.rB2s,
@@ -773,7 +773,7 @@ function setLang(l){
       else el.textContent=regMap[id];
     }
   });
-  var rjb=document.getElementById('r-joinbtn');if(rjb&&t.rJoinbtn)rjb.textContent=t.rJoinbtn+' \uD83D\uDC1F';
+  var rjb=document.getElementById('r-joinbtn');if(rjb&&t.rJoinbtn)rjb.innerHTML=t.rJoinbtn+' <img src="img/icon-192.png" style="height:16px;vertical-align:-3px;object-fit:contain" alt="">';
   var optMap={
     'opt-tip-none':t.optNoTip,'opt-tip-small':t.optSmallTip,'opt-tip-fair':t.optFairTip,'opt-tip-generous':t.optGenTip
   };
@@ -1008,20 +1008,20 @@ function openMod(id){
   document.getElementById('mpay').innerHTML=d.payment.map(payI).join(' ');
   document.getElementById('mlangs').innerHTML=d.langs.map(function(l){return '<span class="t tb">'+(LM[l]||l)+'</span>';}).join(' ');
   var opts=[];
-  if(d.nosmoker)opts.push('<span class="t ty">🚭 No smoking</span>');
-  if(d.smoking)opts.push('<span class="t tr">🚬 Smoking OK</span>');
-  if(d.petfriendly)opts.push('<span class="t tp">🐾 Pets OK</span>');
-  if(d.childok)opts.push('<span class="t to">👶 Child seat</span>');
-  if(d.silent_ok)opts.push('<span class="t tc">🤫 Silent OK</span>');
-  if(d.talk_ok)opts.push('<span class="t tg">💬 Chatty OK</span>');
-  if(d.music)opts.push('<span class="t tp">🎵 Music OK</span>');
-  if(d.chalga)opts.push('<span class="t tpi">🎶 Chalga OK</span>');
-  if(d.nomusic)opts.push('<span class="t ty">🔇 No music</span>');
-  if(d.airport)opts.push('<span class="t tb">✈️ Airport</span>');
-  if(d.longdist)opts.push('<span class="t tb">🛣️ Long distance</span>');
-  if(d.night)opts.push('<span class="t tc">🌙 Night rides</span>');
-  if(d.business)opts.push('<span class="t ty">💼 Business</span>');
-  if(d.wheelchair)opts.push('<span class="t tg">♿ Wheelchair</span>');
+  if(d.nosmoker)opts.push('<span class="t ty">'+t.fNosmoker+'</span>');
+  if(d.smoking)opts.push('<span class="t tr">'+t.fSmoking+'</span>');
+  if(d.petfriendly)opts.push('<span class="t tp">'+t.fPet+'</span>');
+  if(d.childok)opts.push('<span class="t to">'+t.fChild+'</span>');
+  if(d.silent_ok)opts.push('<span class="t tc">'+t.fSilent+'</span>');
+  if(d.talk_ok)opts.push('<span class="t tg">'+t.fTalk+'</span>');
+  if(d.music)opts.push('<span class="t tp">'+t.fMusic+'</span>');
+  if(d.chalga)opts.push('<span class="t tpi">'+t.fChalga+'</span>');
+  if(d.nomusic)opts.push('<span class="t ty">'+t.fNomusic+'</span>');
+  if(d.airport)opts.push('<span class="t tb">'+t.fAirport+'</span>');
+  if(d.longdist)opts.push('<span class="t tb">'+t.fLong+'</span>');
+  if(d.night)opts.push('<span class="t tc">'+t.fNight+'</span>');
+  if(d.business)opts.push('<span class="t ty">'+t.fBiz+'</span>');
+  if(d.wheelchair)opts.push('<span class="t tg">'+t.fWheel+'</span>');
   document.getElementById('mopts').innerHTML=opts.join(' ')||'—';
   document.getElementById('mprice').textContent=d.price;
   document.getElementById('mareas').textContent=d.areas;
