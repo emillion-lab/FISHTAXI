@@ -1368,6 +1368,7 @@ function resolvePickupLocation(cb){
 }
 function doVibOrder(){
   if(!cur)return;
+  var winRef=window.open('','_blank');
   resolvePickupLocation(function(lat,lng){
     var msg=buildOrderMessage(lat,lng);
     var url='viber://forward?text='+encodeURIComponent(msg);
@@ -1377,7 +1378,7 @@ function doVibOrder(){
     try{
       if(navigator.clipboard){navigator.clipboard.writeText(msg);}
     }catch(e){}
-    window.open(chatUrl);
+    if(winRef&&!winRef.closed){winRef.location.href=chatUrl;}else{window.open(chatUrl);}
     setTimeout(function(){
       alert('📋 Your order details copied to clipboard:\n\n'+msg+'\n\nPaste this message in the Viber chat that just opened.');
     },600);
@@ -1386,10 +1387,11 @@ function doVibOrder(){
 
 function doWAOrder(){
   if(!cur)return;
+  var winRef=window.open('','_blank');
   resolvePickupLocation(function(lat,lng){
     var msg=buildOrderMessage(lat,lng);
     var waUrl='https://wa.me/'+cur.phone.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msg);
-    window.open(waUrl);
+    if(winRef&&!winRef.closed){winRef.location.href=waUrl;}else{window.open(waUrl);}
   });
 }
 function openRate(){alert('Rating system coming soon.');}
