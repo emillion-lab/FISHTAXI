@@ -99,6 +99,7 @@ body{display:flex;flex-direction:column;align-items:center;padding:20px 16px;gap
     <div class="dot"></div>
     <span id="gps-bar-text">GPS not active</span>
   </div>
+  <div style="font-size:11px;color:var(--mu);margin-top:8px;line-height:1.5">⚠️ Keep this screen open (unlocked) while online — closing the app or locking the phone stops GPS updates.</div>
 </div>
 
 <!-- GPS INFO -->
@@ -160,6 +161,7 @@ const TOKEN = 'fishtaxi_emil_2026_secret';
 
 let isOnline = false;
 let watchId = null;
+let wakeLock = null;
 let sendInterval = null;
 let lastLat = null, lastLng = null;
 let updateCount = 0;
@@ -301,6 +303,7 @@ function toggleOnline() {
     document.getElementById('val-since').textContent = onlineSince.toLocaleTimeString('en-GB');
     log('Going online...', 'ok');
     startGPS();
+    requestWakeLock();
 
     // Update session timer
     setInterval(() => {
@@ -324,8 +327,37 @@ function toggleOnline() {
     document.getElementById('go-btn').className = 'go-btn offline';
     document.getElementById('val-server').innerHTML = '<span class="info-val">—</span>';
     stopGPS();
+    releaseWakeLock();
   }
 }
+
+async function requestWakeLock() {
+  try {
+    if('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      log('Screen wake lock active — screen won\'t sleep while online', 'ok');
+      wakeLock.addEventListener('release', () => {
+        log('Wake lock released (screen locked or tab hidden)', 'err');
+      });
+    } else {
+      log('Wake Lock not supported on this browser', 'err');
+    }
+  } catch(e) {
+    log('Wake lock error: ' + e.message, 'err');
+  }
+}
+function releaseWakeLock() {
+  if(wakeLock) {
+    wakeLock.release();
+    wakeLock = null;
+  }
+}
+// Re-acquire wake lock if the tab becomes visible again while online
+document.addEventListener('visibilitychange', async () => {
+  if(isOnline && document.visibilityState === 'visible' && wakeLock === null) {
+    requestWakeLock();
+  }
+});
 
 // Warn before closing if online
 window.addEventListener('beforeunload', e => {
