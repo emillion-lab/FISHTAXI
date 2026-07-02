@@ -1151,7 +1151,7 @@ var userLat=null,userLng=null;
 var fromMode='gps';
 var fromLat=null,fromLng=null;
 var toLat=null,toLng=null;
-var pickerTarget=null,pickerMap=null,pickerMarker=null;
+var pickerTarget=null,pickerMap=null,pickerMarker=null,pickerTouched=false;
 
 function togglePref(el,p){
   var i=selectedPrefs.indexOf(p);
@@ -1204,6 +1204,7 @@ function updateToText(){
 }
 function openLocPicker(target){
   pickerTarget=target;
+  pickerTouched=false;
   var panel=document.getElementById('loc-picker');
   panel.style.display='block';
   var linkInput=document.getElementById('loc-picker-link');if(linkInput)linkInput.value='';
@@ -1213,13 +1214,14 @@ function openLocPicker(target){
       pickerMap=L.map('loc-picker-map',{zoomControl:false,attributionControl:false}).setView([42.6977,23.3219],13);
       L.tileLayer(getTileUrl(),{maxZoom:20}).addTo(pickerMap);
       pickerMarker=L.marker([42.6977,23.3219],{draggable:true}).addTo(pickerMap);
-      pickerMap.on('click',function(e){pickerMarker.setLatLng(e.latlng);});
+      pickerMap.on('click',function(e){pickerMarker.setLatLng(e.latlng);pickerTouched=true;});
+      pickerMarker.on('dragend',function(){pickerTouched=true;});
     } else {
       pickerMap.invalidateSize();
     }
     var lat=target==='from'?(fromLat||userLat):toLat;
     var lng=target==='from'?(fromLng||userLng):toLng;
-    if(lat&&lng){pickerMap.setView([lat,lng],15);pickerMarker.setLatLng([lat,lng]);}
+    if(lat&&lng){pickerMap.setView([lat,lng],15);pickerMarker.setLatLng([lat,lng]);pickerTouched=true;}
     else{pickerMap.setView([42.6977,23.3219],13);pickerMarker.setLatLng([42.6977,23.3219]);}
   },80);
 }
@@ -1230,7 +1232,7 @@ function useGpsForPicker(){
   var btn=document.getElementById('btn-picker-gps');if(btn)btn.textContent='⏳ ...';
   requestLocationForOrder(function(lat,lng){
     if(btn)btn.textContent='📍 My GPS';
-    if(lat&&lng&&pickerMap){pickerMap.setView([lat,lng],15);pickerMarker.setLatLng([lat,lng]);}
+    if(lat&&lng&&pickerMap){pickerMap.setView([lat,lng],15);pickerMarker.setLatLng([lat,lng]);pickerTouched=true;}
   });
 }
 function parseMapsLink(){
@@ -1240,9 +1242,11 @@ function parseMapsLink(){
     var lat=parseFloat(m[1]),lng=parseFloat(m[2]);
     pickerMap.setView([lat,lng],16);
     pickerMarker.setLatLng([lat,lng]);
+    pickerTouched=true;
   }
 }
 function confirmLocPicker(){
+  if(!pickerTouched){closeLocPicker();return;}
   var pos=pickerMarker.getLatLng();
   if(pickerTarget==='from'){
     fromMode='custom';fromLat=pos.lat;fromLng=pos.lng;
