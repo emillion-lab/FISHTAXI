@@ -65,6 +65,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
 .tp{color:var(--pu);border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.07)}
 .to{color:var(--or);border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.07)}
 .tpi{color:var(--pi);border-color:rgba(236,72,153,.3);background:rgba(236,72,153,.07)}
+.task{color:var(--mu);border-color:var(--brd);border-style:dashed;background:transparent}
 .pays{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap}
 .pi2{font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;border:1px solid rgba(245,197,24,.3);color:var(--y);background:rgba(245,197,24,.06)}
 .rb{font-size:12px;color:var(--y);font-weight:700;margin-left:auto;flex-shrink:0}
@@ -369,7 +370,7 @@ var DRIVERS=[{
   "silent_ok":true,"talk_ok":true,"calm_ok":true,
   "terminal":true,
   "music_pop":false,"music_chalga":false,"music_rock":false,"music_classical":false,"music_jazz":true,"music_electronic":true,"music_chillout":true,"music_lounge":true,
-  "airport":true,"longdist":true,"night":false,"business":true,"legroom":true,"panoroof":true,"streaming":true,"usb":true,
+  "airport":true,"longdist":true,"night":"ask","business":true,"legroom":true,"panoroof":true,"streaming":true,"usb":true,
   "wheelchair":false,"verified":true,
   "areas":"Sofia — Center, Airport, Ring Road, All districts",
   "phone":"+359878592888",
@@ -397,7 +398,7 @@ var T={
     noDrivers:'No drivers found with this filter',
     online:'Online',offline:'Offline',
     howTitle:'How it works',joinTitle:'Join as Driver',
-    mVerified:"✓ Verified",mReviews:"reviews",mWarn:"Tell your driver your preferred pace when you get in",mCalmOpt:"Calm driving available on request",mCarDet:"Car Details",mPhotos:"Car Photos",mType:"Type",mSeats:"Seats",mPassengers:"passengers",mAccel:"0-100 km/h",mElectric:"Electric",mAC:"A/C",mYes:"Yes",mPayment:"Payment",mLangs:"Languages",mOpts:"Options & Atmosphere",mPrice:"Price",mAreas:"Areas",mAbout:"About the Driver",mRate:"Rate this driver",mViewProfile:"View Profile",
+    mVerified:"✓ Verified",mReviews:"reviews",mWarn:"Tell your driver your preferred pace when you get in",mCalmOpt:"Calm driving available on request",mCarDet:"Car Details",mPhotos:"Car Photos",onRequest:"on request",mType:"Type",mSeats:"Seats",mPassengers:"passengers",mAccel:"0-100 km/h",mElectric:"Electric",mAC:"A/C",mYes:"Yes",mPayment:"Payment",mLangs:"Languages",mOpts:"Options & Atmosphere",mPrice:"Price",mAreas:"Areas",mAbout:"About the Driver",mRate:"Rate this driver",mViewProfile:"View Profile",
     mBeforeOrder:"Before You Order",
     lblMusic:"🎵 Preferred music",lblTip:"💰 Planned tip (optional)",
     optNoPref:"No preference",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classical",optJazz:"🎷 Jazz",optElectronic:"🎧 Electronic",optNoMusic:"🔇 No music",optNoTip:"No tip planned",optSmallTip:"A small tip",optFairTip:"A fair tip — thanks for coming far",optGenTip:"A generous tip",
@@ -430,7 +431,7 @@ var T={
     noDrivers:'Няма намерени шофьори',
     online:'Онлайн',offline:'Офлайн',
     howTitle:'Как работи',joinTitle:'Присъедини се',
-    mVerified:"✓ Верифициран",mReviews:"отзива",mWarn:"Кажи на шофьора предпочитания темп при качване",mCalmOpt:"Спокойно каране при поискване",mCarDet:"Детайли на колата",mPhotos:"Снимки на колата",mType:"Тип",mSeats:"Места",mPassengers:"пътници",mAccel:"0-100 км/ч",mElectric:"Електрическа",mAC:"Климатик",mYes:"Да",mPayment:"Плащане",mLangs:"Езици",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Райони",mAbout:"За шофьора",mRate:"Оцени шофьора",mViewProfile:"Виж профил",
+    mVerified:"✓ Верифициран",mReviews:"отзива",mWarn:"Кажи на шофьора предпочитания темп при качване",mCalmOpt:"Спокойно каране при поискване",mCarDet:"Детайли на колата",mPhotos:"Снимки на колата",onRequest:"по договаряне",mType:"Тип",mSeats:"Места",mPassengers:"пътници",mAccel:"0-100 км/ч",mElectric:"Електрическа",mAC:"Климатик",mYes:"Да",mPayment:"Плащане",mLangs:"Езици",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Райони",mAbout:"За шофьора",mRate:"Оцени шофьора",mViewProfile:"Виж профил",
     mBeforeOrder:"Преди да поръчаш",
     lblMusic:"🎵 Предпочитана музика",lblTip:"💰 Планиран бакшиш (по избор)",
     optNoPref:"Без предпочитание",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Класика",optJazz:"🎷 Джаз",optElectronic:"🎧 Електронна",optNoMusic:"🔇 Без музика",optNoTip:"Без бакшиш",optSmallTip:"Малък бакшиш",optFairTip:"Достоен бакшиш — благодаря за дългия път",optGenTip:"Щедър бакшиш",
@@ -482,7 +483,7 @@ var T={
     btnCall:'📞 Anrufen',btnVib:'💬 Viber',
     noDrivers:'Keine Fahrer gefunden',
     online:'Online',offline:'Offline',
-    mVerified:"✓ Verifiziert",mReviews:"Bewertungen",mWarn:"Sagen Sie Ihrem Fahrer Ihr bevorzugtes Tempo beim Einsteigen",mCalmOpt:"Ruhiges Fahren auf Anfrage",mCarDet:"Fahrzeugdetails",mPhotos:"Fotos vom Auto",mType:"Typ",mSeats:"Sitze",mPassengers:"Passagiere",mAccel:"0-100 km/h",mElectric:"Elektrisch",mAC:"Klima",mYes:"Ja",mPayment:"Zahlung",mLangs:"Sprachen",mOpts:"Optionen & Atmosphäre",mPrice:"Preis",mAreas:"Gebiete",mAbout:"Über den Fahrer",mRate:"Fahrer bewerten",mViewProfile:"Profil ansehen",
+    mVerified:"✓ Verifiziert",mReviews:"Bewertungen",mWarn:"Sagen Sie Ihrem Fahrer Ihr bevorzugtes Tempo beim Einsteigen",mCalmOpt:"Ruhiges Fahren auf Anfrage",mCarDet:"Fahrzeugdetails",mPhotos:"Fotos vom Auto",onRequest:"auf Anfrage",mType:"Typ",mSeats:"Sitze",mPassengers:"Passagiere",mAccel:"0-100 km/h",mElectric:"Elektrisch",mAC:"Klima",mYes:"Ja",mPayment:"Zahlung",mLangs:"Sprachen",mOpts:"Optionen & Atmosphäre",mPrice:"Preis",mAreas:"Gebiete",mAbout:"Über den Fahrer",mRate:"Fahrer bewerten",mViewProfile:"Profil ansehen",
     mBeforeOrder:"Vor der Bestellung",
     lblMusic:"🎵 Bevorzugte Musik",lblTip:"💰 Geplantes Trinkgeld (optional)",
     optNoPref:"Keine Präferenz",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klassik",optJazz:"🎷 Jazz",optElectronic:"🎧 Elektronisch",optNoMusic:"🔇 Keine Musik",optNoTip:"Kein Trinkgeld geplant",optSmallTip:"Ein kleines Trinkgeld",optFairTip:"Ein faires Trinkgeld — danke fürs Kommen",optGenTip:"Ein großzügiges Trinkgeld",
@@ -534,7 +535,7 @@ var T={
     btnCall:'📞 Appeler',btnVib:'💬 Viber',
     noDrivers:'Aucun chauffeur trouvé',
     online:'En ligne',offline:'Hors ligne',
-    mVerified:"✓ Vérifié",mReviews:"avis",mWarn:"Dites à votre chauffeur votre rythme préféré en montant",mCalmOpt:"Conduite calme sur demande",mCarDet:"Détails du véhicule",mPhotos:"Photos de la voiture",mType:"Type",mSeats:"Places",mPassengers:"passagers",mAccel:"0-100 km/h",mElectric:"Électrique",mAC:"Clim",mYes:"Oui",mPayment:"Paiement",mLangs:"Langues",mOpts:"Options et ambiance",mPrice:"Prix",mAreas:"Zones",mAbout:"À propos du chauffeur",mRate:"Évaluer ce chauffeur",mViewProfile:"Voir le profil",
+    mVerified:"✓ Vérifié",mReviews:"avis",mWarn:"Dites à votre chauffeur votre rythme préféré en montant",mCalmOpt:"Conduite calme sur demande",mCarDet:"Détails du véhicule",mPhotos:"Photos de la voiture",onRequest:"sur demande",mType:"Type",mSeats:"Places",mPassengers:"passagers",mAccel:"0-100 km/h",mElectric:"Électrique",mAC:"Clim",mYes:"Oui",mPayment:"Paiement",mLangs:"Langues",mOpts:"Options et ambiance",mPrice:"Prix",mAreas:"Zones",mAbout:"À propos du chauffeur",mRate:"Évaluer ce chauffeur",mViewProfile:"Voir le profil",
     mBeforeOrder:"Avant de commander",
     lblMusic:"🎵 Musique préférée",lblTip:"💰 Pourboire prévu (optionnel)",
     optNoPref:"Aucune préférence",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classique",optJazz:"🎷 Jazz",optElectronic:"🎧 Électronique",optNoMusic:"🔇 Sans musique",optNoTip:"Pas de pourboire prévu",optSmallTip:"Un petit pourboire",optFairTip:"Un pourboire juste — merci de venir de loin",optGenTip:"Un généreux pourboire",
@@ -586,7 +587,7 @@ var T={
     btnCall:'📞 Звонить',btnVib:'💬 Viber',
     noDrivers:'Водители не найдены',
     online:'Онлайн',offline:'Офлайн',
-    mVerified:"✓ Подтвержден",mReviews:"отзывов",mWarn:"Скажите водителю предпочитаемый темп при посадке",mCalmOpt:"Спокойная езда по запросу",mCarDet:"Детали автомобиля",mPhotos:"Фото автомобиля",mType:"Тип",mSeats:"Места",mPassengers:"пассажиров",mAccel:"0-100 км/ч",mElectric:"Электро",mAC:"Кондиционер",mYes:"Да",mPayment:"Оплата",mLangs:"Языки",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Районы",mAbout:"О водителе",mRate:"Оценить водителя",mViewProfile:"Смотреть профиль",
+    mVerified:"✓ Подтвержден",mReviews:"отзывов",mWarn:"Скажите водителю предпочитаемый темп при посадке",mCalmOpt:"Спокойная езда по запросу",mCarDet:"Детали автомобиля",mPhotos:"Фото автомобиля",onRequest:"по договорённости",mType:"Тип",mSeats:"Места",mPassengers:"пассажиров",mAccel:"0-100 км/ч",mElectric:"Электро",mAC:"Кондиционер",mYes:"Да",mPayment:"Оплата",mLangs:"Языки",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Районы",mAbout:"О водителе",mRate:"Оценить водителя",mViewProfile:"Смотреть профиль",
     mBeforeOrder:"Перед заказом",
     lblMusic:"🎵 Предпочитаемая музыка",lblTip:"💰 Планируемые чаевые (необязательно)",
     optNoPref:"Без предпочтений",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Классика",optJazz:"🎷 Джаз",optElectronic:"🎧 Электронная",optNoMusic:"🔇 Без музыки",optNoTip:"Без чаевых",optSmallTip:"Небольшие чаевые",optFairTip:"Достойные чаевые — спасибо за долгий путь",optGenTip:"Щедрые чаевые",
@@ -638,7 +639,7 @@ var T={
     btnCall:'📞 Chiama',btnVib:'💬 Viber',
     noDrivers:'Nessun autista trovato',
     online:'Online',offline:'Offline',
-    mVerified:"✓ Verificato",mReviews:"recensioni",mWarn:"Di al tuo autista il ritmo preferito quando sali",mCalmOpt:"Guida calma su richiesta",mCarDet:"Dettagli auto",mPhotos:"Foto dell auto",mType:"Tipo",mSeats:"Posti",mPassengers:"passeggeri",mAccel:"0-100 km/h",mElectric:"Elettrico",mAC:"Aria cond.",mYes:"Si",mPayment:"Pagamento",mLangs:"Lingue",mOpts:"Opzioni e atmosfera",mPrice:"Prezzo",mAreas:"Zone",mAbout:"Sull autista",mRate:"Valuta autista",mViewProfile:"Vedi profilo",
+    mVerified:"✓ Verificato",mReviews:"recensioni",mWarn:"Di al tuo autista il ritmo preferito quando sali",mCalmOpt:"Guida calma su richiesta",mCarDet:"Dettagli auto",mPhotos:"Foto dell auto",onRequest:"su richiesta",mType:"Tipo",mSeats:"Posti",mPassengers:"passeggeri",mAccel:"0-100 km/h",mElectric:"Elettrico",mAC:"Aria cond.",mYes:"Si",mPayment:"Pagamento",mLangs:"Lingue",mOpts:"Opzioni e atmosfera",mPrice:"Prezzo",mAreas:"Zone",mAbout:"Sull autista",mRate:"Valuta autista",mViewProfile:"Vedi profilo",
     mBeforeOrder:"Prima di ordinare",
     lblMusic:"🎵 Musica preferita",lblTip:"💰 Mancia pianificata (opzionale)",
     optNoPref:"Nessuna preferenza",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classica",optJazz:"🎷 Jazz",optElectronic:"🎧 Elettronica",optNoMusic:"🔇 Senza musica",optNoTip:"Nessuna mancia prevista",optSmallTip:"Una piccola mancia",optFairTip:"Una mancia equa — grazie per essere venuto da lontano",optGenTip:"Una generosa mancia",
@@ -690,7 +691,7 @@ var T={
     btnCall:'📞 Llamar',btnVib:'💬 Viber',
     noDrivers:'No se encontraron conductores',
     online:'Online',offline:'Offline',
-    mVerified:"✓ Verificado",mReviews:"reseñas",mWarn:"Dile a tu conductor tu ritmo preferido al subir",mCalmOpt:"Conducción tranquila bajo petición",mCarDet:"Detalles del coche",mPhotos:"Fotos del coche",mType:"Tipo",mSeats:"Asientos",mPassengers:"pasajeros",mAccel:"0-100 km/h",mElectric:"Eléctrico",mAC:"A/C",mYes:"Sí",mPayment:"Pago",mLangs:"Idiomas",mOpts:"Opciones y ambiente",mPrice:"Precio",mAreas:"Zonas",mAbout:"Sobre el conductor",mRate:"Calificar conductor",mViewProfile:"Ver perfil",
+    mVerified:"✓ Verificado",mReviews:"reseñas",mWarn:"Dile a tu conductor tu ritmo preferido al subir",mCalmOpt:"Conducción tranquila bajo petición",mCarDet:"Detalles del coche",mPhotos:"Fotos del coche",onRequest:"a petición",mType:"Tipo",mSeats:"Asientos",mPassengers:"pasajeros",mAccel:"0-100 km/h",mElectric:"Eléctrico",mAC:"A/C",mYes:"Sí",mPayment:"Pago",mLangs:"Idiomas",mOpts:"Opciones y ambiente",mPrice:"Precio",mAreas:"Zonas",mAbout:"Sobre el conductor",mRate:"Calificar conductor",mViewProfile:"Ver perfil",
     mBeforeOrder:"Antes de pedir",
     lblMusic:"🎵 Música preferida",lblTip:"💰 Propina planeada (opcional)",
     optNoPref:"Sin preferencia",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Clásica",optJazz:"🎷 Jazz",optElectronic:"🎧 Electrónica",optNoMusic:"🔇 Sin música",optNoTip:"Sin propina planeada",optSmallTip:"Una pequeña propina",optFairTip:"Una propina justa — gracias por venir desde lejos",optGenTip:"Una generosa propina",
@@ -1023,25 +1024,22 @@ function openMod(id){
     '<div class="ir"><span class="ik">'+t.mAC+'</span><span class="iv">'+(d.ac?'&#9989; '+t.mYes:'&#8212;')+'</span></div>';
   document.getElementById('mpay').innerHTML=d.payment.map(payI).join(' ');
   document.getElementById('mlangs').innerHTML=d.langs.map(function(l){return '<span class="t tb">'+(LM[l]||l)+'</span>';}).join(' ');
+  var oreq=t.onRequest||'on request';
+  var optDefs=[
+    [d.nosmoker,'ty',t.fNosmoker],[d.smoking,'tr',t.fSmoking],
+    [d.petfriendly,'tp',t.fPet],[d.childok,'to',t.fChild],
+    [d.silent_ok,'tc',t.fSilent],[d.talk_ok,'tg',t.fTalk],
+    [d.music,'tp',t.fMusic],[d.chalga,'tpi',t.fChalga],[d.nomusic,'ty',t.fNomusic],
+    [d.airport,'tb',t.fAirport],[d.longdist,'tb',t.fLong],
+    [d.night,'tc',t.fNight],[d.business,'ty',t.fBiz],
+    [d.wheelchair,'tg',t.fWheel],[d.legroom,'to',t.fLegroom],
+    [d.panoroof,'tb',t.fPanoroof],[d.streaming,'tp',t.fStreaming],[d.usb,'tg',t.fUsb]
+  ];
   var opts=[];
-  if(d.nosmoker)opts.push('<span class="t ty">'+t.fNosmoker+'</span>');
-  if(d.smoking)opts.push('<span class="t tr">'+t.fSmoking+'</span>');
-  if(d.petfriendly)opts.push('<span class="t tp">'+t.fPet+'</span>');
-  if(d.childok)opts.push('<span class="t to">'+t.fChild+'</span>');
-  if(d.silent_ok)opts.push('<span class="t tc">'+t.fSilent+'</span>');
-  if(d.talk_ok)opts.push('<span class="t tg">'+t.fTalk+'</span>');
-  if(d.music)opts.push('<span class="t tp">'+t.fMusic+'</span>');
-  if(d.chalga)opts.push('<span class="t tpi">'+t.fChalga+'</span>');
-  if(d.nomusic)opts.push('<span class="t ty">'+t.fNomusic+'</span>');
-  if(d.airport)opts.push('<span class="t tb">'+t.fAirport+'</span>');
-  if(d.longdist)opts.push('<span class="t tb">'+t.fLong+'</span>');
-  if(d.night)opts.push('<span class="t tc">'+t.fNight+'</span>');
-  if(d.business)opts.push('<span class="t ty">'+t.fBiz+'</span>');
-  if(d.wheelchair)opts.push('<span class="t tg">'+t.fWheel+'</span>');
-  if(d.legroom)opts.push('<span class="t to">'+t.fLegroom+'</span>');
-  if(d.panoroof)opts.push('<span class="t tb">'+t.fPanoroof+'</span>');
-  if(d.streaming)opts.push('<span class="t tp">'+t.fStreaming+'</span>');
-  if(d.usb)opts.push('<span class="t tg">'+t.fUsb+'</span>');
+  optDefs.forEach(function(o){
+    if(o[0]===true)opts.push('<span class="t '+o[1]+'">'+o[2]+'</span>');
+    else if(o[0]==='ask')opts.push('<span class="t task">'+o[2]+' &middot; '+oreq+'</span>');
+  });
   document.getElementById('mopts').innerHTML=opts.join(' ')||'—';
   var mph=document.getElementById('mphotos'),mhph=document.getElementById('mh-photos');
   if(d.photos&&d.photos.length){
