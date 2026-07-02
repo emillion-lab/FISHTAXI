@@ -41,6 +41,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
 /* MAP */
 #map{height:380px;background:#0d1117;flex-shrink:0}
 .leaflet-container{background:#0d1117!important}
+#loc-picker-map.leaflet-container{background:#e8e6df!important}
 .leaflet-popup-content-wrapper{background:var(--s2)!important;color:var(--tx)!important;border:1px solid var(--brd)!important;border-radius:10px!important}
 .leaflet-popup-tip{background:var(--s2)!important}
 
@@ -1212,7 +1213,7 @@ function openLocPicker(target){
   setTimeout(function(){
     if(!pickerMap){
       pickerMap=L.map('loc-picker-map',{zoomControl:false,attributionControl:false}).setView([42.6977,23.3219],13);
-      L.tileLayer(getTileUrl(),{maxZoom:20}).addTo(pickerMap);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:20,subdomains:'abcd'}).addTo(pickerMap);
       pickerMarker=L.marker([42.6977,23.3219],{draggable:true}).addTo(pickerMap);
       pickerMap.on('click',function(e){pickerMarker.setLatLng(e.latlng);pickerTouched=true;});
       pickerMarker.on('dragend',function(){pickerTouched=true;});
