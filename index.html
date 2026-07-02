@@ -325,7 +325,9 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
       </div>
       <div id="schedule-fields" style="display:none;gap:6px;margin-bottom:6px">
         <input type="date" id="order-date" style="flex:1;background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:7px;font-size:13px">
-        <input type="time" id="order-time" style="flex:1;background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:7px;font-size:13px">
+        <select id="order-time-h" style="flex:1;background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:7px;font-size:13px"></select>
+        <span style="display:flex;align-items:center;color:var(--mu);font-weight:700">:</span>
+        <select id="order-time-m" style="flex:1;background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:7px;font-size:13px"></select>
       </div>
       <div id="schedule-warning" style="display:none;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);color:var(--or);border-radius:9px;padding:8px 10px;font-size:12px;line-height:1.5;margin-top:6px">⚠️ This is a booking request, not a confirmed ride. Wait for the driver to confirm by call or message before considering it booked.</div>
     </div>
@@ -865,6 +867,21 @@ function getTileUrl(){
   return 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 }
 
+function populateTimeSelects(){
+  var h=document.getElementById('order-time-h'),m=document.getElementById('order-time-m');
+  if(!h||!m||h.options.length)return;
+  for(var i=0;i<24;i++){var o=document.createElement('option');var v=(i<10?'0':'')+i;o.value=v;o.textContent=v;h.appendChild(o);}
+  for(var j=0;j<60;j+=5){var o2=document.createElement('option');var v2=(j<10?'0':'')+j;o2.value=v2;o2.textContent=v2;m.appendChild(o2);}
+}
+function setDefaultOrderTime(){
+  var now=new Date();
+  var h=now.getHours(),m=Math.ceil(now.getMinutes()/5)*5;
+  if(m>=60){m=0;h=(h+1)%24;}
+  var hh=(h<10?'0':'')+h,mm=(m<10?'0':'')+m;
+  var hSel=document.getElementById('order-time-h'),mSel=document.getElementById('order-time-m');
+  if(hSel)hSel.value=hh;
+  if(mSel)mSel.value=mm;
+}
 function applyTheme(){
   if(theme==='dark'){
     document.documentElement.setAttribute('data-theme','dark');
@@ -1052,7 +1069,7 @@ function openMod(id){
   var pw=document.getElementById('pax-warning');if(pw)pw.style.display='none';
   setWhenMode('now');
   var od=document.getElementById('order-date');if(od){var today=new Date();od.min=today.toISOString().slice(0,10);od.value='';}
-  var ot=document.getElementById('order-time');if(ot)ot.value='';
+  populateTimeSelects();setDefaultOrderTime();
   var mav=document.getElementById('mav');
   if(d.avatar){
     var img=document.createElement('img');img.src=d.avatar;img.style.cssText='width:100%;height:100%;object-fit:cover';mav.innerHTML='';mav.appendChild(img);
@@ -1320,9 +1337,10 @@ function buildOrderMessage(lat,lng){
   var lines=[];
   lines.push(t.orderHeader||'🚕 fish.taxi order request');
   lines.push('');
-  var dateEl=document.getElementById('order-date'),timeEl=document.getElementById('order-time');
+  var dateEl=document.getElementById('order-date'),timeH=document.getElementById('order-time-h'),timeM=document.getElementById('order-time-m');
+  var timeVal=(timeH&&timeH.value&&timeM&&timeM.value)?(timeH.value+':'+timeM.value):'';
   if(whenMode==='later'&&dateEl&&dateEl.value){
-    var whenStr=dateEl.value+(timeEl&&timeEl.value?' '+timeEl.value:'');
+    var whenStr=dateEl.value+(timeVal?' '+timeVal:'');
     lines.push((t.orderWhen||'📅 Requested time:')+' '+whenStr);
     lines.push(t.orderConfirmNote||'⚠️ Please confirm this booking by replying.');
   } else {
@@ -1432,6 +1450,7 @@ function pollGPS(){
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeMod();});
 
 applyTheme();
+populateTimeSelects();
 render();
 pollGPS();
 setInterval(pollGPS,15000);
