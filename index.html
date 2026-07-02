@@ -864,7 +864,12 @@ var filt='all', cur=null, map=null, mkrs=[], mapReady=false, tileLayer=null;
 var theme=localStorage.getItem('fishtaxi_theme')||'light';
 
 function getTileUrl(){
-  return 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+  return theme==='dark'
+    ?'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+    :'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+}
+function getTileSubdomains(){
+  return theme==='dark'?'abcd':'abc';
 }
 
 function populateTimeSelects(){
@@ -892,7 +897,7 @@ function applyTheme(){
   }
   if(map&&tileLayer){
     map.removeLayer(tileLayer);
-    tileLayer=L.tileLayer(getTileUrl(),{maxZoom:20,subdomains:'abcd'}).addTo(map);
+    tileLayer=L.tileLayer(getTileUrl(),{maxZoom:20,subdomains:getTileSubdomains()}).addTo(map);
   }
 }
 
@@ -1227,7 +1232,7 @@ function openLocPicker(target){
   setTimeout(function(){
     if(!pickerMap){
       pickerMap=L.map('loc-picker-map',{zoomControl:false,attributionControl:false}).setView([42.6977,23.3219],13);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:20,subdomains:'abcd'}).addTo(pickerMap);
+      L.tileLayer(getTileUrl(),{maxZoom:20,subdomains:getTileSubdomains()}).addTo(pickerMap);
       pickerMarker=L.marker([42.6977,23.3219],{draggable:true}).addTo(pickerMap);
       pickerMap.on('click',function(e){pickerMarker.setLatLng(e.latlng);pickerTouched=true;});
       pickerMarker.on('dragend',function(){pickerTouched=true;});
@@ -1429,7 +1434,7 @@ function initMapOnce(){
   if(mapReady||typeof L==='undefined')return;
   mapReady=true;
   map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],15);
-  tileLayer=L.tileLayer(getTileUrl(),{maxZoom:20,subdomains:'abcd'}).addTo(map);
+  tileLayer=L.tileLayer(getTileUrl(),{maxZoom:20,subdomains:getTileSubdomains()}).addTo(map);
   renderMap();
 }
 
