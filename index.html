@@ -189,6 +189,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
       <button class="flt" onclick="sf('child',this)" data-f='child'>👶 Child Seat</button>
       <button class="flt" onclick="sf('ac',this)" data-f='ac'>❄️ A/C</button>
       <button class="flt" onclick="sf('wheelchair',this)" data-f='wheelchair'>♿ Wheelchair</button>
+      <button class="flt" onclick="sf('legroom',this)" data-f='legroom'>🦵 Extra Legroom</button>
     </div>
     <div class="fs"><span class="fl">Language</span>
       <button class="flt" onclick="sf('lbg',this)">🇧🇬 BG</button>
@@ -357,7 +358,7 @@ var DRIVERS=[{
   "silent_ok":true,"talk_ok":true,"calm_ok":true,
   "terminal":true,
   "music_pop":false,"music_chalga":false,"music_rock":false,"music_classical":false,"music_jazz":true,"music_electronic":true,"music_chillout":true,"music_lounge":true,
-  "airport":true,"longdist":true,"night":true,"business":true,
+  "airport":true,"longdist":true,"night":false,"business":true,"legroom":true,
   "wheelchair":false,"verified":true,
   "areas":"Sofia — Center, Airport, Ring Road, All districts",
   "phone":"+359878592888",
@@ -379,7 +380,7 @@ var T={
     fSport:'🏎 Sport 0-5s',fFast:'⚡ Fast 5-7s',fNormal:'🚗 Normal',fComfort:'🛋 Comfort',
     fElectric:'⚡ Electric',fSedan:'🚗 Sedan',fSuv:'🚙 SUV',fMinivan:'🚐 Minivan 7+',fLuxury:'👑 Luxury',
     fSilent:'🤫 Silent',fTalk:'💬 Chatty',fMusic:'🎵 Music OK',fChalga:'🎶 Chalga OK',fNomusic:'🔇 No Music',
-    fNosmoker:'🚭 No Smoking',fSmoking:'🚬 Smoking OK',fPet:'🐾 Pets OK',fChild:'👶 Child Seat',fAc:'❄️ A/C',fWheel:'♿ Wheelchair',
+    fNosmoker:'🚭 No Smoking',fSmoking:'🚬 Smoking OK',fPet:'🐾 Pets OK',fChild:'👶 Child Seat',fAc:'❄️ A/C',fWheel:'♿ Wheelchair',fLegroom:'🦵 Extra Legroom',
     fAirport:'✈️ Airport',fLong:'🛣️ Long Distance',fNight:'🌙 Night',fBiz:'💼 Business',fVerified:'✅ Verified',fTop:'⭐ Top Rated',fNew:'🆕 New',
     btnCall:'📞 Call',btnVib:'💬 Viber',
     noDrivers:'No drivers found with this filter',
@@ -412,7 +413,7 @@ var T={
     fSport:'🏎 Спортно 0-5s',fFast:'⚡ Бързо 5-7s',fNormal:'🚗 Нормално',fComfort:'🛋 Комфорт',
     fElectric:'⚡ Електрик',fSedan:'🚗 Седан',fSuv:'🚙 SUV',fMinivan:'🚐 Миниван 7+',fLuxury:'👑 Луксозно',
     fSilent:'🤫 Тишина',fTalk:'💬 Разговори',fMusic:'🎵 Музика OK',fChalga:'🎶 Чалга OK',fNomusic:'🔇 Без музика',
-    fNosmoker:'🚭 Непушач',fSmoking:'🚬 Пушене OK',fPet:'🐾 Домашни',fChild:'👶 Детска седалка',fAc:'❄️ Климатик',fWheel:'♿ Инвалидна количка',
+    fNosmoker:'🚭 Непушач',fSmoking:'🚬 Пушене OK',fPet:'🐾 Домашни',fChild:'👶 Детска седалка',fAc:'❄️ Климатик',fWheel:'♿ Инвалидна количка',fLegroom:'🦵 Просторно за краката',
     fAirport:'✈️ Летище',fLong:'🛣️ Дълъг маршрут',fNight:'🌙 Нощни',fBiz:'💼 Бизнес',fVerified:'✅ Верифициран',fTop:'⭐ Топ рейтинг',fNew:'🆕 Нов',
     btnCall:'📞 Обади се',btnVib:'💬 Viber',
     noDrivers:'Няма намерени шофьори',
@@ -465,7 +466,7 @@ var T={
     fSport:'🏎 Sport 0-5s',fFast:'⚡ Schnell 5-7s',fNormal:'🚗 Normal',fComfort:'🛋 Komfort',
     fElectric:'⚡ Elektro',fSedan:'🚗 Limousine',fSuv:'🚙 SUV',fMinivan:'🚐 Minivan 7+',fLuxury:'👑 Luxus',
     fSilent:'🤫 Leise',fTalk:'💬 Gesprächig',fMusic:'🎵 Musik OK',fChalga:'🎶 Chalga OK',fNomusic:'🔇 Keine Musik',
-    fNosmoker:'🚭 Nichtraucher',fSmoking:'🚬 Rauchen OK',fPet:'🐾 Haustiere',fChild:'👶 Kindersitz',fAc:'❄️ Klima',fWheel:'♿ Rollstuhl',
+    fNosmoker:'🚭 Nichtraucher',fSmoking:'🚬 Rauchen OK',fPet:'🐾 Haustiere',fChild:'👶 Kindersitz',fAc:'❄️ Klima',fWheel:'♿ Rollstuhl',fLegroom:'🦵 Viel Beinfreiheit',
     fAirport:'✈️ Flughafen',fLong:'🛣️ Fernfahrt',fNight:'🌙 Nacht',fBiz:'💼 Business',fVerified:'✅ Verifiziert',fTop:'⭐ Top',fNew:'🆕 Neu',
     btnCall:'📞 Anrufen',btnVib:'💬 Viber',
     noDrivers:'Keine Fahrer gefunden',
@@ -517,7 +518,7 @@ var T={
     fSport:'🏎 Sport 0-5s',fFast:'⚡ Rapide 5-7s',fNormal:'🚗 Normal',fComfort:'🛋 Confort',
     fElectric:'⚡ Électrique',fSedan:'🚗 Berline',fSuv:'🚙 SUV',fMinivan:'🚐 Monospace 7+',fLuxury:'👑 Luxe',
     fSilent:'🤫 Silencieux',fTalk:'💬 Bavard',fMusic:'🎵 Musique OK',fChalga:'🎶 Chalga OK',fNomusic:'🔇 Sans musique',
-    fNosmoker:'🚭 Non-fumeur',fSmoking:'🚬 Fumeur OK',fPet:'🐾 Animaux',fChild:'👶 Siège enfant',fAc:'❄️ Clim',fWheel:'♿ Fauteuil',
+    fNosmoker:'🚭 Non-fumeur',fSmoking:'🚬 Fumeur OK',fPet:'🐾 Animaux',fChild:'👶 Siège enfant',fAc:'❄️ Clim',fWheel:'♿ Fauteuil',fLegroom:'🦵 Grand espace jambes',
     fAirport:'✈️ Aéroport',fLong:'🛣️ Longue distance',fNight:'🌙 Nuit',fBiz:'💼 Business',fVerified:'✅ Vérifié',fTop:'⭐ Top',fNew:'🆕 Nouveau',
     btnCall:'📞 Appeler',btnVib:'💬 Viber',
     noDrivers:'Aucun chauffeur trouvé',
@@ -569,7 +570,7 @@ var T={
     fSport:'🏎 Спорт 0-5s',fFast:'⚡ Быстро 5-7s',fNormal:'🚗 Нормально',fComfort:'🛋 Комфорт',
     fElectric:'⚡ Электро',fSedan:'🚗 Седан',fSuv:'🚙 SUV',fMinivan:'🚐 Минивэн 7+',fLuxury:'👑 Люкс',
     fSilent:'🤫 Тишина',fTalk:'💬 Общение',fMusic:'🎵 Музыка OK',fChalga:'🎶 Чалга OK',fNomusic:'🔇 Без музыки',
-    fNosmoker:'🚭 Некурящий',fSmoking:'🚬 Курение OK',fPet:'🐾 Животные',fChild:'👶 Детское кресло',fAc:'❄️ Кондиционер',fWheel:'♿ Коляска',
+    fNosmoker:'🚭 Некурящий',fSmoking:'🚬 Курение OK',fPet:'🐾 Животные',fChild:'👶 Детское кресло',fAc:'❄️ Кондиционер',fWheel:'♿ Коляска',fLegroom:'🦵 Много места для ног',
     fAirport:'✈️ Аэропорт',fLong:'🛣️ Дальние',fNight:'🌙 Ночные',fBiz:'💼 Бизнес',fVerified:'✅ Верифицирован',fTop:'⭐ Топ',fNew:'🆕 Новый',
     btnCall:'📞 Звонить',btnVib:'💬 Viber',
     noDrivers:'Водители не найдены',
@@ -621,7 +622,7 @@ var T={
     fSport:'🏎 Sport 0-5s',fFast:'⚡ Veloce 5-7s',fNormal:'🚗 Normale',fComfort:'🛋 Comfort',
     fElectric:'⚡ Elettrico',fSedan:'🚗 Berlina',fSuv:'🚙 SUV',fMinivan:'🚐 Monovolume 7+',fLuxury:'👑 Lusso',
     fSilent:'🤫 Silenzioso',fTalk:'💬 Chiacchierone',fMusic:'🎵 Musica OK',fChalga:'🎶 Chalga OK',fNomusic:'🔇 Senza musica',
-    fNosmoker:'🚭 Non fumatore',fSmoking:'🚬 Fumo OK',fPet:'🐾 Animali',fChild:'👶 Seggiolino',fAc:'❄️ Aria cond.',fWheel:'♿ Sedia a rotelle',
+    fNosmoker:'🚭 Non fumatore',fSmoking:'🚬 Fumo OK',fPet:'🐾 Animali',fChild:'👶 Seggiolino',fAc:'❄️ Aria cond.',fWheel:'♿ Sedia a rotelle',fLegroom:'🦵 Spazio per le gambe',
     fAirport:'✈️ Aeroporto',fLong:'🛣️ Lunga distanza',fNight:'🌙 Notturno',fBiz:'💼 Business',fVerified:'✅ Verificato',fTop:'⭐ Top',fNew:'🆕 Nuovo',
     btnCall:'📞 Chiama',btnVib:'💬 Viber',
     noDrivers:'Nessun autista trovato',
@@ -673,7 +674,7 @@ var T={
     fSport:'🏎 Sport 0-5s',fFast:'⚡ Rápido 5-7s',fNormal:'🚗 Normal',fComfort:'🛋 Confort',
     fElectric:'⚡ Eléctrico',fSedan:'🚗 Sedán',fSuv:'🚙 SUV',fMinivan:'🚐 Monovolumen 7+',fLuxury:'👑 Lujo',
     fSilent:'🤫 Silencioso',fTalk:'💬 Conversador',fMusic:'🎵 Música OK',fChalga:'🎶 Chalga OK',fNomusic:'🔇 Sin música',
-    fNosmoker:'🚭 No fumador',fSmoking:'🚬 Fumar OK',fPet:'🐾 Mascotas',fChild:'👶 Silla niño',fAc:'❄️ Aire acond.',fWheel:'♿ Silla de ruedas',
+    fNosmoker:'🚭 No fumador',fSmoking:'🚬 Fumar OK',fPet:'🐾 Mascotas',fChild:'👶 Silla niño',fAc:'❄️ Aire acond.',fWheel:'♿ Silla de ruedas',fLegroom:'🦵 Amplio espacio para piernas',
     fAirport:'✈️ Aeropuerto',fLong:'🛣️ Larga distancia',fNight:'🌙 Nocturno',fBiz:'💼 Negocios',fVerified:'✅ Verificado',fTop:'⭐ Top',fNew:'🆕 Nuevo',
     btnCall:'📞 Llamar',btnVib:'💬 Viber',
     noDrivers:'No se encontraron conductores',
@@ -740,7 +741,7 @@ function setLang(l){
     'sport':t.fSport,'fast':t.fFast,'normal':t.fNormal,'comfort':t.fComfort,
     'electric':t.fElectric,'sedan':t.fSedan,'suv':t.fSuv,'minivan':t.fMinivan,'luxury':t.fLuxury,
     'silent':t.fSilent,'talk':t.fTalk,'music':t.fMusic,'chalga':t.fChalga,'nomusic':t.fNomusic,
-    'nosmoker':t.fNosmoker,'smoking':t.fSmoking,'pet':t.fPet,'child':t.fChild,'ac':t.fAc,'wheelchair':t.fWheel,
+    'nosmoker':t.fNosmoker,'smoking':t.fSmoking,'pet':t.fPet,'child':t.fChild,'ac':t.fAc,'wheelchair':t.fWheel,'legroom':t.fLegroom,
     'airport':t.fAirport,'longdist':t.fLong,'night':t.fNight,'business':t.fBiz,
     'verified':t.fVerified,'top':t.fTop,'new':t.fNew
   };
@@ -923,6 +924,7 @@ function render(){
   if(filt==='child')ds=ds.filter(function(d){return d.childok;});
   if(filt==='ac')ds=ds.filter(function(d){return d.ac;});
   if(filt==='wheelchair')ds=ds.filter(function(d){return d.wheelchair;});
+  if(filt==='legroom')ds=ds.filter(function(d){return d.legroom;});
   if(filt==='lbg')ds=ds.filter(function(d){return d.langs.indexOf('bg')>=0;});
   if(filt==='len')ds=ds.filter(function(d){return d.langs.indexOf('en')>=0;});
   if(filt==='lde')ds=ds.filter(function(d){return d.langs.indexOf('de')>=0;});
@@ -1022,6 +1024,7 @@ function openMod(id){
   if(d.night)opts.push('<span class="t tc">'+t.fNight+'</span>');
   if(d.business)opts.push('<span class="t ty">'+t.fBiz+'</span>');
   if(d.wheelchair)opts.push('<span class="t tg">'+t.fWheel+'</span>');
+  if(d.legroom)opts.push('<span class="t to">'+t.fLegroom+'</span>');
   document.getElementById('mopts').innerHTML=opts.join(' ')||'—';
   document.getElementById('mprice').textContent=d.price;
   document.getElementById('mareas').textContent=d.areas;
