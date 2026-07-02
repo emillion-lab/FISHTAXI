@@ -40,8 +40,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
 
 /* MAP */
 #map{height:380px;background:#0d1117;flex-shrink:0}
-.leaflet-container{background:#0d1117!important}
-#loc-picker-map.leaflet-container{background:#e8e6df!important}
+.leaflet-container{background:#e8e6df!important}
 .leaflet-popup-content-wrapper{background:var(--s2)!important;color:var(--tx)!important;border:1px solid var(--brd)!important;border-radius:10px!important}
 .leaflet-popup-tip{background:var(--s2)!important}
 
@@ -863,9 +862,7 @@ var filt='all', cur=null, map=null, mkrs=[], mapReady=false, tileLayer=null;
 var theme=localStorage.getItem('fishtaxi_theme')||'light';
 
 function getTileUrl(){
-  return theme==='dark'
-    ?'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png'
-    :'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+  return 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 }
 
 function applyTheme(){
@@ -878,7 +875,7 @@ function applyTheme(){
   }
   if(map&&tileLayer){
     map.removeLayer(tileLayer);
-    tileLayer=L.tileLayer(getTileUrl(),{maxZoom:20}).addTo(map);
+    tileLayer=L.tileLayer(getTileUrl(),{maxZoom:20,subdomains:'abcd'}).addTo(map);
   }
 }
 
@@ -1414,7 +1411,7 @@ function initMapOnce(){
   if(mapReady||typeof L==='undefined')return;
   mapReady=true;
   map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],15);
-  tileLayer=L.tileLayer(getTileUrl(),{maxZoom:20}).addTo(map);
+  tileLayer=L.tileLayer(getTileUrl(),{maxZoom:20,subdomains:'abcd'}).addTo(map);
   renderMap();
 }
 
