@@ -318,6 +318,18 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
     <div class="mh" id="mh-about">About the Driver</div><div id="mbio" style="font-size:13px;color:var(--mu);line-height:1.6"></div>
     <div class="mh" id="mh-order">Before You Order</div>
     <div style="margin-bottom:8px">
+      <label style="font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;display:block;margin-bottom:4px" id="lbl-when">🕒 When</label>
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <button class="pref-btn on" id="btn-when-now" onclick="setWhenMode('now')" style="flex:1">Now</button>
+        <button class="pref-btn" id="btn-when-later" onclick="setWhenMode('later')" style="flex:1">📅 Schedule</button>
+      </div>
+      <div id="schedule-fields" style="display:none;gap:6px;margin-bottom:6px">
+        <input type="date" id="order-date" style="flex:1;background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:7px;font-size:13px">
+        <input type="time" id="order-time" style="flex:1;background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:7px;font-size:13px">
+      </div>
+      <div id="schedule-warning" style="display:none;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);color:var(--or);border-radius:9px;padding:8px 10px;font-size:12px;line-height:1.5;margin-top:6px">⚠️ This is a booking request, not a confirmed ride. Wait for the driver to confirm by call or message before considering it booked.</div>
+    </div>
+    <div style="margin-bottom:8px">
       <label style="font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;display:block;margin-bottom:4px" id="lbl-pax">👥 Passengers</label>
       <select id="order-pax" onchange="checkPaxWarning()" style="width:100%;background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:7px;font-size:13px">
         <option value="2" id="opt-pax-2">1–2</option>
@@ -423,7 +435,7 @@ var T={
     howTitle:'How it works',joinTitle:'Join as Driver',
     mVerified:"✓ Verified",mReviews:"reviews",mWarn:"Tell your driver your preferred pace when you get in",mCalmOpt:"Calm driving available on request",mCarDet:"Car Details",mPhotos:"Car Photos",onRequest:"on request",extraFee:"extra charge",mType:"Type",mSeats:"Seats",mPassengers:"passengers",mAccel:"0-100 km/h",mElectric:"Electric",mAC:"A/C",mYes:"Yes",mPayment:"Payment",mLangs:"Languages",mOpts:"Options & Atmosphere",mPrice:"Price",mAreas:"Areas",mAbout:"About the Driver",mRate:"Rate this driver",mViewProfile:"View Profile",
     mBeforeOrder:"Before You Order",
-    lblMusic:"🎵 Preferred music",lblTip:"💰 Planned tip (optional)",lblPax:"👥 Passengers",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passengers:",paxWarn:"⚠️ 3-4 passengers with luggage — please call first to confirm everything fits comfortably.",paxWarnMsg:"⚠️ 3-4 passengers with luggage — please confirm fit before booking",
+    lblMusic:"🎵 Preferred music",lblTip:"💰 Planned tip (optional)",lblPax:"👥 Passengers",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passengers:",lblWhen:"🕒 When",btnNow:"Now",btnSchedule:"📅 Schedule",scheduleWarn:"⚠️ This is a booking request, not a confirmed ride. Wait for the driver to confirm by call or message before considering it booked.",orderWhen:"📅 Requested time:",orderConfirmNote:"⚠️ Please confirm this booking by replying.",orderNow:"🕒 Now (ASAP)",paxWarn:"⚠️ 3-4 passengers with luggage — please call first to confirm everything fits comfortably.",paxWarnMsg:"⚠️ 3-4 passengers with luggage — please confirm fit before booking",
     optNoPref:"No preference",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classical",optJazz:"🎷 Jazz",optElectronic:"🎧 Electronic",optNoMusic:"🔇 No music",optNoTip:"No tip planned",optSmallTip:"A small tip",optFairTip:"A fair tip — thanks for coming far",optGenTip:"A generous tip",
     sumFast:"Can drive fast",sumCalm:"or calmly — your choice",sumTalkSilent:"happy to talk or stay silent",sumTalk:"enjoys conversation",sumSilent:"prefers quiet rides",sumMusic:"plays",
     pbHurry:"⏱ I'm in a hurry",pbRelax:"😌 Take it easy",pbSilent:"🤫 Prefer silence",pbTalk:"💬 Happy to chat",pbNomusic:"🔇 No music",pbAc:"❄️ A/C please",pbLuggage:"🧳 Have luggage",btnCallM:"📞 Call",btnVibOrd:"💬 Order via Viber",locDefault:"Location will be shared with driver",
@@ -456,7 +468,7 @@ var T={
     howTitle:'Как работи',joinTitle:'Присъедини се',
     mVerified:"✓ Верифициран",mReviews:"отзива",mWarn:"Кажи на шофьора предпочитания темп при качване",mCalmOpt:"Спокойно каране при поискване",mCarDet:"Детайли на колата",mPhotos:"Снимки на колата",onRequest:"по договаряне",extraFee:"доплащане",mType:"Тип",mSeats:"Места",mPassengers:"пътници",mAccel:"0-100 км/ч",mElectric:"Електрическа",mAC:"Климатик",mYes:"Да",mPayment:"Плащане",mLangs:"Езици",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Райони",mAbout:"За шофьора",mRate:"Оцени шофьора",mViewProfile:"Виж профил",
     mBeforeOrder:"Преди да поръчаш",
-    lblMusic:"🎵 Предпочитана музика",lblTip:"💰 Планиран бакшиш (по избор)",lblPax:"👥 Пътници",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Пътници:",paxWarn:"⚠️ 3-4 пътници с багаж — моля, обадете се първо, за да потвърдим, че всичко ще се събере комфортно.",paxWarnMsg:"⚠️ 3-4 пътници с багаж — моля потвърдете преди поръчка",
+    lblMusic:"🎵 Предпочитана музика",lblTip:"💰 Планиран бакшиш (по избор)",lblPax:"👥 Пътници",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Пътници:",lblWhen:"🕒 Кога",btnNow:"Сега",btnSchedule:"📅 Резервирай",scheduleWarn:"⚠️ Това е заявка за резервация, не потвърдено возене. Изчакайте шофьорът да потвърди с обаждане или съобщение, преди да смятате возенето за уговорено.",orderWhen:"📅 Заявено време:",orderConfirmNote:"⚠️ Моля, потвърдете тази резервация с отговор.",orderNow:"🕒 Сега (веднага)",paxWarn:"⚠️ 3-4 пътници с багаж — моля, обадете се първо, за да потвърдим, че всичко ще се събере комфортно.",paxWarnMsg:"⚠️ 3-4 пътници с багаж — моля потвърдете преди поръчка",
     optNoPref:"Без предпочитание",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Класика",optJazz:"🎷 Джаз",optElectronic:"🎧 Електронна",optNoMusic:"🔇 Без музика",optNoTip:"Без бакшиш",optSmallTip:"Малък бакшиш",optFairTip:"Достоен бакшиш — благодаря за дългия път",optGenTip:"Щедър бакшиш",
     sumFast:"Може да кара бързо",sumCalm:"или спокойно — твой избор",sumTalkSilent:"може да говори или да мълчи",sumTalk:"обича разговори",sumSilent:"предпочита тишина",sumMusic:"пуска",
     pbHurry:"⏱ Бързам",pbRelax:"😌 Спокойно",pbSilent:"🤫 Предпочитам тишина",pbTalk:"💬 Обичам разговори",pbNomusic:"🔇 Без музика",pbAc:"❄️ Климатик моля",pbLuggage:"🧳 Имам багаж",btnCallM:"📞 Обади се",btnVibOrd:"💬 Поръчай през Viber",locDefault:"Локацията ще се сподели с шофьора",
@@ -508,7 +520,7 @@ var T={
     online:'Online',offline:'Offline',
     mVerified:"✓ Verifiziert",mReviews:"Bewertungen",mWarn:"Sagen Sie Ihrem Fahrer Ihr bevorzugtes Tempo beim Einsteigen",mCalmOpt:"Ruhiges Fahren auf Anfrage",mCarDet:"Fahrzeugdetails",mPhotos:"Fotos vom Auto",onRequest:"auf Anfrage",extraFee:"gegen Aufpreis",mType:"Typ",mSeats:"Sitze",mPassengers:"Passagiere",mAccel:"0-100 km/h",mElectric:"Elektrisch",mAC:"Klima",mYes:"Ja",mPayment:"Zahlung",mLangs:"Sprachen",mOpts:"Optionen & Atmosphäre",mPrice:"Preis",mAreas:"Gebiete",mAbout:"Über den Fahrer",mRate:"Fahrer bewerten",mViewProfile:"Profil ansehen",
     mBeforeOrder:"Vor der Bestellung",
-    lblMusic:"🎵 Bevorzugte Musik",lblTip:"💰 Geplantes Trinkgeld (optional)",lblPax:"👥 Passagiere",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passagiere:",paxWarn:"⚠️ 3-4 Passagiere mit Gepäck — bitte rufen Sie vorher an, um zu bestätigen, dass alles bequem passt.",paxWarnMsg:"⚠️ 3-4 Passagiere mit Gepäck — bitte vor Buchung bestätigen",
+    lblMusic:"🎵 Bevorzugte Musik",lblTip:"💰 Geplantes Trinkgeld (optional)",lblPax:"👥 Passagiere",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passagiere:",lblWhen:"🕒 Wann",btnNow:"Jetzt",btnSchedule:"📅 Terminieren",scheduleWarn:"⚠️ Dies ist eine Buchungsanfrage, keine bestätigte Fahrt. Bitte warten Sie auf die Bestätigung des Fahrers per Anruf oder Nachricht.",orderWhen:"📅 Gewünschte Zeit:",orderConfirmNote:"⚠️ Bitte bestätigen Sie diese Buchung durch Antwort.",orderNow:"🕒 Jetzt (sofort)",paxWarn:"⚠️ 3-4 Passagiere mit Gepäck — bitte rufen Sie vorher an, um zu bestätigen, dass alles bequem passt.",paxWarnMsg:"⚠️ 3-4 Passagiere mit Gepäck — bitte vor Buchung bestätigen",
     optNoPref:"Keine Präferenz",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klassik",optJazz:"🎷 Jazz",optElectronic:"🎧 Elektronisch",optNoMusic:"🔇 Keine Musik",optNoTip:"Kein Trinkgeld geplant",optSmallTip:"Ein kleines Trinkgeld",optFairTip:"Ein faires Trinkgeld — danke fürs Kommen",optGenTip:"Ein großzügiges Trinkgeld",
     sumFast:"Kann schnell fahren",sumCalm:"oder ruhig — Ihre Wahl",sumTalkSilent:"redet gerne oder bleibt still",sumTalk:"genießt Gespräche",sumSilent:"bevorzugt Ruhe",sumMusic:"spielt",
     pbHurry:"⏱ Ich habe es eilig",pbRelax:"😌 Ruhig angehen",pbSilent:"🤫 Stille bevorzugt",pbTalk:"💬 Gerne ein Gespräch",pbNomusic:"🔇 Keine Musik",pbAc:"❄️ Klima bitte",pbLuggage:"🧳 Habe Gepäck",btnCallM:"📞 Anrufen",btnVibOrd:"💬 Über Viber bestellen",locDefault:"Standort wird mit dem Fahrer geteilt",
@@ -560,7 +572,7 @@ var T={
     online:'En ligne',offline:'Hors ligne',
     mVerified:"✓ Vérifié",mReviews:"avis",mWarn:"Dites à votre chauffeur votre rythme préféré en montant",mCalmOpt:"Conduite calme sur demande",mCarDet:"Détails du véhicule",mPhotos:"Photos de la voiture",onRequest:"sur demande",extraFee:"supplément",mType:"Type",mSeats:"Places",mPassengers:"passagers",mAccel:"0-100 km/h",mElectric:"Électrique",mAC:"Clim",mYes:"Oui",mPayment:"Paiement",mLangs:"Langues",mOpts:"Options et ambiance",mPrice:"Prix",mAreas:"Zones",mAbout:"À propos du chauffeur",mRate:"Évaluer ce chauffeur",mViewProfile:"Voir le profil",
     mBeforeOrder:"Avant de commander",
-    lblMusic:"🎵 Musique préférée",lblTip:"💰 Pourboire prévu (optionnel)",lblPax:"👥 Passagers",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passagers :",paxWarn:"⚠️ 3-4 passagers avec bagages — merci d appeler d abord pour confirmer que tout rentre confortablement.",paxWarnMsg:"⚠️ 3-4 passagers avec bagages — merci de confirmer avant de réserver",
+    lblMusic:"🎵 Musique préférée",lblTip:"💰 Pourboire prévu (optionnel)",lblPax:"👥 Passagers",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passagers :",lblWhen:"🕒 Quand",btnNow:"Maintenant",btnSchedule:"📅 Planifier",scheduleWarn:"⚠️ Ceci est une demande de réservation, pas une course confirmée. Attendez la confirmation du chauffeur par appel ou message.",orderWhen:"📅 Heure demandée :",orderConfirmNote:"⚠️ Merci de confirmer cette réservation en répondant.",orderNow:"🕒 Maintenant (dès que possible)",paxWarn:"⚠️ 3-4 passagers avec bagages — merci d appeler d abord pour confirmer que tout rentre confortablement.",paxWarnMsg:"⚠️ 3-4 passagers avec bagages — merci de confirmer avant de réserver",
     optNoPref:"Aucune préférence",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classique",optJazz:"🎷 Jazz",optElectronic:"🎧 Électronique",optNoMusic:"🔇 Sans musique",optNoTip:"Pas de pourboire prévu",optSmallTip:"Un petit pourboire",optFairTip:"Un pourboire juste — merci de venir de loin",optGenTip:"Un généreux pourboire",
     sumFast:"Peut conduire vite",sumCalm:"ou calmement — votre choix",sumTalkSilent:"aime parler ou rester silencieux",sumTalk:"aime discuter",sumSilent:"préfère le calme",sumMusic:"joue",
     pbHurry:"⏱ Je suis pressé",pbRelax:"😌 Tranquillement",pbSilent:"🤫 Préfère le silence",pbTalk:"💬 Content de discuter",pbNomusic:"🔇 Sans musique",pbAc:"❄️ Clim svp",pbLuggage:"🧳 Avec bagages",btnCallM:"📞 Appeler",btnVibOrd:"💬 Commander via Viber",locDefault:"La localisation sera partagée avec le chauffeur",
@@ -612,7 +624,7 @@ var T={
     online:'Онлайн',offline:'Офлайн',
     mVerified:"✓ Подтвержден",mReviews:"отзывов",mWarn:"Скажите водителю предпочитаемый темп при посадке",mCalmOpt:"Спокойная езда по запросу",mCarDet:"Детали автомобиля",mPhotos:"Фото автомобиля",onRequest:"по договорённости",extraFee:"доплата",mType:"Тип",mSeats:"Места",mPassengers:"пассажиров",mAccel:"0-100 км/ч",mElectric:"Электро",mAC:"Кондиционер",mYes:"Да",mPayment:"Оплата",mLangs:"Языки",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Районы",mAbout:"О водителе",mRate:"Оценить водителя",mViewProfile:"Смотреть профиль",
     mBeforeOrder:"Перед заказом",
-    lblMusic:"🎵 Предпочитаемая музыка",lblTip:"💰 Планируемые чаевые (необязательно)",lblPax:"👥 Пассажиры",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Пассажиры:",paxWarn:"⚠️ 3-4 пассажира с багажом — пожалуйста, позвоните заранее, чтобы подтвердить, что всё поместится.",paxWarnMsg:"⚠️ 3-4 пассажира с багажом — подтвердите перед заказом",
+    lblMusic:"🎵 Предпочитаемая музыка",lblTip:"💰 Планируемые чаевые (необязательно)",lblPax:"👥 Пассажиры",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Пассажиры:",lblWhen:"🕒 Когда",btnNow:"Сейчас",btnSchedule:"📅 Забронировать",scheduleWarn:"⚠️ Это запрос на бронирование, а не подтверждённая поездка. Дождитесь подтверждения от водителя по звонку или сообщению.",orderWhen:"📅 Запрошенное время:",orderConfirmNote:"⚠️ Пожалуйста, подтвердите это бронирование ответом.",orderNow:"🕒 Сейчас (немедленно)",paxWarn:"⚠️ 3-4 пассажира с багажом — пожалуйста, позвоните заранее, чтобы подтвердить, что всё поместится.",paxWarnMsg:"⚠️ 3-4 пассажира с багажом — подтвердите перед заказом",
     optNoPref:"Без предпочтений",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Классика",optJazz:"🎷 Джаз",optElectronic:"🎧 Электронная",optNoMusic:"🔇 Без музыки",optNoTip:"Без чаевых",optSmallTip:"Небольшие чаевые",optFairTip:"Достойные чаевые — спасибо за долгий путь",optGenTip:"Щедрые чаевые",
     sumFast:"Может ехать быстро",sumCalm:"или спокойно — ваш выбор",sumTalkSilent:"любит поговорить или помолчать",sumTalk:"любит общение",sumSilent:"предпочитает тишину",sumMusic:"играет",
     pbHurry:"⏱ Я тороплюсь",pbRelax:"😌 Спокойно",pbSilent:"🤫 Предпочитаю тишину",pbTalk:"💬 Рад пообщаться",pbNomusic:"🔇 Без музыки",pbAc:"❄️ Кондиционер",pbLuggage:"🧳 Есть багаж",btnCallM:"📞 Позвонить",btnVibOrd:"💬 Заказать через Viber",locDefault:"Местоположение будет передано водителю",
@@ -664,7 +676,7 @@ var T={
     online:'Online',offline:'Offline',
     mVerified:"✓ Verificato",mReviews:"recensioni",mWarn:"Di al tuo autista il ritmo preferito quando sali",mCalmOpt:"Guida calma su richiesta",mCarDet:"Dettagli auto",mPhotos:"Foto dell auto",onRequest:"su richiesta",extraFee:"supplemento",mType:"Tipo",mSeats:"Posti",mPassengers:"passeggeri",mAccel:"0-100 km/h",mElectric:"Elettrico",mAC:"Aria cond.",mYes:"Si",mPayment:"Pagamento",mLangs:"Lingue",mOpts:"Opzioni e atmosfera",mPrice:"Prezzo",mAreas:"Zone",mAbout:"Sull autista",mRate:"Valuta autista",mViewProfile:"Vedi profilo",
     mBeforeOrder:"Prima di ordinare",
-    lblMusic:"🎵 Musica preferita",lblTip:"💰 Mancia pianificata (opzionale)",lblPax:"👥 Passeggeri",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passeggeri:",paxWarn:"⚠️ 3-4 passeggeri con bagagli — chiamare prima per confermare che tutto entri comodamente.",paxWarnMsg:"⚠️ 3-4 passeggeri con bagagli — confermare prima di prenotare",
+    lblMusic:"🎵 Musica preferita",lblTip:"💰 Mancia pianificata (opzionale)",lblPax:"👥 Passeggeri",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passeggeri:",lblWhen:"🕒 Quando",btnNow:"Ora",btnSchedule:"📅 Prenota",scheduleWarn:"⚠️ Questa è una richiesta di prenotazione, non una corsa confermata. Attendi la conferma dell autista per chiamata o messaggio.",orderWhen:"📅 Orario richiesto:",orderConfirmNote:"⚠️ Conferma questa prenotazione rispondendo.",orderNow:"🕒 Ora (subito)",paxWarn:"⚠️ 3-4 passeggeri con bagagli — chiamare prima per confermare che tutto entri comodamente.",paxWarnMsg:"⚠️ 3-4 passeggeri con bagagli — confermare prima di prenotare",
     optNoPref:"Nessuna preferenza",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classica",optJazz:"🎷 Jazz",optElectronic:"🎧 Elettronica",optNoMusic:"🔇 Senza musica",optNoTip:"Nessuna mancia prevista",optSmallTip:"Una piccola mancia",optFairTip:"Una mancia equa — grazie per essere venuto da lontano",optGenTip:"Una generosa mancia",
     sumFast:"Puo guidare veloce",sumCalm:"o con calma — la tua scelta",sumTalkSilent:"felice di parlare o stare in silenzio",sumTalk:"ama conversare",sumSilent:"preferisce silenzio",sumMusic:"suona",
     pbHurry:"⏱ Ho fretta",pbRelax:"😌 Con calma",pbSilent:"🤫 Preferisco il silenzio",pbTalk:"💬 Felice di chiacchierare",pbNomusic:"🔇 Senza musica",pbAc:"❄️ Aria cond. prego",pbLuggage:"🧳 Ho bagagli",btnCallM:"📞 Chiama",btnVibOrd:"💬 Ordina via Viber",locDefault:"La posizione sara condivisa con l'autista",
@@ -716,7 +728,7 @@ var T={
     online:'Online',offline:'Offline',
     mVerified:"✓ Verificado",mReviews:"reseñas",mWarn:"Dile a tu conductor tu ritmo preferido al subir",mCalmOpt:"Conducción tranquila bajo petición",mCarDet:"Detalles del coche",mPhotos:"Fotos del coche",onRequest:"a petición",extraFee:"cargo extra",mType:"Tipo",mSeats:"Asientos",mPassengers:"pasajeros",mAccel:"0-100 km/h",mElectric:"Eléctrico",mAC:"A/C",mYes:"Sí",mPayment:"Pago",mLangs:"Idiomas",mOpts:"Opciones y ambiente",mPrice:"Precio",mAreas:"Zonas",mAbout:"Sobre el conductor",mRate:"Calificar conductor",mViewProfile:"Ver perfil",
     mBeforeOrder:"Antes de pedir",
-    lblMusic:"🎵 Música preferida",lblTip:"💰 Propina planeada (opcional)",lblPax:"👥 Pasajeros",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Pasajeros:",paxWarn:"⚠️ 3-4 pasajeros con equipaje — llame antes para confirmar que todo cabe cómodamente.",paxWarnMsg:"⚠️ 3-4 pasajeros con equipaje — confirme antes de reservar",
+    lblMusic:"🎵 Música preferida",lblTip:"💰 Propina planeada (opcional)",lblPax:"👥 Pasajeros",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Pasajeros:",lblWhen:"🕒 Cuándo",btnNow:"Ahora",btnSchedule:"📅 Programar",scheduleWarn:"⚠️ Esta es una solicitud de reserva, no un viaje confirmado. Espere la confirmación del conductor por llamada o mensaje.",orderWhen:"📅 Hora solicitada:",orderConfirmNote:"⚠️ Por favor confirme esta reserva respondiendo.",orderNow:"🕒 Ahora (enseguida)",paxWarn:"⚠️ 3-4 pasajeros con equipaje — llame antes para confirmar que todo cabe cómodamente.",paxWarnMsg:"⚠️ 3-4 pasajeros con equipaje — confirme antes de reservar",
     optNoPref:"Sin preferencia",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Clásica",optJazz:"🎷 Jazz",optElectronic:"🎧 Electrónica",optNoMusic:"🔇 Sin música",optNoTip:"Sin propina planeada",optSmallTip:"Una pequeña propina",optFairTip:"Una propina justa — gracias por venir desde lejos",optGenTip:"Una generosa propina",
     sumFast:"Puede conducir rapido",sumCalm:"o con calma — tu eleccion",sumTalkSilent:"feliz de hablar o guardar silencio",sumTalk:"disfruta conversar",sumSilent:"prefiere silencio",sumMusic:"reproduce",
     pbHurry:"⏱ Tengo prisa",pbRelax:"😌 Con calma",pbSilent:"🤫 Prefiero silencio",pbTalk:"💬 Encantado de charlar",pbNomusic:"🔇 Sin música",pbAc:"❄️ A/C por favor",pbLuggage:"🧳 Tengo equipaje",btnCallM:"📞 Llamar",btnVibOrd:"💬 Pedir por Viber",locDefault:"La ubicación se compartirá con el conductor",
@@ -1019,6 +1031,9 @@ function openMod(id){
   var ts=document.getElementById('order-tip');if(ts)ts.value='';
   var ps=document.getElementById('order-pax');if(ps)ps.value='2';
   var pw=document.getElementById('pax-warning');if(pw)pw.style.display='none';
+  setWhenMode('now');
+  var od=document.getElementById('order-date');if(od){var today=new Date();od.min=today.toISOString().slice(0,10);od.value='';}
+  var ot=document.getElementById('order-time');if(ot)ot.value='';
   var mav=document.getElementById('mav');
   if(d.avatar&&d.avatar.indexOf('http')===0){
     var img=document.createElement('img');img.src=d.avatar;img.style.cssText='width:100%;height:100%;object-fit:cover';mav.innerHTML='';mav.appendChild(img);
@@ -1086,6 +1101,10 @@ function openMod(id){
   var lm=document.getElementById('lbl-musicstyle');if(lm)lm.textContent=t.lblMusic;
   var lt2=document.getElementById('lbl-tip');if(lt2)lt2.textContent=t.lblTip;
   var lp=document.getElementById('lbl-pax');if(lp)lp.textContent=t.lblPax||'👥 Passengers';
+  var lw=document.getElementById('lbl-when');if(lw)lw.textContent=t.lblWhen||'🕒 When';
+  var bwn=document.getElementById('btn-when-now');if(bwn)bwn.textContent=t.btnNow||'Now';
+  var bwl=document.getElementById('btn-when-later');if(bwl)bwl.textContent=t.btnSchedule||'📅 Schedule';
+  var sw=document.getElementById('schedule-warning');if(sw)sw.textContent=t.scheduleWarn||'⚠️ This is a booking request, not a confirmed ride. Wait for the driver to confirm by call or message before considering it booked.';
   if(typeof checkPaxWarning==='function')checkPaxWarning();
   document.getElementById('mh-pay').textContent=t.mPayment;
   document.getElementById('mh-langs').textContent=t.mLangs;
@@ -1106,12 +1125,25 @@ function doCall(){if(cur)window.location.href='tel:'+cur.phone;}
 function doVib(){if(cur)window.open('viber://chat?number='+cur.phone.replace(/[^0-9]/g,''));}
 
 var selectedPrefs=[];
+var whenMode='now';
 var userLat=null,userLng=null;
 
 function togglePref(el,p){
   var i=selectedPrefs.indexOf(p);
   if(i>=0){selectedPrefs.splice(i,1);el.classList.remove('on');}
   else{selectedPrefs.push(p);el.classList.add('on');}
+}
+function setWhenMode(mode){
+  whenMode=mode;
+  var btnNow=document.getElementById('btn-when-now'),btnLater=document.getElementById('btn-when-later');
+  var fields=document.getElementById('schedule-fields'),warn=document.getElementById('schedule-warning');
+  if(mode==='now'){
+    btnNow.classList.add('on');btnLater.classList.remove('on');
+    fields.style.display='none';warn.style.display='none';
+  } else {
+    btnNow.classList.remove('on');btnLater.classList.add('on');
+    fields.style.display='flex';warn.style.display='block';
+  }
 }
 function checkPaxWarning(){
   var t=T[lang]||T.en;
@@ -1201,6 +1233,14 @@ function buildOrderMessage(lat,lng){
   var lines=[];
   lines.push(t.orderHeader||'🚕 fish.taxi order request');
   lines.push('');
+  var dateEl=document.getElementById('order-date'),timeEl=document.getElementById('order-time');
+  if(whenMode==='later'&&dateEl&&dateEl.value){
+    var whenStr=dateEl.value+(timeEl&&timeEl.value?' '+timeEl.value:'');
+    lines.push((t.orderWhen||'📅 Requested time:')+' '+whenStr);
+    lines.push(t.orderConfirmNote||'⚠️ Please confirm this booking by replying.');
+  } else {
+    lines.push(t.orderNow||'🕒 Now (ASAP)');
+  }
   var paxSel=document.getElementById('order-pax');
   var pax=paxSel?paxSel.value:'2';
   lines.push((t.orderPax||'• Passengers:')+' '+(pax==='2'?'1-2':pax));
