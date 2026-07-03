@@ -429,6 +429,7 @@ var DRIVERS=[{
   "areas":"Sofia — Center, Airport, Ring Road, All districts",
   "phone":"+359878592888",
   "price":"0.75 EUR/km day / 0.85 EUR/km night / Start 1.49 EUR",
+  "tariff":{"start":1.49,"km_day":0.75,"km_night":0.85},
   "bio":"Non-smoker. IT specialist. Lived abroad. No animals, food or drinks in the car. Happy to talk or stay silent. Please speak up if you want a specific route or feel unwell."
 }];
 
@@ -1232,6 +1233,32 @@ function updateToText(){
   var el=document.getElementById('to-text');
   if(!el)return;
   el.textContent=toLat?(t.destSet||'Destination: point set'):(t.destNotSet||'Destination: not set (optional)');
+  showLiveEstimate();
+}
+function showLiveEstimate(){
+  var el=document.getElementById('est-line');
+  if(!el){
+    var anchor=document.getElementById('to-text');
+    if(!anchor)return;
+    el=document.createElement('div');el.id='est-line';
+    el.style.cssText='font-size:13px;color:var(--y);margin-top:6px;font-weight:600';
+    anchor.parentNode.insertBefore(el,anchor.nextSibling);
+  }
+  if(!toLat||!toLng){el.textContent='';return;}
+  var fLat=(fromMode==='custom'&&fromLat)?fromLat:(cur?cur.lat:null);
+  var fLng=(fromMode==='custom'&&fromLng)?fromLng:(cur?cur.lng:null);
+  if(fromMode!=='custom'&&navigator.geolocation){
+    // при GPS pickup — реалната позиция идва чак при поръчка; ползваме бърза приблизителна
+  }
+  if(!fLat||!fLng){el.textContent='';return;}
+  var t=T[lang]||T.en;
+  el.textContent='⏳ '+(t.estCalc||'Calculating estimate…');
+  fetchEstimate(fLat,fLng,toLat,toLng,function(e){
+    var pr=cur?calcPrice(e.km,cur):null;
+    var s='📐 ≈ '+e.km+' km · ~'+e.min+' min';
+    if(pr)s+=' · ~'+pr+' € ('+(isNightTariff()?(t.tariffNight||'night'):(t.tariffDay||'day'))+' '+(t.tariffNote||'est.')+')';
+    el.textContent=s;
+  });
 }
 function openLocPicker(target){
   pickerTarget=target;
@@ -1394,10 +1421,47 @@ function buildOrderMessage(lat,lng){
     lines.push('');
     lines.push(t.orderDest||'🏁 Destination:');
     lines.push('https://maps.google.com/?q='+toLat+','+toLng);
+    if(lat&&lng){
+      lines.push('');
+      lines.push('🗺 '+(t.orderRoute||'Route')+':');
+      lines.push('https://www.google.com/maps/dir/?api=1&origin='+lat+','+lng+'&destination='+toLat+','+toLng+'&travelmode=driving');
+      if(__est){
+        var pr=cur?calcPrice(__est.km,cur):null;
+        var eLine='≈ '+__est.km+' km · ~'+__est.min+' min';
+        if(pr)eLine+=' · ~'+pr+' € ('+(isNightTariff()?(t.tariffNight||'night'):(t.tariffDay||'day'))+')';
+        lines.push(eLine);
+      }
+    }
   }
   return lines.join('\n');
 }
 
+var __est=null;
+function haversineKm(a,b,c,d){var R=6371,dLa=(c-a)*Math.PI/180,dLo=(d-b)*Math.PI/180;
+  var h=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dLo/2)*Math.sin(dLo/2);
+  return R*2*Math.atan2(Math.sqrt(h),Math.sqrt(1-h));}
+function isNightTariff(){var h=new Date().getHours();return h>=22||h<6;}
+function calcPrice(km,drv){
+  if(!drv||!drv.tariff)return null;
+  var rate=isNightTariff()?drv.tariff.km_night:drv.tariff.km_day;
+  return Math.round((drv.tariff.start+km*rate)*10)/10;
+}
+// OSRM реално разстояние с 2.5с timeout, fallback haversine*1.35
+function fetchEstimate(fLat,fLng,tLat,tLng,cb){
+  var done=false;
+  function finish(km,min,src){if(done)return;done=true;__est={km:Math.round(km*10)/10,min:Math.round(min),src:src};cb(__est);}
+  var fbKm=haversineKm(fLat,fLng,tLat,tLng)*1.35;
+  var timer=setTimeout(function(){finish(fbKm,fbKm/0.42,'approx');},2500);
+  try{
+    fetch('https://router.project-osrm.org/route/v1/driving/'+fLng+','+fLat+';'+tLng+','+tLat+'?overview=false')
+      .then(function(r){return r.json();})
+      .then(function(d){
+        clearTimeout(timer);
+        if(d.routes&&d.routes[0]){finish(d.routes[0].distance/1000,d.routes[0].duration/60+3,'osrm');}
+        else{finish(fbKm,fbKm/0.42,'approx');}
+      }).catch(function(){clearTimeout(timer);finish(fbKm,fbKm/0.42,'approx');});
+  }catch(e){clearTimeout(timer);finish(fbKm,fbKm/0.42,'approx');}
+}
 function resolvePickupLocation(cb){
   if(fromMode==='custom'&&fromLat&&fromLng){cb(fromLat,fromLng);}
   else{requestLocationForOrder(cb);}
@@ -1405,6 +1469,7 @@ function resolvePickupLocation(cb){
 function doVibOrder(){
   if(!cur)return;
   resolvePickupLocation(function(lat,lng){
+    function go(){
     var msg=buildOrderMessage(lat,lng);
     var url='viber://forward?text='+encodeURIComponent(msg);
     // Some Viber versions need chat number first, then user pastes — try direct chat with number to be safe
@@ -1417,15 +1482,22 @@ function doVibOrder(){
     setTimeout(function(){
       alert('📋 Your order details copied to clipboard:\n\n'+msg+'\n\nPaste this message in the Viber chat that just opened.');
     },600);
+    }
+    if(lat&&lng&&toLat&&toLng){fetchEstimate(lat,lng,toLat,toLng,function(){go();});}
+    else{go();}
   });
 }
 
 function doWAOrder(){
   if(!cur)return;
   resolvePickupLocation(function(lat,lng){
-    var msg=buildOrderMessage(lat,lng);
-    var waUrl='https://wa.me/'+cur.phone.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msg);
-    window.location.href=waUrl;
+    function go(){
+      var msg=buildOrderMessage(lat,lng);
+      var waUrl='https://wa.me/'+cur.phone.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msg);
+      window.location.href=waUrl;
+    }
+    if(lat&&lng&&toLat&&toLng){fetchEstimate(lat,lng,toLat,toLng,function(){go();});}
+    else{go();}
   });
 }
 function openRate(){alert('Rating system coming soon.');}
