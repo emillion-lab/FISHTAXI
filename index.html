@@ -291,7 +291,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
       <div class="br"><div class="bi2">🚗</div><div class="bt"><strong id="r-c2t">Car photos</strong><span id="r-c2s"> — outside, inside, dashboard</span></div></div>
       <div class="br"><div class="bi2">📱</div><div class="bt"><strong id="r-c3t">Phone number</strong><span id="r-c3s"> — clients call/Viber directly</span></div></div>
       <div class="br"><div class="bi2">🏙️</div><div class="bt"><strong id="r-c4t">City and areas</strong><span id="r-c4s"> — where you drive</span></div></div>
-      <p style="font-size:11px;color:var(--mu2);margin-top:10px;line-height:1.5;border-top:1px solid var(--brd);padding-top:8px"><span id="r-gdpr">🔒 <strong style="color:var(--mu)">GDPR:</strong> Only public profile data collected. No ID, no address, no financials. Delete anytime. Never sold to third parties.</span></p>
+      <p style="font-size:11px;color:var(--mu2);margin-top:10px;line-height:1.5;border-top:1px solid var(--brd);padding-top:8px"><span id="r-gdpr">🔒 <strong style="color:var(--mu)">GDPR:</strong> Only public profile data collected. No ID, no address, no financials. Delete anytime. Never sold to third parties. If you allow location, an anonymous coarse point (~100 m) may be shown to drivers as live demand for up to 10 minutes — no identity attached.</span></p>
     </div>
     <div class="jc"><h3 id="r-h4">📱 How to Join</h3>
       <p id="r-p2" style="margin-bottom:10px">Driver registration via our dedicated driver app. Under 5 minutes.</p>
@@ -465,7 +465,7 @@ var T={
     sumFast:"Can drive fast",sumCalm:"or calmly — your choice",sumTalkSilent:"happy to talk or stay silent",sumTalk:"enjoys conversation",sumSilent:"prefers quiet rides",sumMusic:"plays",
     pbHurry:"⏱ I'm in a hurry",pbRelax:"😌 Take it easy",pbSilent:"🤫 Prefer silence",pbTalk:"💬 Happy to chat",pbNomusic:"🔇 No music",pbAc:"❄️ A/C please",pbLuggage:"🧳 Have luggage",btnCallM:"📞 Call",btnVibOrd:"💬 Order via Viber",locDefault:"Location will be shared with driver",
     hT1:"Find a Driver",hP1:"Browse verified drivers. Use filters for payment, car type, language, driving style, atmosphere.",hT2:"Check the Profile",hP2:"See photo, car, prices, languages and driving style. Know exactly who to expect.",hT3:"Call or Viber Directly",hP3:"Contact your driver directly. No booking fee, no algorithm, no commission.",hT4:"Tell Your Driver Your Style",hP4:"Tell your driver how you prefer to ride when you get in. Music, silence, speed, route.",hT5:"Pay the Driver",hP5:"Cash, Revolut or card terminal. 100% goes to the driver, zero commission.",hT6:"Ratings Are Verified",hP6:"All reviews checked by admin before publishing. Protects drivers from unfair ratings.",hCta:"Find a Driver Now",
-    rFree:"FREE for first 300 drivers",rJoinnow:"Join now, no payment required",rSpots:"SPOTS REMAINING",rSpotsleft:"276 / 300 left",rH1:"Drive with fish.taxi",rP1:"The platform where drivers come first. Keep 100% of every ride. Forever.",rAfter:"20 EUR/month after launch",rBeta:"Beta, first 300 drivers worldwide",rH2:"What You Get",rB1t:"Live GPS on Map",rB1s:"Clients see you in real time",rB2t:"Driver Protection",rB2s:"Ratings reviewed before publishing. Bad clients reported.",rB3t:"Verified Badge",rB3s:"Vehicle checked against official registries",rB4t:"Digital Documents",rB4s:"Carrier permit and logbook included",rB5t:"Zero Commission",rB5s:"Every cent from the ride is yours. Always.",rB6t:"Any City, Any Country",rB6s:"Sofia, Zurich, Berlin, London, one platform",rH3:"What We Need",rC1t:"Your photo",rC1s:" - clients know who to expect",rC2t:"Car photos",rC2s:" - outside, inside, dashboard",rC3t:"Phone number",rC3s:" - clients call/Viber directly",rC4t:"City and areas",rC4s:" - where you drive",rGdpr:"GDPR: Only public profile data collected. No ID, no address, no financials. Delete anytime. Never sold to third parties.",rH4:"How to Join",rP2:"Driver registration via our dedicated driver app. Under 5 minutes.",rSoon:"Driver app, coming soon",rNotify:"Leave your contact and we will notify you",rJoinbtn:"Join Waitlist, Free",
+    rFree:"FREE for first 300 drivers",rJoinnow:"Join now, no payment required",rSpots:"SPOTS REMAINING",rSpotsleft:"276 / 300 left",rH1:"Drive with fish.taxi",rP1:"The platform where drivers come first. Keep 100% of every ride. Forever.",rAfter:"20 EUR/month after launch",rBeta:"Beta, first 300 drivers worldwide",rH2:"What You Get",rB1t:"Live GPS on Map",rB1s:"Clients see you in real time",rB2t:"Driver Protection",rB2s:"Ratings reviewed before publishing. Bad clients reported.",rB3t:"Verified Badge",rB3s:"Vehicle checked against official registries",rB4t:"Digital Documents",rB4s:"Carrier permit and logbook included",rB5t:"Zero Commission",rB5s:"Every cent from the ride is yours. Always.",rB6t:"Any City, Any Country",rB6s:"Sofia, Zurich, Berlin, London, one platform",rH3:"What We Need",rC1t:"Your photo",rC1s:" - clients know who to expect",rC2t:"Car photos",rC2s:" - outside, inside, dashboard",rC3t:"Phone number",rC3s:" - clients call/Viber directly",rC4t:"City and areas",rC4s:" - where you drive",rGdpr:"GDPR: Only public profile data collected. No ID, no address, no financials. Delete anytime. Never sold to third parties. If you allow location, an anonymous coarse point (~100 m) may be shown to drivers as live demand for up to 10 minutes — no identity attached.",rH4:"How to Join",rP2:"Driver registration via our dedicated driver app. Under 5 minutes.",rSoon:"Driver app, coming soon",rNotify:"Leave your contact and we will notify you",rJoinbtn:"Join Waitlist, Free",
     emilBio:"Non-smoker. IT specialist. Lived abroad. No animals, food or drinks in the car. Happy to talk or stay silent. Please speak up if you want a specific route or feel unwell."
   ,
     orderHeader:'🚕 fish.taxi order request',
@@ -1084,6 +1084,7 @@ function renderMap(){
 function openMod(id){
   cur=DRIVERS.filter(function(d){return d.id===id;})[0];
   if(!cur)return;
+  track('profile_open');
   var d=cur,st=stI(d),t=T[lang]||T.en;
   selectedPrefs=[];
   document.querySelectorAll('.pref-btn').forEach(function(b){b.classList.remove('on');});
@@ -1514,6 +1515,7 @@ function doVibOrder(){
       alert('📋 Your order details copied to clipboard:\n\n'+msg+'\n\nPaste this message in the Viber chat that just opened.');
     },600);
     }
+    gentleChime();track('order_viber');
     if(lat&&lng&&toLat&&toLng){fetchEstimate(lat,lng,toLat,toLng,function(){go();});}
     else{go();}
   });
@@ -1527,6 +1529,7 @@ function doWAOrder(){
       var waUrl='https://wa.me/'+cur.phone.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msg);
       window.location.href=waUrl;
     }
+    gentleChime();track('order_wa');
     if(lat&&lng&&toLat&&toLng){fetchEstimate(lat,lng,toLat,toLng,function(){go();});}
     else{go();}
   });
@@ -1545,6 +1548,44 @@ function showTab(t){
 }
 
 var youMarker=null;
+// ── Анонимен analytics beacon (веднъж на събитие/сесия където има смисъл) ──
+function track(ev){
+  try{
+    var payload=JSON.stringify({event:ev});
+    if(navigator.sendBeacon){navigator.sendBeacon(WORKER+'/track',new Blob([payload],{type:'application/json'}));}
+    else{fetch(WORKER+'/track',{method:'POST',headers:{'Content-Type':'application/json'},body:payload,keepalive:true});}
+  }catch(e){}
+}
+if(!sessionStorage.getItem('ft_pv')){sessionStorage.setItem('ft_pv','1');track('pageview');}
+
+// ── Нежен звук (Web Audio, две меки ноти) ──
+var audioCtx=null;
+function gentleChime(){
+  try{
+    if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==='suspended')audioCtx.resume();
+    [[523.25,0],[783.99,0.16]].forEach(function(n){
+      var o=audioCtx.createOscillator(),g=audioCtx.createGain();
+      o.type='sine';o.frequency.value=n[0];
+      g.gain.setValueAtTime(0,audioCtx.currentTime+n[1]);
+      g.gain.linearRampToValueAtTime(0.12,audioCtx.currentTime+n[1]+0.03);
+      g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+n[1]+0.7);
+      o.connect(g);g.connect(audioCtx.destination);
+      o.start(audioCtx.currentTime+n[1]);o.stop(audioCtx.currentTime+n[1]+0.75);
+    });
+  }catch(e){}
+}
+
+// ── Анонимно присъствие: загрубена локация → точка на търсене за шофьорите (10 мин) ──
+var presenceSent=false;
+function sendPresence(){
+  if(presenceSent||!userLat||!userLng)return;
+  presenceSent=true;
+  try{
+    fetch(WORKER+'/presence',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({lat:Math.round(userLat*1000)/1000,lng:Math.round(userLng*1000)/1000})});
+  }catch(e){}
+}
 function initMapOnce(){
   if(mapReady||typeof L==='undefined')return;
   mapReady=true;
@@ -1592,6 +1633,7 @@ function centerOnUser(announce){
         iconSize:[16,16],iconAnchor:[8,8],className:''
       }),interactive:false}).addTo(map);
       updateEtaLine();
+      sendPresence();
     }
   },function(err){
     if(announce)alert('📍 Достъпът до локация е отказан за fish.taxi. Разреши го от настройките на браузъра (иконата вляво от адреса → Разрешения → Локация).');
