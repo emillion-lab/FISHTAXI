@@ -1182,6 +1182,16 @@ function openMod(id){
     mph.innerHTML='';mhph.style.display='none';
   }
   document.getElementById('mprice').textContent=d.price;
+  (function(){
+    var old=document.getElementById('tariff-photo-line');if(old)old.remove();
+    if(d.tariff_photo){
+      var a=document.createElement('div');a.id='tariff-photo-line';
+      a.style.cssText='margin-top:6px';
+      a.innerHTML='<img src="'+d.tariff_photo+'" onclick="showImg(\''+d.tariff_photo+'\')" style="height:54px;border-radius:8px;border:1px solid #d4af37;cursor:pointer;vertical-align:middle" alt="Тарифа"> <span style="font-size:12px;color:#8a7a3a">📋 Официална тарифна табела — докосни за увеличение. По нея се смята прогнозната цена.</span>';
+      var anchor=document.getElementById('mprice');
+      anchor.parentNode.insertBefore(a,anchor.nextSibling);
+    }
+  })();
   updateEtaLine();
   document.getElementById('mareas').textContent=d.areas;
   document.getElementById('mbio').textContent=(d.id===1&&t.emilBio)?t.emilBio:(d.bio||'');
@@ -1297,7 +1307,7 @@ function showLiveEstimate(){
   fetchEstimate(fLat,fLng,toLat,toLng,function(e){
     var pr=cur?calcPrice(e.km,cur):null;
     var s='📐 ≈ '+e.km+' km · ~'+e.min+' min';
-    if(pr)s+=' · ~'+pr+' € ('+(isNightTariff()?(t.tariffNight||'night'):(t.tariffDay||'day'))+' '+(t.tariffNote||'est.')+')';
+    if(pr)s+=' · ~'+pr+' € ('+(isNightTariff()?(t.tariffNight||'night'):(t.tariffDay||'day'))+', по офиц. тарифа, ориентировъчно)';
     el.textContent=s;
   });
 }
