@@ -1059,10 +1059,14 @@ function renderMap(){
   mkrs.forEach(function(m){try{m.remove();}catch(e){}});mkrs=[];
   DRIVERS.forEach(function(d){
     var ic=carI(d);
-    var op=d.online?'1':'0.5';
+    var op=d.online?'1':'0.55';
+    var ring=d.online?'#22c55e':'#777';
+    var inner=(d.photos&&d.photos.length)
+      ? '<img src="'+d.photos[0]+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt="">'
+      : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:17px;background:'+(d.online?'#22c55e':'#555')+'">'+ic+'</div>';
     var m=L.marker([d.lat,d.lng],{icon:L.divIcon({
-      html:'<div style="opacity:'+op+';background:'+(d.online?'#22c55e':'#555')+';border:2px solid #fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 6px #0008">'+ic+'</div>',
-      iconSize:[32,32],iconAnchor:[16,16],className:''
+      html:'<div style="opacity:'+op+';border:3px solid '+ring+';border-radius:50%;width:38px;height:38px;overflow:hidden;box-shadow:0 2px 8px #000a;background:#111">'+inner+'</div>',
+      iconSize:[38,38],iconAnchor:[19,19],className:''
     })}).addTo(map);
     var statusLine=d.online?'<span style="color:#22c55e">🟢 Online now</span>':'<span style="color:#999">⚫ Last seen '+timeAgo(d.lastSeen)+'</span>';
     m.bindPopup('<div style="text-align:center"><b>'+d.name+'</b><br>'+d.car+'<br>&#11088; '+d.rating+'<br>'+statusLine+'<br><button onclick="openMod('+d.id+')" style="margin-top:6px;background:#f5c518;color:#000;border:none;border-radius:6px;padding:5px 12px;font-weight:700;cursor:pointer">View Profile</button></div>');
@@ -1232,7 +1236,7 @@ function updateToText(){
   var t=T[lang]||T.en;
   var el=document.getElementById('to-text');
   if(!el)return;
-  el.textContent=toLat?(t.destSet||'Destination: point set'):(t.destNotSet||'Destination: not set (optional)');
+  el.textContent=toLat?((t.destSet||'Destination: point set')+' ✓ ('+toLat.toFixed(4)+', '+toLng.toFixed(4)+')'):(t.destNotSet||'Destination: not set (optional)');
   showLiveEstimate();
 }
 function showLiveEstimate(){
@@ -1245,10 +1249,15 @@ function showLiveEstimate(){
     anchor.parentNode.insertBefore(el,anchor.nextSibling);
   }
   if(!toLat||!toLng){el.textContent='';return;}
-  var fLat=(fromMode==='custom'&&fromLat)?fromLat:(cur?cur.lat:null);
-  var fLng=(fromMode==='custom'&&fromLng)?fromLng:(cur?cur.lng:null);
-  if(fromMode!=='custom'&&navigator.geolocation){
-    // при GPS pickup — реалната позиция идва чак при поръчка; ползваме бърза приблизителна
+  var fLat=(fromMode==='custom'&&fromLat)?fromLat:userLat;
+  var fLng=(fromMode==='custom'&&fromLng)?fromLng:userLng;
+  if((!fLat||!fLng)&&fromMode!=='custom'&&navigator.geolocation){
+    el.textContent='⏳ …';
+    navigator.geolocation.getCurrentPosition(function(p){
+      userLat=p.coords.latitude;userLng=p.coords.longitude;
+      showLiveEstimate();
+    },function(){el.textContent='';},{timeout:6000,maximumAge:120000});
+    return;
   }
   if(!fLat||!fLng){el.textContent='';return;}
   var t=T[lang]||T.en;
@@ -1294,17 +1303,32 @@ function useGpsForPicker(){
   });
 }
 function parseMapsLink(){
-  var val=document.getElementById('loc-picker-link').value;
+  var inp=document.getElementById('loc-picker-link');
+  var val=inp.value;
+  var warn=document.getElementById('loc-picker-warn');
+  if(!warn){
+    warn=document.createElement('div');warn.id='loc-picker-warn';
+    warn.style.cssText='font-size:11px;color:#f59e0b;margin:-2px 0 6px;line-height:1.4';
+    inp.parentNode.insertBefore(warn,inp.nextSibling);
+  }
   var m=val.match(/(-?\d{1,3}\.\d+),\s*(-?\d{1,3}\.\d+)/);
   if(m&&pickerMap){
     var lat=parseFloat(m[1]),lng=parseFloat(m[2]);
     pickerMap.setView([lat,lng],16);
     pickerMarker.setLatLng([lat,lng]);
     pickerTouched=true;
-  }
+    warn.textContent='';
+  } else if(/goo\.gl|maps\.app/.test(val)){
+    warn.textContent='⚠️ Съкратен линк — не съдържа координати. Отвори го в браузър и копирай пълния адрес, или просто докосни точката на картата.';
+  } else if(val.length>10){
+    warn.textContent='⚠️ Не откривам координати в линка. Докосни картата вместо това.';
+  } else { warn.textContent=''; }
 }
 function confirmLocPicker(){
-  if(!pickerTouched){closeLocPicker();return;}
+  if(!pickerTouched){
+    alert('📍 Не е избрана точка. Докосни мястото на картата (или постави пълен Google Maps линк с координати), после натисни ✅.');
+    return;
+  }
   var pos=pickerMarker.getLatLng();
   if(pickerTarget==='from'){
     fromMode='custom';fromLat=pos.lat;fromLng=pos.lng;
@@ -1513,12 +1537,28 @@ function showTab(t){
   }
 }
 
+var youMarker=null;
 function initMapOnce(){
   if(mapReady||typeof L==='undefined')return;
   mapReady=true;
   map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],15);
   tileLayer=L.tileLayer(getTileUrl(),{maxZoom:20,subdomains:getTileSubdomains()}).addTo(map);
   renderMap();
+  // Центрирай около ползвателя (ако позволи локация)
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(function(p){
+      userLat=p.coords.latitude;userLng=p.coords.longitude;
+      // само ако е в разумен радиус около София (60 км)
+      var dKm=haversineKm(userLat,userLng,42.6977,23.3219);
+      if(dKm<60){
+        map.setView([userLat,userLng],14);
+        youMarker=L.marker([userLat,userLng],{icon:L.divIcon({
+          html:'<div style="background:#3b82f6;border:3px solid #fff;border-radius:50%;width:16px;height:16px;box-shadow:0 0 0 6px #3b82f644"></div>',
+          iconSize:[16,16],iconAnchor:[8,8],className:''
+        }),interactive:false}).addTo(map);
+      }
+    },function(){},{timeout:8000,maximumAge:300000});
+  }
 }
 
 function pollGPS(){
