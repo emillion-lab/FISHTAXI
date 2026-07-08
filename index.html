@@ -247,8 +247,9 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
 <!-- MAP -->
 <div class="page on" id="page-map" style="overflow:hidden">
   <div id="simple-hero" style="padding:10px 12px;background:linear-gradient(180deg,#111 0%,#1a1a1a 100%);border-bottom:2px solid var(--y,#f0b429)">
-    <button onclick="orderNowSimple()" style="width:100%;padding:18px;font-size:22px;font-weight:900;border:none;border-radius:16px;background:#f0b429;color:#111;cursor:pointer;box-shadow:0 4px 14px #f0b42944">
+    <button onclick="orderNowSimple()" style="width:100%;padding:11px 12px;font-size:16px;font-weight:900;border:none;border-radius:12px;background:#f0b429;color:#111;cursor:pointer;box-shadow:0 2px 8px #f0b42933">
       🚕 <span id="hero-btn-txt">ПОРЪЧАЙ СЕГА</span>
+      <div style="font-size:11px;font-weight:600;text-transform:lowercase;color:#3a3a3a;margin-top:2px;letter-spacing:.2px">най-близкото такси</div>
     </button>
     <div id="hero-sub" style="font-size:12px;color:#999;text-align:center;margin-top:7px;line-height:1.5">
       Едно докосване → локацията ти → Viber до шофьора. Нищо друго.<br>
@@ -426,6 +427,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
       <button class="mcall" id="btn-call" onclick="doCall()" style="flex:1 1 100%">📞 Call</button>
       <button class="mvib" id="btn-vibord" onclick="doVibOrder()" style="flex:1">💬 Viber</button>
       <button class="mvib" id="btn-waord" onclick="doWAOrder()" style="flex:1;background:#25D366">🟢 WhatsApp</button>
+      <button class="mvib" id="btn-smsord" onclick="doSMSOrder()" style="flex:1;background:#4a90d9">✉️ SMS</button>
     </div>
     <button onclick="openRate()" id="rate-btn" style="width:100%;margin-top:8px;background:var(--s3);border:1px solid var(--brd);color:var(--mu);border-radius:9px;padding:9px;font-size:13px;cursor:pointer">⭐ Rate this driver</button>
   </div>
@@ -1564,6 +1566,22 @@ function doWAOrder(){
       window.location.href=waUrl;
     }
     gentleChime();track('order_wa');
+    if(lat&&lng&&toLat&&toLng){fetchEstimate(lat,lng,toLat,toLng,function(){go();});}
+    else{go();}
+  });
+}
+
+function doSMSOrder(){
+  if(!cur)return;
+  resolvePickupLocation(function(lat,lng){
+    function go(){
+      var msg=buildOrderMessage(lat,lng);
+      var num='+'+cur.phone.replace(/[^0-9]/g,'');
+      // iOS използва '&body=', Android '?body='
+      var sep=/iPhone|iPad|iPod/i.test(navigator.userAgent)?'&':'?';
+      window.location.href='sms:'+num+sep+'body='+encodeURIComponent(msg);
+    }
+    gentleChime();track('order_sms');
     if(lat&&lng&&toLat&&toLng){fetchEstimate(lat,lng,toLat,toLng,function(){go();});}
     else{go();}
   });
