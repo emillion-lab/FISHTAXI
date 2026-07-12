@@ -336,12 +336,12 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
     <div class="mc2" id="mcar2"></div>
     <div style="text-align:center;margin-bottom:8px" id="mstars"></div>
     <div class="sbox" id="mstyle"></div>
+    <div class="mh" id="mh-price">Price</div><div id="mprice" style="font-size:14px;font-weight:700;color:var(--y)"></div>
     <div class="mh" id="mh-cardet">Car Details</div><div id="mcardet"></div>
     <div class="mh" id="mh-photos" style="display:none">Car Photos</div><div class="mphotos" id="mphotos"></div>
     <div class="mh" id="mh-pay">Payment</div><div id="mpay"></div>
     <div class="mh" id="mh-langs">Languages</div><div id="mlangs"></div>
     <div class="mh" id="mh-opts">Options &amp; Atmosphere</div><div id="mopts" style="display:flex;flex-wrap:wrap;gap:4px"></div>
-    <div class="mh" id="mh-price">Price</div><div id="mprice" style="font-size:14px;font-weight:700;color:var(--y)"></div>
     <div class="mh" id="mh-areas">Areas</div><div id="mareas" style="font-size:13px;color:var(--mu)"></div>
     <div class="mh" id="mh-about">About the Driver</div><div id="mbio" style="font-size:13px;color:var(--mu);line-height:1.6"></div>
     <div class="mh" id="mh-order">Before You Order</div>
@@ -436,7 +436,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
 <script>
 var WORKER='https://mvr-proxy.mihov-emil.workers.dev';
 var DRIVERS=[{
-  "id":1,"name":"Emil M.",
+  "id":1,"name":"Emil M.","name_bg":"Емил М.",
   "avatar":"img/emil_avatar.jpg",
   "photos":["img/emil_car_front.jpg","img/emil_car_nevski.jpg","img/emil_interior.jpg"],
   "city":"sofia","lat":42.6977,"lng":23.3219,
@@ -482,7 +482,7 @@ var T={
     noDrivers:'No drivers found with this filter',
     online:'Online',offline:'Offline',
     howTitle:'How it works',joinTitle:'Join as Driver',
-    mVerified:"✓ Verified",mReviews:"reviews",mWarn:"Tell your driver your preferred pace when you get in",mCalmOpt:"Calm driving available on request",mCarDet:"Car Details",mPhotos:"Car Photos",onRequest:"on request",extraFee:"extra charge",mType:"Type",mSeats:"Seats",mPassengers:"passengers",mAccel:"0-100 km/h",mElectric:"Electric",mAC:"A/C",mYes:"Yes",mPayment:"Payment",mLangs:"Languages",mOpts:"Options & Atmosphere",mPrice:"Price",mAreas:"Areas",mAbout:"About the Driver",mRate:"Rate this driver",mViewProfile:"View Profile",
+    mVerified:"✓ Verified",mReviews:"reviews",mWarn:"Tell your driver your preferred pace when you get in",mCalmOpt:"Calm driving available on request",mCarDet:"Car Details",mPhotos:"Car Photos",onRequest:"on request",extraFee:"extra charge",mType:"Type",mSeats:"Seats",mPassengers:"passengers",mAccel:"0-100 km/h",mElectric:"Electric",mAC:"A/C",mYes:"Yes",mPayment:"Payment",mLangs:"Languages",mOpts:"Options & Atmosphere",mPrice:"Price",mAreas:"Areas",mAbout:"About the Driver",mRate:"Rate this driver",mViewProfile:"View Profile",stSport:'Sport',stFast:'Fast',stComfort:'Comfort',stNormal:'Normal',stAccel:'s 0-100',stSmooth:'Smooth ride',stBalanced:'Balanced',onlineNow:'Online now',lastSeen:'Last seen',agoNow:'just now',agoM:'m ago',agoH:'h ago',agoD:'d ago',prDay:'day',prNight:'night',prStart:'start',emilAreas:'Sofia — Center, Airport, Ring Road, all districts',
     mBeforeOrder:"Before You Order",
     lblMusic:"🎵 Preferred music",lblTip:"💰 Planned tip (optional)",lblPax:"👥 Passengers",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passengers:",lblWhen:"🕒 When",btnNow:"Now",btnSchedule:"📅 Schedule",pickupGps:"Pickup: my location (GPS)",pickupCustom:"Pickup: custom point set",destSet:"Destination: point set",destNotSet:"Destination: not set (optional)",btnChange:"Change",btnSet:"Set",locPickerHint:"📌 Tap the map to set the point, or paste a Google Maps link below",locPickerPlaceholder:"Paste Google Maps link (optional)",orderPickup:"📍 Pickup location:",orderDest:"🏁 Destination:",scheduleWarn:"⚠️ This is a booking request, not a confirmed ride. Wait for the driver to confirm by call or message before considering it booked.",orderWhen:"📅 Requested time:",orderConfirmNote:"⚠️ Please confirm this booking by replying.",orderNow:"🕒 Now (ASAP)",paxWarn:"⚠️ 3-4 passengers with luggage — please call first to confirm everything fits comfortably.",paxWarnMsg:"⚠️ 3-4 passengers with luggage — please confirm fit before booking",
     optNoPref:"No preference",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classical",optJazz:"🎷 Jazz",optElectronic:"🎧 Electronic",optNoMusic:"🔇 No music",optNoTip:"No tip planned",optSmallTip:"A small tip",optFairTip:"A fair tip — thanks for coming far",optGenTip:"A generous tip",
@@ -515,7 +515,7 @@ var T={
     noDrivers:'Няма намерени шофьори',
     online:'Онлайн',offline:'Офлайн',
     howTitle:'Как работи',joinTitle:'Присъедини се',
-    mVerified:"✓ Верифициран",mReviews:"отзива",mWarn:"Кажи на шофьора предпочитания темп при качване",mCalmOpt:"Спокойно каране при поискване",mCarDet:"Детайли на колата",mPhotos:"Снимки на колата",onRequest:"по договаряне",extraFee:"доплащане",mType:"Тип",mSeats:"Места",mPassengers:"пътници",mAccel:"0-100 км/ч",mElectric:"Електрическа",mAC:"Климатик",mYes:"Да",mPayment:"Плащане",mLangs:"Езици",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Райони",mAbout:"За шофьора",mRate:"Оцени шофьора",mViewProfile:"Виж профил",
+    mVerified:"✓ Верифициран",mReviews:"отзива",mWarn:"Кажи на шофьора предпочитания темп при качване",mCalmOpt:"Спокойно каране при поискване",mCarDet:"Детайли на колата",mPhotos:"Снимки на колата",onRequest:"по договаряне",extraFee:"доплащане",mType:"Тип",mSeats:"Места",mPassengers:"пътници",mAccel:"0-100 км/ч",mElectric:"Електрическа",mAC:"Климатик",mYes:"Да",mPayment:"Плащане",mLangs:"Езици",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Райони",mAbout:"За шофьора",mRate:"Оцени шофьора",mViewProfile:"Виж профил",stSport:'Спорт',stFast:'Бърз',stComfort:'Комфорт',stNormal:'Нормален',stAccel:'с 0-100',stSmooth:'Плавно каране',stBalanced:'Балансиран',onlineNow:'Онлайн сега',lastSeen:'Последно',agoNow:'току-що',agoM:' мин',agoH:' ч',agoD:' дни',prDay:'ден',prNight:'нощ',prStart:'начална',emilAreas:'София — Център, Летище, Околовръстно, всички квартали',
     mBeforeOrder:"Преди да поръчаш",
     lblMusic:"🎵 Предпочитана музика",lblTip:"💰 Планиран бакшиш (по избор)",lblPax:"👥 Пътници",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Пътници:",lblWhen:"🕒 Кога",btnNow:"Сега",btnSchedule:"📅 Резервирай",pickupGps:"Взимане: моята локация (GPS)",pickupCustom:"Взимане: зададена точка",destSet:"Дестинация: зададена",destNotSet:"Дестинация: не е зададена (по избор)",btnChange:"Смени",btnSet:"Задай",locPickerHint:"📌 Докосни картата, за да зададеш точка, или постави Google Maps линк отдолу",locPickerPlaceholder:"Постави Google Maps линк (по избор)",orderPickup:"📍 Място за взимане:",orderDest:"🏁 Дестинация:",scheduleWarn:"⚠️ Това е заявка за резервация, не потвърдено возене. Изчакайте шофьорът да потвърди с обаждане или съобщение, преди да смятате возенето за уговорено.",orderWhen:"📅 Заявено време:",orderConfirmNote:"⚠️ Моля, потвърдете тази резервация с отговор.",orderNow:"🕒 Сега (веднага)",paxWarn:"⚠️ 3-4 пътници с багаж — моля, обадете се първо, за да потвърдим, че всичко ще се събере комфортно.",paxWarnMsg:"⚠️ 3-4 пътници с багаж — моля потвърдете преди поръчка",
     optNoPref:"Без предпочитание",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Класика",optJazz:"🎷 Джаз",optElectronic:"🎧 Електронна",optNoMusic:"🔇 Без музика",optNoTip:"Без бакшиш",optSmallTip:"Малък бакшиш",optFairTip:"Достоен бакшиш — благодаря за дългия път",optGenTip:"Щедър бакшиш",
@@ -567,7 +567,7 @@ var T={
     btnCall:'📞 Anrufen',btnVib:'💬 Viber',
     noDrivers:'Keine Fahrer gefunden',
     online:'Online',offline:'Offline',
-    mVerified:"✓ Verifiziert",mReviews:"Bewertungen",mWarn:"Sagen Sie Ihrem Fahrer Ihr bevorzugtes Tempo beim Einsteigen",mCalmOpt:"Ruhiges Fahren auf Anfrage",mCarDet:"Fahrzeugdetails",mPhotos:"Fotos vom Auto",onRequest:"auf Anfrage",extraFee:"gegen Aufpreis",mType:"Typ",mSeats:"Sitze",mPassengers:"Passagiere",mAccel:"0-100 km/h",mElectric:"Elektrisch",mAC:"Klima",mYes:"Ja",mPayment:"Zahlung",mLangs:"Sprachen",mOpts:"Optionen & Atmosphäre",mPrice:"Preis",mAreas:"Gebiete",mAbout:"Über den Fahrer",mRate:"Fahrer bewerten",mViewProfile:"Profil ansehen",
+    mVerified:"✓ Verifiziert",mReviews:"Bewertungen",mWarn:"Sagen Sie Ihrem Fahrer Ihr bevorzugtes Tempo beim Einsteigen",mCalmOpt:"Ruhiges Fahren auf Anfrage",mCarDet:"Fahrzeugdetails",mPhotos:"Fotos vom Auto",onRequest:"auf Anfrage",extraFee:"gegen Aufpreis",mType:"Typ",mSeats:"Sitze",mPassengers:"Passagiere",mAccel:"0-100 km/h",mElectric:"Elektrisch",mAC:"Klima",mYes:"Ja",mPayment:"Zahlung",mLangs:"Sprachen",mOpts:"Optionen & Atmosphäre",mPrice:"Preis",mAreas:"Gebiete",mAbout:"Über den Fahrer",mRate:"Fahrer bewerten",mViewProfile:"Profil ansehen",stSport:'Sport',stFast:'Schnell',stComfort:'Komfort',stNormal:'Normal',stAccel:'s 0-100',stSmooth:'Ruhige Fahrt',stBalanced:'Ausgewogen',onlineNow:'Jetzt online',lastSeen:'Zuletzt',agoNow:'gerade eben',agoM:' Min.',agoH:' Std.',agoD:' Tg.',prDay:'Tag',prNight:'Nacht',prStart:'Grundpreis',emilAreas:'Sofia — Zentrum, Flughafen, Ringstraße, alle Stadtteile',
     mBeforeOrder:"Vor der Bestellung",
     lblMusic:"🎵 Bevorzugte Musik",lblTip:"💰 Geplantes Trinkgeld (optional)",lblPax:"👥 Passagiere",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passagiere:",lblWhen:"🕒 Wann",btnNow:"Jetzt",btnSchedule:"📅 Terminieren",pickupGps:"Abholung: mein Standort (GPS)",pickupCustom:"Abholung: benutzerdefinierter Punkt",destSet:"Ziel: Punkt gesetzt",destNotSet:"Ziel: nicht festgelegt (optional)",btnChange:"Ändern",btnSet:"Festlegen",locPickerHint:"📌 Tippen Sie auf die Karte, um den Punkt festzulegen, oder fügen Sie unten einen Google-Maps-Link ein",locPickerPlaceholder:"Google-Maps-Link einfügen (optional)",orderPickup:"📍 Abholort:",orderDest:"🏁 Ziel:",scheduleWarn:"⚠️ Dies ist eine Buchungsanfrage, keine bestätigte Fahrt. Bitte warten Sie auf die Bestätigung des Fahrers per Anruf oder Nachricht.",orderWhen:"📅 Gewünschte Zeit:",orderConfirmNote:"⚠️ Bitte bestätigen Sie diese Buchung durch Antwort.",orderNow:"🕒 Jetzt (sofort)",paxWarn:"⚠️ 3-4 Passagiere mit Gepäck — bitte rufen Sie vorher an, um zu bestätigen, dass alles bequem passt.",paxWarnMsg:"⚠️ 3-4 Passagiere mit Gepäck — bitte vor Buchung bestätigen",
     optNoPref:"Keine Präferenz",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klassik",optJazz:"🎷 Jazz",optElectronic:"🎧 Elektronisch",optNoMusic:"🔇 Keine Musik",optNoTip:"Kein Trinkgeld geplant",optSmallTip:"Ein kleines Trinkgeld",optFairTip:"Ein faires Trinkgeld — danke fürs Kommen",optGenTip:"Ein großzügiges Trinkgeld",
@@ -619,7 +619,7 @@ var T={
     btnCall:'📞 Appeler',btnVib:'💬 Viber',
     noDrivers:'Aucun chauffeur trouvé',
     online:'En ligne',offline:'Hors ligne',
-    mVerified:"✓ Vérifié",mReviews:"avis",mWarn:"Dites à votre chauffeur votre rythme préféré en montant",mCalmOpt:"Conduite calme sur demande",mCarDet:"Détails du véhicule",mPhotos:"Photos de la voiture",onRequest:"sur demande",extraFee:"supplément",mType:"Type",mSeats:"Places",mPassengers:"passagers",mAccel:"0-100 km/h",mElectric:"Électrique",mAC:"Clim",mYes:"Oui",mPayment:"Paiement",mLangs:"Langues",mOpts:"Options et ambiance",mPrice:"Prix",mAreas:"Zones",mAbout:"À propos du chauffeur",mRate:"Évaluer ce chauffeur",mViewProfile:"Voir le profil",
+    mVerified:"✓ Vérifié",mReviews:"avis",mWarn:"Dites à votre chauffeur votre rythme préféré en montant",mCalmOpt:"Conduite calme sur demande",mCarDet:"Détails du véhicule",mPhotos:"Photos de la voiture",onRequest:"sur demande",extraFee:"supplément",mType:"Type",mSeats:"Places",mPassengers:"passagers",mAccel:"0-100 km/h",mElectric:"Électrique",mAC:"Clim",mYes:"Oui",mPayment:"Paiement",mLangs:"Langues",mOpts:"Options et ambiance",mPrice:"Prix",mAreas:"Zones",mAbout:"À propos du chauffeur",mRate:"Évaluer ce chauffeur",mViewProfile:"Voir le profil",stSport:'Sport',stFast:'Rapide',stComfort:'Confort',stNormal:'Normal',stAccel:'s 0-100',stSmooth:'Conduite souple',stBalanced:'Équilibré',onlineNow:'En ligne',lastSeen:'Vu il y a',agoNow:"à l'instant",agoM:' min',agoH:' h',agoD:' j',prDay:'jour',prNight:'nuit',prStart:'prise en charge',emilAreas:'Sofia — Centre, Aéroport, Périphérique, tous les quartiers',
     mBeforeOrder:"Avant de commander",
     lblMusic:"🎵 Musique préférée",lblTip:"💰 Pourboire prévu (optionnel)",lblPax:"👥 Passagers",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passagers :",lblWhen:"🕒 Quand",btnNow:"Maintenant",btnSchedule:"📅 Planifier",pickupGps:"Prise en charge : ma position (GPS)",pickupCustom:"Prise en charge : point personnalisé",destSet:"Destination : point défini",destNotSet:"Destination : non définie (optionnel)",btnChange:"Changer",btnSet:"Définir",locPickerHint:"📌 Touchez la carte pour définir le point, ou collez un lien Google Maps ci-dessous",locPickerPlaceholder:"Coller un lien Google Maps (optionnel)",orderPickup:"📍 Lieu de prise en charge :",orderDest:"🏁 Destination :",scheduleWarn:"⚠️ Ceci est une demande de réservation, pas une course confirmée. Attendez la confirmation du chauffeur par appel ou message.",orderWhen:"📅 Heure demandée :",orderConfirmNote:"⚠️ Merci de confirmer cette réservation en répondant.",orderNow:"🕒 Maintenant (dès que possible)",paxWarn:"⚠️ 3-4 passagers avec bagages — merci d appeler d abord pour confirmer que tout rentre confortablement.",paxWarnMsg:"⚠️ 3-4 passagers avec bagages — merci de confirmer avant de réserver",
     optNoPref:"Aucune préférence",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classique",optJazz:"🎷 Jazz",optElectronic:"🎧 Électronique",optNoMusic:"🔇 Sans musique",optNoTip:"Pas de pourboire prévu",optSmallTip:"Un petit pourboire",optFairTip:"Un pourboire juste — merci de venir de loin",optGenTip:"Un généreux pourboire",
@@ -671,7 +671,7 @@ var T={
     btnCall:'📞 Звонить',btnVib:'💬 Viber',
     noDrivers:'Водители не найдены',
     online:'Онлайн',offline:'Офлайн',
-    mVerified:"✓ Подтвержден",mReviews:"отзывов",mWarn:"Скажите водителю предпочитаемый темп при посадке",mCalmOpt:"Спокойная езда по запросу",mCarDet:"Детали автомобиля",mPhotos:"Фото автомобиля",onRequest:"по договорённости",extraFee:"доплата",mType:"Тип",mSeats:"Места",mPassengers:"пассажиров",mAccel:"0-100 км/ч",mElectric:"Электро",mAC:"Кондиционер",mYes:"Да",mPayment:"Оплата",mLangs:"Языки",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Районы",mAbout:"О водителе",mRate:"Оценить водителя",mViewProfile:"Смотреть профиль",
+    mVerified:"✓ Подтвержден",mReviews:"отзывов",mWarn:"Скажите водителю предпочитаемый темп при посадке",mCalmOpt:"Спокойная езда по запросу",mCarDet:"Детали автомобиля",mPhotos:"Фото автомобиля",onRequest:"по договорённости",extraFee:"доплата",mType:"Тип",mSeats:"Места",mPassengers:"пассажиров",mAccel:"0-100 км/ч",mElectric:"Электро",mAC:"Кондиционер",mYes:"Да",mPayment:"Оплата",mLangs:"Языки",mOpts:"Опции и атмосфера",mPrice:"Цена",mAreas:"Районы",mAbout:"О водителе",mRate:"Оценить водителя",mViewProfile:"Смотреть профиль",stSport:'Спорт',stFast:'Быстрый',stComfort:'Комфорт',stNormal:'Обычный',stAccel:'с 0-100',stSmooth:'Плавная езда',stBalanced:'Сбалансированный',onlineNow:'Онлайн',lastSeen:'Был(а)',agoNow:'только что',agoM:' мин назад',agoH:' ч назад',agoD:' дн назад',prDay:'день',prNight:'ночь',prStart:'посадка',emilAreas:'София — Центр, Аэропорт, Кольцевая, все районы',
     mBeforeOrder:"Перед заказом",
     lblMusic:"🎵 Предпочитаемая музыка",lblTip:"💰 Планируемые чаевые (необязательно)",lblPax:"👥 Пассажиры",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Пассажиры:",lblWhen:"🕒 Когда",btnNow:"Сейчас",btnSchedule:"📅 Забронировать",pickupGps:"Подача: моё местоположение (GPS)",pickupCustom:"Подача: указанная точка",destSet:"Пункт назначения: указан",destNotSet:"Пункт назначения: не указан (по желанию)",btnChange:"Изменить",btnSet:"Указать",locPickerHint:"📌 Нажмите на карту, чтобы указать точку, или вставьте ссылку Google Maps ниже",locPickerPlaceholder:"Вставьте ссылку Google Maps (по желанию)",orderPickup:"📍 Место подачи:",orderDest:"🏁 Пункт назначения:",scheduleWarn:"⚠️ Это запрос на бронирование, а не подтверждённая поездка. Дождитесь подтверждения от водителя по звонку или сообщению.",orderWhen:"📅 Запрошенное время:",orderConfirmNote:"⚠️ Пожалуйста, подтвердите это бронирование ответом.",orderNow:"🕒 Сейчас (немедленно)",paxWarn:"⚠️ 3-4 пассажира с багажом — пожалуйста, позвоните заранее, чтобы подтвердить, что всё поместится.",paxWarnMsg:"⚠️ 3-4 пассажира с багажом — подтвердите перед заказом",
     optNoPref:"Без предпочтений",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Классика",optJazz:"🎷 Джаз",optElectronic:"🎧 Электронная",optNoMusic:"🔇 Без музыки",optNoTip:"Без чаевых",optSmallTip:"Небольшие чаевые",optFairTip:"Достойные чаевые — спасибо за долгий путь",optGenTip:"Щедрые чаевые",
@@ -723,7 +723,7 @@ var T={
     btnCall:'📞 Chiama',btnVib:'💬 Viber',
     noDrivers:'Nessun autista trovato',
     online:'Online',offline:'Offline',
-    mVerified:"✓ Verificato",mReviews:"recensioni",mWarn:"Di al tuo autista il ritmo preferito quando sali",mCalmOpt:"Guida calma su richiesta",mCarDet:"Dettagli auto",mPhotos:"Foto dell auto",onRequest:"su richiesta",extraFee:"supplemento",mType:"Tipo",mSeats:"Posti",mPassengers:"passeggeri",mAccel:"0-100 km/h",mElectric:"Elettrico",mAC:"Aria cond.",mYes:"Si",mPayment:"Pagamento",mLangs:"Lingue",mOpts:"Opzioni e atmosfera",mPrice:"Prezzo",mAreas:"Zone",mAbout:"Sull autista",mRate:"Valuta autista",mViewProfile:"Vedi profilo",
+    mVerified:"✓ Verificato",mReviews:"recensioni",mWarn:"Di al tuo autista il ritmo preferito quando sali",mCalmOpt:"Guida calma su richiesta",mCarDet:"Dettagli auto",mPhotos:"Foto dell auto",onRequest:"su richiesta",extraFee:"supplemento",mType:"Tipo",mSeats:"Posti",mPassengers:"passeggeri",mAccel:"0-100 km/h",mElectric:"Elettrico",mAC:"Aria cond.",mYes:"Si",mPayment:"Pagamento",mLangs:"Lingue",mOpts:"Opzioni e atmosfera",mPrice:"Prezzo",mAreas:"Zone",mAbout:"Sull autista",mRate:"Valuta autista",mViewProfile:"Vedi profilo",stSport:'Sport',stFast:'Veloce',stComfort:'Comfort',stNormal:'Normale',stAccel:'s 0-100',stSmooth:'Guida fluida',stBalanced:'Equilibrato',onlineNow:'Online ora',lastSeen:'Visto',agoNow:'adesso',agoM:' min fa',agoH:' h fa',agoD:' g fa',prDay:'giorno',prNight:'notte',prStart:'partenza',emilAreas:'Sofia — Centro, Aeroporto, Tangenziale, tutti i quartieri',
     mBeforeOrder:"Prima di ordinare",
     lblMusic:"🎵 Musica preferita",lblTip:"💰 Mancia pianificata (opzionale)",lblPax:"👥 Passeggeri",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passeggeri:",lblWhen:"🕒 Quando",btnNow:"Ora",btnSchedule:"📅 Prenota",pickupGps:"Ritiro: la mia posizione (GPS)",pickupCustom:"Ritiro: punto personalizzato",destSet:"Destinazione: punto impostato",destNotSet:"Destinazione: non impostata (opzionale)",btnChange:"Cambia",btnSet:"Imposta",locPickerHint:"📌 Tocca la mappa per impostare il punto, oppure incolla un link Google Maps qui sotto",locPickerPlaceholder:"Incolla link Google Maps (opzionale)",orderPickup:"📍 Luogo di ritiro:",orderDest:"🏁 Destinazione:",scheduleWarn:"⚠️ Questa è una richiesta di prenotazione, non una corsa confermata. Attendi la conferma dell autista per chiamata o messaggio.",orderWhen:"📅 Orario richiesto:",orderConfirmNote:"⚠️ Conferma questa prenotazione rispondendo.",orderNow:"🕒 Ora (subito)",paxWarn:"⚠️ 3-4 passeggeri con bagagli — chiamare prima per confermare che tutto entri comodamente.",paxWarnMsg:"⚠️ 3-4 passeggeri con bagagli — confermare prima di prenotare",
     optNoPref:"Nessuna preferenza",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classica",optJazz:"🎷 Jazz",optElectronic:"🎧 Elettronica",optNoMusic:"🔇 Senza musica",optNoTip:"Nessuna mancia prevista",optSmallTip:"Una piccola mancia",optFairTip:"Una mancia equa — grazie per essere venuto da lontano",optGenTip:"Una generosa mancia",
@@ -775,7 +775,7 @@ var T={
     btnCall:'📞 Llamar',btnVib:'💬 Viber',
     noDrivers:'No se encontraron conductores',
     online:'Online',offline:'Offline',
-    mVerified:"✓ Verificado",mReviews:"reseñas",mWarn:"Dile a tu conductor tu ritmo preferido al subir",mCalmOpt:"Conducción tranquila bajo petición",mCarDet:"Detalles del coche",mPhotos:"Fotos del coche",onRequest:"a petición",extraFee:"cargo extra",mType:"Tipo",mSeats:"Asientos",mPassengers:"pasajeros",mAccel:"0-100 km/h",mElectric:"Eléctrico",mAC:"A/C",mYes:"Sí",mPayment:"Pago",mLangs:"Idiomas",mOpts:"Opciones y ambiente",mPrice:"Precio",mAreas:"Zonas",mAbout:"Sobre el conductor",mRate:"Calificar conductor",mViewProfile:"Ver perfil",
+    mVerified:"✓ Verificado",mReviews:"reseñas",mWarn:"Dile a tu conductor tu ritmo preferido al subir",mCalmOpt:"Conducción tranquila bajo petición",mCarDet:"Detalles del coche",mPhotos:"Fotos del coche",onRequest:"a petición",extraFee:"cargo extra",mType:"Tipo",mSeats:"Asientos",mPassengers:"pasajeros",mAccel:"0-100 km/h",mElectric:"Eléctrico",mAC:"A/C",mYes:"Sí",mPayment:"Pago",mLangs:"Idiomas",mOpts:"Opciones y ambiente",mPrice:"Precio",mAreas:"Zonas",mAbout:"Sobre el conductor",mRate:"Calificar conductor",mViewProfile:"Ver perfil",stSport:'Sport',stFast:'Rápido',stComfort:'Confort',stNormal:'Normal',stAccel:'s 0-100',stSmooth:'Conducción suave',stBalanced:'Equilibrado',onlineNow:'En línea',lastSeen:'Visto hace',agoNow:'ahora mismo',agoM:' min',agoH:' h',agoD:' d',prDay:'día',prNight:'noche',prStart:'bajada de bandera',emilAreas:'Sofía — Centro, Aeropuerto, Circunvalación, todos los barrios',
     mBeforeOrder:"Antes de pedir",
     lblMusic:"🎵 Música preferida",lblTip:"💰 Propina planeada (opcional)",lblPax:"👥 Pasajeros",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Pasajeros:",lblWhen:"🕒 Cuándo",btnNow:"Ahora",btnSchedule:"📅 Programar",pickupGps:"Recogida: mi ubicación (GPS)",pickupCustom:"Recogida: punto personalizado",destSet:"Destino: punto establecido",destNotSet:"Destino: no establecido (opcional)",btnChange:"Cambiar",btnSet:"Establecer",locPickerHint:"📌 Toca el mapa para fijar el punto, o pega un enlace de Google Maps abajo",locPickerPlaceholder:"Pegar enlace de Google Maps (opcional)",orderPickup:"📍 Lugar de recogida:",orderDest:"🏁 Destino:",scheduleWarn:"⚠️ Esta es una solicitud de reserva, no un viaje confirmado. Espere la confirmación del conductor por llamada o mensaje.",orderWhen:"📅 Hora solicitada:",orderConfirmNote:"⚠️ Por favor confirme esta reserva respondiendo.",orderNow:"🕒 Ahora (enseguida)",paxWarn:"⚠️ 3-4 pasajeros con equipaje — llame antes para confirmar que todo cabe cómodamente.",paxWarnMsg:"⚠️ 3-4 pasajeros con equipaje — confirme antes de reservar",
     optNoPref:"Sin preferencia",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Clásica",optJazz:"🎷 Jazz",optElectronic:"🎧 Electrónica",optNoMusic:"🔇 Sin música",optNoTip:"Sin propina planeada",optSmallTip:"Una pequeña propina",optFairTip:"Una propina justa — gracias por venir desde lejos",optGenTip:"Una generosa propina",
@@ -944,11 +944,14 @@ function payI(p){
 }
 
 function stI(d){
-  if(d.accel<5)return{l:'🏎 Sport',c:'var(--pi)',s:d.accel+'s 0-100'};
-  if(d.accel<6.5)return{l:'⚡ Fast',c:'var(--or)',s:d.accel+'s 0-100'};
-  if(d.comfort)return{l:'🛋 Comfort',c:'var(--cy)',s:'Smooth ride'};
-  return{l:'🚗 Normal',c:'var(--gr)',s:'Balanced'};
+  var t=T[lang]||T.en;
+  if(d.accel<5)return{l:'🏎 '+t.stSport,c:'var(--pi)',s:d.accel+t.stAccel};
+  if(d.accel<6.5)return{l:'⚡ '+t.stFast,c:'var(--or)',s:d.accel+t.stAccel};
+  if(d.comfort)return{l:'🛋 '+t.stComfort,c:'var(--cy)',s:t.stSmooth};
+  return{l:'🚗 '+t.stNormal,c:'var(--gr)',s:t.stBalanced};
 }
+
+function dName(d){return (lang==='bg'&&d.name_bg)?d.name_bg:d.name;}
 
 function carI(d){
   if(d.car&&d.car.toLowerCase().indexOf('tesla')===0)return '<span style="font-weight:900;font-size:17px;font-family:Arial,sans-serif;color:#e31937;background:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center">T</span>';
@@ -967,11 +970,12 @@ function card(d,mini){
   var av=d.avatar
     ?'<img src="'+d.avatar+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=&quot;none&quot;">'
     :ic;
+  var tl=T[lang]||T.en;
   var tags='';
-  if(d.online)tags+='<span class="t tg">🟢 Online</span>';
-  else tags+='<span class="t" style="color:var(--mu2);border-color:var(--brd)">⚫ Offline</span>';
+  if(d.online)tags+='<span class="t tg">'+tl.fOnline+'</span>';
+  else tags+='<span class="t" style="color:var(--mu2);border-color:var(--brd)">'+tl.fOffline+'</span>';
   if(d.electric)tags+='<span class="t tc">⚡ EV</span>';
-  if(d.luxury)tags+='<span class="t ty">👑 Luxury</span>';
+  if(d.luxury)tags+='<span class="t ty">'+tl.fLuxury+'</span>';
   if(d.minivan)tags+='<span class="t tb">🚐 '+d.seats+'p</span>';
   if(d.suv)tags+='<span class="t tb">🚙 SUV</span>';
   tags+='<span class="t" style="color:'+st.c+';border-color:'+st.c+'44;background:'+st.c+'11">'+st.l+'</span>';
@@ -985,7 +989,7 @@ function card(d,mini){
   var html='<div class="dc" onclick="openMod('+d.id+')">';
   html+='<div class="dct"><div class="dca">'+av+'</div>';
   html+='<div class="dci">';
-  html+='<div class="dcn">'+d.name+' <span class="vb">✓ Verified</span></div>';
+  html+='<div class="dcn">'+dName(d)+' <span class="vb">'+tl.mVerified+'</span>';
   html+='<div class="dcc">'+d.car+' &middot; '+d.plate+'</div>';
   html+='<div class="tags">'+tags+'</div>';
   html+='<div class="pays">'+pays+'</div>';
@@ -1065,7 +1069,7 @@ function render(){
   if(filt==='verified')ds=ds.filter(function(d){return d.verified;});
   if(filt==='top')ds=ds.filter(function(d){return d.rating>=4.8;});
   if(filt==='new')ds=ds.filter(function(d){return d.reviews<10;});
-  if(q)ds=ds.filter(function(d){return d.name.toLowerCase().indexOf(q)>=0||d.car.toLowerCase().indexOf(q)>=0||d.areas.toLowerCase().indexOf(q)>=0;});
+  if(q)ds=ds.filter(function(d){return d.name.toLowerCase().indexOf(q)>=0||(d.name_bg||'').toLowerCase().indexOf(q)>=0||d.car.toLowerCase().indexOf(q)>=0||d.areas.toLowerCase().indexOf(q)>=0;});
   ds.sort(function(a,b){return (b.online?1:0)-(a.online?1:0)||b.rating-a.rating;});
   var dl=document.getElementById('dlist');
   if(dl)dl.innerHTML=ds.length?ds.map(function(d){return card(d,false);}).join(''):'<div style="text-align:center;padding:30px;color:var(--mu)">No drivers found with this filter</div>';
@@ -1075,13 +1079,14 @@ function render(){
 
 function timeAgo(ts){
   if(!ts)return '';
+  var t=T[lang]||T.en;
   var s=Math.floor((Date.now()-ts)/1000);
-  if(s<60)return 'just now';
+  if(s<60)return t.agoNow;
   var m=Math.floor(s/60);
-  if(m<60)return m+'m ago';
+  if(m<60)return m+t.agoM;
   var h=Math.floor(m/60);
-  if(h<24)return h+'h ago';
-  return Math.floor(h/24)+'d ago';
+  if(h<24)return h+t.agoH;
+  return Math.floor(h/24)+t.agoD;
 }
 function renderMap(){
   if(!mapReady||!map)return;
@@ -1098,8 +1103,9 @@ function renderMap(){
       html:'<div style="opacity:'+op+';border:3px solid '+ring+';border-radius:50%;width:38px;height:38px;overflow:hidden;box-shadow:0 2px 8px #000a;background:#111">'+inner+'</div>',
       iconSize:[38,38],iconAnchor:[19,19],className:''
     })}).addTo(map);
-    var statusLine=d.online?'<span style="color:#22c55e">🟢 Online now</span>':'<span style="color:#999">⚫ Last seen '+timeAgo(d.lastSeen)+'</span>';
-    m.bindPopup('<div style="text-align:center"><b>'+d.name+'</b><br>'+d.car+'<br>&#11088; '+d.rating+'<br>'+statusLine+'<br><button onclick="openMod('+d.id+')" style="margin-top:6px;background:#f5c518;color:#000;border:none;border-radius:6px;padding:5px 12px;font-weight:700;cursor:pointer">View Profile</button></div>');
+    var tp=T[lang]||T.en;
+    var statusLine=d.online?'<span style="color:#22c55e">🟢 '+tp.onlineNow+'</span>':'<span style="color:#999">⚫ '+tp.lastSeen+' '+timeAgo(d.lastSeen)+'</span>';
+    m.bindPopup('<div style="text-align:center"><b>'+dName(d)+'</b><br>'+d.car+'<br>&#11088; '+d.rating+'<br>'+statusLine+'<br><button onclick="openMod('+d.id+')" style="margin-top:6px;background:#f5c518;color:#000;border:none;border-radius:6px;padding:5px 12px;font-weight:700;cursor:pointer">'+tp.mViewProfile+'</button></div>');
     m.on('click',function(){openMod(d.id);});
     mkrs.push(m);
   });
@@ -1126,7 +1132,7 @@ function openMod(id){
   if(d.avatar){
     var img=document.createElement('img');img.src=d.avatar;img.style.cssText='width:100%;height:100%;object-fit:cover';mav.innerHTML='';mav.appendChild(img);
   } else { mav.innerHTML=carI(d); }
-  document.getElementById('mname').innerHTML=d.name+' <span class="vb">'+t.mVerified+'</span>';
+  document.getElementById('mname').innerHTML=dName(d)+' <span class="vb">'+t.mVerified+'</span>';
   document.getElementById('mcar2').textContent=d.car+' · '+d.plate;
   document.getElementById('mstars').innerHTML='<span style="color:var(--y);font-size:20px">'+'★'.repeat(Math.round(d.rating))+'</span> <strong>'+d.rating+'</strong> <span style="color:var(--mu);font-size:12px">('+d.reviews+' '+t.mReviews+')</span>';
   var summaryParts=[];
@@ -1176,12 +1182,13 @@ function openMod(id){
   document.getElementById('mopts').innerHTML=opts.join(' ')||'—';
   var mph=document.getElementById('mphotos'),mhph=document.getElementById('mh-photos');
   if(d.photos&&d.photos.length){
-    mph.innerHTML=d.photos.map(function(p){return '<img src="'+p+'" onclick="showImg(\''+p+'\')" alt="">';}).join('');
+    var ph=d.photos.slice();if(d.id===1&&ph.indexOf('img/emil_tariff.jpg')<0)ph.push('img/emil_tariff.jpg');
+    mph.innerHTML=ph.map(function(p){return '<img src="'+p+'" onclick="showImg(\''+p+'\')" onerror="this.remove()" alt="">';}).join('');
     mhph.style.display='';mhph.textContent=t.mPhotos||'Car Photos';
   } else {
     mph.innerHTML='';mhph.style.display='none';
   }
-  document.getElementById('mprice').textContent=d.price;
+  document.getElementById('mprice').textContent=d.tariff?(d.tariff.km_day.toFixed(2)+' EUR/km '+t.prDay+' · '+d.tariff.km_night.toFixed(2)+' EUR/km '+t.prNight+' · '+t.prStart+' '+d.tariff.start.toFixed(2)+' EUR'):d.price;
   (function(){
     var old=document.getElementById('tariff-photo-line');if(old)old.remove();
     if(d.tariff_photo){
@@ -1193,7 +1200,7 @@ function openMod(id){
     }
   })();
   updateEtaLine();
-  document.getElementById('mareas').textContent=d.areas;
+  document.getElementById('mareas').textContent=(d.id===1&&t.emilAreas)?t.emilAreas:d.areas;
   document.getElementById('mbio').textContent=(d.id===1&&t.emilBio)?t.emilBio:(d.bio||'');
   document.getElementById('mh-cardet').textContent=t.mCarDet;
   document.getElementById('mh-order').textContent=t.mBeforeOrder;
