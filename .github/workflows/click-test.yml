@@ -27,9 +27,11 @@ jobs:
             if (tabBtn) tabBtn.click();
             const cards=[...document.querySelectorAll('.dc')];
             res.cards = cards.map(c=>({n:c.querySelector('.dcn')?.textContent?.trim()?.slice(0,14), oc:c.getAttribute('onclick')}));
-            const petar = cards.find(c=>/Пет|Petar/i.test(c.textContent));
-            if (petar) { petar.click(); res.clicked=true; }
+            res.card0text = cards[0]?.textContent?.replace(/\s+/g,' ').slice(0,200);
+            const petar = cards.find(c=>c.getAttribute('onclick')==='openMod(2)');
+            if (petar) { petar.click(); res.clickedOc=petar.getAttribute('onclick'); }
             res.modalName = document.getElementById('mname')?.textContent?.trim();
+            res.curName = window.cur ? window.cur.name : null;
             return res;
           });
           console.log('RESULT:', JSON.stringify(out, null, 1));
