@@ -1543,7 +1543,8 @@ function isNightTariff(){var h=new Date().getHours();return h>=22||h<6;}
 function calcPrice(km,drv){
   if(!drv||!drv.tariff)return null;
   var rate=isNightTariff()?drv.tariff.km_night:drv.tariff.km_day;
-  return Math.round((drv.tariff.start+km*rate)*10)/10;
+  var st=(isNightTariff()&&drv.tariff.start_night)?drv.tariff.start_night:drv.tariff.start;
+  return Math.round((st+km*rate)*10)/10;
 }
 // OSRM реално разстояние с 2.5с timeout, fallback haversine*1.35
 function fetchEstimate(fLat,fLng,tLat,tLng,cb){
