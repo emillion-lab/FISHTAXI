@@ -1012,7 +1012,7 @@ function card(d,mini){
   if(d.silent_ok)tags+='<span class="t tc">🤫</span>';
   if(d.airport)tags+='<span class="t tb">✈️</span>';
   var pays=d.payment.map(payI).join('');
-  var html='<div class="dc" onclick="openMod('+d.id+')">';
+  var html='<div class="dc" onclick="event.stopPropagation();openMod('+d.id+')">';
   html+='<div class="dct"><div class="dca">'+av+'</div>';
   html+='<div class="dci">';
   html+='<div class="dcn">'+dName(d)+' <span class="vb">'+tl.mVerified+'</span>';
@@ -1026,7 +1026,7 @@ function card(d,mini){
     html+='<button class="bv" onclick="event.stopPropagation();qv('+d.id+')">💬 Viber</button>';
     html+='</div>';
   }
-  html+='</div>';
+  html+='</div></div>';
   return html;
 }
 
@@ -1837,7 +1837,7 @@ if('serviceWorker' in navigator){
   });
 }
 </script>
-<div id="build-stamp" style="text-align:center;font-size:10px;color:#666;padding:8px 0 14px;opacity:.7">fish.taxi v2026.07.13-b</div>
-<script>console.log('[fish.taxi] build v2026.07.13-b');</script>
+<div id="build-stamp" style="text-align:center;font-size:10px;color:#666;padding:8px 0 14px;opacity:.7">fish.taxi v2026.07.13-c</div>
+<script>console.log('[fish.taxi] build v2026.07.13-c');</script>
 </body>
 </html><!-- rebuild trigger -->
