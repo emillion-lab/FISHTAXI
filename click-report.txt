@@ -1,0 +1,15 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+Error [TypeError]: Cannot read properties of null (reading 'classList')
+    at evaluate (evaluate at file:///home/runner/work/FISHTAXI/FISHTAXI/ct.mjs:8:21, <anonymous>:4:35)
+    at #evaluate (file:///home/runner/work/FISHTAXI/FISHTAXI/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/ExecutionContext.js:383:19)
+    at async ExecutionContext.evaluate (file:///home/runner/work/FISHTAXI/FISHTAXI/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/ExecutionContext.js:270:16)
+    at async IsolatedWorld.evaluate (file:///home/runner/work/FISHTAXI/FISHTAXI/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/IsolatedWorld.js:96:16)
+    at async CdpFrame.evaluate (file:///home/runner/work/FISHTAXI/FISHTAXI/node_modules/puppeteer-core/lib/esm/puppeteer/api/Frame.js:335:20)
+    at async CdpPage.evaluate (file:///home/runner/work/FISHTAXI/FISHTAXI/node_modules/puppeteer-core/lib/esm/puppeteer/api/Page.js:799:20)
+    at async file:///home/runner/work/FISHTAXI/FISHTAXI/ct.mjs:8:13
+    at showTab (https://fish.taxi/?ct=1783954141680:1624:36)
+
+Node.js v20.20.2
