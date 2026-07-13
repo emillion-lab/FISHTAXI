@@ -28,7 +28,9 @@ RESULT: {
    "oc": "openMod(2)"
   }
  ],
- "clicked": true,
- "modalName": "Емил М. ✓ Верифициран"
+ "card0text": "Емил М. ✓ ВерифициранTesla Model S · EA 0526 AB⚫ Офлайн⚡ EV🏎 Спорт🚭🐾🤫✈️💜 Revolut💵 Cash💳 Terminal⭐ 5📞 Call💬 ViberПетър М. ✓ ВерифициранVW ID.4 · EA 6631 AE⚫ Офлайн⚡ EV🚙 SUV🛋 Комфорт🚭🐾🤫✈️\ud83d",
+ "clickedOc": "openMod(2)",
+ "modalName": "Емил М. ✓ Верифициран",
+ "curName": "Emil M."
 }
 PAGEERRORS: none
