@@ -22,8 +22,9 @@ jobs:
           const out = await p.evaluate(() => {
             const res = {stamp: document.getElementById('build-stamp')?.textContent?.trim()};
             res.drivers = (window.DRIVERS||[]).map(d=>({id:d.id, name:d.name}));
-            // отиваме в Шофьори таба и кликваме картичката на Петър
-            if (typeof showTab==='function') showTab('drivers');
+            // отиваме в Шофьори таба с реален клик по бутона
+            const tabBtn=[...document.querySelectorAll('.tab')].find(b=>(b.getAttribute('onclick')||'').includes("'drivers'"));
+            if (tabBtn) tabBtn.click();
             const cards=[...document.querySelectorAll('.dc')];
             res.cards = cards.map(c=>c.querySelector('.dcn')?.textContent?.trim()?.slice(0,20));
             const petar = cards.find(c=>/Пет|Petar/i.test(c.textContent));
