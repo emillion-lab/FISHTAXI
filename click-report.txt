@@ -1,5 +1,5 @@
 RESULT: {
- "stamp": "fish.taxi v2026.07.13-b",
+ "stamp": "fish.taxi v2026.07.13-c",
  "drivers": [
   {
    "id": 1,
@@ -13,24 +13,23 @@ RESULT: {
  "cards": [
   {
    "n": "Емил М. ✓ Вери",
-   "oc": "openMod(1)"
+   "oc": "event.stopPropagation();openMod(1)"
   },
   {
    "n": "Петър М. ✓ Вер",
-   "oc": "openMod(2)"
+   "oc": "event.stopPropagation();openMod(2)"
   },
   {
    "n": "Емил М. ✓ Вери",
-   "oc": "openMod(1)"
+   "oc": "event.stopPropagation();openMod(1)"
   },
   {
    "n": "Петър М. ✓ Вер",
-   "oc": "openMod(2)"
+   "oc": "event.stopPropagation();openMod(2)"
   }
  ],
- "card0text": "Емил М. ✓ ВерифициранTesla Model S · EA 0526 AB⚫ Офлайн⚡ EV🏎 Спорт🚭🐾🤫✈️💜 Revolut💵 Cash💳 Terminal⭐ 5📞 Call💬 ViberПетър М. ✓ ВерифициранVW ID.4 · EA 6631 AE⚫ Офлайн⚡ EV🚙 SUV🛋 Комфорт🚭🐾🤫✈️\ud83d",
- "clickedOc": "openMod(2)",
- "modalName": "Емил М. ✓ Верифициран",
- "curName": "Emil M."
+ "card0text": "Емил М. ✓ ВерифициранTesla Model S · EA 0526 AB⚫ Офлайн⚡ EV🏎 Спорт🚭🐾🤫✈️💜 Revolut💵 Cash💳 Terminal⭐ 5📞 Call💬 Viber",
+ "modalName": "",
+ "curName": null
 }
 PAGEERRORS: none
