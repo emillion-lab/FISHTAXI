@@ -1,0 +1,41 @@
+name: Click Test
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm install puppeteer@22 --no-save 2>&1 | tail -1
+      - run: |
+          cat > ct.mjs << 'JS'
+          import puppeteer from 'puppeteer';
+          const b = await puppeteer.launch({args:['--no-sandbox']});
+          const p = await b.newPage();
+          await p.setViewport({width:390,height:844});
+          const errs=[]; p.on('pageerror',e=>errs.push(String(e.message||e)));
+          await p.goto('https://fish.taxi/?ct='+Date.now(), {waitUntil:'networkidle2', timeout:45000});
+          await new Promise(r=>setTimeout(r,4000));
+          const out = await p.evaluate(() => {
+            const res = {stamp: document.getElementById('build-stamp')?.textContent?.trim()};
+            res.drivers = (window.DRIVERS||[]).map(d=>({id:d.id, name:d.name}));
+            // отиваме в Шофьори таба и кликваме картичката на Петър
+            if (typeof showTab==='function') showTab('drivers');
+            const cards=[...document.querySelectorAll('.dc')];
+            res.cards = cards.map(c=>c.querySelector('.dcn')?.textContent?.trim()?.slice(0,20));
+            const petar = cards.find(c=>/Пет|Petar/i.test(c.textContent));
+            if (petar) { petar.click(); res.clicked=true; }
+            res.modalName = document.getElementById('mname')?.textContent?.trim();
+            return res;
+          });
+          console.log('RESULT:', JSON.stringify(out, null, 1));
+          console.log('PAGEERRORS:', errs.slice(0,5).join(' | ') || 'none');
+          await b.close();
+          JS
+          node ct.mjs > click-report.txt 2>&1 || true
+          git config user.name ci; git config user.email ci@fish.taxi
+          git add click-report.txt && git commit -m "click test [skip ci]" || true
+          git push
