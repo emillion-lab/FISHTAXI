@@ -29,7 +29,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--bg:#fafaf7;--s1:#fff;--s2:#f5f3ee;--s3:#ece8de;--brd:#ddd6c3;--y:#1a1a1a;--tx:#1a1a1a;--mu:#666;--mu2:#999;--gr:#16a34a;--rd:#dc2626;--bl:#1e40af;--or:#c2410c;--pu:#7e22ce;--cy:#0e7490;--pi:#be185d;--taxiY:#f5c518;--taxiB:#0a0a0a}
 [data-theme="dark"]{--bg:#080808;--s1:#111;--s2:#1a1a1a;--s3:#242424;--brd:#2e2e2e;--y:#f5c518;--tx:#f0f0f0;--mu:#aaa;--mu2:#555;--gr:#22c55e;--rd:#ef4444;--bl:#60a5fa;--or:#fb923c;--pu:#c084fc;--cy:#22d3ee;--pi:#f472b6}
-html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;overflow:hidden;display:flex;flex-direction:column}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable Text",Roboto,system-ui,sans-serif;overflow:hidden;display:flex;flex-direction:column}
 .top{background:#0a0a0a!important;border-bottom:3px solid #f5c518!important;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0}
 .logo{font-size:18px;font-weight:900;color:var(--y)}
 .tabs{display:flex;background:var(--s1);border-bottom:2px solid var(--brd);flex-shrink:0}
@@ -132,6 +132,42 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Segoe UI
   .dc .dn, .dcard .dn, .drv-name{font-size:19px !important;}
   .t{font-size:13px !important;padding:4px 9px !important;}
   #mbio,#mprice,#mareas{font-size:15px !important;}
+}
+
+/* ═══ Нощ: стъкло + неон вместо плосък тъмен фон ═══ */
+[data-theme="dark"] .top{background:rgba(10,10,10,.75)!important;backdrop-filter:blur(14px);border-bottom-color:var(--y)}
+[data-theme="dark"] .tabs{background:rgba(17,17,17,.6);backdrop-filter:blur(10px)}
+[data-theme="dark"] .dc{background:rgba(26,26,26,.55);backdrop-filter:blur(12px);box-shadow:0 1px 1px rgba(245,197,24,.05),inset 0 0 0 1px var(--brd)}
+[data-theme="dark"] .mb{background:rgba(17,17,17,.75);backdrop-filter:blur(18px)}
+[data-theme="dark"] .flt.on{box-shadow:0 0 14px rgba(245,197,24,.35)}
+
+/* шевът над лентата диша леко нощем, застава спокойно през деня */
+@keyframes seamGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.5)}}
+[data-theme="dark"] .top{animation:seamGlow 3.6s ease-in-out infinite}
+
+/* CTA бутонът пуска еднократен проблясък на цикъл — подсказва, не крещи */
+#simple-hero button[onclick^="orderNowSimple"]{position:relative;overflow:hidden}
+#simple-hero button[onclick^="orderNowSimple"]::after{
+  content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);
+  transform:skewX(-18deg);animation:ctaSweep 4.5s ease-in-out infinite;
+}
+@keyframes ctaSweep{0%{left:-60%}35%{left:130%}100%{left:130%}}
+
+/* първите филтри "дишат" леко на ротация — подсказка, не постоянен ефект */
+.fs:first-of-type .flt:nth-of-type(1){animation:chipHint 2.6s ease-in-out infinite}
+.fs:first-of-type .flt:nth-of-type(2){animation:chipHint 2.6s ease-in-out infinite .9s}
+@keyframes chipHint{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 2px rgba(245,197,24,.3)}}
+
+/* spotlight цикъл между картите на шофьорите: фокус/избледняване, не преместване */
+.dc{transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s ease,opacity .5s ease}
+.dc.ft-spotlight{transform:scale(1.012);box-shadow:0 8px 24px rgba(0,0,0,.25),0 0 0 1.5px rgba(245,197,24,.3)}
+.dc.ft-dim{opacity:.55}
+@media (prefers-reduced-motion:reduce){
+  [data-theme="dark"] .top{animation:none}
+  #simple-hero button[onclick^="orderNowSimple"]::after{display:none}
+  .fs:first-of-type .flt:nth-of-type(1),.fs:first-of-type .flt:nth-of-type(2){animation:none}
+  .dc{transition:none}
 }
 </style>
 </head>
@@ -1011,6 +1047,11 @@ function card(d,mini){
   if(d.childok)tags+='<span class="t to">👶</span>';
   if(d.silent_ok)tags+='<span class="t tc">🤫</span>';
   if(d.airport)tags+='<span class="t tb">✈️</span>';
+  if(!mini){
+    if(d.langs&&d.langs.length)tags+='<span class="t" style="color:var(--mu)">'+d.langs.map(function(l){return (LM[l]||l).split(' ')[0];}).join(' ')+'</span>';
+    if(d.legroom)tags+='<span class="t to">🦵</span>';
+    if(d.streaming)tags+='<span class="t tp">🎧</span>';
+  }
   var pays=d.payment.map(payI).join('');
   var html='<div class="dc" onclick="event.stopPropagation();openMod('+d.id+')">';
   html+='<div class="dct"><div class="dca">'+av+'</div>';
@@ -1101,6 +1142,45 @@ function render(){
   if(dl)dl.innerHTML=ds.length?ds.map(function(d){return card(d,false);}).join(''):'<div style="text-align:center;padding:30px;color:var(--mu)">No drivers found with this filter</div>';
   var ml=document.getElementById('map-list');
   if(ml)ml.innerHTML=ds.slice(0,3).map(function(d){return card(d,true);}).join('');
+  initSpotlight();
+}
+
+// ── Spotlight цикъл между картите на шофьорите: фокус/избледняване по ред.
+//    Спира завинаги (за сесията) при първо докосване на списъка — не се
+//    съживява при последващ render(), защото spotlightStopped е глобален. ──
+var spotlightTimer=null, spotlightIdx=0, spotlightStopped=false, spotlightClickBound=false;
+function initSpotlight(){
+  if(spotlightTimer){clearInterval(spotlightTimer);spotlightTimer=null;}
+  if(spotlightStopped)return;
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){spotlightStopped=true;return;}
+  var dl=document.getElementById('dlist');
+  if(!dl)return;
+  var cards=dl.querySelectorAll('.dc');
+  if(cards.length<2)return; // няма смисъл от цикъл с 0-1 карта
+  spotlightIdx=0;
+  applySpotlight(cards);
+  spotlightTimer=setInterval(function(){
+    var live=document.getElementById('dlist');
+    if(!live){clearInterval(spotlightTimer);return;}
+    var c=live.querySelectorAll('.dc');
+    if(c.length<2)return;
+    spotlightIdx=(spotlightIdx+1)%c.length;
+    applySpotlight(c);
+  },3400);
+  if(!spotlightClickBound){
+    spotlightClickBound=true;
+    dl.addEventListener('click',function(){
+      spotlightStopped=true;
+      if(spotlightTimer){clearInterval(spotlightTimer);spotlightTimer=null;}
+      document.querySelectorAll('.dc').forEach(function(c){c.classList.remove('ft-spotlight');c.classList.remove('ft-dim');});
+    },{once:true});
+  }
+}
+function applySpotlight(cards){
+  cards.forEach(function(c,i){
+    c.classList.toggle('ft-spotlight',i===spotlightIdx);
+    c.classList.toggle('ft-dim',i!==spotlightIdx);
+  });
 }
 
 function timeAgo(ts){
@@ -1730,9 +1810,14 @@ function sendPresence(){
 function initMapOnce(){
   if(mapReady||typeof L==='undefined')return;
   mapReady=true;
-  map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],15);
+  var reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  map=L.map('map',{zoomControl:true,attributionControl:false}).setView([42.6977,23.3219],reduceMotion?15:13);
   tileLayer=L.tileLayer(getTileUrl(),{maxZoom:20,subdomains:getTileSubdomains()}).addTo(map);
   renderMap();
+  // Еднократно доближаване при първо отваряне — не се повтаря, не пречи на по-нататъшно въртене на картата
+  if(!reduceMotion){
+    setTimeout(function(){ try{ map.flyTo([42.6977,23.3219],15,{duration:1.6}); }catch(e){ map.setView([42.6977,23.3219],15); } },350);
+  }
   // 📍 бутон "центрирай на мен"
   var LocateCtl=L.Control.extend({options:{position:'bottomright'},
     onAdd:function(){
