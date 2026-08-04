@@ -1,0 +1,243 @@
+--- index.original.html	2026-08-04 22:52:50.194123127 +0000
++++ index.html	2026-08-04 22:55:36.682213028 +0000
+@@ -163,11 +163,72 @@
+ .dc{transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s ease,opacity .5s ease}
+ .dc.ft-spotlight{transform:scale(1.012);box-shadow:0 8px 24px rgba(0,0,0,.25),0 0 0 1.5px rgba(245,197,24,.3)}
+ .dc.ft-dim{opacity:.55}
++
++/* ═══ Тъмна карта нощем — истинската техника от БАК: обръщане на OSM плочките ═══ */
++[data-theme="dark"] .leaflet-tile-pane{
++  filter:invert(1) hue-rotate(180deg) brightness(.93) contrast(.92) saturate(.75);
++}
++[data-theme="dark"] .leaflet-container{background:#0a0e14!important}
++
++/* ═══ По-едър текст и бутони — леко, не драстично ═══ */
++.dcn{font-size:16px}
++.tab{font-size:13px;padding:10px 3px}
++.bc,.bv{font-size:14px;padding:11px}
++.jbtn,.hcta{font-size:15px;padding:13px}
++.mcall,.mvib{font-size:16px;padding:13px}
++.flt{font-size:13px;padding:6px 13px}
++
++/* ═══ Значка "Основател" — за първите регистрирани шофьори ═══ */
++.founder{
++  display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:800;
++  padding:2px 8px 2px 6px;border-radius:8px;color:#3a2a05;
++  background:linear-gradient(100deg,#f5c518,#ffe08a,#f5c518);background-size:200% 100%;
++  animation:founderShine 3.5s linear infinite;
++}
++[data-theme="dark"] .founder{color:#241a02}
++@keyframes founderShine{0%{background-position:0% 0}100%{background-position:200% 0}}
++
++/* ═══ Еднократни подсказки за какво може да се докосне — по 3 повторения, после спират сами ═══ */
++.hint-tabs{animation:tabsHint 1.6s ease-in-out 2;animation-delay:.6s}
++@keyframes tabsHint{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 2px rgba(245,197,24,.4)}}
++.hint-photo{position:relative}
++.hint-photo::after{
++  content:'⇄';position:absolute;bottom:3px;right:4px;font-size:10px;color:#fff;
++  background:rgba(0,0,0,.55);border-radius:50%;width:15px;height:15px;
++  display:flex;align-items:center;justify-content:center;
++  animation:photoHint 1.3s ease-in-out 3;animation-delay:.4s;
++}
++@keyframes photoHint{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
++
++/* ═══ Малко фантазия: тихи искри в героя нощем ═══ */
++.spark{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--y);opacity:0;pointer-events:none}
++[data-theme="dark"] .spark{animation:sparkFloat 6s ease-in-out infinite}
++.spark:nth-child(1){left:12%;top:70%;animation-delay:0s}
++.spark:nth-child(2){left:68%;top:20%;animation-delay:1.8s}
++.spark:nth-child(3){left:85%;top:60%;animation-delay:3.4s}
++@keyframes sparkFloat{0%{opacity:0;transform:translateY(0)}15%{opacity:.8}85%{opacity:.3}100%{opacity:0;transform:translateY(-38px)}}
++
++/* ═══ Галерия със снимки: превъртане вместо затваряне, стрелки + брояч ═══ */
++.imglb-nav{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;
++  border:none;background:rgba(255,255,255,.14);color:#fff;font-size:22px;cursor:pointer;
++  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);z-index:2001}
++.imglb-nav.prev{left:14px}
++.imglb-nav.next{right:14px}
++.imglb-count{position:absolute;top:18px;left:50%;transform:translateX(-50%);
++  font-size:12px;color:#fff;background:rgba(0,0,0,.5);padding:4px 12px;border-radius:99px;z-index:2001}
++.imglb-close{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;
++  border:none;background:rgba(255,255,255,.14);color:#fff;font-size:16px;cursor:pointer;z-index:2001}
++.imglb img{transition:opacity .18s ease}
++
+ @media (prefers-reduced-motion:reduce){
+   [data-theme="dark"] .top{animation:none}
+   #simple-hero button[onclick^="orderNowSimple"]::after{display:none}
+   .fs:first-of-type .flt:nth-of-type(1),.fs:first-of-type .flt:nth-of-type(2){animation:none}
+   .dc{transition:none}
++  .founder{animation:none}
++  .hint-tabs{animation:none}
++  .hint-photo::after{animation:none}
++  .spark{display:none}
+ }
+ </style>
+ </head>
+@@ -191,7 +252,7 @@
+   </div>
+ </div>
+ 
+-<div class="tabs">
++<div class="tabs" id="tabsbar">
+   <button class="tab on" onclick="showTab('map')" id="tab-map">🗺 Map</button>
+   <button class="tab" onclick="showTab('list')" id="tab-list"><img src="img/icon-192.png" style="height:14px;vertical-align:-2px;object-fit:contain;margin-right:3px" alt="">Drivers</button>
+   <button class="tab" onclick="showTab('how')" id="tab-how">ℹ How</button>
+@@ -283,7 +344,8 @@
+ 
+ <!-- MAP -->
+ <div class="page on" id="page-map" style="overflow:hidden">
+-  <div id="simple-hero" style="padding:10px 12px;background:linear-gradient(180deg,#111 0%,#1a1a1a 100%);border-bottom:2px solid var(--y,#f0b429)">
++  <div id="simple-hero" style="position:relative;padding:10px 12px;background:linear-gradient(180deg,#111 0%,#1a1a1a 100%);border-bottom:2px solid var(--y,#f0b429)">
++    <span class="spark"></span><span class="spark"></span><span class="spark"></span>
+     <button onclick="orderNowSimple()" style="width:100%;padding:11px 12px;font-size:16px;font-weight:900;border:none;border-radius:12px;background:#f0b429;color:#111;cursor:pointer;box-shadow:0 2px 8px #f0b42933">
+       🚕 <span id="hero-btn-txt">ПОРЪЧАЙ СЕГА</span>
+       <div style="font-size:11px;font-weight:600;text-transform:lowercase;color:#3a3a3a;margin-top:2px;letter-spacing:.2px">най-близкото такси</div>
+@@ -468,12 +530,18 @@
+   </div>
+ </div>
+ 
+-<div class="imglb" id="imglb" onclick="hideImg()"><img id="imglb-img" src="" alt=""></div>
++<div class="imglb" id="imglb" onclick="hideImg()">
++  <button class="imglb-close" onclick="event.stopPropagation();hideImg()">✕</button>
++  <div class="imglb-count" id="imglb-count"></div>
++  <button class="imglb-nav prev" onclick="event.stopPropagation();galleryStep(-1)">‹</button>
++  <img id="imglb-img" src="" alt="" onclick="event.stopPropagation()">
++  <button class="imglb-nav next" onclick="event.stopPropagation();galleryStep(1)">›</button>
++</div>
+ 
+ <script>
+ var WORKER='https://mvr-proxy.mihov-emil.workers.dev';
+ var DRIVERS=[{
+-  "id":1,"name":"Emil M.","name_bg":"Емил М.","bio_key":"emilBio",
++  "id":1,"founder":1,"name":"Emil M.","name_bg":"Емил М.","bio_key":"emilBio",
+   "avatar":"img/emil_avatar.jpg",
+   "photos":["img/emil_car_front.jpg","img/emil_car_nevski.jpg","img/emil_interior.jpg"],
+   "city":"sofia","lat":42.6977,"lng":23.3219,
+@@ -498,7 +566,7 @@
+   "tariff":{"start":1.49,"km_day":0.75,"km_night":0.85},
+   "bio":"Non-smoker. IT specialist. Lived abroad. No animals, food or drinks in the car. Happy to talk or stay silent. Please speak up if you want a specific route or feel unwell."
+ },{
+-  "id":2,"gps_id":"359897644448","name":"Petar M.","name_bg":"Петър М.","bio_key":"petarBio",
++  "id":2,"founder":2,"gps_id":"359897644448","name":"Petar M.","name_bg":"Петър М.","bio_key":"petarBio",
+   "avatar":"img/petar_avatar.jpg",
+   "photos":["img/petar_car_front.jpg","img/petar_interior.jpg","img/petar_rear_seats.jpg","img/petar_car_lights.jpg"],
+   "city":"sofia","lat":42.6820,"lng":23.3450,
+@@ -1056,7 +1124,7 @@
+   var html='<div class="dc" onclick="event.stopPropagation();openMod('+d.id+')">';
+   html+='<div class="dct"><div class="dca">'+av+'</div>';
+   html+='<div class="dci">';
+-  html+='<div class="dcn">'+dName(d)+' <span class="vb">'+tl.mVerified+'</span>';
++  html+='<div class="dcn">'+dName(d)+' <span class="vb">'+tl.mVerified+'</span>'+(d.founder?' <span class="founder">🏆 '+(lang==='bg'?'Основател №'+d.founder:'Founder #'+d.founder)+'</span>':'');
+   html+='<div class="dcc">'+d.car+' &middot; '+d.plate+'</div>';
+   html+='<div class="tags">'+tags+'</div>';
+   html+='<div class="pays">'+pays+'</div>';
+@@ -1238,7 +1306,7 @@
+   if(d.avatar){
+     var img=document.createElement('img');img.src=d.avatar;img.style.cssText='width:100%;height:100%;object-fit:cover';mav.innerHTML='';mav.appendChild(img);
+   } else { mav.innerHTML=carI(d); }
+-  document.getElementById('mname').innerHTML=dName(d)+' <span class="vb">'+t.mVerified+'</span>';
++  document.getElementById('mname').innerHTML=dName(d)+' <span class="vb">'+t.mVerified+'</span>'+(d.founder?' <span class="founder">🏆 '+(lang==='bg'?'Основател №'+d.founder:'Founder #'+d.founder)+'</span>':'');
+   document.getElementById('mcar2').textContent=d.car+' · '+d.plate;
+   document.getElementById('mstars').innerHTML='<span style="color:var(--y);font-size:20px">'+'★'.repeat(Math.round(d.rating))+'</span> <strong>'+d.rating+'</strong> <span style="color:var(--mu);font-size:12px">('+d.reviews+' '+t.mReviews+')</span>';
+   var summaryParts=[];
+@@ -1289,7 +1357,8 @@
+   var mph=document.getElementById('mphotos'),mhph=document.getElementById('mh-photos');
+   if(d.photos&&d.photos.length){
+     var ph=d.photos.slice();if(d.id===1&&ph.indexOf('img/emil_tariff.jpg')<0)ph.push('img/emil_tariff.jpg');
+-    mph.innerHTML=ph.map(function(p){return '<img src="'+p+'" onclick="showImg(\''+p+'\')" onerror="this.remove()" alt="">';}).join('');
++    mph.innerHTML=ph.map(function(p,i){return '<img src="'+p+'" class="'+(i===0&&ph.length>1?'hint-photo':'')+'" onclick="openGalleryAt('+i+')" onerror="this.remove()" alt="">';}).join('');
++    window.__modalPhotos=ph;
+     mhph.style.display='';mhph.textContent=t.mPhotos||'Car Photos';
+   } else {
+     mph.innerHTML='';mhph.style.display='none';
+@@ -1331,8 +1400,63 @@
+ }
+ 
+ function closeMod(){document.getElementById('modal').className='modal';}
+-function showImg(src){document.getElementById('imglb-img').src=src;document.getElementById('imglb').style.display='flex';}
+-function hideImg(){document.getElementById('imglb').style.display='none';}
++var galleryPhotos=[], galleryIdx=0, galleryTimer=null, galleryAutoStopped=false, galleryTouchX=null, gallerySwipeBound=false;
++function showImg(src){ openGallery([src],0); } // единична снимка (тарифна табела) — без стрелки/брояч
++function openGalleryAt(i){ openGallery(window.__modalPhotos||[],i); }
++function openGallery(photos,idx){
++  galleryPhotos=photos&&photos.length?photos:[];
++  galleryIdx=idx||0;
++  renderGalleryImg();
++  document.getElementById('imglb').style.display='flex';
++  startGalleryAuto();
++  bindGallerySwipe();
++}
++function renderGalleryImg(){
++  if(!galleryPhotos.length)return;
++  var img=document.getElementById('imglb-img');
++  img.style.opacity=0;
++  setTimeout(function(){ img.src=galleryPhotos[galleryIdx]; img.style.opacity=1; },90);
++  var cnt=document.getElementById('imglb-count');
++  var multi=galleryPhotos.length>1;
++  cnt.style.display=multi?'block':'none';
++  if(multi)cnt.textContent=(galleryIdx+1)+' / '+galleryPhotos.length;
++  document.querySelectorAll('.imglb-nav').forEach(function(b){b.style.display=multi?'flex':'none';});
++}
++function galleryStep(dir){
++  if(!galleryPhotos.length)return;
++  galleryAutoStopped=true;
++  if(galleryTimer){clearInterval(galleryTimer);galleryTimer=null;}
++  galleryIdx=(galleryIdx+dir+galleryPhotos.length)%galleryPhotos.length;
++  renderGalleryImg();
++}
++function startGalleryAuto(){
++  galleryAutoStopped=false;
++  if(galleryTimer){clearInterval(galleryTimer);galleryTimer=null;}
++  if(galleryPhotos.length<2)return;
++  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
++  // Тихо превъртане на снимките — спира завинаги при първо докосване/суайп/стрелка
++  galleryTimer=setInterval(function(){
++    if(galleryAutoStopped)return;
++    galleryIdx=(galleryIdx+1)%galleryPhotos.length;
++    renderGalleryImg();
++  },3200);
++}
++function bindGallerySwipe(){
++  if(gallerySwipeBound)return;
++  gallerySwipeBound=true;
++  var el=document.getElementById('imglb');
++  el.addEventListener('touchstart',function(e){galleryTouchX=e.touches[0].clientX;},{passive:true});
++  el.addEventListener('touchend',function(e){
++    if(galleryTouchX===null)return;
++    var dx=e.changedTouches[0].clientX-galleryTouchX;
++    galleryTouchX=null;
++    if(Math.abs(dx)>40)galleryStep(dx<0?1:-1);
++  },{passive:true});
++}
++function hideImg(){
++  document.getElementById('imglb').style.display='none';
++  if(galleryTimer){clearInterval(galleryTimer);galleryTimer=null;}
++}
+ function doCall(){if(cur)window.location.href='tel:'+cur.phone;}
+ function doVib(){if(cur)window.open('viber://chat?number='+cur.phone.replace(/[^0-9]/g,''));}
+ 
+@@ -1705,6 +1829,7 @@
+   document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});
+   document.getElementById('page-'+t).classList.add('on');
+   document.getElementById('tab-'+t).classList.add('on');
++  var tb=document.getElementById('tabsbar');if(tb)tb.classList.remove('hint-tabs');
+   if(t==='map'){
+     initMapOnce();
+     setTimeout(function(){if(map)map.invalidateSize();},300);
+@@ -1894,6 +2019,16 @@
+ // Init map immediately on load
+ initMapOnce();
+ 
++// Еднократна подсказка: табовете леко проблясват при първо влизане, за да
++// покажат, че има още страници — спира сама или при първо докосване.
++if(!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
++  var tb0=document.getElementById('tabsbar');
++  if(tb0){
++    tb0.classList.add('hint-tabs');
++    setTimeout(function(){tb0.classList.remove('hint-tabs');},4200);
++  }
++}
++
+ // PWA Install handling
+ var deferredPrompt=null;
+ window.addEventListener('beforeinstallprompt',function(e){
