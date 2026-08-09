@@ -1,0 +1,21 @@
+name: Build Registry Index
+on:
+  schedule: [{ cron: '20 3 * * 1' }]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build index from newest TAXI registry
+        run: python3 scripts/build_registry_index.py
+      - name: Commit
+        run: |
+          git config user.name ci; git config user.email ci@fishtaxi
+          git add data/registry.json
+          git commit -m "registry index rebuilt [skip ci]" || echo "no change"
+          git fetch origin main && git rebase origin/main || true
+          git push
