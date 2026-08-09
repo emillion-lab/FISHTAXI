@@ -10,12 +10,21 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      - name: Apply pending fixes
+        run: |
+          if ! grep -q "'nd': n_drivers" scripts/build_registry_index.py; then
+            python3 scripts/patch_registry_v2.py && echo "v2 applied"
+          fi
+          if ! grep -q "vt > valid.get" scripts/build_registry_index.py; then
+            python3 scripts/patch_registry_v3.py && echo "v3 applied"
+          fi
+          python3 -m py_compile scripts/build_registry_index.py && echo "compile OK"
       - name: Build index from newest TAXI registry
         run: python3 scripts/build_registry_index.py
       - name: Commit
         run: |
           git config user.name ci; git config user.email ci@fishtaxi
-          git add data/registry.json
+          git add data/registry.json scripts/build_registry_index.py
           git commit -m "registry index rebuilt [skip ci]" || echo "no change"
           git fetch origin main && git rebase origin/main || true
           git push
