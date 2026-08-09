@@ -18,13 +18,32 @@ jobs:
           if ! grep -q "vt > valid.get" scripts/build_registry_index.py; then
             python3 scripts/patch_registry_v3.py && echo "v3 applied"
           fi
+          if ! grep -q "359889638230" join.html; then
+            python3 scripts/patch_join.py && echo "join patched"
+          fi
           python3 -m py_compile scripts/build_registry_index.py && echo "compile OK"
       - name: Build index from newest TAXI registry
         run: python3 scripts/build_registry_index.py
+      - name: Sanity check
+        run: |
+          python3 - <<'EOF'
+          import json, datetime
+          d = json.load(open('data/registry.json'))
+          v = d['v']
+          print('коли:', len(v))
+          today = datetime.date.today().isoformat()
+          valid = sum(1 for r in v if r[4] and r[4] >= today)
+          exp   = sum(1 for r in v if r[4] and r[4] <  today)
+          none_ = sum(1 for r in v if not r[4])
+          print(f'валидни: {valid}  изтекли: {exp}  без дата: {none_}')
+          bad = [r for r in v if r[4] and r[4] < '2015-01-01']
+          print('подозрителни дати преди 2015:', len(bad), bad[:3])
+          assert len(v) > 5000, 'твърде малко коли'
+          EOF
       - name: Commit
         run: |
           git config user.name ci; git config user.email ci@fishtaxi
-          git add data/registry.json scripts/build_registry_index.py
+          git add data/registry.json scripts/build_registry_index.py join.html
           git commit -m "registry index rebuilt [skip ci]" || echo "no change"
           git fetch origin main && git rebase origin/main || true
           git push
