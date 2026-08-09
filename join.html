@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0b">
+<title>Заявка за шофьор · fish.taxi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0b; --card:#141416; --line:#26262b; --txt:#f2f2f4; --dim:#8b8b93;
+  --gold:#d4af37; --gold-dim:#8a7328; --ok:#3fb950; --warn:#d29922; --bad:#f85149;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;
+  padding:0 0 60px;-webkit-font-smoothing:antialiased;line-height:1.5}
+.wrap{max-width:520px;margin:0 auto;padding:22px 18px}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.brand b{font-size:1.35rem;letter-spacing:-.02em}
+.brand .fish{color:var(--gold)}
+.lead{color:var(--dim);font-size:.86rem;margin-bottom:26px}
+
+.step{margin-bottom:26px}
+.step-n{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.step-n i{width:23px;height:23px;border-radius:50%;background:var(--card);border:1px solid var(--line);
+  display:grid;place-items:center;font-style:normal;font-size:.72rem;color:var(--dim);flex-shrink:0}
+.step.on .step-n i{background:var(--gold);border-color:var(--gold);color:#000;font-weight:700}
+.step-n span{font-size:.82rem;font-weight:600;letter-spacing:.01em}
+.step.off{opacity:.4;pointer-events:none}
+
+input{width:100%;background:var(--card);border:1px solid var(--line);border-radius:11px;
+  padding:14px 15px;color:var(--txt);font-size:1rem;font-family:inherit;outline:none}
+input:focus{border-color:var(--gold-dim)}
+input::placeholder{color:#5a5a62}
+.hint{font-size:.74rem;color:var(--dim);margin-top:7px}
+
+.results{margin-top:9px;max-height:290px;overflow-y:auto;border-radius:11px}
+.hit{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:12px 14px;
+  margin-bottom:7px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.hit:active{border-color:var(--gold-dim)}
+.hit .pl{font-weight:700;letter-spacing:.03em;font-size:.98rem}
+.hit .mo{font-size:.76rem;color:var(--dim);margin-top:2px}
+.hit .ar{color:var(--gold);font-size:1.1rem;flex-shrink:0}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px;margin-top:10px}
+.card.picked{border-color:var(--gold-dim)}
+.row{display:flex;justify-content:space-between;gap:14px;padding:7px 0;font-size:.86rem}
+.row+.row{border-top:1px solid #1e1e22}
+.row .k{color:var(--dim);flex-shrink:0}
+.row .v{text-align:right;font-weight:500}
+.badge{display:inline-block;font-size:.7rem;padding:3px 9px;border-radius:20px;font-weight:600}
+.badge.ok{background:rgba(63,185,80,.13);color:var(--ok)}
+.badge.warn{background:rgba(210,153,34,.13);color:var(--warn)}
+.known{margin-top:12px;font-size:.76rem;color:var(--dim);display:flex;gap:8px;align-items:flex-start}
+.known b{color:var(--txt);font-weight:600}
+
+.change{background:none;border:none;color:var(--gold);font-size:.78rem;cursor:pointer;
+  padding:9px 0 0;font-family:inherit}
+.send{display:flex;gap:9px;margin-top:8px}
+.btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:15px;
+  border-radius:12px;border:none;font-size:.95rem;font-weight:600;cursor:pointer;
+  font-family:inherit;text-decoration:none;color:#fff}
+.btn.viber{background:#7360f2}
+.btn.wa{background:#25d366;color:#06301a}
+.btn[disabled]{opacity:.35;pointer-events:none}
+.err{color:var(--bad);font-size:.78rem;margin-top:7px;min-height:1em}
+.done{text-align:center;padding:34px 16px}
+.done .tick{font-size:2.6rem}
+.foot{margin-top:30px;font-size:.7rem;color:#55555d;text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand"><b><span class="fish">fish</span>.taxi</b></div>
+  <p class="lead">Заявка за присъединяване. Отнема по-малко от минута.</p>
+
+  <div id="form">
+    <!-- 1 · автомобил -->
+    <div class="step on" id="s1">
+      <div class="step-n"><i>1</i><span>Твоят автомобил</span></div>
+      <input id="q" placeholder="Регистрационен номер" autocomplete="off"
+             autocapitalize="characters" spellcheck="false">
+      <div class="hint" id="hint">Въведи поне 3 знака от номера</div>
+      <div class="results" id="res"></div>
+      <div id="picked"></div>
+    </div>
+
+    <!-- 2 · шофьор -->
+    <div class="step off" id="s2">
+      <div class="step-n"><i>2</i><span>Твоите данни</span></div>
+      <input id="name" placeholder="Име и фамилия" autocomplete="name">
+      <input id="phone" placeholder="Телефон (08…)" inputmode="tel"
+             autocomplete="tel" style="margin-top:9px">
+      <div class="err" id="err"></div>
+    </div>
+
+    <!-- 3 · изпращане -->
+    <div class="step off" id="s3">
+      <div class="step-n"><i>3</i><span>Изпрати заявката</span></div>
+      <div class="hint">Отваря се готово съобщение. Само натискаш „изпрати“.</div>
+      <div class="send">
+        <a class="btn viber" id="bv" href="#">Viber</a>
+        <a class="btn wa" id="bw" href="#">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="thanks" style="display:none">
+    <div class="done">
+      <div class="tick">🐟</div>
+      <h2 style="margin:12px 0 8px;font-size:1.2rem">Заявката е изпратена</h2>
+      <p style="color:var(--dim);font-size:.88rem">Ще се свържем с теб до 24 часа.</p>
+    </div>
+  </div>
+
+  <div class="foot">
+    Данните за автомобила идват от публичния регистър<br>
+    на Изпълнителна агенция „Автомобилна администрация“.
+  </div>
+</div>
+
+<script>
+const TEL = '359888123456';            // ← сменѝ с истинския номер
+const $ = id => document.getElementById(id);
+let REG = null, picked = null;
+
+/* Регистърът е 24 MB суров; тук идва свит на ~67 KB след gzip.
+   Операторите и моделите са в отделни таблици, колите пазят само индекси. */
+fetch('data/registry.json')
+  .then(r => r.json())
+  .then(j => { REG = j; $('hint').textContent =
+      `Въведи поне 3 знака · ${j.v.length.toLocaleString('bg')} регистрирани таксита`; })
+  .catch(() => { $('hint').textContent = 'Регистърът не се зареди — опитай по-късно'; });
+
+const norm = s => (s||'').toUpperCase().replace(/[\s\-]/g,'')
+  .replace(/A/g,'А').replace(/B/g,'В').replace(/E/g,'Е').replace(/K/g,'К')
+  .replace(/M/g,'М').replace(/H/g,'Н').replace(/O/g,'О').replace(/P/g,'Р')
+  .replace(/C/g,'С').replace(/T/g,'Т').replace(/X/g,'Х');
+
+$('q').addEventListener('input', e => {
+  const q = norm(e.target.value);
+  const box = $('res');
+  if (!REG || q.length < 3) { box.innerHTML=''; return; }
+  const hits = REG.v.filter(v => v[0].includes(q)).slice(0, 25);
+  if (!hits.length) {
+    box.innerHTML = `<div class="card"><div style="font-size:.84rem">
+      Този номер не е в регистъра на таксиметровите автомобили.</div>
+      <div class="hint">Ако колата е с валиден лиценз, но не се намира,
+      пиши ни директно.</div></div>`;
+    return;
+  }
+  box.innerHTML = hits.map((v,i) => `
+    <div class="hit" data-i="${REG.v.indexOf(v)}">
+      <div><div class="pl">${v[0]}</div>
+      <div class="mo">${REG.mods[v[1]]}${v[3]?' · '+v[3]:''}</div></div>
+      <div class="ar">›</div>
+    </div>`).join('');
+  box.querySelectorAll('.hit').forEach(el =>
+    el.onclick = () => pick(REG.v[+el.dataset.i]));
+});
+
+function pick(v){
+  picked = v;
+  const [pl, mi, oi, yr, to, nd] = v;
+  const valid = to ? new Date(to) > new Date() : null;
+  $('res').innerHTML = '';
+  $('q').value = pl;
+  $('picked').innerHTML = `
+    <div class="card picked">
+      <div class="row"><span class="k">Номер</span><span class="v">${pl}</span></div>
+      <div class="row"><span class="k">Автомобил</span><span class="v">${REG.mods[mi]}</span></div>
+      ${yr?`<div class="row"><span class="k">Първа регистрация</span><span class="v">${yr}</span></div>`:''}
+      <div class="row"><span class="k">Превозвач</span><span class="v">${REG.ops[oi]}</span></div>
+      ${to?`<div class="row"><span class="k">Лиценз</span><span class="v">
+        <span class="badge ${valid?'ok':'warn'}">${valid?'валиден до '+to:'изтекъл '+to}</span></span></div>`:''}
+      <div class="known">🔍<div>Тези данни идват от публичния регистър.
+        ${nd?`Фирмата има <b>${nd}</b> вписани шофьори.`:''}
+        Заявки с несъответстващи данни не се обработват.</div></div>
+      <button class="change" onclick="reset()">Друг автомобил</button>
+    </div>`;
+  $('s2').classList.remove('off'); $('s2').classList.add('on');
+  $('name').focus();
+  check();
+}
+function reset(){
+  picked = null; $('picked').innerHTML=''; $('q').value=''; $('q').focus();
+  $('s2').className='step off'; $('s3').className='step off';
+}
+
+['name','phone'].forEach(id => $(id).addEventListener('input', check));
+
+function normPhone(p){
+  let d = (p||'').replace(/\D/g,'');
+  if (d.startsWith('359')) d = '0'+d.slice(3);
+  return d;
+}
+function check(){
+  const nm = $('name').value.trim();
+  const ph = normPhone($('phone').value);
+  const okName = nm.split(/\s+/).filter(w=>w.length>1).length >= 2;
+  const okPhone = /^0[87-9]\d{8}$/.test(ph);
+  let e = '';
+  if (nm && !okName) e = 'Моля, име и фамилия.';
+  else if ($('phone').value && !okPhone) e = 'Телефонът трябва да е 10 цифри, започващи с 08.';
+  $('err').textContent = e;
+
+  const ready = picked && okName && okPhone;
+  $('s3').className = 'step ' + (ready ? 'on' : 'off');
+  if (!ready) return;
+
+  const [pl, mi, oi, yr] = picked;
+  const msg = `Заявка за fish.taxi\n\n`
+    + `Име: ${nm}\nТелефон: ${ph}\n`
+    + `Автомобил: ${pl} · ${REG.mods[mi]}${yr?' ('+yr+')':''}\n`
+    + `Превозвач: ${REG.ops[oi]}`;
+  $('bv').href = `viber://forward?text=${encodeURIComponent(msg)}`;
+  $('bw').href = `https://wa.me/${TEL}?text=${encodeURIComponent(msg)}`;
+}
+
+/* Едно изпращане на автомобил от това устройство. Не спира упорит човек —
+   за това трябва сървър — но маха случайните повторни заявки, които са
+   огромната част от шума. */
+document.querySelectorAll('.btn').forEach(b => b.addEventListener('click', () => {
+  try {
+    const sent = JSON.parse(localStorage.getItem('ft_sent') || '[]');
+    if (picked && !sent.includes(picked[0])) {
+      sent.push(picked[0]);
+      localStorage.setItem('ft_sent', JSON.stringify(sent));
+    }
+  } catch(e){}
+  setTimeout(() => { $('form').style.display='none'; $('thanks').style.display='block'; }, 900);
+}));
+</script>
+</body>
+</html>
