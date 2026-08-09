@@ -54,15 +54,32 @@ def main():
     print('оператори в регистъра:', len(data))
 
     now = datetime.datetime.now(datetime.timezone.utc)
+
+    def parse(s):
+        try:
+            return datetime.datetime.fromisoformat((s or '').replace('Z', '+00:00'))
+        except ValueError:
+            return None
+
     seen = {}
     for op in data:
-        term = op.get('terminationDate')
-        if term:
-            try:
-                if datetime.datetime.fromisoformat(term.replace('Z', '+00:00')) < now:
-                    continue          # лицензът е прекратен — колата не е активна
-            except ValueError:
-                pass
+        term = parse(op.get('terminationDate'))
+        if term and term < now:
+            continue                  # лицензът е прекратен — колата не е активна
+
+        # валидност на лиценза, по регистрационен номер
+        valid = {}
+        for tl in op.get('taxiLicensesVehiclesDrivers') or []:
+            veh = tl.get('taxiLicenseVehicle') or {}
+            lic = tl.get('taxiLicense') or {}
+            pl = (veh.get('registerNumber') or '').replace(' ', '').upper()
+            vt = (lic.get('validTo') or '')[:10]
+            # една кола има по няколко лиценза през годините — взема се последният
+            if pl and vt and vt > valid.get(pl, ''):
+                valid[pl] = vt
+
+        n_drivers = len([x for x in (op.get('drivers') or []) if x.get('driverName')])
+
         for v in op.get('vehicles') or []:
             plate = (v.get('registerNumber') or '').replace(' ', '').upper()
             if not plate:
@@ -72,6 +89,8 @@ def main():
                 'm': (v.get('markAndModel') or '').strip(),
                 'o': (op.get('operatorName') or '').strip(),
                 'y': (v.get('firstRegistrationDate') or '')[:4],
+                'to': valid.get(plate, ''),
+                'nd': n_drivers,
             }
 
     rows = sorted(seen.values(), key=lambda r: r['p'])
@@ -88,8 +107,10 @@ def main():
         'generated': datetime.date.today().isoformat(),
         'source': url.rsplit('/', 1)[-1],
         'ops': ops, 'mods': mods,
+        # [номер, модел, оператор, година, валиден до, брой шофьори]
         'v': [[r['p'], mi[r['m']], oi[r['o']],
-               int(r['y']) if r['y'].isdigit() else 0] for r in rows],
+               int(r['y']) if r['y'].isdigit() else 0,
+               r['to'], r['nd']] for r in rows],
     }
     os.makedirs('data', exist_ok=True)
     with open('data/registry.json', 'w', encoding='utf-8') as f:

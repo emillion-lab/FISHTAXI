@@ -122,7 +122,7 @@ input::placeholder{color:#5a5a62}
 </div>
 
 <script>
-const TEL = '359888123456';            // ← сменѝ с истинския номер
+const TEL = '359889638230';
 const $ = id => document.getElementById(id);
 let REG = null, picked = null;
 
@@ -161,6 +161,10 @@ $('q').addEventListener('input', e => {
     el.onclick = () => pick(REG.v[+el.dataset.i]));
 });
 
+function fmtDate(s){
+  const [y,m,d] = (s||'').split('-');
+  return d ? `${+d}.${+m}.${y}` : s;
+}
 function pick(v){
   picked = v;
   const [pl, mi, oi, yr, to, nd] = v;
@@ -173,11 +177,17 @@ function pick(v){
       <div class="row"><span class="k">Автомобил</span><span class="v">${REG.mods[mi]}</span></div>
       ${yr?`<div class="row"><span class="k">Първа регистрация</span><span class="v">${yr}</span></div>`:''}
       <div class="row"><span class="k">Превозвач</span><span class="v">${REG.ops[oi]}</span></div>
-      ${to?`<div class="row"><span class="k">Лиценз</span><span class="v">
-        <span class="badge ${valid?'ok':'warn'}">${valid?'валиден до '+to:'изтекъл '+to}</span></span></div>`:''}
-      <div class="known">🔍<div>Тези данни идват от публичния регистър.
-        ${nd?`Фирмата има <b>${nd}</b> вписани шофьори.`:''}
-        Заявки с несъответстващи данни не се обработват.</div></div>
+      <div class="row"><span class="k">Лиценз</span><span class="v">${
+        to ? `<span class="badge ${valid?'ok':'warn'}">${
+               valid ? 'валиден до '+fmtDate(to) : 'изтекъл '+fmtDate(to)}</span>`
+           : '<span class="badge warn">няма вписана дата</span>'}</span></div>
+      <div class="known">🔍<div>Данните идват от публичния регистър на
+        Автомобилна администрация${nd?`. Превозвачът има <b>${nd}</b> вписани шофьори`:''}.
+        ${to && !valid
+          ? '<br><b>Лицензът в регистъра е изтекъл.</b> Ако е подновен, напиши го в съобщението — регистърът се обновява веднъж месечно.'
+          : !to
+          ? '<br>За този автомобил няма вписана валидност. Ще я проверим ръчно.'
+          : ''}</div></div>
       <button class="change" onclick="reset()">Друг автомобил</button>
     </div>`;
   $('s2').classList.remove('off'); $('s2').classList.add('on');
@@ -211,10 +221,15 @@ function check(){
   if (!ready) return;
 
   const [pl, mi, oi, yr] = picked;
+  const to = picked[4];
+  const lic = to ? (new Date(to) > new Date()
+        ? 'валиден до ' + fmtDate(to) : 'изтекъл ' + fmtDate(to))
+      : 'няма вписана дата';
   const msg = `Заявка за fish.taxi\n\n`
     + `Име: ${nm}\nТелефон: ${ph}\n`
     + `Автомобил: ${pl} · ${REG.mods[mi]}${yr?' ('+yr+')':''}\n`
-    + `Превозвач: ${REG.ops[oi]}`;
+    + `Превозвач: ${REG.ops[oi]}\n`
+    + `Лиценз: ${lic}`;
   $('bv').href = `viber://forward?text=${encodeURIComponent(msg)}`;
   $('bw').href = `https://wa.me/${TEL}?text=${encodeURIComponent(msg)}`;
 }
