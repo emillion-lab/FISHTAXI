@@ -79,6 +79,7 @@ def main():
                 valid[pl] = vt
 
         n_drivers = len([x for x in (op.get('drivers') or []) if x.get('driverName')])
+        n_vehicles = len(op.get('vehicles') or [])
 
         for v in op.get('vehicles') or []:
             plate = (v.get('registerNumber') or '').replace(' ', '').upper()
@@ -91,6 +92,7 @@ def main():
                 'y': (v.get('firstRegistrationDate') or '')[:4],
                 'to': valid.get(plate, ''),
                 'nd': n_drivers,
+                'nv': n_vehicles,
             }
 
     rows = sorted(seen.values(), key=lambda r: r['p'])
@@ -107,10 +109,10 @@ def main():
         'generated': datetime.date.today().isoformat(),
         'source': url.rsplit('/', 1)[-1],
         'ops': ops, 'mods': mods,
-        # [номер, модел, оператор, година, валиден до, брой шофьори]
+        # [номер, модел, оператор, година, валиден до, брой шофьори, брой возила]
         'v': [[r['p'], mi[r['m']], oi[r['o']],
                int(r['y']) if r['y'].isdigit() else 0,
-               r['to'], r['nd']] for r in rows],
+               r['to'], r['nd'], r['nv']] for r in rows],
     }
     os.makedirs('data', exist_ok=True)
     with open('data/registry.json', 'w', encoding='utf-8') as f:
