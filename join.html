@@ -190,7 +190,7 @@ function fmtDate(s){
 }
 function pick(v){
   picked = v;
-  const [pl, mi, oi, yr, to, nd] = v;
+  const [pl, mi, oi, yr, to, nd, nv] = v;
   const valid = to ? new Date(to) > new Date() : null;
   $('res').innerHTML = '';
   $('q').value = pl;
@@ -205,7 +205,7 @@ function pick(v){
                valid ? 'валиден до '+fmtDate(to) : 'изтекъл '+fmtDate(to)}</span>`
            : '<span class="badge warn">няма вписана дата</span>'}</span></div>
       <div class="known">🔍<div>Данните идват от публичния регистър на
-        Автомобилна администрация${nd?`. Превозвачът има <b>${nd}</b> вписани шофьори`:''}.
+        Автомобилна администрация${nv?`. Превозвачът има <b>${nv.toLocaleString('bg')}</b> регистрирани таксита`:''}.
         ${to && !valid
           ? '<br><b>Лицензът в регистъра е изтекъл.</b> Ако е подновен, напиши го в съобщението — регистърът се обновява веднъж месечно.'
           : !to
