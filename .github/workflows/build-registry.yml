@@ -2,6 +2,13 @@ name: Build Registry Index
 on:
   schedule: [{ cron: '20 3 * * 1' }]
   workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      # Пипването на този файл пуска ребилда — това е начинът да се поиска
+      # пресен регистър, без достъп до Actions бутона (напр. от телефон).
+      - '.rebuild-registry'
+      - 'scripts/build_registry_index.py'
 permissions:
   contents: write
 jobs:
@@ -39,6 +46,12 @@ jobs:
           bad = [r for r in v if r[4] and r[4] < '2015-01-01']
           print('подозрителни дати преди 2015:', len(bad), bad[:3])
           assert len(v) > 5000, 'твърде малко коли'
+          # брой возила на превозвач — новото поле nv
+          if v and len(v[0]) > 6:
+              top = max(v, key=lambda r: r[6])
+              print('най-голям превозвач:', top[6], 'возила')
+          else:
+              print('ВНИМАНИЕ: няма nv поле — index-ът е стар')
           EOF
       - name: Commit
         run: |
