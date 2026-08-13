@@ -1,0 +1,5 @@
+--- a/next/index.html
++++ b/next/index.html
+@@ -30 +30 @@
+-:root{--bg:#fafaf7;--s1:#fff;--s2:#f5f3ee;--s3:#ece8de;--brd:#ddd6c3;--y:#1a1a1a;--tx:#1a1a1a;--mu:#666;--mu2:#999;--gr:#16a34a;--rd:#dc2626;--bl:#1e40af;--or:#c2410c;--pu:#7e22ce;--cy:#0e7490;--pi:#be185d;--taxiY:#f5c518;--taxiB:#0a0a0a}
++:root{--bg:#fafaf7;--s1:#fff;--s2:#f5f3ee;--s3:#ece8de;--brd:#ddd6c3;--y:#1a1a1a;--tx:#1a1a1a;--mu:#666;--mu2:#999;--gr:#2f7d4f;--rd:#b3261e;--bl:#3457a6;--or:#a15c0a;--pu:#6b3fa0;--cy:#0f6e7d;--pi:#9c3f66;--taxiY:#f5c518;--taxiB:#0a0a0a}
