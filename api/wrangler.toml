@@ -1,0 +1,18 @@
+name = "fishtaxi-api"
+main = "src/index.js"
+compatibility_date = "2026-08-01"
+
+# D1 базата. След `wrangler d1 create fishtaxi` сложи истинското id тук.
+[[d1_databases]]
+binding = "DB"
+database_name = "fishtaxi"
+database_id = "ЗАМЕНИ_С_ИСТИНСКОТО_ID"
+
+# R2 за снимки на коли/талони (нужно за trust режима извън България).
+# Разкоментирай след `wrangler r2 bucket create fishtaxi-photos`.
+# [[r2_buckets]]
+# binding = "PHOTOS"
+# bucket_name = "fishtaxi-photos"
+
+[observability]
+enabled = true
