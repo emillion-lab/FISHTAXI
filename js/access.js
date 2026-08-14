@@ -9,9 +9,10 @@
  * което е точно каквото ни трябва сега. Истинската проверка идва
  * с api/ (D1 + Worker), когато има време за него.
  *
- * Двата пътя:
- *   България  → код се издава ръчно след проверка на кола + Viber/WhatsApp
- *   Чужбина   → самообслужване, локален код, ниво 'trust' (на доверие)
+ * Всеки код се издава ръчно — и за България, и за чужбина.
+ * Разликата е само в основанието:
+ *   България → сверена кола в регистъра (mode: 'registry')
+ *   Чужбина  → снимки и разговор, на доверие (mode: 'trust')
  */
 
 (function (global) {
@@ -21,10 +22,7 @@
   var LIST_URL = '/data/access.json';
   var LS_KEY = 'ft_access';
   var CACHE_KEY = 'ft_access_cache';
-  var RECHECK_MS = 6 * 3600 * 1000;   // сверявай списъка веднъж на 6 часа
-
-  // Без 0/O/1/I — за да няма грешки при диктовка по телефона
-  var AL = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var RECHECK_MS = 3600 * 1000;   // 1 час — отнемането влиза в сила бързо
 
   function sha256hex(s) {
     var enc = new TextEncoder().encode(s);
@@ -45,13 +43,6 @@
     });
   }
 
-  function selfCode() {
-    var out = '', a = new Uint8Array(8);
-    crypto.getRandomValues(a);
-    for (var i = 0; i < 8; i++) out += AL[a[i] % AL.length];
-    return out;
-  }
-
   function readLocal() {
     try { return JSON.parse(localStorage.getItem(LS_KEY) || 'null'); }
     catch (e) { return null; }
@@ -66,7 +57,7 @@
   }
 
   function fetchList() {
-    // cache-bust, за да не увисне отнет код в кеша на браузъра
+    // cache-bust на минута, за да не увисне отнет код в кеша на браузъра
     return fetch(LIST_URL + '?t=' + Math.floor(Date.now() / 60000))
       .then(function (r) { return r.json(); })
       .then(function (j) {
@@ -82,7 +73,22 @@
       });
   }
 
-  /* Въвеждане на код, издаден ръчно (България). */
+  function toRecord(hit, h) {
+    return {
+      hash: h,
+      plate: hit.plate || '',
+      name: hit.name || '',
+      city: hit.city || '',
+      country: hit.country || '',
+      mode: hit.mode || 'trust',
+      role: hit.role || 'driver',
+      tier: hit.tier || 'driver',
+      level: 'full',
+      checked: Date.now()
+    };
+  }
+
+  /* Въвеждане на код. Един път, после се помни. */
   function redeem(code) {
     return hashCode(code).then(function (h) {
       return fetchList().then(function (list) {
@@ -90,41 +96,17 @@
         var hit = (list.drivers || []).filter(function (d) { return d.hash === h; })[0];
         if (!hit) return { ok: false, reason: 'not_found' };
         if (hit.status !== 'active') return { ok: false, reason: hit.status };
-
-        var rec = {
-          hash: h, plate: hit.plate, name: hit.name, city: hit.city,
-          country: hit.country, mode: hit.mode || 'registry',
-          tier: hit.tier || 'driver', level: 'full',
-          checked: Date.now()
-        };
+        var rec = toRecord(hit, h);
         saveLocal(rec);
         return { ok: true, driver: rec };
       });
     });
   }
 
-  /* Самообслужване извън България — без проверка, на доверие. */
-  function selfRegister(info) {
-    var rec = {
-      hash: null, code: selfCode(),
-      plate: (info && info.plate) || '',
-      name: (info && info.name) || '',
-      city: (info && info.city) || '',
-      country: (info && info.country) || '',
-      mode: 'trust', tier: 'driver', level: 'full',
-      checked: Date.now()
-    };
-    saveLocal(rec);
-    return rec;
-  }
-
-  /* Текущо ниво. Периодично сверява списъка — така отнемането влиза в сила. */
+  /* Текущо ниво. Сверява списъка на час — така отнемането влиза в сила. */
   function status() {
     var rec = readLocal();
     if (!rec) return Promise.resolve({ level: 'demo', driver: null });
-
-    // Чуждите записи не са в списъка — няма какво да се сверява.
-    if (rec.mode === 'trust') return Promise.resolve({ level: 'full', driver: rec });
 
     if (Date.now() - (rec.checked || 0) < RECHECK_MS)
       return Promise.resolve({ level: rec.level, driver: rec });
@@ -136,20 +118,24 @@
         clearLocal();
         return { level: 'demo', driver: null, revoked: true };
       }
-      rec.checked = Date.now();
-      rec.tier = hit.tier || rec.tier;
-      saveLocal(rec);
-      return { level: 'full', driver: rec };
+      var fresh = toRecord(hit, rec.hash);
+      saveLocal(fresh);
+      return { level: 'full', driver: fresh };
     });
+  }
+
+  function isAdmin() {
+    var r = readLocal();
+    return !!(r && r.role === 'admin');
   }
 
   function signOut() { clearLocal(); }
 
   global.FTAccess = {
     redeem: redeem,
-    selfRegister: selfRegister,
     status: status,
     signOut: signOut,
+    isAdmin: isAdmin,
     current: readLocal
   };
 })(window);
