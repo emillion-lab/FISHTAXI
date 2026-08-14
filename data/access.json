@@ -1,0 +1,31 @@
+{
+  "_": "Издадени кодове за достъп. Публичен файл — тук стоят САМО хешове, не самите кодове.",
+  "_revoke": "За отнемане: сложи status на 'revoked'. Влиза в сила до ~5 мин (CDN кеш).",
+  "_pepper_note": "Хешът е sha256('fishtaxi-access-v1:' + КОД), първите 16 hex знака.",
+  "version": 1,
+  "updated": "2026-08-14",
+  "drivers": [
+    {
+      "hash": "fb83862a3d632811",
+      "plate": "CB0000AA",
+      "name": "Емил (тест)",
+      "city": "sofia",
+      "country": "BG",
+      "mode": "registry",
+      "tier": "founder",
+      "status": "active",
+      "issued": "2026-08-14"
+    },
+    {
+      "hash": "b5d36379f3875ae5",
+      "plate": "CB1234PM",
+      "name": "Петър М.",
+      "city": "sofia",
+      "country": "BG",
+      "mode": "registry",
+      "tier": "founder",
+      "status": "active",
+      "issued": "2026-08-14"
+    }
+  ]
+}
