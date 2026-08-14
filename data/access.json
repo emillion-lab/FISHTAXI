@@ -1,17 +1,32 @@
 {
   "_": "Издадени кодове за достъп. Публичен файл — тук стоят САМО хешове, не самите кодове.",
-  "_revoke": "За отнемане: сложи status на 'revoked'. Влиза в сила до ~5 мин (CDN кеш).",
+  "_revoke": "За отнемане: сложи status на 'revoked'. Влиза в сила до ~1 час (или веднага след рестарт на приложението).",
   "_pepper_note": "Хешът е sha256('fishtaxi-access-v1:' + КОД), първите 16 hex знака.",
-  "version": 1,
+  "_roles": "role: 'admin' вижда всичко + вътрешни изгледи; 'driver' е нормален достъп.",
+  "_modes": "mode: 'registry' = проверен в регистъра (БГ); 'trust' = ръчно одобрен от нас (чужбина).",
+  "version": 2,
   "updated": "2026-08-14",
   "drivers": [
     {
-      "hash": "fb83862a3d632811",
-      "plate": "CB0000AA",
-      "name": "Емил (тест)",
+      "hash": "82e6a0725b2d0f69",
+      "plate": "—",
+      "name": "Емил (админ)",
       "city": "sofia",
       "country": "BG",
       "mode": "registry",
+      "role": "admin",
+      "tier": "founder",
+      "status": "active",
+      "issued": "2026-08-14"
+    },
+    {
+      "hash": "fb83862a3d632811",
+      "plate": "CB0000AA",
+      "name": "Емил (шофьор)",
+      "city": "sofia",
+      "country": "BG",
+      "mode": "registry",
+      "role": "driver",
       "tier": "founder",
       "status": "active",
       "issued": "2026-08-14"
@@ -23,6 +38,7 @@
       "city": "sofia",
       "country": "BG",
       "mode": "registry",
+      "role": "driver",
       "tier": "founder",
       "status": "active",
       "issued": "2026-08-14"
