@@ -23,7 +23,8 @@
   var CACHE_KEY = 'ft_access_cache';
   var RECHECK_MS = 6 * 3600 * 1000;   // сверявай списъка веднъж на 6 часа
 
-  var AL = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';   // без 0/O/1/I — за диктовка по телефона
+  // Без 0/O/1/I — за да няма грешки при диктовка по телефона
+  var AL = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
   function sha256hex(s) {
     var enc = new TextEncoder().encode(s);
@@ -34,16 +35,14 @@
     });
   }
 
+  function normalize(code) {
+    return String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  }
+
   function hashCode(code) {
     return sha256hex(PEPPER + ':' + normalize(code)).then(function (h) {
       return h.slice(0, 16);
     });
-  }
-
-  function normalize(code) {
-    return String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '')
-      .replace(/O/g, '0').replace(/I/g, '1')   // чести грешки при преписване
-      .replace(/0/g, 'O').replace(/1/g, 'J');  // връщаме към азбуката ни
   }
 
   function selfCode() {
@@ -83,7 +82,7 @@
       });
   }
 
-  /* Въвеждане на код, издаден от Емил (България). */
+  /* Въвеждане на код, издаден ръчно (България). */
   function redeem(code) {
     return hashCode(code).then(function (h) {
       return fetchList().then(function (list) {
