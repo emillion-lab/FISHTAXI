@@ -4,8 +4,8 @@
   "_pepper_note": "Хешът е sha256('fishtaxi-access-v1:' + КОД), първите 16 hex знака.",
   "_roles": "role: 'admin' вижда всичко + вътрешни изгледи; 'driver' е нормален достъп.",
   "_modes": "mode: 'registry' = проверен в регистъра (БГ); 'trust' = ръчно одобрен от нас (чужбина).",
-  "version": 4,
-  "updated": "2026-08-15",
+  "version": 5,
+  "updated": "2026-08-16",
   "drivers": [
     {
       "hash": "82e6a0725b2d0f69",
@@ -33,6 +33,18 @@
       "issued": "2026-08-15"
     },
     {
+      "hash": "295ffd71046cee56",
+      "plate": "—",
+      "name": "Емил (админ, 16.08)",
+      "city": "sofia",
+      "country": "BG",
+      "mode": "registry",
+      "role": "admin",
+      "tier": "founder",
+      "status": "active",
+      "issued": "2026-08-16"
+    },
+    {
       "hash": "fb83862a3d632811",
       "plate": "CB0000AA",
       "name": "Емил (шофьор)",
@@ -43,6 +55,18 @@
       "tier": "founder",
       "status": "active",
       "issued": "2026-08-14"
+    },
+    {
+      "hash": "2c9037eca7f49e86",
+      "plate": "CB0000AA",
+      "name": "Емил (шофьор, 16.08)",
+      "city": "sofia",
+      "country": "BG",
+      "mode": "registry",
+      "role": "driver",
+      "tier": "founder",
+      "status": "active",
+      "issued": "2026-08-16"
     },
     {
       "hash": "b5d36379f3875ae5",
