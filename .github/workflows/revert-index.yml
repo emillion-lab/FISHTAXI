@@ -1,0 +1,79 @@
+name: revert-index
+# АВАРИЙНО ВРЪЩАНЕ на fish.taxi към работеща версия.
+#
+# Пусни от Actions → revert-index → Run workflow.
+# Полето "source" приема:
+#   latest              — последното датирано копие (по подразбиране)
+#   indexOLD.html       — старият единичен snapshot
+#   backups/index-…html — конкретно копие по име
+#
+# Сайтът е жив 2–5 минути след това (GitHub Pages).
+
+on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: 'откъде да върна: latest | indexOLD.html | backups/index-….html'
+        required: false
+        default: 'latest'
+
+permissions:
+  contents: write
+
+jobs:
+  revert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Избери източник
+        id: pick
+        run: |
+          SRC="${{ github.event.inputs.source }}"
+          if [ -z "$SRC" ] || [ "$SRC" = "latest" ]; then
+            if [ -f backups/LATEST.txt ]; then
+              SRC=$(cat backups/LATEST.txt)
+            else
+              SRC="indexOLD.html"
+            fi
+          fi
+          if [ ! -f "$SRC" ]; then
+            echo "Няма такъв файл: $SRC"
+            echo "--- налични копия ---"
+            ls -la backups/ 2>/dev/null || echo "(няма папка backups)"
+            ls -la indexOLD.html 2>/dev/null || true
+            exit 1
+          fi
+          echo "връщам от: $SRC ($(wc -c < "$SRC") байта)"
+          echo "src=$SRC" >> $GITHUB_OUTPUT
+
+      - name: Провери, че копието е смислено
+        run: |
+          SRC="${{ steps.pick.outputs.src }}"
+          SIZE=$(wc -c < "$SRC")
+          if [ "$SIZE" -lt 20000 ]; then
+            echo "Копието е подозрително малко ($SIZE байта) — спирам"; exit 1
+          fi
+          grep -qi "<html" "$SRC" || { echo "Няма <html> — не е валидна страница"; exit 1; }
+          grep -qi "</body>" "$SRC" || { echo "Няма </body> — файлът е отрязан"; exit 1; }
+          echo "проверката мина"
+
+      - name: Върни
+        run: |
+          cp "${{ steps.pick.outputs.src }}" index.html
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "index.html вече е същият — няма какво да върна"; exit 0
+          fi
+          git commit -m "revert: index.html върнат от ${{ steps.pick.outputs.src }}"
+          for i in 1 2 3; do
+            git pull --rebase --autostash || true
+            if git push; then echo "върнато от опит $i"; exit 0; fi
+            sleep $((i * 5))
+          done
+          exit 1
+
+      - name: Готово
+        run: echo "fish.taxi ще е жив след 2–5 минути (GitHub Pages)"
