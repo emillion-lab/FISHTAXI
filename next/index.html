@@ -6,7 +6,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#080808">
-<title>fish.taxi — Direct Taxi Finder</title>
+<title>fish.taxi — Direct Taxi Finder [preview 2026-08-16 12:10 UTC]</title>
 <meta name="description" content="Find verified taxi drivers directly in Sofia. Call or message them yourself — see the car, price and driver before you book.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="fish.taxi">
@@ -472,6 +472,32 @@ div:has(> #from-text),div:has(> #to-text){
 @media (prefers-reduced-motion:reduce){
   .dlist .dc,#map-list .dc,.mb,.tab.on::after{animation:none}
 }
+
+/* ═══ FT-REORDER-V3: сгъваемото справочно ═══ */
+.ft-fold{margin:18px 0 8px;border-radius:var(--m3-md,16px);
+  background:var(--m3-sc,#f7ecdc);overflow:hidden}
+.ft-fold>summary{list-style:none;cursor:pointer;padding:16px 18px;
+  font-size:15px;font-weight:600;color:var(--m3-on-surface,#1f1b13);
+  display:flex;align-items:center;justify-content:space-between;
+  -webkit-tap-highlight-color:transparent}
+.ft-fold>summary::-webkit-details-marker{display:none}
+.ft-fold>summary::after{content:'⌄';font-size:19px;line-height:1;
+  color:var(--m3-on-surface-var,#4e4639);
+  transition:transform 220ms cubic-bezier(.2,0,0,1)}
+.ft-fold[open]>summary::after{transform:rotate(180deg)}
+.ft-fold[open]>summary{border-bottom:1px solid var(--m3-outline-var,#d1c5b4)}
+.ft-fold>*:not(summary){margin-left:18px;margin-right:18px}
+.ft-fold>*:last-child{margin-bottom:16px}
+.ft-fold .mh:first-of-type{margin-top:14px}
+
+/* цената е кратка и решаваща — остава видима и се откроява */
+#mprice{font-size:17px!important;font-weight:700!important;
+  color:var(--m3-on-surface,#1f1b13)!important;
+  background:var(--m3-primary-c,#ffdf95);border-radius:var(--m3-sm,12px);
+  padding:12px 14px;line-height:1.45}
+
+/* поръчката вече е високо — заглавието ѝ носи повече тежест */
+#mh-order{font-size:13px!important;letter-spacing:.09em!important;margin-top:22px!important}
 
 </style>
 
@@ -2504,5 +2530,73 @@ if('serviceWorker' in navigator){
 </script>
 <div id="build-stamp" style="text-align:center;font-size:10px;color:#666;padding:8px 0 14px;opacity:.7">fish.taxi v2026.07.13-d</div>
 <script>console.log('[fish.taxi] build v2026.07.13-d');</script>
+
+<script>
+/* FT-REORDER-V3 — поръчката се вдига нагоре, справочното се сгъва */
+(function(){
+  function reorder(){
+    var mb = document.querySelector('.mb');
+    if(!mb || mb.dataset.ftReordered) return;
+
+    var order  = document.getElementById('mh-order');
+    var btns   = mb.querySelector('.mbtns');
+    var photos = document.getElementById('mphotos');
+    if(!order || !btns || !photos) return;
+
+    /* 1. блокът на поръчката: от „Преди да поръчаш" до бутоните включително */
+    var block = [], n = order;
+    while(n && n !== btns){ block.push(n); n = n.nextElementSibling; }
+    block.push(btns);
+
+    /* 2. справочните секции — поименно, за да не глътнат нещо чуждо */
+    var foldIds = ['mh-cardet','mcardet','mh-pay','mpay','mh-langs','mlangs',
+                   'mh-opts','mopts','mh-areas','mareas','mh-about','mbio'];
+    var foldNodes = foldIds.map(function(id){ return document.getElementById(id); })
+                           .filter(Boolean);
+
+    /* 3. поръчката се вдига веднага след снимките */
+    var anchor = photos;
+    block.forEach(function(el){
+      anchor.parentNode.insertBefore(el, anchor.nextSibling);
+      anchor = el;
+    });
+
+    /* 4. справочното отива под бутоните, сгънато в едно */
+    if(foldNodes.length){
+      var det = document.createElement('details');
+      det.className = 'ft-fold';
+      var sum = document.createElement('summary');
+      sum.id = 'ft-fold-sum';
+      sum.textContent = (document.documentElement.lang === 'bg')
+        ? 'Още за шофьора и колата'
+        : 'More about the driver and car';
+      det.appendChild(sum);
+      btns.parentNode.insertBefore(det, btns.nextSibling);
+      foldNodes.forEach(function(el){ det.appendChild(el); });
+    }
+
+    mb.dataset.ftReordered = '1';
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', reorder);
+  } else {
+    reorder();
+  }
+
+  /* езикът се сменя динамично — обновяваме надписа на сгъването */
+  var oldSetLang = window.setLang;
+  if(typeof oldSetLang === 'function'){
+    window.setLang = function(v){
+      var r = oldSetLang.apply(this, arguments);
+      var sum = document.getElementById('ft-fold-sum');
+      if(sum) sum.textContent = (v === 'bg')
+        ? 'Още за шофьора и колата'
+        : 'More about the driver and car';
+      return r;
+    };
+  }
+})();
+</script>
 </body>
 </html><!-- rebuild trigger -->
