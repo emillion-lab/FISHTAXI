@@ -1,9 +1,10 @@
 name: apply-design-preview
 
 # 1. Презарежда next/index.html от живия index.html
-# 2. Прилага M3 основата
-# 3. Пренарежда панела: поръчката нагоре, справочното сгънато
-# 4. Слага номер на версията в заглавието, за да се вижда кое е заредено
+# 2. M3 основа
+# 3. Пренареждане на панела: поръчката нагоре, справочното сгънато
+# 4. Нощна схема + емблема по тема
+# 5. Отпечатък на версията в заглавието
 #
 # Живият сайт не се пипа. Преглед: https://fish.taxi/next/
 
@@ -30,6 +31,9 @@ jobs:
 
       - name: Пренареждане на панела
         run: python3 scripts/patch_reorder.py next/index.html
+
+      - name: Нощна схема и емблема
+        run: python3 scripts/patch_mood.py next/index.html
 
       - name: Отпечатък на версията
         run: |
@@ -59,7 +63,7 @@ jobs:
             echo "няма промяна"
             exit 0
           fi
-          git commit -m "design: M3 + пренареден панел върху прегледа"
+          git commit -m "design: M3 + пренареден панел + нощна схема"
           for i in 1 2 3; do
             git pull --rebase --autostash || true
             if git push; then
@@ -71,4 +75,4 @@ jobs:
           exit 1
 
       - name: Къде да гледам
-        run: echo "Отвори с нов адрес, за да минеш кеша https://fish.taxi/next/?v=4"
+        run: echo "Отвори с нов адрес, за да минеш кеша https://fish.taxi/next/?v=5"
