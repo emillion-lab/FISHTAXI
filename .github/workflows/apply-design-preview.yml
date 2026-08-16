@@ -1,0 +1,68 @@
+name: apply-design-preview
+# Прилага scripts/patch_design.py върху next/index.html — ПРЕГЛЕД, не живия сайт.
+# Виж резултата на https://fish.taxi/next/
+#
+# Живият index.html не се пипа. Когато редизайнът бъде одобрен,
+# се пуска apply-design-live.yml.
+#
+# ВНИМАНИЕ: fork-next.yml презаписва next/index.html от index.html.
+# Пуснеш ли fork-next, преглядът се губи и този workflow трябва да се пусне пак.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Приложи патча върху прегледа
+        run: python3 scripts/patch_design.py next/index.html
+
+      - name: Провери целостта
+        run: |
+          python3 - <<'EOF'
+          import io, re, sys
+          s = io.open('next/index.html', encoding='utf-8').read()
+          ok = True
+          def check(cond, msg):
+              global ok
+              print(('OK  ' if cond else 'ГРЕШКА ') + msg)
+              if not cond: ok = False
+          check(s.count('<style>') == 1 and s.count('</style>') == 1, 'един стилов блок')
+          check('FT-DESIGN-V1' in s, 'патчът е вътре')
+          check(s.rstrip().endswith('-->') or s.rstrip().endswith('</html>'), 'файлът не е отрязан')
+          check('</body>' in s, 'body е затворен')
+          css = s.split('FT-DESIGN-V1')[1].split('</style>')[0]
+          check(css.count('{') == css.count('}'), 'скобите в новия CSS са балансирани')
+          blocks = re.findall(r'<script>(.*?)</script>', s, re.S)
+          io.open('/tmp/inline.js', 'w', encoding='utf-8').write(max(blocks, key=len))
+          sys.exit(0 if ok else 1)
+          EOF
+          node --check /tmp/inline.js && echo "JS SYNTAX OK"
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add next/index.html
+          if git diff --cached --quiet; then
+            echo "няма промяна"; exit 0
+          fi
+          git commit -m "design: редизайн v1 приложен върху прегледа"
+          for i in 1 2 3; do
+            git pull --rebase --autostash || true
+            if git push; then echo "качено от опит $i"; exit 0; fi
+            sleep $((i * 5))
+          done
+          exit 1
+
+      - name: Къде да гледам
+        run: echo "Преглед след 2-5 минути: https://fish.taxi/next/"
