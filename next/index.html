@@ -6,7 +6,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#080808">
-<title>fish.taxi — Direct Taxi Finder [preview 2026-08-16 12:10 UTC]</title>
+<title>fish.taxi — Direct Taxi Finder [preview 2026-08-16 15:01 UTC]</title>
 <meta name="description" content="Find verified taxi drivers directly in Sofia. Call or message them yourself — see the car, price and driver before you book.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="fish.taxi">
@@ -499,6 +499,37 @@ div:has(> #from-text),div:has(> #to-text){
 /* поръчката вече е високо — заглавието ѝ носи повече тежест */
 #mh-order{font-size:13px!important;letter-spacing:.09em!important;margin-top:22px!important}
 
+/* ═══════════════ FT-MOOD-V4 ═══════════════ */
+
+/* ── по-дълбока нощ ── */
+[data-theme="dark"]{
+  --m3-primary:#dcb03a;        --m3-on-primary:#2c2000;
+  --m3-primary-c:#4a3600;      --m3-on-primary-c:#f7d886;
+  --m3-secondary-c:#3d382c;    --m3-on-secondary-c:#ddd3c0;
+  --m3-surface:#0c0b07;        --m3-on-surface:#ded5c6;
+  --m3-surface-dim:#0c0b07;
+  --m3-sc-lowest:#060502;      --m3-sc-low:#121009;
+  --m3-sc:#17140d;             --m3-sc-high:#201c14;
+  --m3-sc-highest:#29241b;
+  --m3-on-surface-var:#b3a996; --m3-outline:#7b7263;
+  --m3-outline-var:#39352c;
+  --m3-success:#7cc79c;        --m3-success-c:#123f28;
+  --m3-scrim:rgba(0,0,0,.74);
+  --m3-state:#ded5c6;
+}
+/* нощем картата пада още малко, за да не блести в очите */
+[data-theme="dark"] .leaflet-tile-pane{
+  filter:invert(1) hue-rotate(180deg) brightness(.82) contrast(.9) saturate(.62);
+}
+[data-theme="dark"] .leaflet-container{background:#07080b!important}
+/* табелата остава светла — тя е физически предмет, не част от темата */
+
+/* ── емблемата ── */
+.ft-logo{display:block;width:100px;height:46px;flex-shrink:0;
+  background:url("img/logo.png") left center/contain no-repeat}
+[data-theme="dark"] .ft-logo{width:104px;
+  background-image:url("img/header_logo.png")}
+
 </style>
 
 <base href="/">
@@ -535,7 +566,7 @@ div:has(> #from-text),div:has(> #to-text){
 <body>
 
 <div class="top">
-  <img src="img/header_logo.png" style="height:44px;object-fit:contain;display:block" alt="fish.taxi">
+  <a class="ft-logo" href="./" aria-label="fish.taxi"></a>
   <div style="display:flex;align-items:center;gap:8px">
     <button onclick="installApp()" id="install-btn" style="display:none;background:var(--taxiY);border:none;color:#000;border-radius:8px;padding:5px 9px;font-size:12px;cursor:pointer;font-weight:700">📲 Install</button>
     <button onclick="toggleTheme()" id="theme-btn" style="background:var(--taxiY);border:none;color:#000;border-radius:8px;padding:5px 9px;font-size:14px;cursor:pointer;font-weight:700">🌙</button>
