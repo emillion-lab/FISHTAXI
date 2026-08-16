@@ -20,13 +20,19 @@ def check(cond, msg):
 
 open_tag = '<' + 'style>'
 close_tag = '</' + 'style>'
+marker = 'FT-M3-V2'
+
 check(s.count(open_tag) == 1 and s.count(close_tag) == 1, 'един стилов блок')
-check('FT-DESIGN-V1' in s, 'патчът е вътре')
+check(marker in s, 'патчът е вътре')
 check('</' + 'body>' in s, 'body е затворен')
 check(len(s) > 100000, 'файлът не е отрязан (%d знака)' % len(s))
 
-if 'FT-DESIGN-V1' in s:
-    css = s.split('FT-DESIGN-V1')[1].split(close_tag)[0]
+o = len(re.findall(r'<div', s))
+c = len(re.findall(r'</' + r'div>', s))
+check(o == c, 'баланс на div: %d отворени / %d затворени' % (o, c))
+
+if marker in s:
+    css = s.split(marker)[1].split(close_tag)[0]
     check(css.count('{') == css.count('}'),
           'скобите в новия CSS са балансирани (%d / %d)' % (css.count('{'), css.count('}')))
 
