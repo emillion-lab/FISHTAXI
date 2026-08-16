@@ -1,7 +1,10 @@
 name: apply-design-preview
 
-# 1. Презарежда next/index.html от живия index.html (за да не е застояла)
-# 2. Прилага M3 патча върху прегледа
+# 1. Презарежда next/index.html от живия index.html
+# 2. Прилага M3 основата
+# 3. Пренарежда панела: поръчката нагоре, справочното сгънато
+# 4. Слага номер на версията в заглавието, за да се вижда кое е заредено
+#
 # Живият сайт не се пипа. Преглед: https://fish.taxi/next/
 
 on:
@@ -22,8 +25,24 @@ jobs:
       - name: Презареди прегледа от живия файл
         run: python3 scripts/fork_next.py
 
-      - name: Приложи M3 патча върху прегледа
+      - name: M3 основа
         run: python3 scripts/patch_design.py next/index.html
+
+      - name: Пренареждане на панела
+        run: python3 scripts/patch_reorder.py next/index.html
+
+      - name: Отпечатък на версията
+        run: |
+          STAMP="preview $(date -u +%Y-%m-%d\ %H:%M) UTC"
+          python3 - "$STAMP" <<'PY'
+          import io, sys
+          stamp = sys.argv[1]
+          p = 'next/index.html'
+          s = io.open(p, encoding='utf-8').read()
+          s = s.replace('</title>', ' [' + stamp + ']</title>', 1)
+          io.open(p, 'w', encoding='utf-8').write(s)
+          print(stamp)
+          PY
 
       - name: Провери целостта
         run: python3 scripts/verify_page.py next/index.html /tmp/inline.js
@@ -40,7 +59,7 @@ jobs:
             echo "няма промяна"
             exit 0
           fi
-          git commit -m "design: M3 основа върху прегледа"
+          git commit -m "design: M3 + пренареден панел върху прегледа"
           for i in 1 2 3; do
             git pull --rebase --autostash || true
             if git push; then
@@ -52,4 +71,4 @@ jobs:
           exit 1
 
       - name: Къде да гледам
-        run: echo "Преглед след 2-5 минути https://fish.taxi/next/"
+        run: echo "Отвори с нов адрес, за да минеш кеша https://fish.taxi/next/?v=4"
