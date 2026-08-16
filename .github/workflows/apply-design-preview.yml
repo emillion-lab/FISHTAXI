@@ -1,5 +1,9 @@
 name: apply-design-preview
 
+# 1. Презарежда next/index.html от живия index.html (за да не е застояла)
+# 2. Прилага M3 патча върху прегледа
+# Живият сайт не се пипа. Преглед: https://fish.taxi/next/
+
 on:
   workflow_dispatch:
 
@@ -15,7 +19,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Приложи патча върху прегледа
+      - name: Презареди прегледа от живия файл
+        run: python3 scripts/fork_next.py
+
+      - name: Приложи M3 патча върху прегледа
         run: python3 scripts/patch_design.py next/index.html
 
       - name: Провери целостта
@@ -33,7 +40,7 @@ jobs:
             echo "няма промяна"
             exit 0
           fi
-          git commit -m "design: редизайн v1 приложен върху прегледа"
+          git commit -m "design: M3 основа върху прегледа"
           for i in 1 2 3; do
             git pull --rebase --autostash || true
             if git push; then
