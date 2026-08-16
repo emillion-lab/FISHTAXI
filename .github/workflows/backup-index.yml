@@ -1,0 +1,50 @@
+name: backup-index
+# Прави датирано копие на живия index.html в backups/.
+# За разлика от snapshot-old.yml тук НИЩО не се презаписва —
+# всяко пускане добавя нов файл, така че историята се трупа.
+#
+# Пусни го ПРЕДИ всяка по-голяма промяна по index.html.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Копирай с дата
+        run: |
+          if [ ! -f index.html ]; then
+            echo "index.html липсва — спирам"; exit 1
+          fi
+          mkdir -p backups
+          TS=$(date -u +%Y-%m-%d-%H%M)
+          DEST="backups/index-$TS.html"
+          if [ -f "$DEST" ]; then
+            echo "Копие за тази минута вече има: $DEST"; exit 0
+          fi
+          cp index.html "$DEST"
+          echo "Записано: $DEST ($(wc -c < "$DEST") байта)"
+          echo "$DEST" > backups/LATEST.txt
+          ls -la backups/
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add backups/
+          if git diff --cached --quiet; then
+            echo "няма промяна"; exit 0
+          fi
+          git commit -m "backup: датирано копие на index.html"
+          for i in 1 2 3; do
+            git pull --rebase --autostash || true
+            if git push; then echo "качено от опит $i"; exit 0; fi
+            sleep $((i * 5))
+          done
+          exit 1
