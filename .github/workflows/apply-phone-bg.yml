@@ -1,0 +1,52 @@
+name: apply-phone-bg-patch
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply patch
+        run: python3 scripts/patch_phone_bg.py
+
+      - name: Sanity check inline JS
+        run: |
+          for F in index.html next/index.html; do
+            python3 - "$F" <<'PY'
+          import io, re, sys
+          s = io.open(sys.argv[1], encoding='utf-8').read()
+          blocks = re.findall(r'<script(?![^>]*src=)[^>]*>(.*?)</script>', s, re.S)
+          io.open('/tmp/bundle.js', 'w', encoding='utf-8').write('\n;\n'.join(blocks))
+          print(sys.argv[1], 'script blocks:', len(blocks))
+          PY
+            node --check /tmp/bundle.js || exit 1
+          done
+          echo "SYNTAX OK"
+
+      - name: Verify
+        run: |
+          for F in index.html next/index.html; do
+            grep -q "FT-PHONE-NAT" "$F"          || { echo "$F: липсва маркерът"; exit 1; }
+            grep -q "setDriverPhone(d);" "$F"    || { echo "$F: не се вика"; exit 1; }
+            if grep -q "viber://chat?number='+" "$F"; then echo "$F: остана Viber линк без %2B"; exit 1; fi
+          done
+          echo "CLEAN"
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- index.html next/index.html; then
+            echo "no change"
+          else
+            git add index.html next/index.html
+            git commit -m "fix(phone): показва 0878 592 888 до бутоните, %2B за Viber"
+            git fetch origin main && git rebase origin/main || git rebase --abort
+            git push
+          fi
