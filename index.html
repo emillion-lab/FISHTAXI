@@ -1094,7 +1094,7 @@ function carI(d){
 }
 
 function qc(id){var d=DRIVERS.filter(function(x){return x.id===id;})[0];if(d)window.location.href='tel:'+d.phone;}
-function qv(id){var d=DRIVERS.filter(function(x){return x.id===id;})[0];if(d)window.open('viber://chat?number='+d.phone.replace(/[^0-9]/g,''));}
+function qv(id){var d=DRIVERS.filter(function(x){return x.id===id;})[0];if(d)window.open('viber://chat?number=%2B'+d.phone.replace(/[^0-9]/g,''));}
 
 function card(d,mini){
   var st=stI(d),ic=carI(d);
@@ -1309,6 +1309,7 @@ function openMod(id){
   } else { mav.innerHTML=carI(d); }
   document.getElementById('mname').innerHTML=dName(d)+' <span class="vb">'+t.mVerified+'</span>'+(d.founder?' <span class="founder">🏆 '+(lang==='bg'?'Основател №'+d.founder:'Founder #'+d.founder)+'</span>':'');
   document.getElementById('mcar2').textContent=d.car+' · '+d.plate;
+  setDriverPhone(d);
   document.getElementById('mstars').innerHTML='<span style="color:var(--y);font-size:20px">'+'★'.repeat(Math.round(d.rating))+'</span> <strong>'+d.rating+'</strong> <span style="color:var(--mu);font-size:12px">('+d.reviews+' '+t.mReviews+')</span>';
   var summaryParts=[];
   if(d.sport)summaryParts.push((t.sumFast||'Can drive fast')+' ('+d.accel+'s 0-100)');
@@ -1458,8 +1459,27 @@ function hideImg(){
   document.getElementById('imglb').style.display='none';
   if(galleryTimer){clearInterval(galleryTimer);galleryTimer=null;}
 }
+/* FT-PHONE-NAT — националният запис е това, което българският клиент
+   разпознава. Линкът остава +359…, за да звъни и от чужбина. */
+function natPhone(p){
+  var d=String(p||'').replace(/[^0-9]/g,'');
+  if(d.indexOf('359')===0){return ('0'+d.slice(3)).replace(/^(\d{4})(\d{3})(\d{3})$/,'$1 $2 $3');}
+  return '+'+d;
+}
+function setDriverPhone(d){
+  var host=document.getElementById('mcar2');
+  if(!host||!d||!d.phone)return;
+  var el=document.getElementById('mphone');
+  if(!el){
+    el=document.createElement('div');el.id='mphone';
+    el.style.cssText='margin-top:6px;font-size:14px;font-weight:600;letter-spacing:.3px';
+    host.parentNode.insertBefore(el,host.nextSibling);
+  }
+  var intl=String(d.phone).replace(/[^0-9+]/g,'');
+  el.innerHTML='<a href="tel:'+intl+'" style="color:var(--y,#e8b923);text-decoration:none">&#9742; '+natPhone(d.phone)+'</a>';
+}
 function doCall(){if(cur)window.location.href='tel:'+cur.phone;}
-function doVib(){if(cur)window.open('viber://chat?number='+cur.phone.replace(/[^0-9]/g,''));}
+function doVib(){if(cur)window.open('viber://chat?number=%2B'+cur.phone.replace(/[^0-9]/g,''));}
 
 var selectedPrefs=[];
 var whenMode='now';
@@ -1946,7 +1966,7 @@ function doVibOrder(){
     var msg=buildOrderMessage(lat,lng);
     var url='viber://forward?text='+encodeURIComponent(msg);
     // Some Viber versions need chat number first, then user pastes — try direct chat with number to be safe
-    var chatUrl='viber://chat?number='+cur.phone.replace(/[^0-9]/g,'');
+    var chatUrl='viber://chat?number=%2B'+cur.phone.replace(/[^0-9]/g,'');
     // Open chat, then copy message to clipboard as fallback so user can paste
     try{
       if(navigator.clipboard){navigator.clipboard.writeText(msg);}
