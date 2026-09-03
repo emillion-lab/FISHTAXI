@@ -1,0 +1,42 @@
+name: assemble-b64-images
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assemble images from base64 chunks
+        run: python3 scripts/assemble_b64_images.py
+
+      - name: Verify decoded images
+        run: |
+          for f in img/*.jpg; do
+            [ -e "$f" ] || continue
+            python3 -c "
+from PIL import Image
+import sys
+im = Image.open('$f'); im.verify()
+print('$f', im.size)
+" || { echo "повреден: $f"; exit 1; }
+          done
+          echo "всички изображения са валидни"
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet && git diff --cached --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "no change"
+          else
+            git add -A img/
+            git commit -m "chore(img): assemble images from base64 chunks" || echo "nothing to commit"
+            git fetch origin main && git rebase origin/main || git rebase --abort
+            git push
+          fi
