@@ -1,0 +1,55 @@
+name: apply-lancelot-photos
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply patch
+        run: python3 scripts/patch_lancelot_photos.py
+
+      - name: Sanity check inline JS
+        run: |
+          python3 - "index.html" <<'PY'
+          import io, re, sys
+          s = io.open(sys.argv[1], encoding='utf-8').read()
+          blocks = re.findall(r'<script(?![^>]*src=)[^>]*>(.*?)</script>', s, re.S)
+          io.open('/tmp/bundle.js', 'w', encoding='utf-8').write('\n;\n'.join(blocks))
+          print(sys.argv[1], 'script blocks:', len(blocks))
+          PY
+          node --check /tmp/bundle.js || exit 1
+          echo "SYNTAX OK"
+
+      - name: Verify
+        run: |
+          grep -q '"avatar":"img/lancelot_avatar.jpg"' index.html || { echo "липсва аватар"; exit 1; }
+          grep -q 'lancelot_car_riviera.jpg' index.html || { echo "липсват снимки"; exit 1; }
+          echo "CLEAN"
+
+      - name: Warn about missing image files
+        run: |
+          MISSING=0
+          for f in lancelot_avatar lancelot_car_riviera lancelot_car_chalet lancelot_interior lancelot_fleet lancelot_helico; do
+            if [ ! -f "img/$f.jpg" ]; then echo "⚠ липсва img/$f.jpg"; MISSING=1; fi
+          done
+          [ "$MISSING" -eq 0 ] && echo "всички файлове са на място" || echo "^^ качи ги през GitHub web upload в папка img/"
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- index.html; then
+            echo "no change"
+          else
+            git add index.html
+            git commit -m "feat(drivers): attach avatar and car photos to Lancelot Transfers profile"
+            git fetch origin main && git rebase origin/main || git rebase --abort
+            git push
+          fi
