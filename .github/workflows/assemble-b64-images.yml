@@ -12,31 +12,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Assemble images from base64 chunks
-        run: python3 scripts/assemble_b64_images.py
+      - name: Install Pillow
+        run: pip install pillow
 
-      - name: Verify decoded images
-        run: |
-          for f in img/*.jpg; do
-            [ -e "$f" ] || continue
-            python3 -c "
-from PIL import Image
-import sys
-im = Image.open('$f'); im.verify()
-print('$f', im.size)
-" || { echo "повреден: $f"; exit 1; }
-          done
-          echo "всички изображения са валидни"
+      - name: Assemble and verify images
+        run: python3 scripts/assemble_b64_images.py
 
       - name: Commit
         run: |
-          git config user.name  "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet && git diff --cached --quiet && [ -z "$(git status --porcelain)" ]; then
+          if [ -z "$(git status --porcelain)" ]; then
             echo "no change"
           else
             git add -A img/
-            git commit -m "chore(img): assemble images from base64 chunks" || echo "nothing to commit"
+            git commit -m "chore(img): assemble images from base64 chunks"
             git fetch origin main && git rebase origin/main || git rebase --abort
             git push
           fi
