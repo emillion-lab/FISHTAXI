@@ -1,13 +1,14 @@
-import base64, glob, os, sys
+import base64, glob, io, os, sys
 
 """
-Сглобява бинарни файлове от base64 парчета.
+Сглобява бинарни изображения от base64 парчета.
 
 Всяко изображение се качва като img/_b64/<име>.jpg.partNN (чист текст,
 понеже MCP конекторът качва само текст). Тук ги събираме по ред,
-декодираме и записваме истинския .jpg, после трием парчетата.
+декодираме, проверяваме че е валиден JPEG и записваме истинския файл,
+после трием парчетата.
 
-Идемпотентно: ако няма парчета, не прави нищо и излиза чисто.
+Идемпотентно: без парчета не прави нищо и излиза чисто.
 """
 
 B64DIR = "img/_b64"
@@ -17,7 +18,6 @@ if not os.path.isdir(B64DIR):
     print("няма парчета за сглобяване")
     sys.exit(0)
 
-# групираме по име на целевия файл
 groups = {}
 for p in glob.glob(os.path.join(B64DIR, "*.part*")):
     base = os.path.basename(p)
@@ -27,6 +27,8 @@ for p in glob.glob(os.path.join(B64DIR, "*.part*")):
 if not groups:
     print("няма парчета за сглобяване")
     sys.exit(0)
+
+from PIL import Image
 
 for name, parts in sorted(groups.items()):
     parts.sort()
@@ -39,22 +41,23 @@ for name, parts in sorted(groups.items()):
     try:
         blob = base64.b64decode(b64, validate=True)
     except Exception as e:
-        raise SystemExit(f"{name}: невалиден base64 — {e}")
+        raise SystemExit(f"{name}: невалиден base64 - {e}")
 
-    if not blob.startswith(b"\xff\xd8\xff"):
-        raise SystemExit(f"{name}: резултатът не е JPEG")
-    if not blob.rstrip(b"\x00").endswith(b"\xff\xd9"):
-        raise SystemExit(f"{name}: JPEG-ът е отрязан (липсва край на файла)")
+    try:
+        Image.open(io.BytesIO(blob)).verify()
+        im = Image.open(io.BytesIO(blob))
+        size = im.size
+    except Exception as e:
+        raise SystemExit(f"{name}: не е валидно изображение - {e}")
 
     out = os.path.join(OUTDIR, name)
     with open(out, "wb") as f:
         f.write(blob)
-    print(f"{name}: {len(parts)} парчета → {len(blob)//1024} KB")
+    print(f"OK {name}: {len(parts)} парчета, {size[0]}x{size[1]}, {len(blob)//1024} KB")
 
     for _, p in parts:
         os.remove(p)
 
-# махаме папката, ако е останала празна
 try:
     os.rmdir(B64DIR)
 except OSError:
