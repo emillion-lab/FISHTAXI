@@ -1,0 +1,46 @@
+name: apply-lancelot-avatar-cachebust
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply patch
+        run: python3 scripts/patch_lancelot_avatar_cachebust.py
+
+      - name: Sanity check inline JS
+        run: |
+          python3 - "index.html" <<'PY'
+          import io, re, sys
+          s = io.open(sys.argv[1], encoding='utf-8').read()
+          blocks = re.findall(r'<script(?![^>]*src=)[^>]*>(.*?)</script>', s, re.S)
+          io.open('/tmp/bundle.js', 'w', encoding='utf-8').write('\n;\n'.join(blocks))
+          print(sys.argv[1], 'script blocks:', len(blocks))
+          PY
+          node --check /tmp/bundle.js || exit 1
+          echo "SYNTAX OK"
+
+      - name: Verify
+        run: |
+          grep -q 'lancelot_avatar.jpg?v=2' index.html || { echo "патчът не мина"; exit 1; }
+          echo "CLEAN"
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- index.html; then
+            echo "no change"
+          else
+            git add index.html
+            git commit -m "fix(lancelot): cache-bust avatar path — phones had cached the old 404"
+            git fetch origin main && git rebase origin/main || git rebase --abort
+            git push
+          fi
