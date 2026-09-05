@@ -1553,14 +1553,24 @@ function vcardEscape(v){
 }
 /* Визитка на шофьора като vCard — телефонът предлага да я запише
    в контактите: име, телефон, район на работа, кола, линк.        */
+function asciiFold(v){
+  return String(v==null?'':v)
+    .replace(/[\u2010-\u2015]/g,'-')     /* тирета */
+    .replace(/[\u2018\u2019]/g,"'")
+    .replace(/[\u201C\u201D]/g,'"')
+    .replace(/\u00b7/g,'-')              /* средна точка */
+    .replace(/\u2026/g,'...')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+/* Визитка като vCard.  Пази се КРАТКА нарочно: библиотеката побира
+   само ~270 байта, а кирилица и типографски знаци заемат по 2-3.
+   Районът съзнателно не влиза — вижда се на самата страница.      */
 function driverVCard(d){
-  var name=d.name||('Driver '+d.id);
+  var name=asciiFold(d.name||('Driver '+d.id));
   var tel=(d.phone||'').replace(/[^0-9+]/g,'');
   if(tel&&tel.charAt(0)!=='+')tel='+'+tel;
-  var area=(d.areas||'').replace(/\s+/g,' ').trim();
-  if(area.length>80)area=area.slice(0,77)+'...';
-  var car=[d.car,d.plate].filter(Boolean).join(' \u00b7 ');
-  var note=[area,car].filter(Boolean).join(' | ');
+  var car=asciiFold([d.car,d.plate].filter(Boolean).join(' '));
   var L=[];
   L.push('BEGIN:VCARD');
   L.push('VERSION:3.0');
@@ -1569,9 +1579,15 @@ function driverVCard(d){
   L.push('ORG:fish.taxi');
   if(tel)L.push('TEL;TYPE=CELL:'+tel);
   L.push('URL:'+driverCardUrl(d));
-  if(note)L.push('NOTE:'+vcardEscape(note));
+  if(car)L.push('NOTE:'+vcardEscape(car));
   L.push('END:VCARD');
-  return L.join('\n');
+  var out=L.join('\n');
+  /* последна защита: ако пак е твърде дълго, махаме NOTE */
+  if(out.length>230){
+    L=L.filter(function(x){return x.indexOf('NOTE:')!==0;});
+    out=L.join('\n');
+  }
+  return out;
 }
 function renderDriverQR(d){
   var box=document.getElementById('m-qr');
@@ -1584,7 +1600,7 @@ function renderDriverQR(d){
       correctLevel:QRCode.CorrectLevel.L});
     box.title=(d.name||'')+' \u2014 '+(d.phone||'');
     box.style.display='block';
-  }catch(e){ box.style.display='none'; }
+  }catch(e){ box.style.display='block';box.innerHTML='<span style="font-size:9px;color:#c00">QR: '+(e&&e.message?e.message:'error')+'</span>'; }
 }
 function copyDriverLink(){
   if(!cur)return;
