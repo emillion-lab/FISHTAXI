@@ -1,0 +1,79 @@
+name: build-join-i18n
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate lib/join-i18n.js from the Python dictionary
+        run: |
+          mkdir -p lib
+          python3 scripts/gen_join_i18n.py > lib/join-i18n.js
+          node --check lib/join-i18n.js
+          echo "size: $(wc -c < lib/join-i18n.js) bytes"
+
+      - name: Patch join.html
+        run: python3 scripts/patch_join_i18n.py
+
+      - name: Verify every language has every key
+        run: |
+          node -e "
+            const fs=require('fs');
+            global.navigator={language:'en'};
+            global.localStorage={getItem:()=>null,setItem:()=>{}};
+            global.document={documentElement:{},getElementById:()=>null,
+              addEventListener:()=>{},createElement:()=>({})};
+            (0,eval)(fs.readFileSync('lib/join-i18n.js','utf8'));
+            const langs=['bg','en','de','fr','es','it','ru','ro','el','tr','pl','nl'];
+            const keys=Object.keys(JT.bg);
+            let bad=0;
+            langs.forEach(l=>{
+              if(!JT[l]){ console.log('FAIL missing language',l); bad++; return; }
+              const miss=keys.filter(k=>!(k in JT[l]));
+              if(miss.length){ console.log('FAIL',l,'missing:',miss.join(', ')); bad++; }
+              else console.log('OK  ',l,'('+keys.length+' keys)');
+            });
+            // само bg има текст за българския регистър
+            langs.forEach(l=>{
+              if(l!=='bg' && JT[l].footBG){ console.log('FAIL',l,'shows BG registry text'); bad++; }
+            });
+            if(bad){ console.log(bad+' problem(s)'); process.exit(1); }
+            console.log('ALL '+langs.length+' LANGUAGES COMPLETE');
+          "
+
+      - name: No hardcoded Bulgarian left in join.html markup
+        run: |
+          python3 - <<'PY'
+          import io, re, sys
+          s = io.open('join.html', encoding='utf-8').read()
+          body = s[s.find('<body'):s.find('<script')]
+          leftovers = []
+          for m in re.finditer(r'>([^<>{}]*[А-Яа-я][^<>{}]*)<', body):
+              t = m.group(1).strip()
+              if len(t) > 2: leftovers.append(t)
+          if leftovers:
+              print('FAIL — untranslated markup text:')
+              for t in leftovers[:20]: print('   ', t[:70])
+              sys.exit(1)
+          print('OK — no hardcoded Bulgarian in markup')
+          PY
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add lib/join-i18n.js join.html
+          if git diff --cached --quiet; then
+            echo "no change"
+          else
+            git commit -m "feat(join): 12 languages, zero-commission message, BG registry only for BG plates"
+            git fetch origin main && git rebase origin/main || git rebase --abort
+            git push
+          fi
