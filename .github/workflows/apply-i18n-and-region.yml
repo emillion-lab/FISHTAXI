@@ -1,0 +1,61 @@
+name: apply-i18n-and-region
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply patch
+        run: python3 scripts/patch_i18n_order_btn_and_lancelot_region.py
+
+      - name: Sanity check inline JS
+        run: |
+          python3 - "index.html" <<'PY'
+          import io, re, sys
+          s = io.open(sys.argv[1], encoding='utf-8').read()
+          blocks = re.findall(r'<script(?![^>]*src=)[^>]*>(.*?)</script>', s, re.S)
+          io.open('/tmp/bundle.js', 'w', encoding='utf-8').write('\n;\n'.join(blocks))
+          print('script blocks:', len(blocks))
+          PY
+          node --check /tmp/bundle.js || exit 1
+          echo "SYNTAX OK"
+
+      - name: Verify
+        run: |
+          python3 - <<'PY'
+          import io, re, json
+          s = io.open('index.html', encoding='utf-8').read()
+          assert 'ПОРЪЧАЙ СЕГА\';' not in s, "hardcoded button text still there"
+          for code in ['bg','en','fr','ru','de','it','es']:
+              m = re.search(r'\n\s{2}'+code+r':\{', s)
+              assert m, f"lang block {code} missing"
+              blk = s[m.end():m.end()+9000]
+              hit = re.search(r'btnOrderNow:"([^"]+)"', blk)
+              assert hit, f"btnOrderNow missing in {code}"
+              print(code, '->', hit.group(1))
+          i = s.find('var DRIVERS=['); j = s.find('];', i)+1
+          lan = [d for d in json.loads(s[i+len('var DRIVERS='):j]) if d.get('gps_id')=='33749132090'][0]
+          assert 'Nice' in lan['areas'] and 'Tarentaise' in lan['areas'], lan['areas']
+          print('areas OK:', lan['areas'])
+          print("ALL CHECKS PASSED")
+          PY
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- index.html; then
+            echo "no change"
+          else
+            git add index.html
+            git commit -m "i18n: order button follows selected language; Lancelot covers Riviera (summer) + Alps (winter)"
+            git fetch origin main && git rebase origin/main || git rebase --abort
+            git push
+          fi
