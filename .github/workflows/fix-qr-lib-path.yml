@@ -1,0 +1,90 @@
+name: fix-qr-lib-path
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Disable Jekyll processing
+        run: |
+          # Без този файл GitHub Pages пуска сайта през Jekyll, който
+          # мълчаливо изключва папки като vendor/ и всичко с _ отпред.
+          touch .nojekyll
+          ls -la .nojekyll
+
+      - name: Move library out of vendor/ into lib/
+        run: |
+          mkdir -p lib
+          if [ -f vendor/qrcode.min.js ]; then
+            git mv vendor/qrcode.min.js lib/qrcode.min.js 2>/dev/null || mv vendor/qrcode.min.js lib/qrcode.min.js
+            rmdir vendor 2>/dev/null || true
+          fi
+          test -s lib/qrcode.min.js || { echo "library missing"; exit 1; }
+          node --check lib/qrcode.min.js
+          echo "size: $(wc -c < lib/qrcode.min.js)"
+
+      - name: Point index.html at lib/
+        run: |
+          python3 - <<'PY'
+          import io
+          p='index.html'; s=io.open(p,encoding='utf-8').read()
+          OLD='<script src="vendor/qrcode.min.js"></script>'
+          NEW='<script src="lib/qrcode.min.js"></script>'
+          if OLD in s:
+              s=s.replace(OLD,NEW,1); io.open(p,'w',encoding='utf-8').write(s)
+              print("path -> lib/")
+          elif NEW in s:
+              print("already lib/")
+          else:
+              raise SystemExit("script tag not found")
+          PY
+
+      - name: Make QR failure visible instead of silent
+        run: |
+          python3 - <<'PY'
+          import io
+          p='index.html'; s=io.open(p,encoding='utf-8').read()
+          OLD = "if(typeof QRCode==='undefined'){box.style.display='none';return;}"
+          NEW = ("if(typeof QRCode==='undefined'){box.style.display='block';"
+                 "box.innerHTML='<span style=\\\"font-size:9px;color:#c00\\\">"
+                 "QR lib not loaded</span>';return;}")
+          if OLD in s:
+              s=s.replace(OLD,NEW,1); io.open(p,'w',encoding='utf-8').write(s)
+              print("silent failure -> visible message")
+          elif 'QR lib not loaded' in s:
+              print("already visible")
+          else:
+              print("anchor not found - SKIPPED")
+          PY
+
+      - name: Sanity check inline JS
+        run: |
+          python3 - "index.html" <<'PY'
+          import io, re, sys
+          s=io.open(sys.argv[1],encoding='utf-8').read()
+          b=re.findall(r'<script(?![^>]*src=)[^>]*>(.*?)</script>',s,re.S)
+          io.open('/tmp/bundle.js','w',encoding='utf-8').write('\n;\n'.join(b))
+          print('blocks:',len(b))
+          PY
+          node --check /tmp/bundle.js
+          echo "SYNTAX OK"
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A .nojekyll lib index.html vendor 2>/dev/null || git add -A
+          if git diff --cached --quiet; then
+            echo "no change"
+          else
+            git commit -m "fix(qr): move lib out of vendor/ (Jekyll excludes it), add .nojekyll, surface load failures"
+            git fetch origin main && git rebase origin/main || git rebase --abort
+            git push
+          fi
