@@ -26,7 +26,7 @@ T = {
 'bg': dict(
  lead='Заявка за присъединяване. Под минута.',
  h1='0% комисиона. Печелиш каквото си изкарал.',
- p='Големите платформи взимат 20–25% от всеки курс. Ние не взимаме нищо. Клиентът те вижда, звъни ти директно, плаща на теб.',
+ p='Големите платформи взимат 20–40% от всеки курс — при късите най-много. Ние не взимаме нищо. Клиентът те вижда, звъни ти директно, плаща на теб.',
  b1='Без комисиона — нито сега, нито по-късно',
  b2='Клиентът звъни директно на теб',
  b3='Founder значка за първите — постоянна',
@@ -43,7 +43,7 @@ T = {
 'en': dict(
  lead='Join request. Under a minute.',
  h1='0% commission. You keep what you earn.',
- p='The big platforms take 20–25% of every ride. We take nothing. The client sees you, calls you directly, pays you.',
+ p='The big platforms take 20–40% of every ride — most on short trips. We take nothing. The client sees you, calls you directly, pays you.',
  b1='No commission — not now, not later',
  b2='Clients call you directly',
  b3='Founder badge for the first drivers — permanent',
@@ -60,7 +60,7 @@ T = {
 'de': dict(
  lead='Beitrittsanfrage. Unter einer Minute.',
  h1='0 % Provision. Du behältst, was du verdienst.',
- p='Die großen Plattformen nehmen 20–25 % pro Fahrt. Wir nehmen nichts. Der Kunde sieht dich, ruft dich direkt an, zahlt an dich.',
+ p='Die großen Plattformen nehmen 20–40 % pro Fahrt — bei kurzen Strecken am meisten. Wir nehmen nichts. Der Kunde sieht dich, ruft dich direkt an, zahlt an dich.',
  b1='Keine Provision — jetzt nicht und später nicht',
  b2='Kunden rufen dich direkt an',
  b3='Founder-Abzeichen für die Ersten — dauerhaft',
@@ -77,7 +77,7 @@ T = {
 'fr': dict(
  lead='Demande d’inscription. Moins d’une minute.',
  h1='0 % de commission. Vous gardez ce que vous gagnez.',
- p='Les grandes plateformes prennent 20 à 25 % de chaque course. Nous, rien. Le client vous voit, vous appelle directement, vous paie.',
+ p='Les grandes plateformes prennent 20 à 40 % de chaque course — le plus sur les trajets courts. Nous, rien. Le client vous voit, vous appelle directement, vous paie.',
  b1='Aucune commission — ni maintenant, ni plus tard',
  b2='Les clients vous appellent directement',
  b3='Badge Founder pour les premiers — permanent',
@@ -94,7 +94,7 @@ T = {
 'es': dict(
  lead='Solicitud de alta. Menos de un minuto.',
  h1='0 % de comisión. Te quedas con lo que ganas.',
- p='Las grandes plataformas se llevan el 20–25 % de cada viaje. Nosotros, nada. El cliente te ve, te llama directamente y te paga.',
+ p='Las grandes plataformas se llevan el 20–40 % de cada viaje — más aún en los trayectos cortos. Nosotros, nada. El cliente te ve, te llama directamente y te paga.',
  b1='Sin comisión — ni ahora ni después',
  b2='Los clientes te llaman directamente',
  b3='Insignia Founder para los primeros — permanente',
@@ -111,7 +111,7 @@ T = {
 'it': dict(
  lead='Richiesta di adesione. Meno di un minuto.',
  h1='0% di commissione. Tieni quello che guadagni.',
- p='Le grandi piattaforme prendono il 20–25% di ogni corsa. Noi niente. Il cliente ti vede, ti chiama direttamente, paga te.',
+ p='Le grandi piattaforme prendono il 20–40% di ogni corsa — soprattutto sulle tratte brevi. Noi niente. Il cliente ti vede, ti chiama direttamente, paga te.',
  b1='Nessuna commissione — né ora né dopo',
  b2='I clienti ti chiamano direttamente',
  b3='Badge Founder per i primi — permanente',
@@ -128,7 +128,7 @@ T = {
 'ru': dict(
  lead='Заявка на присоединение. Меньше минуты.',
  h1='0% комиссии. Вы оставляете себе всё, что заработали.',
- p='Крупные платформы берут 20–25% с каждой поездки. Мы не берём ничего. Клиент видит вас, звонит напрямую и платит вам.',
+ p='Крупные платформы берут 20–40% с каждой поездки — на коротких больше всего. Мы не берём ничего. Клиент видит вас, звонит напрямую и платит вам.',
  b1='Без комиссии — ни сейчас, ни потом',
  b2='Клиенты звонят вам напрямую',
  b3='Значок Founder для первых — навсегда',
@@ -145,7 +145,7 @@ T = {
 'ro': dict(
  lead='Cerere de înscriere. Sub un minut.',
  h1='0% comision. Păstrezi tot ce câștigi.',
- p='Platformele mari iau 20–25% din fiecare cursă. Noi nu luăm nimic. Clientul te vede, te sună direct și îți plătește ție.',
+ p='Platformele mari iau 20–40% din fiecare cursă — cel mai mult la cursele scurte. Noi nu luăm nimic. Clientul te vede, te sună direct și îți plătește ție.',
  b1='Fără comision — nici acum, nici mai târziu',
  b2='Clienții te sună direct',
  b3='Insignă Founder pentru primii — permanentă',
@@ -162,7 +162,7 @@ T = {
 'el': dict(
  lead='Αίτηση συμμετοχής. Λιγότερο από ένα λεπτό.',
  h1='0% προμήθεια. Κρατάς ό,τι βγάζεις.',
- p='Οι μεγάλες πλατφόρμες παίρνουν 20–25% από κάθε διαδρομή. Εμείς τίποτα. Ο πελάτης σε βλέπει, σε καλεί απευθείας και σε πληρώνει.',
+ p='Οι μεγάλες πλατφόρμες παίρνουν 20–40% από κάθε διαδρομή — στις σύντομες ακόμη περισσότερο. Εμείς τίποτα. Ο πελάτης σε βλέπει, σε καλεί απευθείας και σε πληρώνει.',
  b1='Χωρίς προμήθεια — ούτε τώρα ούτε αργότερα',
  b2='Οι πελάτες σε καλούν απευθείας',
  b3='Σήμα Founder για τους πρώτους — μόνιμο',
@@ -179,7 +179,7 @@ T = {
 'tr': dict(
  lead='Katılım başvurusu. Bir dakikadan kısa.',
  h1='%0 komisyon. Kazandığın sende kalır.',
- p='Büyük platformlar her yolculuktan %20–25 alır. Biz hiçbir şey almıyoruz. Müşteri seni görür, doğrudan arar ve sana öder.',
+ p='Büyük platformlar her yolculuktan %20–40 alır — kısa mesafelerde en çok. Biz hiçbir şey almıyoruz. Müşteri seni görür, doğrudan arar ve sana öder.',
  b1='Komisyon yok — ne şimdi ne sonra',
  b2='Müşteriler seni doğrudan arar',
  b3='İlk sürücülere Founder rozeti — kalıcı',
@@ -196,7 +196,7 @@ T = {
 'pl': dict(
  lead='Zgłoszenie dołączenia. Poniżej minuty.',
  h1='0% prowizji. Zostaje ci to, co zarobisz.',
- p='Duże platformy biorą 20–25% z każdego kursu. My nic. Klient cię widzi, dzwoni bezpośrednio i płaci tobie.',
+ p='Duże platformy biorą 20–40% z każdego kursu — na krótkich najwięcej. My nic. Klient cię widzi, dzwoni bezpośrednio i płaci tobie.',
  b1='Bez prowizji — ani teraz, ani później',
  b2='Klienci dzwonią bezpośrednio do ciebie',
  b3='Odznaka Founder dla pierwszych — na stałe',
@@ -213,7 +213,7 @@ T = {
 'nl': dict(
  lead='Aanmelding. Minder dan een minuut.',
  h1='0% commissie. Jij houdt wat je verdient.',
- p='De grote platforms nemen 20–25% van elke rit. Wij niets. De klant ziet je, belt je direct en betaalt aan jou.',
+ p='De grote platforms nemen 20–40% van elke rit — op korte ritten het meest. Wij niets. De klant ziet je, belt je direct en betaalt aan jou.',
  b1='Geen commissie — nu niet en later niet',
  b2='Klanten bellen je direct',
  b3='Founder-badge voor de eersten — blijvend',
