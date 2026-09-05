@@ -82,35 +82,37 @@ input::placeholder{color:#9c988a}
 .done .founder-badge{margin-top:8px}
 .foot{margin-top:32px;font-size:.8rem;color:#8a8678;text-align:center;line-height:1.7}
 </style>
+<script src="lib/join-i18n.js"></script>
 </head>
 <body>
 <div class="wrap">
 
+  <div style="display:flex;justify-content:flex-end;margin-bottom:6px"><select id="j-lang" aria-label="Language" style="background:#1a1a1a;color:#ddd;border:1px solid #333;border-radius:8px;padding:6px 10px;font-size:13px;font-family:inherit"></select></div>
   <div class="brand"><b><span class="fish">fish</span>.taxi</b></div>
-  <p class="lead">Заявка за присъединяване. Отнема по-малко от минута.</p>
+  <p class="lead" id="j-lead">Заявка за присъединяване. Под минута.</p>
 
   <div class="founder-hero">
     <span class="founder-badge">★ FOUNDER</span>
-    <h1>Първите шофьори не се качват на платформа — основават я.</h1>
-    <p>fish.taxi тръгва с малка, подбрана общност. Тези, които се присъединят сега, получават статут <b style="color:var(--txt)">Founder</b> — видим завинаги в профила им пред клиентите. Без гарантирани отстъпки занапред — само мястото, което никой, присъединил се по-късно, няма да има.</p>
+    <h1 id="j-h1">0% комисиона. Печелиш каквото си изкарал.</h1>
+    <p id="j-p">Големите платформи взимат 20–25% от всеки курс. Ние не взимаме нищо. Клиентът те вижда, звъни ти директно, плаща на теб.</p>
     <ul class="founder-list">
-      <li>Founder значка на профила — постоянна, не изтича</li>
-      <li>Приоритетен достъп до нови функции преди всички останали</li>
-      <li>Име в основаването на платформата, каквато и да стане тя</li>
+      <li id="j-b1">Без комисиона — нито сега, нито по-късно</li>
+      <li id="j-b2">Клиентът звъни директно на теб</li>
+      <li id="j-b3">Founder значка за първите — постоянна</li>
     </ul>
   </div>
 
   <div id="form">
     <!-- 1 · телефон -->
     <div class="step on" id="s1">
-      <div class="step-n"><i>1</i><span>Твоят телефон</span></div>
+      <div class="step-n"><i>1</i><span id="j-s1">Твоят телефон</span></div>
       <input id="phone" placeholder="Телефон" inputmode="tel" autocomplete="tel">
       <div class="hint" id="phoneHint">Въведи телефонния си номер</div>
     </div>
 
     <!-- 2а · автомобил, БГ номер -->
     <div class="step off" id="s2bg">
-      <div class="step-n"><i>2</i><span>Твоят автомобил</span></div>
+      <div class="step-n"><i>2</i><span id="j-s2">Твоят автомобил</span></div>
       <input id="q" placeholder="Регистрационен номер" autocomplete="off"
              autocapitalize="characters" spellcheck="false">
       <div class="hint" id="hint">Въведи поне 3 знака от номера</div>
@@ -120,22 +122,22 @@ input::placeholder{color:#9c988a}
 
     <!-- 2б · автомобил, чужд номер -->
     <div class="step off" id="s2foreign">
-      <div class="step-n"><i>2</i><span>Твоят автомобил</span></div>
-      <div class="hint">Номерът е извън България — колата не е в местния регистър на такситата. Опиши я накратко, ще я потвърдим ръчно.</div>
+      <div class="step-n"><i>2</i><span id="j-s2f">Твоят автомобил</span></div>
+      <div class="hint" id="j-hintF">Колата ще потвърдим ръчно. Опиши я накратко.</div>
       <input id="carManual" placeholder="Марка, модел, рег. номер" autocomplete="off" style="margin-top:10px">
     </div>
 
     <!-- 3 · име -->
     <div class="step off" id="s3">
-      <div class="step-n"><i>3</i><span>Твоето име</span></div>
+      <div class="step-n"><i>3</i><span id="j-s3">Твоето име</span></div>
       <input id="name" placeholder="Име и фамилия" autocomplete="name">
       <div class="err" id="err"></div>
     </div>
 
     <!-- 4 · изпращане -->
     <div class="step off" id="s4">
-      <div class="step-n"><i>4</i><span>Изпрати заявката</span></div>
-      <div class="hint">Отваря се готово съобщение. Само натискаш „изпрати“.</div>
+      <div class="step-n"><i>4</i><span id="j-s4">Изпрати заявката</span></div>
+      <div class="hint" id="j-hint4">Отваря се готово съобщение. Само натискаш „изпрати“.</div>
       <div class="send">
         <a class="btn viber" id="bv" href="#">Viber</a>
         <a class="btn wa" id="bw" href="#">WhatsApp</a>
@@ -146,15 +148,15 @@ input::placeholder{color:#9c988a}
   <div id="thanks" style="display:none">
     <div class="done">
       <div class="tick">🐟</div>
-      <h2 style="margin:14px 0 9px;font-size:1.35rem">Заявката е изпратена</h2>
-      <p style="color:var(--dim);font-size:1rem">Founder статутът те очаква. Ще се свържем с теб до 24 часа.</p>
+      <h2 id="j-okH" style="margin:14px 0 9px;font-size:1.35rem">Заявката е изпратена</h2>
+      <p id="j-okP" style="color:var(--dim);font-size:1rem">Ще се свържем с теб до 24 часа.</p>
       <span class="founder-badge">★ FOUNDER</span>
     </div>
   </div>
 
   <div class="foot">
-    За български номера данните за автомобила идват от публичния регистър<br>
-    на Изпълнителна агенция „Автомобилна администрация“. Чужди — проверка ръчно.
+    <div id="j-gdpr">Показваме на клиентите само това, което сам попълниш тук. Нищо повече.</div>
+    <div id="j-footBG" style="margin-top:6px;opacity:.75">За български номера данните идват от публичния регистър на ИА „Автомобилна администрация“.</div>
   </div>
 </div>
 
@@ -285,7 +287,7 @@ function check(){
   const okName = nm.split(/\s+/).filter(w=>w.length>1).length >= 2;
   const okPhone = country === 'BG' ? /^0[7-9]\d{8}$/.test(ph) : !!country && ph.length >= 6;
   let e = '';
-  if (nm && !okName) e = 'Моля, име и фамилия.';
+  if (nm && !okName) e = (jt().errName||'Please enter your name.');
   $('err').textContent = e;
 
   const carOk = country === 'BG' ? !!picked : $('carManual').value.trim().length >= 4;
