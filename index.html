@@ -462,8 +462,6 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-sy
       <label style="font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;display:block;margin-bottom:4px" id="lbl-pax">👥 Passengers</label>
       <select id="order-pax" onchange="checkPaxWarning()" style="width:100%;background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:7px;font-size:13px">
         <option value="2" id="opt-pax-2">1–2</option>
-        <option value="3" id="opt-pax-3">3</option>
-        <option value="4" id="opt-pax-4">4</option>
       </select>
     </div>
     <div id="pax-warning" style="display:none;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);color:var(--or);border-radius:9px;padding:8px 10px;font-size:12px;line-height:1.5;margin-bottom:8px"></div>
@@ -597,10 +595,10 @@ var DRIVERS=[{
   "photos":["img/lancelot_car_riviera.jpg","img/lancelot_car_chalet.jpg","img/lancelot_interior.jpg","img/lancelot_fleet.jpg","img/lancelot_helico.jpg"],
   "city":"saint-tropez","lat":43.2677,"lng":6.6407,
   "car":"Mercedes V-Class","plate":"FV-231-QE",
-  "car_type":"minivan","accel":9.0,"seats":6,
+  "car_type":"minivan","accel":9.0,"seats":7,
   "online":false,"rating":5.0,"reviews":0,
   "payment":["cash","terminal"],
-  "langs":["fr","en"],
+  "langs":["fr","en","bg","ru"],
   "electric":false,"smoking":false,"nosmoker":true,
   "petfriendly":"ask","childok":true,
   "sport":false,"fast":false,"comfort":true,
@@ -1312,6 +1310,7 @@ function renderMap(){
 }
 
 function openMod(id){
+  buildPaxOptions(id);
   cur=DRIVERS.filter(function(d){return d.id===id;})[0];
   if(!cur)return;
   track('profile_open');
@@ -1531,6 +1530,27 @@ function setWhenMode(mode){
     fields.style.display='flex';warn.style.display='block';
   }
 }
+/* Пътници според конкретната кола: 4-местна дава 1-2/3/4,
+   V-Class със 7 места дава до 7. seats е в профила на шофьора. */
+function buildPaxOptions(d){
+  var sel=document.getElementById('order-pax');
+  if(!sel)return;
+  var t=T[lang]||T.en;
+  var max=parseInt(d&&d.seats,10);
+  if(!max||max<2)max=4;
+  var keep=sel.value;
+  sel.innerHTML='';
+  var o=document.createElement('option');
+  o.value='2';o.id='opt-pax-2';o.textContent=t.paxOpt2||'1\u20132';
+  sel.appendChild(o);
+  for(var n=3;n<=max;n++){
+    var x=document.createElement('option');
+    x.value=String(n);x.id='opt-pax-'+n;x.textContent=String(n);
+    sel.appendChild(x);
+  }
+  if(keep&&parseInt(keep,10)<=max)sel.value=keep;
+}
+
 function checkPaxWarning(){
   var t=T[lang]||T.en;
   var paxSel=document.getElementById('order-pax');
