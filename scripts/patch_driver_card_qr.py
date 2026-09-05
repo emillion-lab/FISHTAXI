@@ -9,22 +9,25 @@ report = []
 # 0. БЪГФИКС: openMod получава id (число), а buildPaxOptions очаква
 #    обекта на шофьора. Заради това менюто с местата винаги падаше на 4.
 # ─────────────────────────────────────────────────────────────────────
-OLD_CALL = "function openMod(id){\n  buildPaxOptions(id);\n  cur=DRIVERS.filter(function(d){return d.id===id;})[0];\n  if(!cur)return;"
+OLD_CALL = ("function openMod(id){\n  buildPaxOptions(id);\n"
+            "  cur=DRIVERS.filter(function(d){return d.id===id;})[0];\n"
+            "  if(!cur)return;")
 NEW_CALL = ("function openMod(id){\n"
             "  cur=DRIVERS.filter(function(d){return d.id===id;})[0];\n"
             "  if(!cur)return;\n"
             "  buildPaxOptions(cur);\n"
-            "  location.hash='d'+cur.id;")
+            "  renderDriverQR(cur);\n"
+            "  try{location.hash='d'+cur.id;}catch(e){}")
 if OLD_CALL in s:
     s = s.replace(OLD_CALL, NEW_CALL, 1)
-    report.append("BUGFIX: buildPaxOptions got id instead of driver object")
+    report.append("BUGFIX: buildPaxOptions received id instead of driver object")
 elif "buildPaxOptions(cur);" in s:
-    report.append("buildPaxOptions fix: already done")
+    report.append("openMod: already patched")
 else:
     raise SystemExit("openMod head anchor not found")
 
 # ─────────────────────────────────────────────────────────────────────
-# 1. QR библиотека (рисува се в браузъра — никакви файлове с картинки)
+# 1. QR библиотека — рисува се в браузъра, без файлове с картинки
 # ─────────────────────────────────────────────────────────────────────
 QR_LIB = ('<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/'
           'qrcode.min.js"></script>\n')
@@ -38,23 +41,24 @@ else:
     report.append("QR library: already there")
 
 # ─────────────────────────────────────────────────────────────────────
-# 2. Визитка: deep link + QR до аватара
+# 2. Визитка: собствен линк на всеки шофьор + QR
 # ─────────────────────────────────────────────────────────────────────
 HELPER = '''
 /* ── Визитка на шофьор ────────────────────────────────────────────
    Всеки шофьор има собствен линк: fish.taxi/#d3
    QR кодът до аватара води точно към него — шофьорът може да го
-   покаже на клиент или да си го сложи на стъклото. Рисува се в
+   покаже на клиент или да си го залепи на стъклото. Рисува се в
    браузъра, без файлове с картинки.                                */
 function driverCardUrl(d){
   return location.origin+location.pathname+'#d'+d.id;
 }
 function renderDriverQR(d){
   var box=document.getElementById('m-qr');
-  if(!box||typeof QRCode==='undefined')return;
+  if(!box)return;
+  if(typeof QRCode==='undefined'){box.style.display='none';return;}
   box.innerHTML='';
   try{
-    new QRCode(box,{text:driverCardUrl(d),width:74,height:74,
+    new QRCode(box,{text:driverCardUrl(d),width:70,height:70,
       colorDark:'#000000',colorLight:'#ffffff',
       correctLevel:QRCode.CorrectLevel.M});
     box.title=driverCardUrl(d);
@@ -88,8 +92,7 @@ function openFromHash(){
   if(DRIVERS.filter(function(d){return d.id===id;}).length)openMod(id);
 }
 window.addEventListener('hashchange',function(){
-  if(!location.hash)return;
-  openFromHash();
+  if(location.hash)openFromHash();
 });
 '''
 
@@ -104,21 +107,7 @@ else:
     report.append("driver card helpers: already there")
 
 # ─────────────────────────────────────────────────────────────────────
-# 3. Рисуваме QR при отваряне на профил
-# ─────────────────────────────────────────────────────────────────────
-if 'renderDriverQR(cur)' not in s:
-    anchor = "  buildPaxOptions(cur);"
-    i = s.find(anchor)
-    if i < 0:
-        raise SystemExit("buildPaxOptions(cur) anchor not found")
-    j = i + len(anchor)
-    s = s[:j] + "\n  renderDriverQR(cur);" + s[j:]
-    report.append("renderDriverQR hooked into openMod")
-else:
-    report.append("renderDriverQR hook: already there")
-
-# ─────────────────────────────────────────────────────────────────────
-# 4. Чистим hash при затваряне, за да не заяжда при следващо отваряне
+# 3. Чистим hash при затваряне
 # ─────────────────────────────────────────────────────────────────────
 m = re.search(r'function closeMod\(\)\s*\{', s)
 if m and 'history.replaceState' not in s[m.end():m.end()+220]:
@@ -128,38 +117,39 @@ if m and 'history.replaceState' not in s[m.end():m.end()+220]:
          "+location.search);}catch(e){}" + s[ins:])
     report.append("closeMod clears hash")
 else:
-    report.append("closeMod hash cleanup: already there or not found")
+    report.append("closeMod hash cleanup: already there")
 
 # ─────────────────────────────────────────────────────────────────────
-# 5. Слот за QR до аватара в модала
+# 4. Слот за QR до аватара.  Аватарът е <div class="mav" id="mav">
 # ─────────────────────────────────────────────────────────────────────
 if 'id="m-qr"' not in s:
-    m = re.search(r'<img[^>]*id="m-av"[^>]*>', s)
-    if not m:
-        raise SystemExit("m-av avatar element not found")
-    block = ('<div style="display:flex;align-items:center;justify-content:center;'
-             'gap:14px;flex-wrap:wrap">'
-             + m.group() +
-             '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'
-             '<div id="m-qr" style="background:#fff;padding:5px;border-radius:8px;'
-             'line-height:0"></div>'
-             '<button id="m-copylink" onclick="copyDriverLink()" '
-             'style="background:none;border:none;color:var(--mu2);font-size:10px;'
-             'cursor:pointer;padding:2px 4px" title="Copy link">\U0001F517</button>'
-             '</div></div>')
-    s = s[:m.start()] + block + s[m.end():]
+    OLD_AV = '<div class="mav" id="mav">\U0001F697</div>'
+    if OLD_AV not in s:
+        raise SystemExit("mav avatar div not found")
+    NEW_AV = ('<div style="display:flex;align-items:center;justify-content:center;'
+              'gap:14px;flex-wrap:wrap">'
+              + OLD_AV +
+              '<div style="display:flex;flex-direction:column;align-items:center;'
+              'gap:2px">'
+              '<div id="m-qr" style="background:#fff;padding:5px;border-radius:8px;'
+              'line-height:0"></div>'
+              '<button id="m-copylink" onclick="copyDriverLink()" '
+              'style="background:none;border:none;color:var(--mu2);font-size:10px;'
+              'cursor:pointer;padding:2px 4px">\U0001F517</button>'
+              '</div></div>')
+    s = s.replace(OLD_AV, NEW_AV, 1)
     report.append("QR slot added next to avatar")
 else:
     report.append("QR slot: already there")
 
 # ─────────────────────────────────────────────────────────────────────
-# 6. При зареждане на страницата — ако има #d3, отваряме профила
+# 5. При зареждане — ако линкът е #d3, отваряме профила
 # ─────────────────────────────────────────────────────────────────────
-if 'openFromHash();' not in s.split('function openFromHash')[-1][:4000]:
-    m = re.search(r'\n\s*(renderDrivers\(\);|renderList\(\);)', s)
+if 'setTimeout(openFromHash' not in s:
+    m = re.search(r'\n(\s*)(renderDrivers\(\);|renderList\(\);|drawList\(\);)', s)
     if m:
         j = m.end()
-        s = s[:j] + "\n  setTimeout(openFromHash,300);" + s[j:]
+        s = s[:j] + "\n" + m.group(1) + "setTimeout(openFromHash,350);" + s[j:]
         report.append("openFromHash called on load")
     else:
         report.append("load hook: render call not found — SKIPPED")
