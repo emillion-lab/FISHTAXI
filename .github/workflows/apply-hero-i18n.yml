@@ -1,0 +1,69 @@
+name: apply-hero-i18n
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply patch
+        run: python3 scripts/patch_hero_i18n.py
+
+      - name: Sanity check inline JS
+        run: |
+          python3 - "index.html" <<'PY'
+          import io, re, sys
+          s=io.open(sys.argv[1],encoding='utf-8').read()
+          b=re.findall(r'<script(?![^>]*src=)[^>]*>(.*?)</script>',s,re.S)
+          io.open('/tmp/bundle.js','w',encoding='utf-8').write('\n;\n'.join(b))
+          print('blocks:',len(b))
+          PY
+          node --check /tmp/bundle.js
+          echo "SYNTAX OK"
+
+      - name: Every language must have every hero key
+        run: |
+          python3 - <<'PY'
+          import io, re, sys
+          s=io.open('index.html',encoding='utf-8').read()
+          need=['btnOrderNow','heroSub','moreOpts','prefsQ','prefsSave',
+                'prefsSkip','paxQ','noDriver','gettingLoc','prefsSaved']
+          bad=False
+          for code in ['bg','en','de','fr','ru','it','es']:
+              m=re.search(r'\n\s{2}'+code+r':\{', s)
+              if not m:
+                  print('FAIL missing language block:',code); bad=True; continue
+              blk=s[m.end():m.end()+11000]
+              miss=[k for k in need if k+':' not in blk]
+              if miss:
+                  print('FAIL',code,'missing:',', '.join(miss)); bad=True
+              else:
+                  print('OK  ',code)
+          # setLang трябва да пипа хиро-бутона, иначе преводите са мъртви
+          tail=s.split('function setLang(')[1][:3000]
+          if "getElementById('hero-btn-txt')" not in tail:
+              print('FAIL setLang does not update the hero button'); bad=True
+          else:
+              print('OK   setLang updates hero block')
+          if bad: sys.exit(1)
+          print('ALL HERO I18N CHECKS PASSED')
+          PY
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- index.html; then
+            echo "no change"
+          else
+            git add index.html
+            git commit -m "fix(i18n): hero block was hardcoded Bulgarian — now follows selected language"
+            git fetch origin main && git rebase origin/main || git rebase --abort
+            git push
+          fi
