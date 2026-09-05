@@ -143,16 +143,16 @@ else:
     report.append("QR slot: already there")
 
 # ─────────────────────────────────────────────────────────────────────
-# 5. При зареждане — ако линкът е #d3, отваряме профила
+# 5. При зареждане — ако линкът е #d3, отваряме профила.
+#    Стартовият блок е: applyTheme(); populateTimeSelects(); render();
 # ─────────────────────────────────────────────────────────────────────
 if 'setTimeout(openFromHash' not in s:
-    m = re.search(r'\n(\s*)(renderDrivers\(\);|renderList\(\);|drawList\(\);)', s)
-    if m:
-        j = m.end()
-        s = s[:j] + "\n" + m.group(1) + "setTimeout(openFromHash,350);" + s[j:]
+    BOOT = "applyTheme();\npopulateTimeSelects();\nrender();"
+    if BOOT in s:
+        s = s.replace(BOOT, BOOT + "\nsetTimeout(openFromHash,350);", 1)
         report.append("openFromHash called on load")
     else:
-        report.append("load hook: render call not found — SKIPPED")
+        raise SystemExit("boot block not found")
 else:
     report.append("openFromHash on load: already there")
 
