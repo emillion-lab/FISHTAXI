@@ -231,6 +231,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-sy
   .spark{display:none}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -430,7 +431,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-sy
 <div class="modal" id="modal">
   <div class="mb">
     <button class="mc" onclick="closeMod()">✕</button>
-    <div class="mav" id="mav">🚗</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap"><div class="mav" id="mav">🚗</div><div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div id="m-qr" style="background:#fff;padding:5px;border-radius:8px;line-height:0"></div><button id="m-copylink" onclick="copyDriverLink()" style="background:none;border:none;color:var(--mu2);font-size:10px;cursor:pointer;padding:2px 4px">🔗</button></div></div>
     <div class="mn" id="mname"></div>
     <div class="mc2" id="mcar2"></div>
     <div style="text-align:center;margin-bottom:8px" id="mstars"></div>
@@ -1310,9 +1311,11 @@ function renderMap(){
 }
 
 function openMod(id){
-  buildPaxOptions(id);
   cur=DRIVERS.filter(function(d){return d.id===id;})[0];
   if(!cur)return;
+  buildPaxOptions(cur);
+  renderDriverQR(cur);
+  try{location.hash='d'+cur.id;}catch(e){}
   track('profile_open');
   var d=cur,st=stI(d),t=T[lang]||T.en;
   selectedPrefs=[];
@@ -1425,7 +1428,8 @@ function openMod(id){
   if(sel) sel.value=lang;
 }
 
-function closeMod(){document.getElementById('modal').className='modal';}
+function closeMod(){
+  try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}document.getElementById('modal').className='modal';}
 var galleryPhotos=[], galleryIdx=0, galleryTimer=null, galleryAutoStopped=false, galleryTouchX=null, gallerySwipeBound=false;
 function showImg(src){ openGallery([src],0); } // единична снимка (тарифна табела) — без стрелки/брояч
 function openGalleryAt(i){ openGallery(window.__modalPhotos||[],i); }
@@ -1532,6 +1536,57 @@ function setWhenMode(mode){
 }
 /* Пътници според конкретната кола: 4-местна дава 1-2/3/4,
    V-Class със 7 места дава до 7. seats е в профила на шофьора. */
+/* ── Визитка на шофьор ────────────────────────────────────────────
+   Всеки шофьор има собствен линк: fish.taxi/#d3
+   QR кодът до аватара води точно към него — шофьорът може да го
+   покаже на клиент или да си го залепи на стъклото. Рисува се в
+   браузъра, без файлове с картинки.                                */
+function driverCardUrl(d){
+  return location.origin+location.pathname+'#d'+d.id;
+}
+function renderDriverQR(d){
+  var box=document.getElementById('m-qr');
+  if(!box)return;
+  if(typeof QRCode==='undefined'){box.style.display='none';return;}
+  box.innerHTML='';
+  try{
+    new QRCode(box,{text:driverCardUrl(d),width:70,height:70,
+      colorDark:'#000000',colorLight:'#ffffff',
+      correctLevel:QRCode.CorrectLevel.M});
+    box.title=driverCardUrl(d);
+    box.style.display='block';
+  }catch(e){ box.style.display='none'; }
+}
+function copyDriverLink(){
+  if(!cur)return;
+  var url=driverCardUrl(cur);
+  var done=function(){
+    var b=document.getElementById('m-copylink');
+    if(!b)return;
+    var old=b.textContent;
+    b.textContent='\u2713';
+    setTimeout(function(){b.textContent=old;},1400);
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(done,done);
+  }else{
+    var ta=document.createElement('textarea');
+    ta.value=url;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');}catch(e){}
+    document.body.removeChild(ta);done();
+  }
+}
+/* Отваряне по линк: fish.taxi/#d3 показва профила директно. */
+function openFromHash(){
+  var m=/^#d(\d+)$/.exec(location.hash||'');
+  if(!m)return;
+  var id=parseInt(m[1],10);
+  if(DRIVERS.filter(function(d){return d.id===id;}).length)openMod(id);
+}
+window.addEventListener('hashchange',function(){
+  if(location.hash)openFromHash();
+});
+
 function buildPaxOptions(d){
   var sel=document.getElementById('order-pax');
   if(!sel)return;
@@ -2248,6 +2303,7 @@ document.getElementById('modal').addEventListener('click',function(e){if(e.targe
 applyTheme();
 populateTimeSelects();
 render();
+setTimeout(openFromHash,350);
 pollGPS();
 setInterval(pollGPS,15000);
 // Init map immediately on load
