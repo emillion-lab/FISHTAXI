@@ -231,7 +231,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-sy
   .spark{display:none}
 }
 </style>
-<script src="vendor/qrcode.min.js"></script>
+<script src="lib/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -1576,7 +1576,7 @@ function driverVCard(d){
 function renderDriverQR(d){
   var box=document.getElementById('m-qr');
   if(!box)return;
-  if(typeof QRCode==='undefined'){box.style.display='none';return;}
+  if(typeof QRCode==='undefined'){box.style.display='block';box.innerHTML='<span style=\"font-size:9px;color:#c00\">QR lib not loaded</span>';return;}
   box.innerHTML='';
   try{
     new QRCode(box,{text:driverVCard(d),width:88,height:88,
