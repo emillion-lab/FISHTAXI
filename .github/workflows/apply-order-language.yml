@@ -1,0 +1,88 @@
+name: apply-order-language
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply patch
+        run: python3 scripts/patch_order_language.py
+
+      - name: Sanity check inline JS
+        run: |
+          python3 - "index.html" <<'PY'
+          import io, re, sys
+          s=io.open(sys.argv[1],encoding='utf-8').read()
+          b=re.findall(r'<script(?![^>]*src=)[^>]*>(.*?)</script>',s,re.S)
+          io.open('/tmp/bundle.js','w',encoding='utf-8').write('\n;\n'.join(b))
+          print('blocks:',len(b))
+          PY
+          node --check /tmp/bundle.js
+          echo "SYNTAX OK"
+
+      - name: Verify language matching against real scenarios
+        run: |
+          python3 - <<'PY'
+          import io
+          s=io.open('index.html',encoding='utf-8').read()
+          i=s.find('function orderLang'); j=s.find('function pickOnlineDriver')
+          assert i>=0 and j>i, "orderLang helpers missing"
+          k=s.find('var DRIVERS=['); m=s.find('];',k)+2
+          io.open('/tmp/t.js','w',encoding='utf-8').write(
+            s[k:m]+'\nvar lang="bg";\n'+s[i:j]+
+            '\nmodule.exports={DRIVERS:DRIVERS,orderLang:orderLang,'
+            'clientLangTag:clientLangTag,orderT:orderT,setLang:function(l){lang=l;}};')
+          PY
+          cat > /tmp/check.js <<'EOF'
+          const M=require('/tmp/t.js');
+          const byId=id=>M.DRIVERS.filter(d=>d.id===id)[0];
+          const emil=byId(1), petar=byId(2), lancelot=byId(3);
+          const expect=[
+            ['bg',emil,'bg',''],           // българин -> български шофьор
+            ['de',emil,'en',' [DE]'],      // германец -> английски + етикет
+            ['fr',lancelot,'fr',''],       // французин -> Lancelot говори fr
+            ['ru',lancelot,'ru',''],       // руснак -> Lancelot говори ru
+            ['ru',emil,'ru',''],           // руснак -> Emil говори ru
+            ['es',lancelot,'en',' [ES]'],  // испанец -> никой не говори es
+            ['fr',petar,'fr',''],          // французин -> Petar говори fr
+          ];
+          let fail=0;
+          expect.forEach(([l,d,wantLang,wantTag])=>{
+            M.setLang(l);
+            const got=M.orderLang(d), tag=M.clientLangTag(d);
+            const ok = got===wantLang && tag===wantTag;
+            if(!ok){ fail++; console.log('FAIL',l,d.name,'got',got,JSON.stringify(tag),'want',wantLang,JSON.stringify(wantTag)); }
+            else console.log('OK  ',l,'->',d.name,'=>',got,tag||'');
+          });
+          // всеки език трябва да има пълна таблица
+          ['bg','en','de','fr','ru','it','es'].forEach(l=>{
+            M.setLang(l);
+            const t=M.orderT({langs:[l]});
+            ['head','now','pax','prefs','myloc','nogps','confirm'].forEach(k=>{
+              if(!t[k]){ fail++; console.log('FAIL missing ORDER_T.'+l+'.'+k); }
+            });
+          });
+          if(fail){ console.log(fail+' check(s) failed'); process.exit(1); }
+          console.log('ALL LANGUAGE ROUTING CHECKS PASSED');
+          EOF
+          node /tmp/check.js
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- index.html; then
+            echo "no change"
+          else
+            git add index.html
+            git commit -m "feat(i18n): order text matches driver's languages; English + [XX] tag otherwise"
+            git fetch origin main && git rebase origin/main || git rebase --abort
+            git push
+          fi
