@@ -1,0 +1,87 @@
+name: apply-qr-fullscreen
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply patch
+        run: python3 scripts/patch_qr_fullscreen.py
+
+      - name: Sanity check inline JS
+        run: |
+          python3 - "index.html" <<'PY'
+          import io, re, sys
+          s=io.open(sys.argv[1],encoding='utf-8').read()
+          b=re.findall(r'<script(?![^>]*src=)[^>]*>(.*?)</script>',s,re.S)
+          io.open('/tmp/bundle.js','w',encoding='utf-8').write('\n;\n'.join(b))
+          print('blocks:',len(b))
+          PY
+          node --check /tmp/bundle.js
+          echo "SYNTAX OK"
+
+      - name: Verify markup and render at fullscreen sizes
+        run: |
+          python3 - <<'PY'
+          import io
+          s=io.open('index.html',encoding='utf-8').read()
+          for k,v in {
+            'overlay':        'id="qr-big"' in s,
+            'clickable QR':   'onclick="openQrBig()"' in s,
+            'openQrBig':      'function openQrBig' in s,
+            'closeQrBig':     'function closeQrBig' in s,
+          }.items():
+              print(('OK  ' if v else 'FAIL'), k); assert v, k
+          i=s.find('function vcardEscape'); j=s.find('function openQrBig')
+          k=s.find('var DRIVERS=['); m=s.find('];',k)+2
+          io.open('/tmp/real.js','w',encoding='utf-8').write(
+            s[k:m]+'\nvar location={origin:"https://fish.taxi",pathname:"/"};\n'
+            'function driverCardUrl(d){return location.origin+location.pathname+"#d"+d.id;}\n'
+            + s[i:j] + '\nmodule.exports={DRIVERS:DRIVERS,driverVCard:driverVCard};')
+          PY
+          cat > /tmp/check.js <<'EOF'
+          global.navigator={userAgent:'Mozilla/5.0'};
+          function mk(t){return{tagName:t||'div',style:{},childNodes:[],children:[],innerHTML:'',
+           appendChild(c){this.children.push(c);this.childNodes.push(c);return c;},
+           removeChild(){},hasChildNodes(){return false;},setAttribute(){},setAttributeNS(){},
+           getContext(){return{fillStyle:'',strokeStyle:'',lineWidth:1,fillRect(){},strokeRect(){},clearRect(){}};},
+           toDataURL(){return'data:image/png;base64,AAA';},offsetWidth:88,offsetHeight:88};}
+          global.document={createElement:mk,createElementNS:(n,t)=>mk(t),
+           documentElement:mk('html'),body:mk('body'),getElementById:()=>null};
+          global.window=global; global.CanvasRenderingContext2D=function(){};
+          const fs=require('fs');
+          (0,eval)(fs.readFileSync(process.env.GITHUB_WORKSPACE+'/lib/qrcode.min.js','utf8'));
+          const {DRIVERS,driverVCard}=require('/tmp/real.js');
+          let fail=0;
+          [88,200,260,320].forEach(side=>{
+            DRIVERS.forEach(d=>{
+              try{ new QRCode(mk('div'),{text:driverVCard(d),width:side,height:side,
+                     colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.L});
+              }catch(e){ fail++; console.log('FAIL size',side,d.name,'->',e.message); }
+            });
+            if(!fail) console.log('size',side,'-> all drivers OK');
+          });
+          if(fail) process.exit(1);
+          console.log('QR RENDERS AT SMALL AND FULLSCREEN SIZES');
+          EOF
+          node /tmp/check.js
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- index.html; then
+            echo "no change"
+          else
+            git add index.html
+            git commit -m "feat(qr): tap the code to open it fullscreen for scanning from the back seat"
+            git fetch origin main && git rebase origin/main || git rebase --abort
+            git push
+          fi
