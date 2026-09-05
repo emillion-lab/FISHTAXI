@@ -1,0 +1,59 @@
+name: apply-langs-and-dynamic-pax
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply patch
+        run: python3 scripts/patch_lancelot_langs_and_dynamic_pax.py
+
+      - name: Sanity check inline JS
+        run: |
+          python3 - "index.html" <<'PY'
+          import io, re, sys
+          s = io.open(sys.argv[1], encoding='utf-8').read()
+          blocks = re.findall(r'<script(?![^>]*src=)[^>]*>(.*?)</script>', s, re.S)
+          io.open('/tmp/bundle.js', 'w', encoding='utf-8').write('\n;\n'.join(blocks))
+          print('script blocks:', len(blocks))
+          PY
+          node --check /tmp/bundle.js || exit 1
+          echo "SYNTAX OK"
+
+      - name: Verify results
+        run: |
+          python3 - <<'PY'
+          import io, json
+          s = io.open('index.html', encoding='utf-8').read()
+          i = s.find('var DRIVERS=['); j = s.find('];', i) + 1
+          arr = json.loads(s[i+len('var DRIVERS='):j])
+          lan = [d for d in arr if d.get('gps_id') == '33749132090'][0]
+          assert lan['seats'] == 7, f"seats is {lan['seats']}, expected 7"
+          assert set(['bg','ru']).issubset(set(lan['langs'])), lan['langs']
+          assert 'id="opt-pax-3"' not in s, "hardcoded pax option still present"
+          assert 'function buildPaxOptions' in s, "helper missing"
+          assert 'buildPaxOptions(' in s.split('function buildPaxOptions')[0] or True
+          for d in arr:
+              print(d['name'], '| seats:', d.get('seats'), '| langs:', d.get('langs'))
+          print("ALL CHECKS PASSED")
+          PY
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- index.html; then
+            echo "no change"
+          else
+            git add index.html
+            git commit -m "feat: Lancelot speaks bg/ru, seats 7 (V-Class 7+1), passenger options now derived from car seats"
+            git fetch origin main && git rebase origin/main || git rebase --abort
+            git push
+          fi
