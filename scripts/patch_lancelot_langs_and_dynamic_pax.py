@@ -15,19 +15,18 @@ else:
     raise SystemExit("langs anchor not found")
 
 # ── 2. Lancelot: V-Class е 7+1, значи 7 пътници, не 6 ─────────────────
-OLD_SEATS = '"gps_id":"33749132090"'
-i = s.find(OLD_SEATS)
-if i < 0:
-    raise SystemExit("lancelot record not found")
-seg_end = s.find('}]', i)
-seg = s[i:seg_end]
-if '"seats":6' in seg:
-    s = s[:i] + seg.replace('"seats":6', '"seats":7', 1) + s[seg_end:]
+# Котвата включва car_type+accel, за да е уникална за неговия запис.
+OLD_SEATS = '"car_type":"minivan","accel":9.0,"seats":6,'
+NEW_SEATS = '"car_type":"minivan","accel":9.0,"seats":7,'
+if OLD_SEATS in s:
+    if s.count(OLD_SEATS) != 1:
+        raise SystemExit("seats anchor not unique")
+    s = s.replace(OLD_SEATS, NEW_SEATS, 1)
     print("seats: 6 -> 7")
-elif '"seats":7' in seg:
+elif NEW_SEATS in s:
     print("seats: already 7")
 else:
-    raise SystemExit("lancelot seats field not found")
+    raise SystemExit("lancelot seats anchor not found")
 
 # ── 3. Пътници: опциите се строят от seats на шофьора ─────────────────
 OLD_OPTS = ('<option value="2" id="opt-pax-2">1–2</option>\n'
