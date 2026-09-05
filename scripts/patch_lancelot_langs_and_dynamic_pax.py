@@ -14,9 +14,22 @@ elif '"langs":["fr","en","bg","ru"]' in s:
 else:
     raise SystemExit("langs anchor not found")
 
-# ── 2. Пътници: опциите се строят от seats на шофьора ─────────────────
-# HTML-ът държеше три твърдо зашити опции. Оставяме само 1-2 като
-# начална, останалите се дописват от buildPaxOptions().
+# ── 2. Lancelot: V-Class е 7+1, значи 7 пътници, не 6 ─────────────────
+OLD_SEATS = '"gps_id":"33749132090"'
+i = s.find(OLD_SEATS)
+if i < 0:
+    raise SystemExit("lancelot record not found")
+seg_end = s.find('}]', i)
+seg = s[i:seg_end]
+if '"seats":6' in seg:
+    s = s[:i] + seg.replace('"seats":6', '"seats":7', 1) + s[seg_end:]
+    print("seats: 6 -> 7")
+elif '"seats":7' in seg:
+    print("seats: already 7")
+else:
+    raise SystemExit("lancelot seats field not found")
+
+# ── 3. Пътници: опциите се строят от seats на шофьора ─────────────────
 OLD_OPTS = ('<option value="2" id="opt-pax-2">1–2</option>\n'
             '        <option value="3" id="opt-pax-3">3</option>\n'
             '        <option value="4" id="opt-pax-4">4</option>')
@@ -30,10 +43,10 @@ elif s.count('id="opt-pax-3"') == 0:
 else:
     raise SystemExit("pax option markup not matched")
 
-# ── 3. Функцията, която строи опциите според местата в колата ─────────
+# ── 4. Функцията, която строи опциите според местата в колата ─────────
 HELPER = '''
 /* Пътници според конкретната кола: 4-местна дава 1-2/3/4,
-   V-Class с 7 места дава до 7. seats е в профила на шофьора. */
+   V-Class със 7 места дава до 7. seats е в профила на шофьора. */
 function buildPaxOptions(d){
   var sel=document.getElementById('order-pax');
   if(!sel)return;
@@ -64,8 +77,7 @@ if 'function buildPaxOptions' not in s:
 else:
     print("helper: already there")
 
-# ── 4. Викаме я при отваряне на профил ────────────────────────────────
-# openMod(d) пълни модала; вмъкваме извикване веднага след началото му.
+# ── 5. Викаме я при отваряне на профил ────────────────────────────────
 m = re.search(r'function openMod\(([A-Za-z_$][\w$]*)\)\s*\{', s)
 if not m:
     raise SystemExit("openMod not found")
