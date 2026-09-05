@@ -1,0 +1,64 @@
+name: apply-qr-vcard
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply patch
+        run: python3 scripts/patch_qr_vcard.py
+
+      - name: Sanity check inline JS
+        run: |
+          python3 - "index.html" <<'PY'
+          import io, re, sys
+          s = io.open(sys.argv[1], encoding='utf-8').read()
+          blocks = re.findall(r'<script(?![^>]*src=)[^>]*>(.*?)</script>', s, re.S)
+          io.open('/tmp/bundle.js', 'w', encoding='utf-8').write('\n;\n'.join(blocks))
+          print('script blocks:', len(blocks))
+          PY
+          node --check /tmp/bundle.js || exit 1
+          echo "SYNTAX OK"
+
+      - name: Verify vCard output for every driver
+        run: |
+          python3 - <<'PY'
+          import io
+          s = io.open('index.html', encoding='utf-8').read()
+          i = s.find('function vcardEscape'); j = s.find('function renderDriverQR')
+          assert i >= 0 and j > i, "vcard functions missing"
+          k = s.find('var DRIVERS=['); m = s.find('];', k) + 2
+          io.open('/tmp/t.js','w',encoding='utf-8').write(
+            s[k:m] +
+            '\nvar location={origin:"https://fish.taxi",pathname:"/"};\n'
+            'function driverCardUrl(d){return location.origin+location.pathname+"#d"+d.id;}\n'
+            + s[i:j] +
+            '\nDRIVERS.forEach(function(d){var v=driverVCard(d);'
+            'if(v.indexOf("BEGIN:VCARD")!==0)throw new Error("bad vcard "+d.name);'
+            'if(v.indexOf("END:VCARD")<0)throw new Error("unterminated "+d.name);'
+            'if(v.length>700)throw new Error("vcard too long for QR: "+d.name);'
+            'console.log(d.name,"->",v.length,"chars OK");});'
+          )
+          PY
+          node /tmp/t.js
+          echo "VCARD CHECKS PASSED"
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- index.html; then
+            echo "no change"
+          else
+            git add index.html
+            git commit -m "feat(qr): encode vCard — scanning saves driver contact (name, phone, area, car, link)"
+            git fetch origin main && git rebase origin/main || git rebase --abort
+            git push
+          fi
