@@ -171,6 +171,23 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-sy
 @media (prefers-reduced-motion:reduce){
   .dc{transition:none}
 }
+
+/* ═══ Логото има запечен черен фон в самия PNG — screen blend-mode
+   го "изяжда" върху всякакъв фон, вместо да стои като черна кутия ═══ */
+.top img[alt="fish.taxi"]{mix-blend-mode:screen}
+
+/* ═══ Героят (CTA банерът) беше inline-стилизиран в HTML и остана
+   недокоснат при първия redesign — оттам усещането за "същото".
+   Override-ваме върху inline стиловете, за да пасне на новата палитра. ═══ */
+#simple-hero{background:var(--s2)!important;border-bottom:1px solid var(--brd)!important}
+[data-theme="dark"] #simple-hero{background:var(--s1)!important}
+#simple-hero button[onclick^="orderNowSimple"]{background:var(--y)!important;color:var(--bg)!important;box-shadow:none!important}
+#simple-hero button[onclick^="orderNowSimple"] #hero-btn-sub{color:inherit!important;opacity:.55}
+#hero-sub{color:var(--mu)!important}
+#hero-more{color:var(--y)!important}
+#prefs-prompt{background:var(--s1)!important;border:1px solid var(--brd)!important}
+#prefs-prompt div{color:var(--tx)!important}
+#prefs-prompt .pf{background:var(--s2)!important;border-color:var(--brd)!important;color:var(--mu)!important}
 </style>
 <script src="lib/qrcode.min.js"></script>
 </head>
@@ -2197,8 +2214,7 @@ function clientLangTag(d){
   return orderLang(d)===lang ? '' : ' ['+String(lang).toUpperCase()+']';
 }
 var ORDER_T={
- bg:{head:'\u{1F695} fish.taxi \u2014 \u0411\u042A\u0420\u0417\u0410 \u041F\u041E\u0420\u042A\u0427\u041A\u0410',now:'\u{1F552} \u0421\u0435\u0433\u0430 (\u0432\u0435\u0434\u043D\u0430\u0433\u0430)',pax:'\u2022 \u041F\u044A\u0442\u043D\u0438\u0446\u0438: ',prefs:'\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u043D\u0438\u044F:',myloc:'\u{1F4CD} \u041C\u043E\u044F\u0442\u0430 \u043B\u043E\u043A\u0430\u0446\u0438\u044F:',nogps:'\u{1F4CD} \u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u0449\u0435 \u044F \u043F\u0440\u0430\u0442\u044F \u0432 \u0447\u0430\u0442\u0430 (GPS \u043E\u0442\u043A\u0430\u0437\u0430\u043D)',confirm:'\u260E\uFE0F \u041F\u043E\u0442\u0432\u044A\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u043D\u0430 \u0442\u043E\u0437\u0438 \u043D\u043E\u043C\u0435\u0440.'},
- en:{head:'\u{1F695} fish.taxi \u2014 QUICK ORDER',now:'\u{1F552} Now (immediately)',pax:'\u2022 Passengers: ',prefs:'Preferences:',myloc:'\u{1F4CD} My location:',nogps:'\u{1F4CD} Location: will send in chat (GPS denied)',confirm:'\u260E\uFE0F Confirm on this number.'},
+ bg:{head:'\u{1F695} fish.taxi \u2014 \u0411\u042A\u0420\u0417\u0410 \u041F\u041E\u0420\u042A\u0427\u041A\u0410',now:'\u{1F552} \u0421\u0435\u0433\u0430 (\u0432\u0435\u0434\u043D\u0430\u0433\u0430)',pax:'\u2022 \u041F\u044A\u0442\u043D\u0438\u0446\u0438: ',prefs:'\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u043D\u0438\u044F:',myloc:'\u{1F4CD} \u041C\u043E\u044F\u0442\u0430 \u043B\u043E\u043A\u0430\u0446\u0438\u044F:',nogps:'\u{1F4CD} \u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u0449\u0435 \u044F \u043F\u0440\u0430\u0442\u044F \u0432 \u0447\u0430\u0442\u0430 (GPS \u043E\u0442\u043A\u0430\u0437\u0430\u043D)',confirm:'\u260E\uFE0F \u041F\u043E\u0442\u0432\u044A\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u043D\u0430 \u0442\u043E\u0437\u0438 \u043D\u043E\u043C\u0435\u0440.'},\n en:{head:'\u{1F695} fish.taxi \u2014 QUICK ORDER',now:'\u{1F552} Now (immediately)',pax:'\u2022 Passengers: ',prefs:'Preferences:',myloc:'\u{1F4CD} My location:',nogps:'\u{1F4CD} Location: will send in chat (GPS denied)',confirm:'\u260E\uFE0F Confirm on this number.'},
  de:{head:'\u{1F695} fish.taxi \u2014 SCHNELLBESTELLUNG',now:'\u{1F552} Jetzt (sofort)',pax:'\u2022 Fahrg\u00E4ste: ',prefs:'W\u00FCnsche:',myloc:'\u{1F4CD} Mein Standort:',nogps:'\u{1F4CD} Standort: sende ich im Chat (GPS abgelehnt)',confirm:'\u260E\uFE0F Best\u00E4tigung unter dieser Nummer.'},
  fr:{head:'\u{1F695} fish.taxi \u2014 COMMANDE RAPIDE',now:'\u{1F552} Maintenant (imm\u00E9diatement)',pax:'\u2022 Passagers : ',prefs:'Pr\u00E9f\u00E9rences :',myloc:'\u{1F4CD} Ma position :',nogps:'\u{1F4CD} Position : je l\u2019envoie dans le chat (GPS refus\u00E9)',confirm:'\u260E\uFE0F Confirmation \u00E0 ce num\u00E9ro.'},
  ru:{head:'\u{1F695} fish.taxi \u2014 \u0411\u042B\u0421\u0422\u0420\u042B\u0419 \u0417\u0410\u041A\u0410\u0417',now:'\u{1F552} \u0421\u0435\u0439\u0447\u0430\u0441 (\u0441\u0440\u0430\u0437\u0443)',pax:'\u2022 \u041F\u0430\u0441\u0441\u0430\u0436\u0438\u0440\u044B: ',prefs:'\u041F\u043E\u0436\u0435\u043B\u0430\u043D\u0438\u044F:',myloc:'\u{1F4CD} \u041C\u043E\u0451 \u043C\u0435\u0441\u0442\u043E\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435:',nogps:'\u{1F4CD} \u041C\u0435\u0441\u0442\u043E: \u043F\u0440\u0438\u0448\u043B\u044E \u0432 \u0447\u0430\u0442 (GPS \u043E\u0442\u043A\u043B\u043E\u043D\u0451\u043D)',confirm:'\u260E\uFE0F \u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u043D\u0430 \u044D\u0442\u043E\u0442 \u043D\u043E\u043C\u0435\u0440.'},
