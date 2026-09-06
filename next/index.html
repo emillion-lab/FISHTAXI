@@ -6,7 +6,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#080808">
-<title>fish.taxi — Direct Taxi Finder [preview 2026-08-16 15:01 UTC]</title>
+<title>fish.taxi — Direct Taxi Finder</title>
 <meta name="description" content="Find verified taxi drivers directly in Sofia. Call or message them yourself — see the car, price and driver before you book.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="fish.taxi">
@@ -27,188 +27,135 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--bg:#fafaf7;--s1:#fff;--s2:#f5f3ee;--s3:#ece8de;--brd:#ddd6c3;--y:#1a1a1a;--tx:#1a1a1a;--mu:#666;--mu2:#999;--gr:#16a34a;--rd:#dc2626;--bl:#1e40af;--or:#c2410c;--pu:#7e22ce;--cy:#0e7490;--pi:#be185d;--taxiY:#f5c518;--taxiB:#0a0a0a}
-[data-theme="dark"]{--bg:#080808;--s1:#111;--s2:#1a1a1a;--s3:#242424;--brd:#2e2e2e;--y:#f5c518;--tx:#f0f0f0;--mu:#aaa;--mu2:#555;--gr:#22c55e;--rd:#ef4444;--bl:#60a5fa;--or:#fb923c;--pu:#c084fc;--cy:#22d3ee;--pi:#f472b6}
-html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable Text",Roboto,system-ui,sans-serif;overflow:hidden;display:flex;flex-direction:column}
-.top{background:#0a0a0a!important;border-bottom:3px solid #f5c518!important;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0}
-.logo{font-size:18px;font-weight:900;color:var(--y)}
-.tabs{display:flex;background:var(--s1);border-bottom:2px solid var(--brd);flex-shrink:0}
-.tab{flex:1;padding:8px 2px;font-size:12px;font-weight:800;border:none;background:transparent;color:var(--mu);cursor:pointer;border-bottom:3px solid transparent}
-.tab.on{color:var(--y);border-bottom-color:var(--y)}
+:root{--bg:#f7f7f5;--s1:#fff;--s2:#f1f0ed;--s3:#e7e5e0;--brd:#e2e0da;--y:#0a0a0a;--tx:#0a0a0a;--mu:#6b6b6b;--mu2:#9a9a9a;--gr:#0a8a4a;--rd:#d32f2f;--bl:#1a56db;--or:#b8560f;--pu:#6b21a8;--cy:#0e7490;--pi:#a8265f;--taxiY:#f5c518;--taxiB:#0a0a0a}
+[data-theme="dark"]{--bg:#000;--s1:#141414;--s2:#1c1c1c;--s3:#262626;--brd:#2a2a2a;--y:#fff;--tx:#f2f2f2;--mu:#a3a3a3;--mu2:#666;--gr:#34c77b;--rd:#f16565;--bl:#5b8def;--or:#e08a4a;--pu:#c084fc;--cy:#22d3ee;--pi:#e879a8}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable Text",Roboto,system-ui,sans-serif;overflow:hidden;display:flex;flex-direction:column;letter-spacing:-.01em}
+.top{background:var(--s1)!important;border-bottom:1px solid var(--brd)!important;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex-shrink:0}
+.logo{font-size:18px;font-weight:800;color:var(--y);letter-spacing:-.02em}
+.tabs{display:flex;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0}
+.tab{flex:1;padding:11px 2px;font-size:13px;font-weight:600;border:none;background:transparent;color:var(--mu2);cursor:pointer;border-bottom:2px solid transparent;transition:color .15s}
+.tab.on{color:var(--y);border-bottom-color:var(--y);font-weight:700}
 .page{display:none;flex:1;flex-direction:column;overflow:hidden;min-height:0}
 .page.on{display:flex}
 
 /* MAP */
-#map{height:380px;background:#0d1117;flex-shrink:0}
+#map{height:380px;background:#e9e7e2;flex-shrink:0}
 @media(max-height:800px){#map{height:42vh;min-height:230px}}
-.leaflet-container{background:#e8e6df!important}
-.leaflet-popup-content-wrapper{background:var(--s2)!important;color:var(--tx)!important;border:1px solid var(--brd)!important;border-radius:10px!important}
-.leaflet-popup-tip{background:var(--s2)!important}
+.leaflet-container{background:#eeece7!important}
+.leaflet-popup-content-wrapper{background:var(--s1)!important;color:var(--tx)!important;border:1px solid var(--brd)!important;border-radius:14px!important;box-shadow:0 8px 24px rgba(0,0,0,.12)!important}
+.leaflet-popup-tip{background:var(--s1)!important}
 
 /* SEARCH */
-.srch{padding:7px 10px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;display:flex;gap:7px}
-.srch input{flex:1;background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:7px 11px;font-size:14px}
-.srch input:focus{outline:none;border-color:var(--y)}
+.srch{padding:10px 12px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;display:flex;gap:8px}
+.srch input{flex:1;background:var(--s2);border:1px solid transparent;color:var(--tx);border-radius:12px;padding:11px 14px;font-size:15px}
+.srch input:focus{outline:none;border-color:var(--y);background:var(--s1)}
 
 /* FILTERS */
 .fw{background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0}
-.fs{padding:4px 8px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;align-items:center}
+.fs{padding:6px 8px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;align-items:center}
 .fs::-webkit-scrollbar{display:none}
-.fl{font-size:10px;color:var(--mu2);font-weight:700;text-transform:uppercase;white-space:nowrap;flex-shrink:0;letter-spacing:.5px}
-.flt{font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;border:1px solid var(--brd);background:var(--s2);color:var(--mu);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
-.flt.on{background:rgba(245,197,24,.13);border-color:var(--y);color:var(--y)}
-.flt:active{opacity:.7}
+.fl{font-size:10px;color:var(--mu2);font-weight:700;text-transform:uppercase;white-space:nowrap;flex-shrink:0;letter-spacing:.6px}
+.flt{font-size:13px;font-weight:600;padding:7px 14px;border-radius:20px;border:1px solid var(--brd);background:var(--s1);color:var(--mu);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.flt.on{background:var(--y);border-color:var(--y);color:var(--bg)}
+.flt:active{opacity:.75}
 
 /* CARDS */
-.dlist{flex:1;overflow-y:auto;padding:8px}
-.dc{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:11px;margin-bottom:7px;cursor:pointer;transition:border-color .15s}
-.dc:active{border-color:var(--y)}
-.dct{display:flex;gap:9px;align-items:flex-start}
-.dca{width:56px;height:56px;border-radius:12px;background:var(--s3);border:2px solid var(--brd);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px}
+.dlist{flex:1;overflow-y:auto;padding:10px}
+.dc{background:var(--s1);border:1px solid var(--brd);border-radius:16px;padding:13px;margin-bottom:9px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:box-shadow .2s ease,transform .2s ease}
+.dc:active{box-shadow:0 4px 14px rgba(0,0,0,.1);transform:translateY(-1px)}
+.dct{display:flex;gap:11px;align-items:flex-start}
+.dca{width:56px;height:56px;border-radius:14px;background:var(--s2);border:1px solid var(--brd);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px}
 .dca img{width:100%;height:100%;object-fit:cover}
 .dci{flex:1;min-width:0}
-.dcn{font-size:15px;font-weight:800;margin-bottom:1px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
-.dcc{font-size:12px;color:var(--mu);margin-bottom:5px}
-.tags{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
-.t{font-size:11px;font-weight:700;padding:2px 7px;border-radius:9px;border:1px solid}
-.tg{color:var(--gr);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.07)}
-.ty{color:var(--y);border-color:rgba(245,197,24,.3);background:rgba(245,197,24,.07)}
-.tb{color:var(--bl);border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.07)}
-.tc{color:var(--cy);border-color:rgba(6,182,212,.3);background:rgba(6,182,212,.07)}
-.tr{color:var(--rd);border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.07)}
-.tp{color:var(--pu);border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.07)}
-.to{color:var(--or);border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.07)}
-.tpi{color:var(--pi);border-color:rgba(236,72,153,.3);background:rgba(236,72,153,.07)}
-.task{color:var(--mu);border-color:var(--brd);border-style:dashed;background:transparent}
-.pays{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap}
-.pi2{font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;border:1px solid rgba(245,197,24,.3);color:var(--y);background:rgba(245,197,24,.06)}
-.rb{font-size:12px;color:var(--y);font-weight:700;margin-left:auto;flex-shrink:0}
-.vb{font-size:10px;font-weight:700;color:var(--gr);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:7px;padding:1px 5px;white-space:nowrap}
-.dcb{display:flex;gap:5px;margin-top:9px}
-.bc{flex:1;background:var(--gr);color:#000;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:800;cursor:pointer}
-.bv{flex:1;background:#7360f2;color:#fff;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:800;cursor:pointer}
+.dcn{font-size:16px;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.dcc{font-size:12px;color:var(--mu);margin-bottom:6px}
+.tags{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.t{font-size:11px;font-weight:600;padding:3px 8px;border-radius:8px;border:1px solid}
+.tg{color:var(--gr);border-color:rgba(10,138,74,.25);background:rgba(10,138,74,.06)}
+.ty{color:#8a6d00;border-color:rgba(245,197,24,.4);background:rgba(245,197,24,.12)}
+.tb{color:var(--bl);border-color:rgba(26,86,219,.25);background:rgba(26,86,219,.06)}
+.tc{color:var(--cy);border-color:rgba(14,116,144,.25);background:rgba(14,116,144,.06)}
+.tr{color:var(--rd);border-color:rgba(211,47,47,.25);background:rgba(211,47,47,.06)}
+.tp{color:var(--pu);border-color:rgba(107,33,168,.25);background:rgba(107,33,168,.06)}
+.to{color:var(--or);border-color:rgba(184,86,15,.25);background:rgba(184,86,15,.06)}
+.tpi{color:var(--pi);border-color:rgba(168,38,95,.25);background:rgba(168,38,95,.06)}
+.task{color:var(--mu2);border-color:var(--brd);border-style:dashed;background:transparent}
+.pays{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.pi2{font-size:11px;font-weight:600;padding:3px 8px;border-radius:8px;border:1px solid var(--brd);color:var(--mu);background:var(--s2)}
+.rb{font-size:13px;color:var(--y);font-weight:700;margin-left:auto;flex-shrink:0}
+.vb{font-size:10px;font-weight:700;color:var(--gr);background:rgba(10,138,74,.08);border:1px solid rgba(10,138,74,.25);border-radius:8px;padding:2px 6px;white-space:nowrap}
+.dcb{display:flex;gap:6px;margin-top:11px}
+.bc{flex:1;background:var(--y);color:var(--bg);border:none;border-radius:12px;padding:11px;font-size:14px;font-weight:700;cursor:pointer}
+.bv{flex:1;background:var(--s2);color:var(--tx);border:1px solid var(--brd);border-radius:12px;padding:11px;font-size:14px;font-weight:700;cursor:pointer}
 
 /* MODAL */
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:1000;align-items:flex-end}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:flex-end;backdrop-filter:blur(2px)}
 .modal.on{display:flex}
-.mb{background:var(--s1);border-top:3px solid var(--y);border-radius:20px 20px 0 0;padding:18px;width:100%;height:85vh;overflow-y:auto}
-.mc{float:right;background:var(--s3);border:none;color:var(--mu);border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;line-height:30px;text-align:center}
-.mav{width:80px;height:80px;border-radius:14px;background:var(--s3);border:3px solid var(--y);margin:0 auto 10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:32px}
+.mb{background:var(--s1);border-radius:24px 24px 0 0;padding:20px;width:100%;height:85vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.15)}
+.mb::before{content:'';display:block;width:36px;height:4px;background:var(--brd);border-radius:99px;margin:0 auto 14px}
+.mc{float:right;background:var(--s2);border:none;color:var(--mu);border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;line-height:32px;text-align:center}
+.mav{width:80px;height:80px;border-radius:18px;background:var(--s2);border:1px solid var(--brd);margin:0 auto 10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:32px}
 .mav img{width:100%;height:100%;object-fit:cover}
-.mn{font-size:19px;font-weight:900;text-align:center;margin-bottom:2px}
-.mc2{font-size:12px;color:var(--mu);text-align:center;margin-bottom:6px}
-.mh{font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:12px 0 5px;border-bottom:1px solid var(--brd);padding-bottom:3px}
-.mphotos{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
-.mphotos img{height:64px;width:86px;object-fit:cover;border-radius:8px;border:1px solid var(--brd);flex-shrink:0;cursor:pointer}
+.mn{font-size:20px;font-weight:800;text-align:center;margin-bottom:2px}
+.mc2{font-size:13px;color:var(--mu);text-align:center;margin-bottom:8px}
+.mh{font-size:11px;color:var(--mu2);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin:14px 0 6px;border-bottom:1px solid var(--brd);padding-bottom:4px}
+.mphotos{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px}
+.mphotos img{height:64px;width:86px;object-fit:cover;border-radius:10px;border:1px solid var(--brd);flex-shrink:0;cursor:pointer}
 .imglb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;align-items:center;justify-content:center;padding:20px}
-.imglb img{max-width:100%;max-height:100%;border-radius:10px}
-.ir{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--brd)}
+.imglb img{max-width:100%;max-height:100%;border-radius:12px}
+.ir{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--brd)}
 .ir:last-child{border:none}
 .ik{font-size:12px;color:var(--mu)}
 .iv{font-size:13px;font-weight:700}
-.mbtns{display:flex;gap:8px;margin-top:14px}
-.mcall{flex:1;background:var(--gr);color:#000;border:none;border-radius:10px;padding:12px;font-size:15px;font-weight:800;cursor:pointer}
-.mvib{flex:1;background:#7360f2;color:#fff;border:none;border-radius:10px;padding:12px;font-size:15px;font-weight:800;cursor:pointer}
-.pref-btn{font-size:12px;font-weight:700;padding:6px 11px;border-radius:18px;border:1px solid var(--brd);background:var(--s2);color:var(--mu);cursor:pointer;transition:all .15s}
-.pref-btn.on{background:var(--taxiY);border-color:var(--taxiY);color:#000}
-.sbox{background:var(--s3);border-left:3px solid var(--or);border-radius:8px;padding:9px 11px;font-size:12px;color:var(--mu);margin:8px 0;line-height:1.5}
+.mbtns{display:flex;gap:8px;margin-top:16px}
+.mcall{flex:1;background:var(--y);color:var(--bg);border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:700;cursor:pointer}
+.mvib{flex:1;background:var(--s2);color:var(--tx);border:1px solid var(--brd);border-radius:14px;padding:14px;font-size:15px;font-weight:700;cursor:pointer}
+.pref-btn{font-size:12px;font-weight:600;padding:7px 12px;border-radius:18px;border:1px solid var(--brd);background:var(--s1);color:var(--mu);cursor:pointer;transition:all .15s}
+.pref-btn.on{background:var(--y);border-color:var(--y);color:var(--bg)}
+.sbox{background:var(--s2);border-left:3px solid var(--or);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--mu);margin:9px 0;line-height:1.55}
 
 /* HOW & JOIN */
-.scroll-page{flex:1;overflow-y:auto;padding:13px}
-.hs{background:var(--s2);border:1px solid var(--brd);border-radius:13px;padding:13px;margin-bottom:7px;display:flex;gap:11px}
-.hn{width:34px;height:34px;border-radius:50%;background:var(--taxiY);color:#000;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.hs h3{font-size:14px;font-weight:800;margin-bottom:2px}
-.hs p{font-size:12px;color:var(--mu);line-height:1.5}
-.jc{background:var(--s2);border:1px solid var(--brd);border-radius:13px;padding:13px;margin-bottom:7px}
-.jc h3{font-size:14px;font-weight:800;margin-bottom:7px;color:var(--y)}
-.jc p{font-size:12px;color:var(--mu);line-height:1.5;margin-bottom:5px}
-.pbox{background:var(--s3);border:2px solid var(--y);border-radius:11px;padding:11px;text-align:center;margin:7px 0}
-.br{display:flex;gap:7px;margin-bottom:6px}
+.scroll-page{flex:1;overflow-y:auto;padding:14px}
+.hs{background:var(--s1);border:1px solid var(--brd);border-radius:16px;padding:14px;margin-bottom:9px;display:flex;gap:12px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.hs h3{font-size:14px;font-weight:700;margin-bottom:2px}
+.hs p{font-size:12px;color:var(--mu);line-height:1.55}
+.jc{background:var(--s1);border:1px solid var(--brd);border-radius:16px;padding:14px;margin-bottom:9px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.jc h3{font-size:14px;font-weight:700;margin-bottom:8px;color:var(--y)}
+.jc p{font-size:12px;color:var(--mu);line-height:1.55;margin-bottom:6px}
+.pbox{background:var(--s2);border:1px solid var(--brd);border-radius:14px;padding:12px;text-align:center;margin:8px 0}
+.br{display:flex;gap:8px;margin-bottom:7px}
 .bi2{font-size:15px;flex-shrink:0}
-.bt{font-size:12px;color:var(--mu);line-height:1.4}
+.bt{font-size:12px;color:var(--mu);line-height:1.45}
 .bt strong{color:var(--tx)}
-.jbtn,.hcta{background:var(--taxiY);color:#000;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:900;width:100%;cursor:pointer;margin-top:7px}
+.jbtn,.hcta{background:var(--y);color:var(--bg);border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:700;width:100%;cursor:pointer;margin-top:8px}
 @media (max-width:560px){
   .dc .dn, .dcard .dn, .drv-name{font-size:19px !important;}
   .t{font-size:13px !important;padding:4px 9px !important;}
   #mbio,#mprice,#mareas{font-size:15px !important;}
 }
 
-/* ═══ Нощ: стъкло + неон вместо плосък тъмен фон ═══ */
-[data-theme="dark"] .top{background:rgba(10,10,10,.75)!important;backdrop-filter:blur(14px);border-bottom-color:var(--y)}
-[data-theme="dark"] .tabs{background:rgba(17,17,17,.6);backdrop-filter:blur(10px)}
-[data-theme="dark"] .dc{background:rgba(26,26,26,.55);backdrop-filter:blur(12px);box-shadow:0 1px 1px rgba(245,197,24,.05),inset 0 0 0 1px var(--brd)}
-[data-theme="dark"] .mb{background:rgba(17,17,17,.75);backdrop-filter:blur(18px)}
-[data-theme="dark"] .flt.on{box-shadow:0 0 14px rgba(245,197,24,.35)}
+/* ═══ Нощ: чист true-black, без стъкло/неон ═══ */
+[data-theme="dark"] .top{background:var(--s1)!important;border-bottom-color:var(--brd)}
+[data-theme="dark"] .tabs{background:var(--s1)}
+[data-theme="dark"] .dc{background:var(--s1);box-shadow:none}
+[data-theme="dark"] .mb{background:var(--s1)}
+[data-theme="dark"] .flt.on{box-shadow:none}
 
-/* шевът над лентата диша леко нощем, застава спокойно през деня */
-@keyframes seamGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.5)}}
-[data-theme="dark"] .top{animation:seamGlow 3.6s ease-in-out infinite}
-
-/* CTA бутонът пуска еднократен проблясък на цикъл — подсказва, не крещи */
-#simple-hero button[onclick^="orderNowSimple"]{position:relative;overflow:hidden}
-#simple-hero button[onclick^="orderNowSimple"]::after{
-  content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;
-  background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);
-  transform:skewX(-18deg);animation:ctaSweep 4.5s ease-in-out infinite;
-}
-@keyframes ctaSweep{0%{left:-60%}35%{left:130%}100%{left:130%}}
-
-/* първите филтри "дишат" леко на ротация — подсказка, не постоянен ефект */
-.fs:first-of-type .flt:nth-of-type(1){animation:chipHint 2.6s ease-in-out infinite}
-.fs:first-of-type .flt:nth-of-type(2){animation:chipHint 2.6s ease-in-out infinite .9s}
-@keyframes chipHint{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 2px rgba(245,197,24,.3)}}
-
-/* spotlight цикъл между картите на шофьорите: фокус/избледняване, не преместване */
-.dc{transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s ease,opacity .5s ease}
-.dc.ft-spotlight{transform:scale(1.012);box-shadow:0 8px 24px rgba(0,0,0,.25),0 0 0 1.5px rgba(245,197,24,.3)}
-.dc.ft-dim{opacity:.55}
-
-/* ═══ Тъмна карта нощем — истинската техника от БАК: обръщане на OSM плочките ═══ */
+/* ═══ Тъмна карта нощем ═══ */
 [data-theme="dark"] .leaflet-tile-pane{
-  filter:invert(1) hue-rotate(180deg) brightness(.93) contrast(.92) saturate(.75);
+  filter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.6);
 }
-[data-theme="dark"] .leaflet-container{background:#0a0e14!important}
+[data-theme="dark"] .leaflet-container{background:#000!important}
 
-/* ═══ По-едър текст и бутони — леко, не драстично ═══ */
-.dcn{font-size:16px}
-.tab{font-size:13px;padding:10px 3px}
-.bc,.bv{font-size:14px;padding:11px}
-.jbtn,.hcta{font-size:15px;padding:13px}
-.mcall,.mvib{font-size:16px;padding:13px}
-.flt{font-size:13px;padding:6px 13px}
-
-/* ═══ Значка "Основател" — за първите регистрирани шофьори ═══ */
+/* ═══ Значка "Основател" — тих вариант, без анимиран блясък ═══ */
 .founder{
-  display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:800;
-  padding:2px 8px 2px 6px;border-radius:8px;color:#3a2a05;
-  background:linear-gradient(100deg,#f5c518,#ffe08a,#f5c518);background-size:200% 100%;
-  animation:founderShine 3.5s linear infinite;
+  display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;
+  padding:2px 8px 2px 6px;border-radius:8px;color:#8a6d00;
+  background:rgba(245,197,24,.16);border:1px solid rgba(245,197,24,.35);
 }
-[data-theme="dark"] .founder{color:#241a02}
-@keyframes founderShine{0%{background-position:0% 0}100%{background-position:200% 0}}
+[data-theme="dark"] .founder{color:#f5c518;background:rgba(245,197,24,.1)}
 
-/* ═══ Еднократни подсказки за какво може да се докосне — по 3 повторения, после спират сами ═══ */
-.hint-tabs{animation:tabsHint 1.6s ease-in-out 2;animation-delay:.6s}
-@keyframes tabsHint{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 2px rgba(245,197,24,.4)}}
-.hint-photo{position:relative}
-.hint-photo::after{
-  content:'⇄';position:absolute;bottom:3px;right:4px;font-size:10px;color:#fff;
-  background:rgba(0,0,0,.55);border-radius:50%;width:15px;height:15px;
-  display:flex;align-items:center;justify-content:center;
-  animation:photoHint 1.3s ease-in-out 3;animation-delay:.4s;
-}
-@keyframes photoHint{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
-
-/* ═══ Малко фантазия: тихи искри в героя нощем ═══ */
-.spark{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--y);opacity:0;pointer-events:none}
-[data-theme="dark"] .spark{animation:sparkFloat 6s ease-in-out infinite}
-.spark:nth-child(1){left:12%;top:70%;animation-delay:0s}
-.spark:nth-child(2){left:68%;top:20%;animation-delay:1.8s}
-.spark:nth-child(3){left:85%;top:60%;animation-delay:3.4s}
-@keyframes sparkFloat{0%{opacity:0;transform:translateY(0)}15%{opacity:.8}85%{opacity:.3}100%{opacity:0;transform:translateY(-38px)}}
-
-/* ═══ Галерия със снимки: превъртане вместо затваряне, стрелки + брояч ═══ */
+/* ═══ Галерия със снимки: превъртане, стрелки + брояч ═══ */
 .imglb-nav{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;
   border:none;background:rgba(255,255,255,.14);color:#fff;font-size:22px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);z-index:2001}
@@ -221,352 +168,15 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-sy
 .imglb img{transition:opacity .18s ease}
 
 @media (prefers-reduced-motion:reduce){
-  [data-theme="dark"] .top{animation:none}
-  #simple-hero button[onclick^="orderNowSimple"]::after{display:none}
-  .fs:first-of-type .flt:nth-of-type(1),.fs:first-of-type .flt:nth-of-type(2){animation:none}
   .dc{transition:none}
-  .founder{animation:none}
-  .hint-tabs{animation:none}
-  .hint-photo::after{animation:none}
-  .spark{display:none}
 }
-/* ═══════════════════ FT-M3-V2 ═══════════════════
-   Material 3 основа. Всичко под този коментар определя системата;
-   старите правила остават само там, където M3 не ги покрива.
-   Много елементи имат inline стилове, затова тук се използва
-   !important — нарочно, не по небрежност. */
-
-:root{
-  /* ─ форма ─ */
-  --m3-xs:8px; --m3-sm:12px; --m3-md:16px; --m3-lg:20px; --m3-xl:28px; --m3-full:999px;
-  /* ─ движение ─ */
-  --m3-emph:cubic-bezier(.2,0,0,1);
-  --m3-std:cubic-bezier(.2,0,0,1);
-  --m3-short:180ms; --m3-med:300ms; --m3-long:450ms;
-}
-
-/* ─ цветови роли: светла схема ─ */
-:root{
-  --m3-primary:#785900;        --m3-on-primary:#ffffff;
-  --m3-primary-c:#ffdf95;      --m3-on-primary-c:#251a00;
-  --m3-secondary-c:#ede1c2;    --m3-on-secondary-c:#231b04;
-  --m3-surface:#fff8ef;        --m3-on-surface:#1f1b13;
-  --m3-surface-dim:#e2d9cc;
-  --m3-sc-lowest:#ffffff;      --m3-sc-low:#fdf1e2;
-  --m3-sc:#f7ecdc;             --m3-sc-high:#f1e6d7;
-  --m3-sc-highest:#ebe0d1;
-  --m3-on-surface-var:#4e4639; --m3-outline:#807667;
-  --m3-outline-var:#d1c5b4;
-  --m3-success:#1c6c46;        --m3-on-success-c:#00210f;
-  --m3-success-c:#a4f2c4;
-  --m3-error:#ba1a1a;          --m3-error-c:#ffdad6;
-  --m3-scrim:rgba(0,0,0,.42);
-  --m3-state:#1f1b13;
-}
-/* ─ цветови роли: тъмна схема ─ */
-[data-theme="dark"]{
-  --m3-primary:#f0c33f;        --m3-on-primary:#3f2e00;
-  --m3-primary-c:#5b4300;      --m3-on-primary-c:#ffdf95;
-  --m3-secondary-c:#4e4739;    --m3-on-secondary-c:#ede1c2;
-  --m3-surface:#16130b;        --m3-on-surface:#eae1d3;
-  --m3-surface-dim:#16130b;
-  --m3-sc-lowest:#100e07;      --m3-sc-low:#1f1b13;
-  --m3-sc:#231f17;             --m3-sc-high:#2e2921;
-  --m3-sc-highest:#39342b;
-  --m3-on-surface-var:#d1c5b4; --m3-outline:#9a8f80;
-  --m3-outline-var:#4e4639;
-  --m3-success:#88d6a9;        --m3-on-success-c:#a4f2c4;
-  --m3-success-c:#00522f;
-  --m3-error:#ffb4ab;          --m3-error-c:#93000a;
-  --m3-scrim:rgba(0,0,0,.62);
-  --m3-state:#eae1d3;
-}
-
-/* ─ старите променливи се пренасочват към M3 ролите,
-     за да поеме системата и това, което не е пипано поименно ─ */
-:root,[data-theme="dark"]{
-  --bg:var(--m3-surface); --s1:var(--m3-sc-low); --s2:var(--m3-sc);
-  --s3:var(--m3-sc-high); --brd:var(--m3-outline-var);
-  --tx:var(--m3-on-surface); --mu:var(--m3-on-surface-var);
-  --mu2:var(--m3-outline); --y:var(--m3-primary);
-}
-
-/* ─ типографска стълба ─ */
-body{font-size:14px;line-height:1.43;letter-spacing:.0125em}
-
-/* ═══ ПОВЪРХНОСТИ ═══ */
-html,body{background:var(--m3-surface)}
-.top{background:var(--m3-sc)!important;border-bottom:none!important;height:60px;
-  box-shadow:none;animation:none!important}
-.tabs{background:var(--m3-surface);border-bottom:1px solid var(--m3-outline-var)}
-
-/* ═══ TABS: M3 primary tabs ═══ */
-.tab{position:relative;background:transparent;color:var(--m3-on-surface-var);
-  font-size:13px;font-weight:600;letter-spacing:.01em;padding:13px 4px 12px;
-  border-bottom:none;overflow:hidden;transition:color var(--m3-short) var(--m3-std)}
-.tab::before{content:'';position:absolute;inset:0;background:var(--m3-state);
-  opacity:0;transition:opacity var(--m3-short) var(--m3-std)}
-.tab:active::before{opacity:.1}
-.tab.on{color:var(--m3-primary)}
-.tab.on::after{content:'';position:absolute;left:50%;transform:translateX(-50%);
-  bottom:0;width:56%;height:3px;border-radius:3px 3px 0 0;background:var(--m3-primary);
-  animation:m3Ind var(--m3-med) var(--m3-emph)}
-@keyframes m3Ind{from{width:0}to{width:56%}}
-
-/* ═══ CARDS: M3 filled card ═══ */
-.dc{background:var(--m3-sc)!important;border:none!important;border-radius:var(--m3-lg);
-  padding:14px;margin-bottom:10px;position:relative;overflow:hidden;
-  box-shadow:none!important;backdrop-filter:none!important;
-  transition:background var(--m3-short) var(--m3-std)}
-.dc::before{content:'';position:absolute;inset:0;background:var(--m3-state);
-  opacity:0;transition:opacity var(--m3-short) var(--m3-std);pointer-events:none}
-.dc:active::before{opacity:.1}
-.dc.ft-spotlight{transform:none;box-shadow:none}
-.dc.ft-dim{opacity:1}
-.dca{width:60px;height:60px;border-radius:var(--m3-md);background:var(--m3-sc-highest);
-  border:none}
-.dcn{font-size:17px;font-weight:600;letter-spacing:-.005em;line-height:1.3;
-  color:var(--m3-on-surface)}
-.dcc{font-size:13px;color:var(--m3-on-surface-var);display:flex;align-items:center;
-  gap:8px;flex-wrap:wrap;margin-top:3px}
-.rb{font-size:14px;font-weight:600;color:var(--m3-on-surface-var);
-  font-variant-numeric:tabular-nums}
-
-/* ═══ ПОДПИСЪТ: регистрационният номер като табела ═══ */
-.plate{display:inline-flex;align-items:stretch;height:20px;border-radius:4px;
-  overflow:hidden;background:#f4f2ec;color:#16181c;
-  font:600 12px/18px ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  letter-spacing:.06em;flex-shrink:0;padding-right:7px;
-  box-shadow:0 0 0 1px rgba(0,0,0,.35)}
-.plate i{display:flex;align-items:center;justify-content:center;font-style:normal;
-  background:#003399;color:#fff;font-size:8px;font-weight:700;letter-spacing:.02em;
-  padding:0 3px;margin-right:6px;min-width:15px}
-#mcar2 .plate{height:24px;font-size:14px;line-height:22px;margin-left:8px}
-
-/* ═══ CHIPS: M3 filter chip ═══ */
-.flt,.pref-btn{height:36px;padding:0 16px!important;border-radius:var(--m3-xs)!important;
-  border:1px solid var(--m3-outline)!important;background:transparent!important;
-  color:var(--m3-on-surface-var)!important;font-size:14px!important;font-weight:600!important;
-  letter-spacing:.007em;position:relative;overflow:hidden;
-  transition:background var(--m3-short) var(--m3-std),border-color var(--m3-short) var(--m3-std);
-  animation:none!important;box-shadow:none!important}
-.flt::before,.pref-btn::before{content:'';position:absolute;inset:0;
-  background:var(--m3-state);opacity:0;transition:opacity var(--m3-short) var(--m3-std)}
-.flt:active::before,.pref-btn:active::before{opacity:.1}
-.flt.on,.pref-btn.on{background:var(--m3-secondary-c)!important;
-  border-color:transparent!important;color:var(--m3-on-secondary-c)!important}
-.fl{font-size:11px;font-weight:600;letter-spacing:.09em;color:var(--m3-on-surface-var)}
-
-/* ═══ SEGMENTED BUTTON: Сега / Резервирай ═══ */
-#lbl-when + div{gap:0!important}
-#btn-when-now,#btn-when-later{height:40px;border-radius:0!important;margin:0!important;
-  border:1px solid var(--m3-outline)!important}
-#btn-when-now{border-radius:var(--m3-full) 0 0 var(--m3-full)!important;
-  border-right-width:0!important}
-#btn-when-later{border-radius:0 var(--m3-full) var(--m3-full) 0!important}
-#btn-when-now.on,#btn-when-later.on{background:var(--m3-secondary-c)!important;
-  border-color:var(--m3-outline)!important;color:var(--m3-on-secondary-c)!important}
-
-/* ═══ TEXT FIELDS: M3 outlined ═══ */
-.mb select,.mb input[type="text"],.mb input[type="date"],
-#order-pax,#order-music,#order-tip,#order-date,#order-time-h,#order-time-m,
-#loc-picker-link,.srch input{
-  background:transparent!important;border:1px solid var(--m3-outline)!important;
-  border-radius:var(--m3-sm)!important;color:var(--m3-on-surface)!important;
-  font-size:16px!important;padding:14px 16px!important;
-  transition:border-color var(--m3-short) var(--m3-std)}
-.mb select:focus,.mb input:focus,.srch input:focus{
-  outline:none!important;border-color:var(--m3-primary)!important;border-width:2px!important}
-.mb label{font-size:12px!important;font-weight:600!important;letter-spacing:.04em!important;
-  color:var(--m3-on-surface-var)!important;margin-bottom:6px!important}
-
-/* ═══ LIST ITEMS: взимане / дестинация ═══ */
-div:has(> #from-text),div:has(> #to-text){
-  background:var(--m3-sc)!important;border:none!important;
-  border-radius:var(--m3-md)!important;padding:14px 14px 14px 16px!important;
-  font-size:15px!important;font-weight:500!important;margin-bottom:8px!important}
-
-/* ═══ BUTTONS ═══ */
-/* filled */
-.mcall,#btn-to-change,#btn-picker-confirm{
-  background:var(--m3-primary)!important;color:var(--m3-on-primary)!important;
-  border:none!important;border-radius:var(--m3-full)!important;
-  font-size:15px!important;font-weight:600!important;letter-spacing:.01em!important;
-  padding:14px 24px!important;position:relative;overflow:hidden;
-  transition:box-shadow var(--m3-short) var(--m3-std)}
-.mcall{padding:16px 24px!important;font-size:16px!important}
-#btn-to-change,#btn-picker-confirm{padding:10px 20px!important;font-size:14px!important}
-/* tonal */
-.mvib,#btn-from-change,#btn-picker-gps,#rate-btn,.bc,.bv{
-  border:none!important;border-radius:var(--m3-full)!important;
-  font-size:14px!important;font-weight:600!important;letter-spacing:.01em!important;
-  padding:12px 20px!important;position:relative;overflow:hidden}
-#btn-from-change,#btn-picker-gps,#rate-btn{
-  background:var(--m3-secondary-c)!important;color:var(--m3-on-secondary-c)!important}
-.bc{background:var(--m3-primary)!important;color:var(--m3-on-primary)!important;padding:12px!important}
-.bv{background:var(--m3-secondary-c)!important;color:var(--m3-on-secondary-c)!important;padding:12px!important}
-.mcall::before,.mvib::before,.bc::before,.bv::before,
-#btn-from-change::before,#btn-to-change::before,#rate-btn::before{
-  content:'';position:absolute;inset:0;background:#000;opacity:0;
-  transition:opacity var(--m3-short) var(--m3-std)}
-.mcall:active::before,.mvib:active::before,.bc:active::before,.bv:active::before,
-#btn-from-change:active::before,#btn-to-change:active::before,#rate-btn:active::before{opacity:.12}
-.mbtns{gap:8px}
-
-/* ═══ BOTTOM SHEET ═══ */
-.modal{background:var(--m3-scrim)}
-.mb{background:var(--m3-sc-low)!important;border-top:none!important;
-  border-radius:var(--m3-xl) var(--m3-xl) 0 0!important;padding:0 20px 24px!important;
-  backdrop-filter:none!important;
-  animation:m3Sheet var(--m3-long) var(--m3-emph)}
-@keyframes m3Sheet{from{transform:translateY(6%);opacity:.4}to{transform:none;opacity:1}}
-.m3-handle{position:sticky;top:0;z-index:5;height:26px;
-  background:var(--m3-sc-low);margin:0 -20px 4px;display:flex;
-  align-items:center;justify-content:center}
-.m3-handle::after{content:'';width:32px;height:4px;border-radius:2px;
-  background:var(--m3-outline-var)}
-.mc{background:var(--m3-sc-high);color:var(--m3-on-surface-var);width:40px;height:40px;
-  line-height:40px;font-size:18px}
-.mav{width:88px;height:88px;border-radius:var(--m3-lg);border:none;
-  background:var(--m3-sc-highest)}
-.mn{font-size:24px;font-weight:500;letter-spacing:0;color:var(--m3-on-surface)}
-.mc2{font-size:14px;color:var(--m3-on-surface-var)}
-.mh{font-size:11px;font-weight:700;letter-spacing:.11em;color:var(--m3-primary);
-  border-bottom:none;margin:20px 0 8px;padding-bottom:0}
-
-/* ═══ TAGS: без заливки, само очертание ═══ */
-.t{background:transparent!important;border-radius:var(--m3-xs);padding:4px 10px;
-  font-size:12px;font-weight:600;border-color:var(--m3-outline-var)!important}
-.tb,.tc,.tp,.to,.tpi,.tr{color:var(--m3-on-surface-var)!important}
-.vb{color:var(--m3-success)!important;background:var(--m3-success-c)!important;
-  border:none!important;border-radius:var(--m3-xs);padding:3px 8px;font-weight:700}
-.pi2{background:transparent;border-color:var(--m3-outline-var)}
-.founder{animation:none!important;background:var(--m3-primary-c)!important;
-  color:var(--m3-on-primary-c)!important;border-radius:var(--m3-xs);font-weight:700}
-
-/* ═══ ГЕРОЯТ ═══ */
-#simple-hero{background:var(--m3-sc-low)!important;border-bottom:none!important;
-  padding:14px 16px 16px!important}
-#simple-hero>button{background:var(--m3-primary)!important;color:var(--m3-on-primary)!important;
-  border-radius:var(--m3-xl)!important;padding:18px 24px!important;
-  font-size:17px!important;font-weight:600!important;letter-spacing:.01em!important;
-  box-shadow:none!important}
-#simple-hero>button div{color:var(--m3-on-primary)!important;opacity:.72}
-#simple-hero button::after{display:none!important}
-
-/* ═══ ТИШИНА: старите безкрайни анимации отпадат ═══ */
-.spark{display:none}
-.hint-tabs{animation:none}
-.hint-photo::after{animation:none}
-.fs:first-of-type .flt:nth-of-type(1),
-.fs:first-of-type .flt:nth-of-type(2){animation:none}
-
-/* ═══ ЕДИНСТВЕНОТО движение: списъкът се подрежда веднъж ═══ */
-@keyframes m3In{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.dlist .dc,#map-list .dc{animation:m3In var(--m3-med) var(--m3-emph) both}
-.dlist .dc:nth-child(1),#map-list .dc:nth-child(1){animation-delay:.02s}
-.dlist .dc:nth-child(2),#map-list .dc:nth-child(2){animation-delay:.06s}
-.dlist .dc:nth-child(3),#map-list .dc:nth-child(3){animation-delay:.1s}
-.dlist .dc:nth-child(n+4),#map-list .dc:nth-child(n+4){animation-delay:.14s}
-
-@media (prefers-reduced-motion:reduce){
-  .dlist .dc,#map-list .dc,.mb,.tab.on::after{animation:none}
-}
-
-/* ═══ FT-REORDER-V3: сгъваемото справочно ═══ */
-.ft-fold{margin:18px 0 8px;border-radius:var(--m3-md,16px);
-  background:var(--m3-sc,#f7ecdc);overflow:hidden}
-.ft-fold>summary{list-style:none;cursor:pointer;padding:16px 18px;
-  font-size:15px;font-weight:600;color:var(--m3-on-surface,#1f1b13);
-  display:flex;align-items:center;justify-content:space-between;
-  -webkit-tap-highlight-color:transparent}
-.ft-fold>summary::-webkit-details-marker{display:none}
-.ft-fold>summary::after{content:'⌄';font-size:19px;line-height:1;
-  color:var(--m3-on-surface-var,#4e4639);
-  transition:transform 220ms cubic-bezier(.2,0,0,1)}
-.ft-fold[open]>summary::after{transform:rotate(180deg)}
-.ft-fold[open]>summary{border-bottom:1px solid var(--m3-outline-var,#d1c5b4)}
-.ft-fold>*:not(summary){margin-left:18px;margin-right:18px}
-.ft-fold>*:last-child{margin-bottom:16px}
-.ft-fold .mh:first-of-type{margin-top:14px}
-
-/* цената е кратка и решаваща — остава видима и се откроява */
-#mprice{font-size:17px!important;font-weight:700!important;
-  color:var(--m3-on-surface,#1f1b13)!important;
-  background:var(--m3-primary-c,#ffdf95);border-radius:var(--m3-sm,12px);
-  padding:12px 14px;line-height:1.45}
-
-/* поръчката вече е високо — заглавието ѝ носи повече тежест */
-#mh-order{font-size:13px!important;letter-spacing:.09em!important;margin-top:22px!important}
-
-/* ═══════════════ FT-MOOD-V4 ═══════════════ */
-
-/* ── по-дълбока нощ ── */
-[data-theme="dark"]{
-  --m3-primary:#dcb03a;        --m3-on-primary:#2c2000;
-  --m3-primary-c:#4a3600;      --m3-on-primary-c:#f7d886;
-  --m3-secondary-c:#3d382c;    --m3-on-secondary-c:#ddd3c0;
-  --m3-surface:#0c0b07;        --m3-on-surface:#ded5c6;
-  --m3-surface-dim:#0c0b07;
-  --m3-sc-lowest:#060502;      --m3-sc-low:#121009;
-  --m3-sc:#17140d;             --m3-sc-high:#201c14;
-  --m3-sc-highest:#29241b;
-  --m3-on-surface-var:#b3a996; --m3-outline:#7b7263;
-  --m3-outline-var:#39352c;
-  --m3-success:#7cc79c;        --m3-success-c:#123f28;
-  --m3-scrim:rgba(0,0,0,.74);
-  --m3-state:#ded5c6;
-}
-/* нощем картата пада още малко, за да не блести в очите */
-[data-theme="dark"] .leaflet-tile-pane{
-  filter:invert(1) hue-rotate(180deg) brightness(.82) contrast(.9) saturate(.62);
-}
-[data-theme="dark"] .leaflet-container{background:#07080b!important}
-/* табелата остава светла — тя е физически предмет, не част от темата */
-
-/* ── емблемата ── */
-.ft-logo{display:block;width:100px;height:46px;flex-shrink:0;
-  background:url("img/logo.png") left center/contain no-repeat}
-[data-theme="dark"] .ft-logo{width:104px;
-  background-image:url("img/header_logo.png")}
-
 </style>
-
-<base href="/">
-<meta name="robots" content="noindex">
-<script>
-(function(){
-  var P = 'next:';
-  window.__nextLS = {
-    getItem:    function(k){ return localStorage.getItem(P + k); },
-    setItem:    function(k, v){ return localStorage.setItem(P + k, v); },
-    removeItem: function(k){ return localStorage.removeItem(P + k); },
-    key:        function(){ return null; },
-    length:     0,
-    clear:      function(){
-      Object.keys(localStorage)
-        .filter(function(k){ return k.indexOf(P) === 0; })
-        .forEach(function(k){ localStorage.removeItem(k); });
-    }
-  };
-  window.__nextNoSW = {
-    register:         function(){ return Promise.reject(new Error('SW off in /next/')); },
-    ready:            new Promise(function(){}),
-    getRegistrations: function(){ return Promise.resolve([]); },
-    addEventListener: function(){}
-  };
-  if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
-    navigator.serviceWorker.getRegistrations().then(function(rs){
-      rs.forEach(function(r){ if (r.scope.indexOf('/next/') > -1) r.unregister(); });
-    }).catch(function(){});
-  }
-})();
-</script>
+<script src="lib/qrcode.min.js"></script>
 </head>
 <body>
 
 <div class="top">
-  <a class="ft-logo" href="./" aria-label="fish.taxi"></a>
+  <img src="img/header_logo.png" style="height:44px;object-fit:contain;display:block" alt="fish.taxi">
   <div style="display:flex;align-items:center;gap:8px">
     <button onclick="installApp()" id="install-btn" style="display:none;background:var(--taxiY);border:none;color:#000;border-radius:8px;padding:5px 9px;font-size:12px;cursor:pointer;font-weight:700">📲 Install</button>
     <button onclick="toggleTheme()" id="theme-btn" style="background:var(--taxiY);border:none;color:#000;border-radius:8px;padding:5px 9px;font-size:14px;cursor:pointer;font-weight:700">🌙</button>
@@ -679,10 +289,10 @@ div:has(> #from-text),div:has(> #to-text){
     <span class="spark"></span><span class="spark"></span><span class="spark"></span>
     <button onclick="orderNowSimple()" style="width:100%;padding:11px 12px;font-size:16px;font-weight:900;border:none;border-radius:12px;background:#f0b429;color:#111;cursor:pointer;box-shadow:0 2px 8px #f0b42933">
       🚕 <span id="hero-btn-txt">ПОРЪЧАЙ СЕГА</span>
-      <div style="font-size:11px;font-weight:600;text-transform:lowercase;color:#3a3a3a;margin-top:2px;letter-spacing:.2px">най-близкото такси</div>
+      <div id="hero-btn-sub" style="font-size:11px;font-weight:600;text-transform:lowercase;color:#3a3a3a;margin-top:2px;letter-spacing:.2px">най-близкото такси</div>
     </button>
     <div id="hero-sub" style="font-size:12px;color:#999;text-align:center;margin-top:7px">
-      <a href="#" onclick="document.getElementById('simple-hero').style.display='none';return false" style="color:#f0b429">Още опции ↓</a>
+      <a href="#" onclick="document.getElementById('simple-hero').style.display='none';return false" id="hero-more" style="color:#f0b429">Още опции ↓</a>
     </div>
     <div id="prefs-prompt" style="display:none;margin-top:10px;background:#222;border-radius:12px;padding:12px">
       <div style="font-size:14px;font-weight:700;color:#eee;margin-bottom:8px">💾 Запази предпочитания за следващия път? (по избор)</div>
@@ -759,9 +369,9 @@ div:has(> #from-text),div:has(> #to-text){
 
 <!-- MODAL -->
 <div class="modal" id="modal">
-  <div class="mb"><div class="m3-handle" aria-hidden="true"></div>
+  <div class="mb">
     <button class="mc" onclick="closeMod()">✕</button>
-    <div class="mav" id="mav">🚗</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap"><div class="mav" id="mav">🚗</div><div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div id="m-qr" onclick="openQrBig()" title="Докосни за голям QR" style="background:#fff;padding:5px;border-radius:8px;line-height:0;cursor:pointer"></div><div style="font-size:9px;color:var(--mu2);text-align:center;line-height:1.2;max-width:92px"><span id="m-qr-hint">QR vCard</span></div><button id="m-copylink" onclick="copyDriverLink()" style="background:none;border:none;color:var(--mu2);font-size:10px;cursor:pointer;padding:2px 4px">🔗</button></div></div>
     <div class="mn" id="mname"></div>
     <div class="mc2" id="mcar2"></div>
     <div style="text-align:center;margin-bottom:8px" id="mstars"></div>
@@ -793,8 +403,6 @@ div:has(> #from-text),div:has(> #to-text){
       <label style="font-size:11px;color:var(--mu);font-weight:700;text-transform:uppercase;display:block;margin-bottom:4px" id="lbl-pax">👥 Passengers</label>
       <select id="order-pax" onchange="checkPaxWarning()" style="width:100%;background:var(--s2);border:1px solid var(--brd);color:var(--tx);border-radius:8px;padding:7px;font-size:13px">
         <option value="2" id="opt-pax-2">1–2</option>
-        <option value="3" id="opt-pax-3">3</option>
-        <option value="4" id="opt-pax-4">4</option>
       </select>
     </div>
     <div id="pax-warning" style="display:none;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);color:var(--or);border-radius:9px;padding:8px 10px;font-size:12px;line-height:1.5;margin-bottom:8px"></div>
@@ -873,7 +481,7 @@ div:has(> #from-text),div:has(> #to-text){
 <script>
 var WORKER='https://mvr-proxy.mihov-emil.workers.dev';
 var DRIVERS=[{
-  "id":1,"founder":1,"name":"Emil M.","name_bg":"Емил М.","bio_key":"emilBio",
+  "id":1,"gps_id":"359878592888","founder":1,"name":"Emil M.","name_bg":"Емил М.","bio_key":"emilBio",
   "avatar":"img/emil_avatar.jpg",
   "photos":["img/emil_car_front.jpg","img/emil_car_nevski.jpg","img/emil_interior.jpg"],
   "city":"sofia","lat":42.6977,"lng":23.3219,
@@ -922,6 +530,30 @@ var DRIVERS=[{
   "price":"0.75 EUR/km day / 0.85 EUR/km night / Start 1.49 EUR",
   "tariff":{"start":1.50,"start_night":1.70,"km_day":0.75,"km_night":0.85},"tariff_photo":"img/petar_tariff.jpg",
   "bio":"Non-smoker. IT specialist. Calm driving. Music on request via YouTube. 540L trunk. Small pets welcome."
+},{
+  "id":3,"founder":3,"gps_id":"33749132090","name":"Lancelot Transfers","name_bg":"Lancelot Transfers",
+  "avatar":"img/lancelot_avatar.jpg",
+  "photos":["img/lancelot_car_riviera.jpg","img/lancelot_car_chalet.jpg","img/lancelot_interior.jpg","img/lancelot_fleet.jpg","img/lancelot_helico.jpg"],
+  "city":"saint-tropez","lat":43.2677,"lng":6.6407,
+  "car":"Mercedes V-Class","plate":"FV-231-QE",
+  "car_type":"minivan","accel":9.0,"seats":7,
+  "online":false,"rating":5.0,"reviews":0,
+  "payment":["cash","terminal"],
+  "langs":["fr","en","bg","ru"],
+  "electric":false,"smoking":false,"nosmoker":true,
+  "petfriendly":"ask","childok":true,
+  "sport":false,"fast":false,"comfort":true,
+  "minivan":true,"suv":false,"luxury":true,
+  "ac":true,"music":true,"chalga":false,"nomusic":false,
+  "silent_ok":true,"talk_ok":true,"calm_ok":true,
+  "terminal":true,
+  "music_pop":false,"music_chalga":false,"music_rock":false,"music_classical":false,"music_jazz":false,"music_electronic":false,"music_chillout":false,"music_lounge":false,
+  "airport":true,"longdist":true,"night":"ask","business":true,"legroom":true,"panoroof":false,"streaming":false,"usb":true,"tinted":true,
+  "wheelchair":"ask","verified":true,
+  "areas":"French Riviera & Alps — Nice, Cannes, Saint-Tropez, Monaco, Marseille · winter: Tarentaise ski resorts",
+  "phone":"+33749132090",
+  "price":"On request",
+  "bio":"VIP transfers across the French Riviera in summer (Nice, Cannes, Saint-Tropez, Monaco) and the Alps in winter (Tarentaise ski resorts). Mercedes V-Class, 7 leather seats. Airport and long-distance transfers."
 }];
 
 
@@ -950,7 +582,7 @@ var T={
     lblMusic:"🎵 Preferred music",lblTip:"💰 Planned tip (optional)",lblPax:"👥 Passengers",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passengers:",lblWhen:"🕒 When",btnNow:"Now",btnSchedule:"📅 Schedule",pickupGps:"Pickup: my location (GPS)",pickupCustom:"Pickup: custom point set",destSet:"Destination: point set",destNotSet:"Destination: not set (optional)",btnChange:"Change",btnSet:"Set",locPickerHint:"📌 Tap the map to set the point, or paste a Google Maps link below",locPickerPlaceholder:"Paste Google Maps link (optional)",orderPickup:"📍 Pickup location:",orderDest:"🏁 Destination:",scheduleWarn:"⚠️ This is a booking request, not a confirmed ride. Wait for the driver to confirm by call or message before considering it booked.",orderWhen:"📅 Requested time:",orderConfirmNote:"⚠️ Please confirm this booking by replying.",orderNow:"🕒 Now (ASAP)",paxWarn:"⚠️ 3-4 passengers with luggage — please call first to confirm everything fits comfortably.",paxWarnMsg:"⚠️ 3-4 passengers with luggage — please confirm fit before booking",
     optNoPref:"No preference",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classical",optJazz:"🎷 Jazz",optElectronic:"🎧 Electronic",optNoMusic:"🔇 No music",optNoTip:"No tip planned",optSmallTip:"A small tip",optFairTip:"A fair tip — thanks for coming far",optGenTip:"A generous tip",
     sumFast:"Can drive fast",sumCalm:"or calmly — your choice",sumTalkSilent:"happy to talk or stay silent",sumTalk:"enjoys conversation",sumSilent:"prefers quiet rides",sumMusic:"plays",
-    pbHurry:"⏱ I'm in a hurry",pbRelax:"😌 Take it easy",pbSilent:"🤫 Prefer silence",pbTalk:"💬 Happy to chat",pbNomusic:"🔇 No music",pbAc:"❄️ A/C please",pbLuggage:"🧳 Have luggage",btnCallM:"📞 Call",btnVibOrd:"💬 Order via Viber",locDefault:"Location will be shared with driver",
+    pbHurry:"⏱ I'm in a hurry",pbRelax:"😌 Take it easy",pbSilent:"🤫 Prefer silence",pbTalk:"💬 Happy to chat",pbNomusic:"🔇 No music",pbAc:"❄️ A/C please",pbLuggage:"🧳 Have luggage",btnCallM:"📞 Call",heroSub:"nearest taxi",moreOpts:"More options ↓",prefsQ:"💾 Save preferences for next time? (optional)",prefsSave:"Save",prefsSkip:"No thanks",paxQ:"Passengers?",pbMusic:"🎵 Music",noDriver:"No driver online right now. Try again shortly.",gettingLoc:"📍 GETTING LOCATION…",prefsSaved:"✅ Saved! Your next order carries your preferences automatically.",btnOrderNow:"ORDER NOW",btnVibOrd:"💬 Order via Viber",locDefault:"Location will be shared with driver",
     hT1:"Find a Driver",hP1:"Browse verified drivers. Use filters for payment, car type, language, driving style, atmosphere.",hT2:"Check the Profile",hP2:"See photo, car, prices, languages and driving style. Know exactly who to expect.",hT3:"Call or Viber Directly",hP3:"Contact your driver directly. No booking fee, no algorithm, no commission.",hT4:"Tell Your Driver Your Style",hP4:"Tell your driver how you prefer to ride when you get in. Music, silence, speed, route.",hT5:"Pay the Driver",hP5:"Cash, Revolut or card terminal. 100% goes to the driver, zero commission.",hT6:"Ratings Are Verified",hP6:"All reviews checked by admin before publishing. Protects drivers from unfair ratings.",hCta:"Find a Driver Now",
     rFree:"FREE for first 300 drivers",rJoinnow:"Join now, no payment required",rSpots:"SPOTS REMAINING",rSpotsleft:"276 / 300 left",rH1:"Drive with fish.taxi",rP1:"The platform where drivers come first. Keep 100% of every ride. Forever.",rAfter:"20 EUR/month after launch",rBeta:"Beta, first 300 drivers worldwide",rH2:"What You Get",rB1t:"Live GPS on Map",rB1s:"Clients see you in real time",rB2t:"Driver Protection",rB2s:"Ratings reviewed before publishing. Bad clients reported.",rB3t:"Registry Checked",rB3s:"Matched against the public taxi registry — data refreshed monthly",rB4t:"Your Own Schedule",rB4s:"Drive when you want — no shifts, no quotas",rB5t:"Zero Commission",rB5s:"Every cent from the ride is yours. Always.",rB6t:"Any City, Any Country",rB6s:"Sofia, Zurich, Berlin, London, one platform",rH3:"What We Need",rC1t:"Your photo",rC1s:" - clients know who to expect",rC2t:"Car photos",rC2s:" - outside, inside, dashboard",rC3t:"Phone number",rC3s:" - clients call/Viber directly",rC4t:"City and areas",rC4s:" - where you drive",rGdpr:"GDPR: Only public profile data collected. No ID, no address, no financials. Delete anytime. Never sold to third parties. If you allow location, an anonymous coarse point (~100 m) may be shown to drivers as live demand for up to 10 minutes — no identity attached.",rH4:"How to Join",rP2:"Fill in your car and contact details. Takes less than a minute.",rSoon:"We look up your car in the public taxi registry automatically",rNotify:"Then send us your details via Viber, WhatsApp or SMS",rJoinbtn:"Apply Now — Free",
     emilBio:"Non-smoker. IT specialist. Lived abroad. No animals, food or drinks in the car. Happy to talk or stay silent. Please speak up if you want a specific route or feel unwell."
@@ -983,7 +615,7 @@ var T={
     lblMusic:"🎵 Предпочитана музика",lblTip:"💰 Планиран бакшиш (по избор)",lblPax:"👥 Пътници",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Пътници:",lblWhen:"🕒 Кога",btnNow:"Сега",btnSchedule:"📅 Резервирай",pickupGps:"Взимане: моята локация (GPS)",pickupCustom:"Взимане: зададена точка",destSet:"Дестинация: зададена",destNotSet:"Дестинация: не е зададена (по избор)",btnChange:"Смени",btnSet:"Задай",locPickerHint:"📌 Докосни картата, за да зададеш точка, или постави Google Maps линк отдолу",locPickerPlaceholder:"Постави Google Maps линк (по избор)",orderPickup:"📍 Място за взимане:",orderDest:"🏁 Дестинация:",scheduleWarn:"⚠️ Това е заявка за резервация, а не потвърдено возене. Изчакайте шофьорът да потвърди с обаждане или съобщение, преди да смятате возенето за уговорено.",orderWhen:"📅 Заявено време:",orderConfirmNote:"⚠️ Моля, потвърдете тази резервация с отговор.",orderNow:"🕒 Сега (веднага)",paxWarn:"⚠️ 3-4 пътници с багаж — моля, обадете се първо, за да потвърдим, че всичко ще се събере комфортно.",paxWarnMsg:"⚠️ 3-4 пътници с багаж — моля, потвърдете преди поръчка",
     optNoPref:"Без предпочитание",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Класика",optJazz:"🎷 Джаз",optElectronic:"🎧 Електронна",optNoMusic:"🔇 Без музика",optNoTip:"Без бакшиш",optSmallTip:"Малък бакшиш",optFairTip:"Достоен бакшиш — благодаря за дългия път",optGenTip:"Щедър бакшиш",
     sumFast:"Може да кара бързо",sumCalm:"или спокойно — твой избор",sumTalkSilent:"може да говори или да мълчи",sumTalk:"обича разговори",sumSilent:"предпочита тишина",sumMusic:"пуска",
-    pbHurry:"⏱ Бързам",pbRelax:"😌 Спокойно",pbSilent:"🤫 Предпочитам тишина",pbTalk:"💬 Обичам разговори",pbNomusic:"🔇 Без музика",pbAc:"❄️ Климатик моля",pbLuggage:"🧳 Имам багаж",btnCallM:"📞 Обади се",btnVibOrd:"💬 Поръчай през Viber",locDefault:"Локацията ще се сподели с шофьора",
+    pbHurry:"⏱ Бързам",pbRelax:"😌 Спокойно",pbSilent:"🤫 Предпочитам тишина",pbTalk:"💬 Обичам разговори",pbNomusic:"🔇 Без музика",pbAc:"❄️ Климатик моля",pbLuggage:"🧳 Имам багаж",btnCallM:"📞 Обади се",heroSub:"най-близкото такси",moreOpts:"Още опции ↓",prefsQ:"💾 Запази предпочитания за следващия път? (по избор)",prefsSave:"Запази",prefsSkip:"Не, благодаря",paxQ:"Пътници?",pbMusic:"🎵 Музика",noDriver:"В момента няма шофьор на линия. Опитай след малко.",gettingLoc:"📍 ВЗИМАМ ЛОКАЦИЯТА…",prefsSaved:"✅ Запазено! Следващата поръчка идва с твоите предпочитания автоматично.",btnOrderNow:"ПОРЪЧАЙ СЕГА",btnVibOrd:"💬 Поръчай през Viber",locDefault:"Локацията ще се сподели с шофьора",
     hT1:"Намери шофьор",hP1:"Разгледай верифицирани шофьори. Филтрирай по плащане, тип кола, език, стил на каране, атмосфера.",hT2:"Провери профила",hP2:"Виж снимка, кола, цени, езици и стил на каране. Знай точно кого да очакваш.",hT3:"Обади се или пиши във Viber",hP3:"Свържи се директно с шофьора. Без такса за резервация, без алгоритъм, без комисионна.",hT4:"Кажи на шофьора стила си",hP4:"Кажи на шофьора как предпочиташ да пътуваш още при качване. Музика, тишина, скорост, маршрут.",hT5:"Плати на шофьора",hP5:"В брой, Revolut или терминал. 100% отива при шофьора, нула комисионна.",hT6:"Оценките са верифицирани",hP6:"Всички отзиви се проверяват от администратор преди публикуване. Защитава шофьорите от нечестни оценки.",hCta:"Намери шофьор сега",
     rFree:"БЕЗПЛАТНО за първите 300 шофьори",rJoinnow:"Присъедини се сега, без плащане",rSpots:"ОСТАВАЩИ МЕСТА",rSpotsleft:"276 / 300 свободни",rH1:"Карай с fish.taxi",rP1:"Платформата, в която шофьорите са на първо място. Запази 100% от всеки курс. Завинаги.",rAfter:"20 EUR/месец след старта",rBeta:"Бета, първите 300 шофьори по света",rH2:"Какво получаваш",rB1t:"GPS на живо на картата",rB1s:"Клиентите те виждат в реално време",rB2t:"Защита на шофьора",rB2s:"Оценките се проверяват преди публикуване. Лоши клиенти се докладват.",rB3t:"Проверка в регистъра",rB3s:"Автомобилът е сверен с публичния регистър на МВР — обновяван ежемесечно",rB4t:"Собствен график",rB4s:"Работиш, когато искаш — без смени, без квоти",rB5t:"Нула комисионна",rB5s:"Всеки цент от курса е твой. Винаги.",rB6t:"Всеки град, всяка държава",rB6s:"София, Цюрих, Берлин, Лондон, една платформа",rH3:"Какво ни трябва",rC1t:"Твоя снимка",rC1s:" - клиентите знаят кого да очакват",rC2t:"Снимки на колата",rC2s:" - отвън, отвътре, таблото",rC3t:"Телефонен номер",rC3s:" - клиентите се обаждат или пишат директно",rC4t:"Град и райони",rC4s:" - къде караш",rGdpr:"GDPR: Събират се само данните на публичния профил. Без лична карта, без адрес, без финанси. Изтриване по всяко време. Никога не се продава на трети страни.",rH4:"Как да се присъединиш",rP2:"Попълни данните за колата и контактите си. Отнема по-малко от минута.",rSoon:"Автоматично търсим колата ти в публичния регистър на такситата",rNotify:"После изпращаш данните през Viber, WhatsApp или SMS",rJoinbtn:"Кандидатствай сега — безплатно",
     emilBio:"Непушач. IT специалист. Живял в чужбина. Без животни, храна или напитки в колата. С удоволствие ще говоря или ще мълча. Моля, кажи, ако искаш конкретен маршрут или не се чувстваш добре."
@@ -1035,7 +667,7 @@ var T={
     lblMusic:"🎵 Bevorzugte Musik",lblTip:"💰 Geplantes Trinkgeld (optional)",lblPax:"👥 Passagiere",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passagiere:",lblWhen:"🕒 Wann",btnNow:"Jetzt",btnSchedule:"📅 Terminieren",pickupGps:"Abholung: mein Standort (GPS)",pickupCustom:"Abholung: benutzerdefinierter Punkt",destSet:"Ziel: Punkt gesetzt",destNotSet:"Ziel: nicht festgelegt (optional)",btnChange:"Ändern",btnSet:"Festlegen",locPickerHint:"📌 Tippen Sie auf die Karte, um den Punkt festzulegen, oder fügen Sie unten einen Google-Maps-Link ein",locPickerPlaceholder:"Google-Maps-Link einfügen (optional)",orderPickup:"📍 Abholort:",orderDest:"🏁 Ziel:",scheduleWarn:"⚠️ Dies ist eine Buchungsanfrage, keine bestätigte Fahrt. Bitte warten Sie auf die Bestätigung des Fahrers per Anruf oder Nachricht.",orderWhen:"📅 Gewünschte Zeit:",orderConfirmNote:"⚠️ Bitte bestätigen Sie diese Buchung durch Antwort.",orderNow:"🕒 Jetzt (sofort)",paxWarn:"⚠️ 3-4 Passagiere mit Gepäck — bitte rufen Sie vorher an, um zu bestätigen, dass alles bequem passt.",paxWarnMsg:"⚠️ 3-4 Passagiere mit Gepäck — bitte vor Buchung bestätigen",
     optNoPref:"Keine Präferenz",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Klassik",optJazz:"🎷 Jazz",optElectronic:"🎧 Elektronisch",optNoMusic:"🔇 Keine Musik",optNoTip:"Kein Trinkgeld geplant",optSmallTip:"Ein kleines Trinkgeld",optFairTip:"Ein faires Trinkgeld — danke fürs Kommen",optGenTip:"Ein großzügiges Trinkgeld",
     sumFast:"Kann schnell fahren",sumCalm:"oder ruhig — Ihre Wahl",sumTalkSilent:"redet gerne oder bleibt still",sumTalk:"genießt Gespräche",sumSilent:"bevorzugt Ruhe",sumMusic:"spielt",
-    pbHurry:"⏱ Ich habe es eilig",pbRelax:"😌 Ruhig angehen",pbSilent:"🤫 Stille bevorzugt",pbTalk:"💬 Gerne ein Gespräch",pbNomusic:"🔇 Keine Musik",pbAc:"❄️ Klima bitte",pbLuggage:"🧳 Habe Gepäck",btnCallM:"📞 Anrufen",btnVibOrd:"💬 Über Viber bestellen",locDefault:"Standort wird mit dem Fahrer geteilt",
+    pbHurry:"⏱ Ich habe es eilig",pbRelax:"😌 Ruhig angehen",pbSilent:"🤫 Stille bevorzugt",pbTalk:"💬 Gerne ein Gespräch",pbNomusic:"🔇 Keine Musik",pbAc:"❄️ Klima bitte",pbLuggage:"🧳 Habe Gepäck",btnCallM:"📞 Anrufen",heroSub:"nächstes Taxi",moreOpts:"Mehr Optionen ↓",prefsQ:"💾 Einstellungen für nächstes Mal speichern? (optional)",prefsSave:"Speichern",prefsSkip:"Nein danke",paxQ:"Fahrgäste?",pbMusic:"🎵 Musik",noDriver:"Aktuell ist kein Fahrer online. Bitte gleich nochmal versuchen.",gettingLoc:"📍 STANDORT WIRD ERMITTELT…",prefsSaved:"✅ Gespeichert! Die nächste Bestellung übernimmt deine Wünsche automatisch.",btnOrderNow:"JETZT BESTELLEN",btnVibOrd:"💬 Über Viber bestellen",locDefault:"Standort wird mit dem Fahrer geteilt",
     hT1:"Fahrer finden",hP1:"Verifizierte Fahrer durchsuchen. Filtern Sie nach Zahlung, Fahrzeugtyp, Sprache, Fahrstil, Atmosphäre.",hT2:"Profil prüfen",hP2:"Foto, Auto, Preise, Sprachen und Fahrstil ansehen. Wissen Sie genau, wen Sie erwarten.",hT3:"Direkt anrufen oder Viber",hP3:"Kontaktieren Sie Ihren Fahrer direkt. Keine Buchungsgebühr, kein Algorithmus, keine Provision.",hT4:"Sagen Sie Ihrem Fahrer Ihren Stil",hP4:"Sagen Sie Ihrem Fahrer beim Einsteigen, wie Sie fahren möchten. Musik, Stille, Tempo, Route.",hT5:"Fahrer bezahlen",hP5:"Bar, Revolut oder Kartenterminal. 100% gehen an den Fahrer, keine Provision.",hT6:"Bewertungen sind verifiziert",hP6:"Alle Bewertungen werden vor der Veröffentlichung von einem Administrator geprüft. Schützt Fahrer vor unfairen Bewertungen.",hCta:"Jetzt Fahrer finden",
     rFree:"KOSTENLOS fur die ersten 300 Fahrer",rJoinnow:"Jetzt beitreten, keine Zahlung erforderlich",rSpots:"VERBLEIBENDE PLAETZE",rSpotsleft:"276 / 300 verbleibend",rH1:"Fahren mit fish.taxi",rP1:"Die Plattform, auf der Fahrer an erster Stelle stehen. Behalte 100% jeder Fahrt. Fur immer.",rAfter:"20 EUR/Monat nach dem Start",rBeta:"Beta, die ersten 300 Fahrer weltweit",rH2:"Was Sie bekommen",rB1t:"Live-GPS auf der Karte",rB1s:"Kunden sehen Sie in Echtzeit",rB2t:"Fahrerschutz",rB2s:"Bewertungen werden vor Veroeffentlichung gepruft. Schlechte Kunden werden gemeldet.",rB3t:"Registerabgleich",rB3s:"Abgeglichen mit dem oeffentlichen Taxiregister — monatlich aktualisiert",rB4t:"Eigener Zeitplan",rB4s:"Fahren, wann Sie wollen — keine Schichten, keine Quoten",rB5t:"Null Provision",rB5s:"Jeder Cent der Fahrt gehoert Ihnen. Immer.",rB6t:"Jede Stadt, jedes Land",rB6s:"Sofia, Zurich, Berlin, London, eine Plattform",rH3:"Was wir brauchen",rC1t:"Ihr Foto",rC1s:" - Kunden wissen, wen sie erwarten",rC2t:"Autofotos",rC2s:" - aussen, innen, Armaturenbrett",rC3t:"Telefonnummer",rC3s:" - Kunden rufen an oder schreiben direkt",rC4t:"Stadt und Gebiete",rC4s:" - wo Sie fahren",rGdpr:"DSGVO: Es werden nur oeffentliche Profildaten erfasst. Kein Ausweis, keine Adresse, keine Finanzen. Jederzeit loeschbar. Niemals an Dritte verkauft.",rH4:"So treten Sie bei",rP2:"Geben Sie Ihre Fahrzeug- und Kontaktdaten ein. Dauert weniger als eine Minute.",rSoon:"Wir suchen Ihr Fahrzeug automatisch im oeffentlichen Taxiregister",rNotify:"Dann senden Sie uns Ihre Daten per Viber, WhatsApp oder SMS",rJoinbtn:"Jetzt bewerben — kostenlos",
     emilBio:"Nichtraucher. IT-Spezialist. Im Ausland gelebt. Keine Tiere, kein Essen oder Trinken im Auto. Gerne reden oder schweigen. Bitte sprechen Sie, wenn Sie eine bestimmte Route wuenschen oder sich unwohl fuehlen."
@@ -1087,7 +719,7 @@ var T={
     lblMusic:"🎵 Musique préférée",lblTip:"💰 Pourboire prévu (optionnel)",lblPax:"👥 Passagers",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passagers :",lblWhen:"🕒 Quand",btnNow:"Maintenant",btnSchedule:"📅 Planifier",pickupGps:"Prise en charge : ma position (GPS)",pickupCustom:"Prise en charge : point personnalisé",destSet:"Destination : point défini",destNotSet:"Destination : non définie (optionnel)",btnChange:"Changer",btnSet:"Définir",locPickerHint:"📌 Touchez la carte pour définir le point, ou collez un lien Google Maps ci-dessous",locPickerPlaceholder:"Coller un lien Google Maps (optionnel)",orderPickup:"📍 Lieu de prise en charge :",orderDest:"🏁 Destination :",scheduleWarn:"⚠️ Ceci est une demande de réservation, pas une course confirmée. Attendez la confirmation du chauffeur par appel ou message.",orderWhen:"📅 Heure demandée :",orderConfirmNote:"⚠️ Merci de confirmer cette réservation en répondant.",orderNow:"🕒 Maintenant (dès que possible)",paxWarn:"⚠️ 3-4 passagers avec bagages — merci d appeler d abord pour confirmer que tout rentre confortablement.",paxWarnMsg:"⚠️ 3-4 passagers avec bagages — merci de confirmer avant de réserver",
     optNoPref:"Aucune préférence",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classique",optJazz:"🎷 Jazz",optElectronic:"🎧 Électronique",optNoMusic:"🔇 Sans musique",optNoTip:"Pas de pourboire prévu",optSmallTip:"Un petit pourboire",optFairTip:"Un pourboire juste — merci de venir de loin",optGenTip:"Un généreux pourboire",
     sumFast:"Peut conduire vite",sumCalm:"ou calmement — votre choix",sumTalkSilent:"aime parler ou rester silencieux",sumTalk:"aime discuter",sumSilent:"préfère le calme",sumMusic:"joue",
-    pbHurry:"⏱ Je suis pressé",pbRelax:"😌 Tranquillement",pbSilent:"🤫 Préfère le silence",pbTalk:"💬 Content de discuter",pbNomusic:"🔇 Sans musique",pbAc:"❄️ Clim svp",pbLuggage:"🧳 Avec bagages",btnCallM:"📞 Appeler",btnVibOrd:"💬 Commander via Viber",locDefault:"La localisation sera partagée avec le chauffeur",
+    pbHurry:"⏱ Je suis pressé",pbRelax:"😌 Tranquillement",pbSilent:"🤫 Préfère le silence",pbTalk:"💬 Content de discuter",pbNomusic:"🔇 Sans musique",pbAc:"❄️ Clim svp",pbLuggage:"🧳 Avec bagages",btnCallM:"📞 Appeler",heroSub:"taxi le plus proche",moreOpts:"Plus d’options ↓",prefsQ:"💾 Enregistrer vos préférences pour la prochaine fois ? (facultatif)",prefsSave:"Enregistrer",prefsSkip:"Non merci",paxQ:"Passagers ?",pbMusic:"🎵 Musique",noDriver:"Aucun chauffeur en ligne pour le moment. Réessayez dans un instant.",gettingLoc:"📍 LOCALISATION EN COURS…",prefsSaved:"✅ Enregistré ! Votre prochaine commande reprendra vos préférences automatiquement.",btnOrderNow:"COMMANDER",btnVibOrd:"💬 Commander via Viber",locDefault:"La localisation sera partagée avec le chauffeur",
     hT1:"Trouver un chauffeur",hP1:"Parcourez les chauffeurs vérifiés. Filtrez par paiement, type de voiture, langue, style de conduite, ambiance.",hT2:"Vérifier le profil",hP2:"Voyez photo, voiture, prix, langues et style de conduite. Sachez exactement qui attendre.",hT3:"Appeler ou Viber directement",hP3:"Contactez votre chauffeur directement. Pas de frais de réservation, pas d'algorithme, pas de commission.",hT4:"Dites votre style au chauffeur",hP4:"Dites a votre chauffeur comment vous preferez voyager en montant. Musique, silence, vitesse, itineraire.",hT5:"Payer le chauffeur",hP5:"Especes, Revolut ou terminal de carte. 100% va au chauffeur, zero commission.",hT6:"Les avis sont verifies",hP6:"Tous les avis sont verifies par un administrateur avant publication. Protege les chauffeurs des avis injustes.",hCta:"Trouver un chauffeur maintenant",
     rFree:"GRATUIT pour les 300 premiers chauffeurs",rJoinnow:"Rejoignez maintenant, aucun paiement requis",rSpots:"PLACES RESTANTES",rSpotsleft:"276 / 300 restantes",rH1:"Conduisez avec fish.taxi",rP1:"La plateforme ou les chauffeurs passent en premier. Gardez 100% de chaque course. Pour toujours.",rAfter:"20 EUR/mois apres le lancement",rBeta:"Beta, les 300 premiers chauffeurs dans le monde",rH2:"Ce que vous obtenez",rB1t:"GPS en direct sur la carte",rB1s:"Les clients vous voient en temps reel",rB2t:"Protection du chauffeur",rB2s:"Les avis sont verifies avant publication. Les mauvais clients sont signales.",rB3t:"Verifie au registre",rB3s:"Verifie par rapport au registre public des taxis — donnees mises a jour mensuellement",rB4t:"Votre propre horaire",rB4s:"Conduisez quand vous voulez — pas d'equipes, pas de quotas",rB5t:"Zero commission",rB5s:"Chaque centime de la course est a vous. Toujours.",rB6t:"Toute ville, tout pays",rB6s:"Sofia, Zurich, Berlin, Londres, une plateforme",rH3:"Ce dont nous avons besoin",rC1t:"Votre photo",rC1s:" - les clients savent qui attendre",rC2t:"Photos de la voiture",rC2s:" - exterieur, interieur, tableau de bord",rC3t:"Numero de telephone",rC3s:" - les clients appellent ou ecrivent directement",rC4t:"Ville et zones",rC4s:" - ou vous conduisez",rGdpr:"RGPD: Seules les donnees du profil public sont collectees. Pas de piece d'identite, pas d'adresse, pas de finances. Suppression a tout moment. Jamais vendu a des tiers.",rH4:"Comment rejoindre",rP2:"Renseignez les informations de votre vehicule et vos coordonnees. Moins d'une minute.",rSoon:"Nous recherchons automatiquement votre vehicule dans le registre public des taxis",rNotify:"Puis envoyez-nous vos coordonnees via Viber, WhatsApp ou SMS",rJoinbtn:"Postuler maintenant — gratuit",
     emilBio:"Non-fumeur. Specialiste informatique. A vecu a l'etranger. Pas d'animaux, de nourriture ou de boissons dans la voiture. Heureux de parler ou de rester silencieux. Merci de parler si vous voulez un itineraire specifique ou si vous ne vous sentez pas bien."
@@ -1139,7 +771,7 @@ var T={
     lblMusic:"🎵 Предпочитаемая музыка",lblTip:"💰 Планируемые чаевые (необязательно)",lblPax:"👥 Пассажиры",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Пассажиры:",lblWhen:"🕒 Когда",btnNow:"Сейчас",btnSchedule:"📅 Забронировать",pickupGps:"Подача: моё местоположение (GPS)",pickupCustom:"Подача: указанная точка",destSet:"Пункт назначения: указан",destNotSet:"Пункт назначения: не указан (по желанию)",btnChange:"Изменить",btnSet:"Указать",locPickerHint:"📌 Нажмите на карту, чтобы указать точку, или вставьте ссылку Google Maps ниже",locPickerPlaceholder:"Вставьте ссылку Google Maps (по желанию)",orderPickup:"📍 Место подачи:",orderDest:"🏁 Пункт назначения:",scheduleWarn:"⚠️ Это запрос на бронирование, а не подтверждённая поездка. Дождитесь подтверждения от водителя по звонку или сообщению.",orderWhen:"📅 Запрошенное время:",orderConfirmNote:"⚠️ Пожалуйста, подтвердите это бронирование ответом.",orderNow:"🕒 Сейчас (немедленно)",paxWarn:"⚠️ 3-4 пассажира с багажом — пожалуйста, позвоните заранее, чтобы подтвердить, что всё поместится.",paxWarnMsg:"⚠️ 3-4 пассажира с багажом — подтвердите перед заказом",
     optNoPref:"Без предпочтений",optPop:"🎤 Поп",optChalga:"🎶 Чалга",optRock:"🎸 Рок",optClassical:"🎻 Классика",optJazz:"🎷 Джаз",optElectronic:"🎧 Электронная",optNoMusic:"🔇 Без музыки",optNoTip:"Без чаевых",optSmallTip:"Небольшие чаевые",optFairTip:"Достойные чаевые — спасибо за долгий путь",optGenTip:"Щедрые чаевые",
     sumFast:"Может ехать быстро",sumCalm:"или спокойно — ваш выбор",sumTalkSilent:"любит поговорить или помолчать",sumTalk:"любит общение",sumSilent:"предпочитает тишину",sumMusic:"играет",
-    pbHurry:"⏱ Я тороплюсь",pbRelax:"😌 Спокойно",pbSilent:"🤫 Предпочитаю тишину",pbTalk:"💬 Рад пообщаться",pbNomusic:"🔇 Без музыки",pbAc:"❄️ Кондиционер",pbLuggage:"🧳 Есть багаж",btnCallM:"📞 Позвонить",btnVibOrd:"💬 Заказать через Viber",locDefault:"Местоположение будет передано водителю",
+    pbHurry:"⏱ Я тороплюсь",pbRelax:"😌 Спокойно",pbSilent:"🤫 Предпочитаю тишину",pbTalk:"💬 Рад пообщаться",pbNomusic:"🔇 Без музыки",pbAc:"❄️ Кондиционер",pbLuggage:"🧳 Есть багаж",btnCallM:"📞 Позвонить",heroSub:"ближайшее такси",moreOpts:"Больше опций ↓",prefsQ:"💾 Сохранить пожелания на следующий раз? (необязательно)",prefsSave:"Сохранить",prefsSkip:"Нет, спасибо",paxQ:"Пассажиры?",pbMusic:"🎵 Музыка",noDriver:"Сейчас нет водителей онлайн. Попробуйте через минуту.",gettingLoc:"📍 ОПРЕДЕЛЯЮ МЕСТОПОЛОЖЕНИЕ…",prefsSaved:"✅ Сохранено! Следующий заказ автоматически учтёт ваши пожелания.",btnOrderNow:"ЗАКАЗАТЬ",btnVibOrd:"💬 Заказать через Viber",locDefault:"Местоположение будет передано водителю",
     hT1:"Найти водителя",hP1:"Просмотрите проверенных водителей. Фильтруйте по оплате, типу авто, языку, стилю вождения, атмосфере.",hT2:"Проверить профиль",hP2:"Посмотрите фото, машину, цены, языки и стиль вождения. Точно знайте, кого ожидать.",hT3:"Позвонить или написать в Viber",hP3:"Свяжитесь с водителем напрямую. Без платы за бронирование, без алгоритма, без комиссии.",hT4:"Скажите водителю свой стиль",hP4:"Скажите водителю, как вы предпочитаете ехать, при посадке. Музыка, тишина, скорость, маршрут.",hT5:"Оплатить водителю",hP5:"Наличные, Revolut или терминал. 100% идет водителю, нулевая комиссия.",hT6:"Оценки проверены",hP6:"Все отзывы проверяются администратором перед публикацией. Защищает водителей от несправедливых оценок.",hCta:"Найти водителя сейчас",
     rFree:"БЕСПЛАТНО для первых 300 водителей",rJoinnow:"Присоединяйтесь сейчас, без оплаты",rSpots:"ОСТАЛОСЬ МЕСТ",rSpotsleft:"276 / 300 осталось",rH1:"Работайте с fish.taxi",rP1:"Платформа, где водители на первом месте. Оставляйте 100% от каждой поездки. Навсегда.",rAfter:"20 EUR/мес после запуска",rBeta:"Бета, первые 300 водителей по всему миру",rH2:"Что вы получаете",rB1t:"GPS на карте в реальном времени",rB1s:"Клиенты видят вас в реальном времени",rB2t:"Защита водителя",rB2s:"Отзывы проверяются перед публикацией. О плохих клиентах сообщается.",rB3t:"Проверка по реестру",rB3s:"Сверено с публичным реестром такси — данные обновляются ежемесячно",rB4t:"Свой график",rB4s:"Работайте, когда хотите — без смен и квот",rB5t:"Нулевая комиссия",rB5s:"Каждый цент от поездки ваш. Всегда.",rB6t:"Любой город, любая страна",rB6s:"София, Цюрих, Берлин, Лондон, одна платформа",rH3:"Что нам нужно",rC1t:"Ваше фото",rC1s:" - клиенты знают, кого ожидать",rC2t:"Фото автомобиля",rC2s:" - снаружи, внутри, приборная панель",rC3t:"Номер телефона",rC3s:" - клиенты звонят или пишут напрямую",rC4t:"Город и районы",rC4s:" - где вы работаете",rGdpr:"GDPR: Собираются только данные публичного профиля. Без паспорта, без адреса, без финансов. Удаление в любое время. Никогда не продается третьим лицам.",rH4:"Как присоединиться",rP2:"Заполните данные автомобиля и контакты. Занимает меньше минуты.",rSoon:"Мы автоматически найдём ваш автомобиль в публичном реестре такси",rNotify:"Затем отправьте данные через Viber, WhatsApp или SMS",rJoinbtn:"Подать заявку — бесплатно",
     emilBio:"Некурящий. IT-специалист. Жил за границей. Без животных, еды или напитков в машине. Рад поговорить или помолчать. Пожалуйста, скажите, если хотите конкретный маршрут или плохо себя чувствуете."
@@ -1191,7 +823,7 @@ var T={
     lblMusic:"🎵 Musica preferita",lblTip:"💰 Mancia pianificata (opzionale)",lblPax:"👥 Passeggeri",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Passeggeri:",lblWhen:"🕒 Quando",btnNow:"Ora",btnSchedule:"📅 Prenota",pickupGps:"Ritiro: la mia posizione (GPS)",pickupCustom:"Ritiro: punto personalizzato",destSet:"Destinazione: punto impostato",destNotSet:"Destinazione: non impostata (opzionale)",btnChange:"Cambia",btnSet:"Imposta",locPickerHint:"📌 Tocca la mappa per impostare il punto, oppure incolla un link Google Maps qui sotto",locPickerPlaceholder:"Incolla link Google Maps (opzionale)",orderPickup:"📍 Luogo di ritiro:",orderDest:"🏁 Destinazione:",scheduleWarn:"⚠️ Questa è una richiesta di prenotazione, non una corsa confermata. Attendi la conferma dell autista per chiamata o messaggio.",orderWhen:"📅 Orario richiesto:",orderConfirmNote:"⚠️ Conferma questa prenotazione rispondendo.",orderNow:"🕒 Ora (subito)",paxWarn:"⚠️ 3-4 passeggeri con bagagli — chiamare prima per confermare che tutto entri comodamente.",paxWarnMsg:"⚠️ 3-4 passeggeri con bagagli — confermare prima di prenotare",
     optNoPref:"Nessuna preferenza",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Classica",optJazz:"🎷 Jazz",optElectronic:"🎧 Elettronica",optNoMusic:"🔇 Senza musica",optNoTip:"Nessuna mancia prevista",optSmallTip:"Una piccola mancia",optFairTip:"Una mancia equa — grazie per essere venuto da lontano",optGenTip:"Una generosa mancia",
     sumFast:"Puo guidare veloce",sumCalm:"o con calma — la tua scelta",sumTalkSilent:"felice di parlare o stare in silenzio",sumTalk:"ama conversare",sumSilent:"preferisce silenzio",sumMusic:"suona",
-    pbHurry:"⏱ Ho fretta",pbRelax:"😌 Con calma",pbSilent:"🤫 Preferisco il silenzio",pbTalk:"💬 Felice di chiacchierare",pbNomusic:"🔇 Senza musica",pbAc:"❄️ Aria cond. prego",pbLuggage:"🧳 Ho bagagli",btnCallM:"📞 Chiama",btnVibOrd:"💬 Ordina via Viber",locDefault:"La posizione sara condivisa con l'autista",
+    pbHurry:"⏱ Ho fretta",pbRelax:"😌 Con calma",pbSilent:"🤫 Preferisco il silenzio",pbTalk:"💬 Felice di chiacchierare",pbNomusic:"🔇 Senza musica",pbAc:"❄️ Aria cond. prego",pbLuggage:"🧳 Ho bagagli",btnCallM:"📞 Chiama",heroSub:"taxi più vicino",moreOpts:"Altre opzioni ↓",prefsQ:"💾 Salvare le preferenze per la prossima volta? (facoltativo)",prefsSave:"Salva",prefsSkip:"No grazie",paxQ:"Passeggeri?",pbMusic:"🎵 Musica",noDriver:"Nessun autista online al momento. Riprova tra poco.",gettingLoc:"📍 RILEVAMENTO POSIZIONE…",prefsSaved:"✅ Salvato! Il prossimo ordine userà le tue preferenze automaticamente.",btnOrderNow:"ORDINA ORA",btnVibOrd:"💬 Ordina via Viber",locDefault:"La posizione sara condivisa con l'autista",
     hT1:"Trova un autista",hP1:"Sfoglia autisti verificati. Filtra per pagamento, tipo di auto, lingua, stile di guida, atmosfera.",hT2:"Controlla il profilo",hP2:"Vedi foto, auto, prezzi, lingue e stile di guida. Sai esattamente chi aspettarti.",hT3:"Chiama o scrivi su Viber",hP3:"Contatta direttamente il tuo autista. Nessuna commissione di prenotazione, nessun algoritmo, nessuna commissione.",hT4:"Di il tuo stile al tuo autista",hP4:"Di al tuo autista come preferisci viaggiare quando sali. Musica, silenzio, velocita, percorso.",hT5:"Paga l'autista",hP5:"Contanti, Revolut o terminale carta. Il 100% va all'autista, zero commissioni.",hT6:"Le valutazioni sono verificate",hP6:"Tutte le recensioni sono controllate da un amministratore prima della pubblicazione. Protegge gli autisti da valutazioni ingiuste.",hCta:"Trova un autista ora",
     rFree:"GRATIS per i primi 300 autisti",rJoinnow:"Iscriviti ora, nessun pagamento richiesto",rSpots:"POSTI RIMANENTI",rSpotsleft:"276 / 300 rimasti",rH1:"Guida con fish.taxi",rP1:"La piattaforma dove gli autisti vengono prima. Tieni il 100% di ogni corsa. Per sempre.",rAfter:"20 EUR/mese dopo il lancio",rBeta:"Beta, i primi 300 autisti nel mondo",rH2:"Cosa ottieni",rB1t:"GPS live sulla mappa",rB1s:"I clienti ti vedono in tempo reale",rB2t:"Protezione autista",rB2s:"Le valutazioni sono verificate prima della pubblicazione. I clienti scorretti vengono segnalati.",rB3t:"Verifica nel registro",rB3s:"Verificato nel registro pubblico dei taxi — dati aggiornati mensilmente",rB4t:"Il tuo orario",rB4s:"Guida quando vuoi — niente turni, niente quote",rB5t:"Zero commissioni",rB5s:"Ogni centesimo della corsa e tuo. Sempre.",rB6t:"Qualsiasi citta, qualsiasi paese",rB6s:"Sofia, Zurigo, Berlino, Londra, una piattaforma",rH3:"Di cosa abbiamo bisogno",rC1t:"La tua foto",rC1s:" - i clienti sanno chi aspettarsi",rC2t:"Foto dell'auto",rC2s:" - esterno, interno, cruscotto",rC3t:"Numero di telefono",rC3s:" - i clienti chiamano o scrivono direttamente",rC4t:"Citta e zone",rC4s:" - dove guidi",rGdpr:"GDPR: Vengono raccolti solo i dati del profilo pubblico. Nessun documento, nessun indirizzo, nessuna finanza. Cancellazione in qualsiasi momento. Mai venduto a terzi.",rH4:"Come iscriversi",rP2:"Inserisci i dati della tua auto e i tuoi contatti. Richiede meno di un minuto.",rSoon:"Cerchiamo automaticamente la tua auto nel registro pubblico dei taxi",rNotify:"Poi invia i tuoi dati via Viber, WhatsApp o SMS",rJoinbtn:"Candidati ora — gratis",
     emilBio:"Non fumatore. Specialista IT. Vissuto all'estero. Niente animali, cibo o bevande in auto. Felice di parlare o stare in silenzio. Si prega di parlare se si desidera un percorso specifico o ci si sente male."
@@ -1243,7 +875,7 @@ var T={
     lblMusic:"🎵 Música preferida",lblTip:"💰 Propina planeada (opcional)",lblPax:"👥 Pasajeros",paxOpt2:"1–2",paxOpt3:"3",paxOpt4:"4",orderPax:"• Pasajeros:",lblWhen:"🕒 Cuándo",btnNow:"Ahora",btnSchedule:"📅 Programar",pickupGps:"Recogida: mi ubicación (GPS)",pickupCustom:"Recogida: punto personalizado",destSet:"Destino: punto establecido",destNotSet:"Destino: no establecido (opcional)",btnChange:"Cambiar",btnSet:"Establecer",locPickerHint:"📌 Toca el mapa para fijar el punto, o pega un enlace de Google Maps abajo",locPickerPlaceholder:"Pegar enlace de Google Maps (opcional)",orderPickup:"📍 Lugar de recogida:",orderDest:"🏁 Destino:",scheduleWarn:"⚠️ Esta es una solicitud de reserva, no un viaje confirmado. Espere la confirmación del conductor por llamada o mensaje.",orderWhen:"📅 Hora solicitada:",orderConfirmNote:"⚠️ Por favor confirme esta reserva respondiendo.",orderNow:"🕒 Ahora (enseguida)",paxWarn:"⚠️ 3-4 pasajeros con equipaje — llame antes para confirmar que todo cabe cómodamente.",paxWarnMsg:"⚠️ 3-4 pasajeros con equipaje — confirme antes de reservar",
     optNoPref:"Sin preferencia",optPop:"🎤 Pop",optChalga:"🎶 Chalga",optRock:"🎸 Rock",optClassical:"🎻 Clásica",optJazz:"🎷 Jazz",optElectronic:"🎧 Electrónica",optNoMusic:"🔇 Sin música",optNoTip:"Sin propina planeada",optSmallTip:"Una pequeña propina",optFairTip:"Una propina justa — gracias por venir desde lejos",optGenTip:"Una generosa propina",
     sumFast:"Puede conducir rapido",sumCalm:"o con calma — tu eleccion",sumTalkSilent:"feliz de hablar o guardar silencio",sumTalk:"disfruta conversar",sumSilent:"prefiere silencio",sumMusic:"reproduce",
-    pbHurry:"⏱ Tengo prisa",pbRelax:"😌 Con calma",pbSilent:"🤫 Prefiero silencio",pbTalk:"💬 Encantado de charlar",pbNomusic:"🔇 Sin música",pbAc:"❄️ A/C por favor",pbLuggage:"🧳 Tengo equipaje",btnCallM:"📞 Llamar",btnVibOrd:"💬 Pedir por Viber",locDefault:"La ubicación se compartirá con el conductor",
+    pbHurry:"⏱ Tengo prisa",pbRelax:"😌 Con calma",pbSilent:"🤫 Prefiero silencio",pbTalk:"💬 Encantado de charlar",pbNomusic:"🔇 Sin música",pbAc:"❄️ A/C por favor",pbLuggage:"🧳 Tengo equipaje",btnCallM:"📞 Llamar",heroSub:"taxi más cercano",moreOpts:"Más opciones ↓",prefsQ:"💾 ¿Guardar preferencias para la próxima vez? (opcional)",prefsSave:"Guardar",prefsSkip:"No, gracias",paxQ:"¿Pasajeros?",pbMusic:"🎵 Música",noDriver:"Ahora mismo no hay conductores en línea. Inténtalo en un momento.",gettingLoc:"📍 OBTENIENDO UBICACIÓN…",prefsSaved:"✅ ¡Guardado! Tu próximo pedido usará tus preferencias automáticamente.",btnOrderNow:"PEDIR AHORA",btnVibOrd:"💬 Pedir por Viber",locDefault:"La ubicación se compartirá con el conductor",
     hT1:"Encuentra un conductor",hP1:"Explora conductores verificados. Filtra por pago, tipo de coche, idioma, estilo de conduccion, ambiente.",hT2:"Revisa el perfil",hP2:"Mira foto, coche, precios, idiomas y estilo de conduccion. Sabe exactamente a quien esperar.",hT3:"Llama o escribe por Viber",hP3:"Contacta a tu conductor directamente. Sin tarifa de reserva, sin algoritmo, sin comision.",hT4:"Dile a tu conductor tu estilo",hP4:"Dile a tu conductor como prefieres viajar al subir. Musica, silencio, velocidad, ruta.",hT5:"Paga al conductor",hP5:"Efectivo, Revolut o terminal de tarjeta. El 100% va al conductor, cero comision.",hT6:"Las calificaciones estan verificadas",hP6:"Todas las resenas son revisadas por un administrador antes de publicarse. Protege a los conductores de calificaciones injustas.",hCta:"Encuentra un conductor ahora",
     rFree:"GRATIS para los primeros 300 conductores",rJoinnow:"Unete ahora, sin pago requerido",rSpots:"PLAZAS RESTANTES",rSpotsleft:"276 / 300 restantes",rH1:"Conduce con fish.taxi",rP1:"La plataforma donde los conductores van primero. Quedate con el 100% de cada viaje. Para siempre.",rAfter:"20 EUR/mes despues del lanzamiento",rBeta:"Beta, los primeros 300 conductores en el mundo",rH2:"Lo que obtienes",rB1t:"GPS en vivo en el mapa",rB1s:"Los clientes te ven en tiempo real",rB2t:"Proteccion del conductor",rB2s:"Las calificaciones se revisan antes de publicarse. Los clientes problematicos son reportados.",rB3t:"Verificado en el registro",rB3s:"Verificado con el registro publico de taxis — datos actualizados mensualmente",rB4t:"Tu propio horario",rB4s:"Conduce cuando quieras — sin turnos, sin cuotas",rB5t:"Cero comision",rB5s:"Cada centavo del viaje es tuyo. Siempre.",rB6t:"Cualquier ciudad, cualquier pais",rB6s:"Sofia, Zurich, Berlin, Londres, una plataforma",rH3:"Lo que necesitamos",rC1t:"Tu foto",rC1s:" - los clientes saben a quien esperar",rC2t:"Fotos del coche",rC2s:" - exterior, interior, tablero",rC3t:"Numero de telefono",rC3s:" - los clientes llaman o escriben directamente",rC4t:"Ciudad y zonas",rC4s:" - donde conduces",rGdpr:"RGPD: Solo se recopilan datos del perfil publico. Sin identificacion, sin direccion, sin finanzas. Eliminacion en cualquier momento. Nunca vendido a terceros.",rH4:"Como unirse",rP2:"Completa los datos de tu coche y tu contacto. Toma menos de un minuto.",rSoon:"Buscamos automaticamente tu coche en el registro publico de taxis",rNotify:"Luego envianos tus datos por Viber, WhatsApp o SMS",rJoinbtn:"Solicitar ahora — gratis",
     emilBio:"No fumador. Especialista en TI. Vivio en el extranjero. Sin animales, comida o bebidas en el coche. Feliz de hablar o guardar silencio. Por favor avise si quiere una ruta especifica o se siente mal."
@@ -1275,12 +907,27 @@ var T={
     tipGenerous:'Propina generosa'},
 
 };
-var lang=__nextLS.getItem('fishtaxi-lang')||'bg';
+var lang=localStorage.getItem('fishtaxi-lang')||'bg';
 
 function setLang(l){
   lang=l;
-  __nextLS.setItem('fishtaxi-lang',l);
+  localStorage.setItem('fishtaxi-lang',l);
   var t=T[l]||T.en;
+  /* Хиро-блокът: беше зашит на български и не се превеждаше. */
+  var hb=document.getElementById('hero-btn-txt');
+  if(hb)hb.textContent=t.btnOrderNow||'ORDER NOW';
+  var hs=document.getElementById('hero-btn-sub');
+  if(hs)hs.textContent=t.heroSub||'';
+  var mo=document.getElementById('hero-more');
+  if(mo)mo.textContent=t.moreOpts||'';
+  var pq=document.getElementById('prefs-q');
+  if(pq)pq.textContent=t.prefsQ||'';
+  var psv=document.getElementById('prefs-save');
+  if(psv)psv.textContent=t.prefsSave||'';
+  var psk=document.getElementById('prefs-skip');
+  if(psk)psk.textContent=t.prefsSkip||'';
+  var pxq=document.getElementById('prefs-pax-q');
+  if(pxq)pxq.textContent=t.paxQ||'';
   // Tabs
   document.getElementById('tab-map').textContent=t.tabMap;
   document.getElementById('tab-list').innerHTML='<img src="img/icon-192.png" style="height:14px;vertical-align:-2px;object-fit:contain;margin-right:3px" alt="">'+t.tabList;
@@ -1354,7 +1001,7 @@ function setLang(l){
 }
 
 var filt='all', cur=null, map=null, mkrs=[], mapReady=false, tileLayer=null;
-var theme=__nextLS.getItem('fishtaxi_theme')||'light';
+var theme=localStorage.getItem('fishtaxi_theme')||'light';
 
 function getTileUrl(){
   return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -1394,7 +1041,7 @@ function applyTheme(){
 
 function toggleTheme(){
   theme=theme==='dark'?'light':'dark';
-  __nextLS.setItem('fishtaxi_theme',theme);
+  localStorage.setItem('fishtaxi_theme',theme);
   applyTheme();
 }
 
@@ -1458,7 +1105,7 @@ function card(d,mini){
   html+='<div class="dct"><div class="dca">'+av+'</div>';
   html+='<div class="dci">';
   html+='<div class="dcn">'+dName(d)+' <span class="vb">'+tl.mVerified+'</span>'+(d.founder?' <span class="founder">🏆 '+(lang==='bg'?'Основател №'+d.founder:'Founder #'+d.founder)+'</span>':'');
-  html+='<div class="dcc">'+d.car+'<span class="plate"><i>BG</i>'+d.plate+'</span></div>';
+  html+='<div class="dcc">'+d.car+' &middot; '+d.plate+'</div>';
   html+='<div class="tags">'+tags+'</div>';
   html+='<div class="pays">'+pays+'</div>';
   html+='</div><div class="rb">&#11088; '+d.rating+'</div></div>';
@@ -1621,6 +1268,9 @@ function renderMap(){
 function openMod(id){
   cur=DRIVERS.filter(function(d){return d.id===id;})[0];
   if(!cur)return;
+  buildPaxOptions(cur);
+  renderDriverQR(cur);
+  try{location.hash='d'+cur.id;}catch(e){}
   track('profile_open');
   var d=cur,st=stI(d),t=T[lang]||T.en;
   selectedPrefs=[];
@@ -1640,8 +1290,7 @@ function openMod(id){
     var img=document.createElement('img');img.src=d.avatar;img.style.cssText='width:100%;height:100%;object-fit:cover';mav.innerHTML='';mav.appendChild(img);
   } else { mav.innerHTML=carI(d); }
   document.getElementById('mname').innerHTML=dName(d)+' <span class="vb">'+t.mVerified+'</span>'+(d.founder?' <span class="founder">🏆 '+(lang==='bg'?'Основател №'+d.founder:'Founder #'+d.founder)+'</span>':'');
-  var _e=function(v){return String(v==null?'':v).replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});};
-  document.getElementById('mcar2').innerHTML=_e(d.car)+'<span class="plate"><i>BG</i>'+_e(d.plate)+'</span>';
+  document.getElementById('mcar2').textContent=d.car+' · '+d.plate;
   setDriverPhone(d);
   document.getElementById('mstars').innerHTML='<span style="color:var(--y);font-size:20px">'+'★'.repeat(Math.round(d.rating))+'</span> <strong>'+d.rating+'</strong> <span style="color:var(--mu);font-size:12px">('+d.reviews+' '+t.mReviews+')</span>';
   var summaryParts=[];
@@ -1734,7 +1383,8 @@ function openMod(id){
   if(sel) sel.value=lang;
 }
 
-function closeMod(){document.getElementById('modal').className='modal';}
+function closeMod(){
+  try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}document.getElementById('modal').className='modal';}
 var galleryPhotos=[], galleryIdx=0, galleryTimer=null, galleryAutoStopped=false, galleryTouchX=null, gallerySwipeBound=false;
 function showImg(src){ openGallery([src],0); } // единична снимка (тарифна табела) — без стрелки/брояч
 function openGalleryAt(i){ openGallery(window.__modalPhotos||[],i); }
@@ -1839,6 +1489,163 @@ function setWhenMode(mode){
     fields.style.display='flex';warn.style.display='block';
   }
 }
+/* Пътници според конкретната кола: 4-местна дава 1-2/3/4,
+   V-Class със 7 места дава до 7. seats е в профила на шофьора. */
+/* ── Визитка на шофьор ────────────────────────────────────────────
+   Всеки шофьор има собствен линк: fish.taxi/#d3
+   QR кодът до аватара води точно към него — шофьорът може да го
+   покаже на клиент или да си го залепи на стъклото. Рисува се в
+   браузъра, без файлове с картинки.                                */
+function driverCardUrl(d){
+  return location.origin+location.pathname+'#d'+d.id;
+}
+function vcardEscape(v){
+  return String(v==null?'':v)
+    .replace(/\\/g,'\\\\')
+    .replace(/;/g,'\\;')
+    .replace(/,/g,'\\,')
+    .replace(/\n/g,'\\n');
+}
+/* Визитка на шофьора като vCard — телефонът предлага да я запише
+   в контактите: име, телефон, район на работа, кола, линк.        */
+/* Сгъва типографските знаци до ASCII.  Имената се въвеждат на
+   латиница по правило, затова тук няма транслитерация — марки и
+   градове имат истинско латинско изписване, а буква по буква
+   излиза безсмислица.                                          */
+function asciiFold(v){
+  var t=String(v==null?'':v)
+    .replace(/[\u2010-\u2015]/g,'-')
+    .replace(/[\u2018\u2019]/g,"'")
+    .replace(/[\u201C\u201D]/g,'"')
+    .replace(/\u00b7/g,'-')
+    .replace(/\u2026/g,'...')
+    .replace(/\u00a0/g,' ')
+    .replace(/[^\x20-\x7E]/g,'');
+  return t.replace(/\s+/g,' ').trim();
+}
+/* Визитка като vCard.  Пази се КРАТКА нарочно: библиотеката побира
+   само ~270 байта, а кирилица и типографски знаци заемат по 2-3.
+   Районът съзнателно не влиза — вижда се на самата страница.      */
+function driverVCard(d){
+  var name=asciiFold(d.name||('Driver '+d.id));
+  var tel=(d.phone||'').replace(/[^0-9+]/g,'');
+  if(tel&&tel.charAt(0)!=='+')tel='+'+tel;
+  var car=asciiFold([d.car,d.plate].filter(Boolean).join(' '));
+  var L=[];
+  L.push('BEGIN:VCARD');
+  L.push('VERSION:3.0');
+  L.push('N:;'+vcardEscape(name)+';;;');
+  L.push('FN:'+vcardEscape(name));
+  L.push('ORG:fish.taxi');
+  if(tel)L.push('TEL;TYPE=CELL:'+tel);
+  L.push('URL:'+driverCardUrl(d));
+  if(car)L.push('NOTE:'+vcardEscape(car));
+  L.push('END:VCARD');
+  var out=L.join('\n');
+  /* последна защита: ако пак е твърде дълго, махаме NOTE */
+  if(out.length>230){
+    L=L.filter(function(x){return x.indexOf('NOTE:')!==0;});
+    out=L.join('\n');
+  }
+  return out;
+}
+/* Голям QR за сканиране от разстояние — например от задната седалка.
+   Кодът се рисува наново в голям размер, а не се увеличава: увеличен
+   canvas се размазва и четците се затрудняват.                    */
+function openQrBig(){
+  if(!cur)return;
+  var lay=document.getElementById('qr-big');
+  var box=document.getElementById('qr-big-box');
+  if(!lay||!box)return;
+  if(typeof QRCode==='undefined')return;
+  box.innerHTML='';
+  /* колкото permits екранът, но не по-голямо от 320 */
+  var side=Math.max(200,Math.min(320,
+    Math.floor(Math.min(window.innerWidth,window.innerHeight)*0.62)));
+  try{
+    new QRCode(box,{text:driverVCard(cur),width:side,height:side,
+      colorDark:'#000000',colorLight:'#ffffff',
+      correctLevel:QRCode.CorrectLevel.L});
+  }catch(e){
+    box.innerHTML='<span style="font-size:12px;color:#c00">QR: '
+      +(e&&e.message?e.message:'error')+'</span>';
+  }
+  var nm=document.getElementById('qr-big-name');
+  var sb=document.getElementById('qr-big-sub');
+  if(nm)nm.textContent=dName(cur);
+  if(sb)sb.textContent=(cur.phone||'')+(cur.car?'  \u00b7  '+cur.car:'');
+  lay.style.display='flex';
+  /* докато е отворен, фонът не скролва */
+  document.body.style.overflow='hidden';
+}
+function closeQrBig(){
+  var lay=document.getElementById('qr-big');
+  if(lay)lay.style.display='none';
+  document.body.style.overflow='';
+}
+
+function renderDriverQR(d){
+  var box=document.getElementById('m-qr');
+  if(!box)return;
+  if(typeof QRCode==='undefined'){box.style.display='block';box.innerHTML='<span style=\"font-size:9px;color:#c00\">QR lib not loaded</span>';return;}
+  box.innerHTML='';
+  try{
+    new QRCode(box,{text:driverVCard(d),width:88,height:88,
+      colorDark:'#000000',colorLight:'#ffffff',
+      correctLevel:QRCode.CorrectLevel.L});
+    box.title=(d.name||'')+' \u2014 '+(d.phone||'');
+    box.style.display='block';
+  }catch(e){ box.style.display='block';box.innerHTML='<span style="font-size:9px;color:#c00">QR: '+(e&&e.message?e.message:'error')+'</span>'; }
+}
+function copyDriverLink(){
+  if(!cur)return;
+  var url=driverCardUrl(cur);
+  var done=function(){
+    var b=document.getElementById('m-copylink');
+    if(!b)return;
+    var old=b.textContent;
+    b.textContent='\u2713';
+    setTimeout(function(){b.textContent=old;},1400);
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(done,done);
+  }else{
+    var ta=document.createElement('textarea');
+    ta.value=url;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');}catch(e){}
+    document.body.removeChild(ta);done();
+  }
+}
+/* Отваряне по линк: fish.taxi/#d3 показва профила директно. */
+function openFromHash(){
+  var m=/^#d(\d+)$/.exec(location.hash||'');
+  if(!m)return;
+  var id=parseInt(m[1],10);
+  if(DRIVERS.filter(function(d){return d.id===id;}).length)openMod(id);
+}
+window.addEventListener('hashchange',function(){
+  if(location.hash)openFromHash();
+});
+
+function buildPaxOptions(d){
+  var sel=document.getElementById('order-pax');
+  if(!sel)return;
+  var t=T[lang]||T.en;
+  var max=parseInt(d&&d.seats,10);
+  if(!max||max<2)max=4;
+  var keep=sel.value;
+  sel.innerHTML='';
+  var o=document.createElement('option');
+  o.value='2';o.id='opt-pax-2';o.textContent=t.paxOpt2||'1\u20132';
+  sel.appendChild(o);
+  for(var n=3;n<=max;n++){
+    var x=document.createElement('option');
+    x.value=String(n);x.id='opt-pax-'+n;x.textContent=String(n);
+    sel.appendChild(x);
+  }
+  if(keep&&parseInt(keep,10)<=max)sel.value=keep;
+}
+
 function checkPaxWarning(){
   var t=T[lang]||T.en;
   var paxSel=document.getElementById('order-pax');
@@ -2361,51 +2168,75 @@ function showTab(t){
 var youMarker=null;
 // ═══ СЕМПЛА ПОРЪЧКА: едно докосване → GPS → Viber ═══
 var PREF_LABELS={quiet:'🤫 Предпочитам тишина',talk:'💬 Готов за разговор',calm:'🐢 Моля, карайте спокойно',music:'🎵 Музика'};
-function getPrefs(){try{return JSON.parse(__nextLS.getItem('ft_prefs')||'null');}catch(e){return null;}}
+function getPrefs(){try{return JSON.parse(localStorage.getItem('ft_prefs')||'null');}catch(e){return null;}}
 function tgPref(b){b.dataset.on=b.dataset.on==='1'?'':'1';b.style.background=b.dataset.on==='1'?'#f0b429':'#1a1a1a';b.style.color=b.dataset.on==='1'?'#111':'#ccc';}
 function savePrefs(){
   var p={tags:[],pax:document.getElementById('pf-pax').value||''};
   document.querySelectorAll('#prefs-prompt .pf').forEach(function(b){if(b.dataset.on==='1')p.tags.push(b.dataset.k);});
-  __nextLS.setItem('ft_prefs',JSON.stringify(p));
-  __nextLS.setItem('ft_prefs_done','1');
+  localStorage.setItem('ft_prefs',JSON.stringify(p));
+  localStorage.setItem('ft_prefs_done','1');
   document.getElementById('prefs-prompt').style.display='none';
-  document.getElementById('hero-sub').innerHTML='✅ Запазено! Следващата поръчка идва с твоите предпочитания автоматично.';
+  document.getElementById('hero-sub').innerHTML=(T[lang]||T.en).prefsSaved||'Saved!';
   track('prefs_saved');
 }
 function dismissPrefs(){
-  __nextLS.setItem('ft_prefs_done','1');
+  localStorage.setItem('ft_prefs_done','1');
   document.getElementById('prefs-prompt').style.display='none';
 }
+/* Език за текста на поръчката: съвпадение с езиците на шофьора,
+   иначе английски.  Виж ORDER_T по-долу за самите текстове.     */
+function orderLang(d){
+  var dl=(d&&d.langs)||[];
+  return dl.indexOf(lang)>=0 ? lang : 'en';
+}
+/* Кодът на езика, на който КЛИЕНТЪТ ползва приложението.
+   Показва се само когато не съвпада с езика на поръчката —
+   за да знае шофьорът на какъв език да отговори.               */
+function clientLangTag(d){
+  return orderLang(d)===lang ? '' : ' ['+String(lang).toUpperCase()+']';
+}
+var ORDER_T={
+ bg:{head:'\u{1F695} fish.taxi \u2014 \u0411\u042A\u0420\u0417\u0410 \u041F\u041E\u0420\u042A\u0427\u041A\u0410',now:'\u{1F552} \u0421\u0435\u0433\u0430 (\u0432\u0435\u0434\u043D\u0430\u0433\u0430)',pax:'\u2022 \u041F\u044A\u0442\u043D\u0438\u0446\u0438: ',prefs:'\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u043D\u0438\u044F:',myloc:'\u{1F4CD} \u041C\u043E\u044F\u0442\u0430 \u043B\u043E\u043A\u0430\u0446\u0438\u044F:',nogps:'\u{1F4CD} \u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u0449\u0435 \u044F \u043F\u0440\u0430\u0442\u044F \u0432 \u0447\u0430\u0442\u0430 (GPS \u043E\u0442\u043A\u0430\u0437\u0430\u043D)',confirm:'\u260E\uFE0F \u041F\u043E\u0442\u0432\u044A\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u043D\u0430 \u0442\u043E\u0437\u0438 \u043D\u043E\u043C\u0435\u0440.'},
+ en:{head:'\u{1F695} fish.taxi \u2014 QUICK ORDER',now:'\u{1F552} Now (immediately)',pax:'\u2022 Passengers: ',prefs:'Preferences:',myloc:'\u{1F4CD} My location:',nogps:'\u{1F4CD} Location: will send in chat (GPS denied)',confirm:'\u260E\uFE0F Confirm on this number.'},
+ de:{head:'\u{1F695} fish.taxi \u2014 SCHNELLBESTELLUNG',now:'\u{1F552} Jetzt (sofort)',pax:'\u2022 Fahrg\u00E4ste: ',prefs:'W\u00FCnsche:',myloc:'\u{1F4CD} Mein Standort:',nogps:'\u{1F4CD} Standort: sende ich im Chat (GPS abgelehnt)',confirm:'\u260E\uFE0F Best\u00E4tigung unter dieser Nummer.'},
+ fr:{head:'\u{1F695} fish.taxi \u2014 COMMANDE RAPIDE',now:'\u{1F552} Maintenant (imm\u00E9diatement)',pax:'\u2022 Passagers : ',prefs:'Pr\u00E9f\u00E9rences :',myloc:'\u{1F4CD} Ma position :',nogps:'\u{1F4CD} Position : je l\u2019envoie dans le chat (GPS refus\u00E9)',confirm:'\u260E\uFE0F Confirmation \u00E0 ce num\u00E9ro.'},
+ ru:{head:'\u{1F695} fish.taxi \u2014 \u0411\u042B\u0421\u0422\u0420\u042B\u0419 \u0417\u0410\u041A\u0410\u0417',now:'\u{1F552} \u0421\u0435\u0439\u0447\u0430\u0441 (\u0441\u0440\u0430\u0437\u0443)',pax:'\u2022 \u041F\u0430\u0441\u0441\u0430\u0436\u0438\u0440\u044B: ',prefs:'\u041F\u043E\u0436\u0435\u043B\u0430\u043D\u0438\u044F:',myloc:'\u{1F4CD} \u041C\u043E\u0451 \u043C\u0435\u0441\u0442\u043E\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435:',nogps:'\u{1F4CD} \u041C\u0435\u0441\u0442\u043E: \u043F\u0440\u0438\u0448\u043B\u044E \u0432 \u0447\u0430\u0442 (GPS \u043E\u0442\u043A\u043B\u043E\u043D\u0451\u043D)',confirm:'\u260E\uFE0F \u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u043D\u0430 \u044D\u0442\u043E\u0442 \u043D\u043E\u043C\u0435\u0440.'},
+ it:{head:'\u{1F695} fish.taxi \u2014 ORDINE RAPIDO',now:'\u{1F552} Ora (subito)',pax:'\u2022 Passeggeri: ',prefs:'Preferenze:',myloc:'\u{1F4CD} La mia posizione:',nogps:'\u{1F4CD} Posizione: la invio in chat (GPS negato)',confirm:'\u260E\uFE0F Conferma a questo numero.'},
+ es:{head:'\u{1F695} fish.taxi \u2014 PEDIDO R\u00C1PIDO',now:'\u{1F552} Ahora (inmediatamente)',pax:'\u2022 Pasajeros: ',prefs:'Preferencias:',myloc:'\u{1F4CD} Mi ubicaci\u00F3n:',nogps:'\u{1F4CD} Ubicaci\u00F3n: la enviar\u00E9 en el chat (GPS denegado)',confirm:'\u260E\uFE0F Confirmaci\u00F3n a este n\u00FAmero.'}
+};
+function orderT(d){ return ORDER_T[orderLang(d)]||ORDER_T.en; }
+
 function pickOnlineDriver(){
   var on=DRIVERS.filter(function(d){return d.online;});
   return on.length?on[0]:DRIVERS[0];
 }
 function orderNowSimple(){
   var d=pickOnlineDriver();
-  if(!d){alert('В момента няма шофьор на линия. Опитай след малко.');return;}
+  if(!d){alert((T[lang]||T.en).noDriver||'No driver online right now.');return;}
   var btn=document.getElementById('hero-btn-txt');
-  btn.textContent='📍 ВЗИМАМ ЛОКАЦИЯТА…';
+  btn.textContent=(T[lang]||T.en).gettingLoc||'GETTING LOCATION…';
   gentleChime();
   track('order_simple');
   function go(lat,lng){
-    var lines=['🚕 fish.taxi — БЪРЗА ПОРЪЧКА','','🕒 Сега (веднага)'];
+    var ot=orderT(d);
+    var lines=[ot.head+clientLangTag(d),'',ot.now];
     var p=getPrefs();
     if(p){
-      if(p.pax)lines.push('• Пътници: '+p.pax);
-      if(p.tags&&p.tags.length){lines.push('Предпочитания:');p.tags.forEach(function(t){if(PREF_LABELS[t])lines.push('• '+PREF_LABELS[t]);});}
+      if(p.pax)lines.push(ot.pax+p.pax);
+      if(p.tags&&p.tags.length){lines.push(ot.prefs);p.tags.forEach(function(t){if(PREF_LABELS[t])lines.push('• '+PREF_LABELS[t]);});}
     }
     lines.push('');
-    if(lat&&lng){lines.push('📍 Моята локация:');lines.push('https://maps.google.com/?q='+lat+','+lng);}
-    else{lines.push('📍 Локация: ще я пратя в чата (GPS отказан)');}
-    lines.push('');lines.push('☎️ Потвърждение на този номер.');
+    if(lat&&lng){lines.push(ot.myloc);lines.push('https://maps.google.com/?q='+lat+','+lng);}
+    else{lines.push(ot.nogps);}
+    lines.push('');lines.push(ot.confirm);
     var msg=lines.join('\n');
     try{navigator.clipboard.writeText(msg);}catch(e){}
     var num='+'+d.phone.replace(/[^0-9]/g,'');
     var sep=/iPhone|iPad|iPod/i.test(navigator.userAgent)?'&':'?';
     window.location.href='sms:'+num+sep+'body='+encodeURIComponent(msg);
-    btn.textContent='ПОРЪЧАЙ СЕГА';
+    btn.textContent=(T[lang]||T.en).btnOrderNow||'ORDER NOW';
     // след първата поръчка — предложи запазване на предпочитания
-    if(!__nextLS.getItem('ft_prefs_done')){
+    if(!localStorage.getItem('ft_prefs_done')){
       setTimeout(function(){document.getElementById('prefs-prompt').style.display='block';},1500);
     }
   }
@@ -2531,11 +2362,13 @@ function pollGPS(){
   }).catch(function(){});
 }
 
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeQrBig();});
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeMod();});
 
 applyTheme();
 populateTimeSelects();
 render();
+setTimeout(openFromHash,350);
 pollGPS();
 setInterval(pollGPS,15000);
 // Init map immediately on load
@@ -2575,80 +2408,13 @@ window.addEventListener('appinstalled',function(){
 // Service worker disabled - was causing cross-origin fetch issues with images
 // Unregister any existing service worker (cleanup from previous version)
 if('serviceWorker' in navigator){
-  window.__nextNoSW.getRegistrations().then(function(regs){
+  navigator.serviceWorker.getRegistrations().then(function(regs){
     regs.forEach(function(reg){reg.unregister();});
   });
 }
 </script>
 <div id="build-stamp" style="text-align:center;font-size:10px;color:#666;padding:8px 0 14px;opacity:.7">fish.taxi v2026.07.13-d</div>
 <script>console.log('[fish.taxi] build v2026.07.13-d');</script>
-
-<script>
-/* FT-REORDER-V3 — поръчката се вдига нагоре, справочното се сгъва */
-(function(){
-  function reorder(){
-    var mb = document.querySelector('.mb');
-    if(!mb || mb.dataset.ftReordered) return;
-
-    var order  = document.getElementById('mh-order');
-    var btns   = mb.querySelector('.mbtns');
-    var photos = document.getElementById('mphotos');
-    if(!order || !btns || !photos) return;
-
-    /* 1. блокът на поръчката: от „Преди да поръчаш" до бутоните включително */
-    var block = [], n = order;
-    while(n && n !== btns){ block.push(n); n = n.nextElementSibling; }
-    block.push(btns);
-
-    /* 2. справочните секции — поименно, за да не глътнат нещо чуждо */
-    var foldIds = ['mh-cardet','mcardet','mh-pay','mpay','mh-langs','mlangs',
-                   'mh-opts','mopts','mh-areas','mareas','mh-about','mbio'];
-    var foldNodes = foldIds.map(function(id){ return document.getElementById(id); })
-                           .filter(Boolean);
-
-    /* 3. поръчката се вдига веднага след снимките */
-    var anchor = photos;
-    block.forEach(function(el){
-      anchor.parentNode.insertBefore(el, anchor.nextSibling);
-      anchor = el;
-    });
-
-    /* 4. справочното отива под бутоните, сгънато в едно */
-    if(foldNodes.length){
-      var det = document.createElement('details');
-      det.className = 'ft-fold';
-      var sum = document.createElement('summary');
-      sum.id = 'ft-fold-sum';
-      sum.textContent = (document.documentElement.lang === 'bg')
-        ? 'Още за шофьора и колата'
-        : 'More about the driver and car';
-      det.appendChild(sum);
-      btns.parentNode.insertBefore(det, btns.nextSibling);
-      foldNodes.forEach(function(el){ det.appendChild(el); });
-    }
-
-    mb.dataset.ftReordered = '1';
-  }
-
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', reorder);
-  } else {
-    reorder();
-  }
-
-  /* езикът се сменя динамично — обновяваме надписа на сгъването */
-  var oldSetLang = window.setLang;
-  if(typeof oldSetLang === 'function'){
-    window.setLang = function(v){
-      var r = oldSetLang.apply(this, arguments);
-      var sum = document.getElementById('ft-fold-sum');
-      if(sum) sum.textContent = (v === 'bg')
-        ? 'Още за шофьора и колата'
-        : 'More about the driver and car';
-      return r;
-    };
-  }
-})();
-</script>
+<div id="qr-big" onclick="closeQrBig()" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.92);align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:20px;cursor:pointer"><div id="qr-big-box" style="background:#fff;padding:16px;border-radius:14px;line-height:0"></div><div id="qr-big-name" style="color:#fff;font-size:16px;font-weight:700;text-align:center"></div><div id="qr-big-sub" style="color:#9aa;font-size:13px;text-align:center"></div><div style="color:#667;font-size:11px;margin-top:4px">Докосни за затваряне</div></div>
 </body>
 </html><!-- rebuild trigger -->
