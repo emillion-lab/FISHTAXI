@@ -12,45 +12,53 @@
   gzip по мрежата    60 KB   ← това получава телефонът
 
 Изход: registry.json в FISHTAXI, до index.html, за да се тегли от същия домейн.
-"""
-import json, os, sys, gzip, collections, datetime, urllib.request
 
-SRC = ('https://raw.githubusercontent.com/emillion-lab/TAXI/main/'
-       'Sofia_09.05.2026.json')
+13.09.2026: TAXI мина на Sofia_YYYY-MM-DD.json.gz. Затова се приемат и .gz,
+ISO датата се чете преди D.M.Y, а тихият fallback към твърдо зашит файл е
+махнат — ако няма регистър, рънът пада с ясна грешка.
+"""
+import json, os, re, sys, gzip, collections, datetime, urllib.request
+
 
 def newest_registry():
-    """Взима най-новия файл от TAXI вместо да е зашит твърдо."""
+    """Взима най-новия софийски файл от TAXI (.json или .json.gz)."""
     api = 'https://api.github.com/repos/emillion-lab/TAXI/contents/'
-    try:
-        req = urllib.request.Request(api, headers={'User-Agent': 'fishtaxi'})
-        files = json.load(urllib.request.urlopen(req, timeout=60))
-        cands = []
-        for f in files:
-            n = f['name']
-            if not n.endswith('.json'):
-                continue
+    req = urllib.request.Request(api, headers={'User-Agent': 'fishtaxi'})
+    files = json.load(urllib.request.urlopen(req, timeout=60))
+    cands = []
+    for f in files:
+        n = f['name']
+        if 'Sofia' not in n or not n.endswith(('.json', '.json.gz')):
+            continue
+        # Sofia_2026-09-01.json.gz  — ISO първо
+        m = re.search(r'(\d{4})-(\d{2})-(\d{2})', n)
+        if m:
+            y, mo, d = map(int, m.groups())
+        else:
             # Sofia_09.05.2026.json  или  taxi_data_Sofia20.07.2026.json
-            digits = ''.join(c if c.isdigit() else ' ' for c in n).split()
-            if len(digits) >= 3:
-                try:
-                    d, m, y = int(digits[-3]), int(digits[-2]), int(digits[-1])
-                    if y < 100: y += 2000
-                    cands.append((datetime.date(y, m, d), f['download_url'], n))
-                except ValueError:
-                    pass
-        if cands:
-            cands.sort()
-            print('най-нов регистър:', cands[-1][2], cands[-1][0])
-            return cands[-1][1]
-    except Exception as ex:
-        print('не успях да избера най-новия:', ex)
-    return SRC
+            m = re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{4})', n)
+            if not m:
+                continue
+            d, mo, y = map(int, m.groups())
+        try:
+            cands.append((datetime.date(y, mo, d), f['download_url'], n))
+        except ValueError:
+            pass
+    if not cands:
+        sys.exit('няма софийски регистър в TAXI')
+    cands.sort()
+    print('най-нов регистър:', cands[-1][2], cands[-1][0])
+    return cands[-1][1]
+
 
 def main():
     url = newest_registry()
     print('тегля', url)
     req = urllib.request.Request(url, headers={'User-Agent': 'fishtaxi'})
-    data = json.load(urllib.request.urlopen(req, timeout=300))
+    raw = urllib.request.urlopen(req, timeout=300).read()
+    if raw[:2] == b'\x1f\x8b':
+        raw = gzip.decompress(raw)
+    data = json.loads(raw)
     print('оператори в регистъра:', len(data))
 
     now = datetime.datetime.now(datetime.timezone.utc)
