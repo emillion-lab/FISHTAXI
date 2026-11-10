@@ -1,14 +1,8 @@
-== scripts/patch_icons.py Tue Nov 10 13:14:44 UTC 2026
-инструмент: Pillow
-favicon.png : (1254, 1254) → (64, 64)
-img/icon-192.png : (1254, 1254) → (192, 192)
-img/icon-512.png : (1254, 1254) → (512, 512)
-index.html : favicon ?v=3
-next/index.html : favicon ?v=3
-иконки сменени: 3
-[main 8aeb5dc] patch: scripts/patch_icons.py
- 5 files changed, 2 insertions(+), 2 deletions(-)
+== scripts/patch_no_smoking_ok.py Tue Nov 10 18:43:33 UTC 2026
+„Пушене OK“ е махнато: филтър, значка, ред в картата
+[main 8220f85] patch: scripts/patch_no_smoking_ok.py
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 Current branch main is up to date.
 To https://github.com/emillion-lab/FISHTAXI
-   4c60cfc..8aeb5dc  main -> main
+   33e92d4..8220f85  main -> main
 == резултат: success
