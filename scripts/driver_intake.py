@@ -90,7 +90,7 @@ LANGS = [('бълг', 'bg'), ('англ', 'en'), ('немс', 'de'), ('френ'
 # началото на всеки етикет от TEMPLATE.txt — за да не се вземе етикетът за отговор
 LABELS = {1: 'име', 2: 'телефон', 3: 'кола', 4: 'рег', 5: 'тип', 6: 'места',
           7: 'тарифа', 8: 'плащане', 9: 'езици', 10: 'летище', 11: 'домашни',
-          12: 'пушиш', 13: 'две изречения'}
+          12: ('пушиш', 'непушач'), 13: 'две изречения'}
 def parse_answers(text):
     """„7. Тарифа …: 1.49 / 0.75 / 0.85“ → {7: '1.49 / 0.75 / 0.85'}.
     Отговорът може да е на същия ред след „:“ или на следващите редове."""
@@ -101,6 +101,8 @@ def parse_answers(text):
         if m and 1 <= int(m.group(1)) <= 13:
             cur = int(m.group(1))
             rest = m.group(2).strip()
+            if cur == 12:                          # „Непушач ли си“ или старото „Пушиш ли“
+                extra['_q12'] = rest.split(':', 1)[0].lower()
             if ':' in rest:
                 ans[cur] = rest.split(':', 1)[1].strip()
             elif LABELS.get(cur) and rest.lower().startswith(LABELS[cur]):
@@ -187,7 +189,12 @@ def build_profile(ans, extra, slug, old, notes):
     airport, longdist, night = (trip + ['ask', 'ask', 'ask'])[:3]
 
     pets = yes_no_ask(ans.get(11))
-    smokes = yes_no_ask(ans.get(12)) is True
+    # Пушенето в такси е забранено (чл. 56 ЗЗ) — сайтът показва само 🚭 „Непушач“
+    # и то само ако шофьорът го е потвърдил. „smoking“ винаги е false.
+    a12 = yes_no_ask(ans.get(12))
+    nosmoker = (a12 is True) if 'непушач' in extra.get('_q12', '') else (a12 is False)
+    if a12 is None:
+        note('Точка 12 (непушач) без отговор — без значка 🚭.')
 
     bio_bg = ' '.join((ans.get(13) or '').split())
     bio_en = extra.get('BIO_EN', '').strip()
@@ -209,7 +216,7 @@ def build_profile(ans, extra, slug, old, notes):
         'online': False, 'rating': base.get('rating', 5.0), 'reviews': base.get('reviews', 0),
         'payment': payment, 'langs': langs,
         'electric': bool(re.search(r'tesla|тесла|id\.?\s?[3-7]|leaf|лийф|ioniq|e-?niro|kona|zoe|enyaq|model [3sxy]|byd|polestar|ev\b|електр', car.lower())),
-        'smoking': smokes, 'nosmoker': not smokes,
+        'smoking': False, 'nosmoker': nosmoker,
         'petfriendly': pets if pets is not None else 'ask',
         'childok': base.get('childok', False),
         'sport': False, 'fast': False, 'comfort': True,
@@ -254,7 +261,7 @@ FIELDS = {1: ('name', 'name_bg'), 3: ('car', 'electric'), 4: ('plate',),
           8: ('payment', 'terminal'), 9: ('langs',), 10: ('airport', 'longdist', 'night'),
           11: ('petfriendly',), 12: ('smoking', 'nosmoker'), 13: ('bio', 'bio_bg')}
 DEFAULT_NOTES = ('Тип кола не е даден', 'Плащане не е разчетено', 'Тарифата не е разчетена',
-                 'Няма BIO_EN', 'Името е на латиница')
+                 'Няма BIO_EN', 'Името е на латиница', 'Точка 12')
 
 # ── главно ───────────────────────────────────────────────────────────────
 def existing_profiles():
