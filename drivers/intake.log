@@ -1,5 +1,9 @@
-== driver-intake Tue Nov 10 18:19:40 UTC 2026
-inbox е празен
+== driver-intake Tue Nov 10 18:20:44 UTC 2026
+test-z: НЕ е публикуван · id 4 · отчет drivers/reports/test-z.md
+    Тестов профил (test-) — не се публикува.
+    Лице: 1-lice.webp → img/test-z_avatar.jpg (7 KB)
+    Снимка 1: 2-snimka.webp → img/test-z_1.jpg (1 KB)
 index.html: без промяна — 3 на сайта
-без промяна
+скрити (publish: false): test-z
+качено
 == резултат: success
