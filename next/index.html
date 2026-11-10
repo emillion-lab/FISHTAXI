@@ -2387,7 +2387,9 @@ populateTimeSelects();
 render();
 setTimeout(openFromHash,350);
 pollGPS();
-setInterval(pollGPS,15000);
+/* FT-POLL-HIDDEN-V1: скрит таб не пита /gps — пести KV квотата; при връщане веднага. */
+setInterval(function(){if(!document.hidden)pollGPS();},15000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)pollGPS();});
 // Init map immediately on load
 initMapOnce();
 
