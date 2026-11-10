@@ -2,20 +2,25 @@
 """Нов шофьор от Viber текст + снимки → профил (10.11.2026).
 
 Вход:  drivers/inbox/<slug>.txt   — отговорите на шофьора по drivers/TEMPLATE.txt
-       drivers/inbox/<slug>/      — снимки (.jpg/.png/.webp) или base64 парчета
-                                    <име>.b64.001, .002 … (MCP качва само текст)
+       drivers/inbox/<slug>/      — снимки (.jpg/.webp) или base64 парчета + photos.sha256
+                                    (виж driver_photos.py и prep_photos.py)
 Изход: drivers/profiles/<slug>.json — профилът (после build_drivers.py → сайта)
        img/<slug>_*.jpg              — смалени снимки, без EXIF (GPS, телефон)
        drivers/reports/<slug>.md     — какво е разчетено, какво е по подразбиране,
                                        какво казва регистърът на ИААА
 След успех inbox файловете се трият (текстът остава в отчета).
 
+Повредена или липсваща снимка → шофьорът чака в inbox, отчетът казва какво
+да се качи пак; после workflow-ът се пуска ръчно (dispatch).
+
 Безопасност:
   - номер, който го няма в регистъра (или е с изтекло разрешително) → publish: false
   - slug, който започва с test- → винаги publish: false (за проби)
   - съществуващ профил със същия телефон → обновява се, id и основател се пазят
 """
-import base64, datetime, glob, io, json, os, re, shutil, sys
+import datetime, glob, io, json, os, re, shutil, sys
+
+from driver_photos import assemble, process_photos
 
 INBOX, PROFILES, REPORTS = 'drivers/inbox', 'drivers/profiles', 'drivers/reports'
 REGISTRY = 'data/registry.json'
@@ -117,7 +122,7 @@ def build_profile(ans, extra, slug, old, notes):
     def note(msg):
         notes.append(msg)
 
-    full = ans.get(1, '').strip()
+    full = ans.get(1, '').strip() or (old or {}).get('name_bg', '')   # обновяване без име
     if not full:
         sys.exit(f'{slug}: липсва име (точка 1)')
     parts = full.split()
@@ -243,75 +248,6 @@ def check_registry(plate_cyr, notes):
     return None
 
 
-# ── снимки ───────────────────────────────────────────────────────────────
-def assemble_b64(folder):
-    """photo.jpg.b64.001 + .002 … → photo.jpg"""
-    groups = {}
-    for f in glob.glob(os.path.join(folder, '*.b64.*')):
-        m = re.match(r'(.+)\.b64\.(\d+)$', f)
-        if m:
-            groups.setdefault(m.group(1), []).append((int(m.group(2)), f))
-    for target, chunks in groups.items():
-        data = ''.join(io.open(f, encoding='ascii').read().strip() for _, f in sorted(chunks))
-        open(target, 'wb').write(base64.b64decode(data))
-        for _, f in chunks:
-            os.remove(f)
-
-
-def role(name):
-    n = name.lower()
-    if re.search(r'avatar|face|lice|лице|portrait|аз\b', n): return 'avatar'
-    if re.search(r'tarif|тариф|price|цени', n): return 'tariff'
-    return 'photo'
-
-
-def process_photos(slug, folder, notes, old=None):
-    from PIL import Image, ImageOps
-    if not os.path.isdir(folder):
-        return None
-    assemble_b64(folder)
-    files = sorted(f for f in glob.glob(os.path.join(folder, '*'))
-                   if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp', '.heic')))
-    if not files:
-        return None
-    avatar = next((f for f in files if role(os.path.basename(f)) == 'avatar'), None)
-    if avatar is None and not old:
-        avatar = files[0]          # нов шофьор: първата снимка е лицето
-    tariff = next((f for f in files if role(os.path.basename(f)) == 'tariff' and f != avatar), None)
-    photos = [f for f in files if f not in (avatar, tariff)]
-    # обновяване: новите снимки се добавят към старите (до 6); лице и тарифа —
-    # само ако името на файла го казва
-    out = {'photos': list((old or {}).get('photos', []))[:6]}
-    start = len(out['photos'])
-
-    def save(src, dst, square=None, longest=1280):
-        im = ImageOps.exif_transpose(Image.open(src)).convert('RGB')   # завърта; EXIF не се пази
-        if square:
-            im = ImageOps.fit(im, (square, square), Image.LANCZOS)
-        else:
-            im.thumbnail((longest, longest), Image.LANCZOS)
-        im.save(dst, 'JPEG', quality=80, optimize=True, progressive=True)
-        return dst, os.path.getsize(dst)
-
-    if avatar:
-        dst, sz = save(avatar, f'img/{slug}_avatar.jpg', square=400)
-        out['avatar'] = dst
-        notes.append(f'Лице: {os.path.basename(avatar)} → {dst} ({sz // 1024} KB)')
-    for i, f in enumerate(photos, start + 1):
-        if len(out['photos']) >= 6:
-            notes.append(f'Снимка {os.path.basename(f)} е пропусната — максимум 6')
-            continue
-        dst, sz = save(f, f'img/{slug}_{i}.jpg')
-        if dst not in out['photos']:
-            out['photos'].append(dst)
-        notes.append(f'Снимка {i}: {os.path.basename(f)} → {dst} ({sz // 1024} KB)')
-    if tariff:
-        dst, sz = save(tariff, f'img/{slug}_tariff.jpg')
-        out['tariff_photo'] = dst
-        notes.append(f'Тарифа: {os.path.basename(tariff)} → {dst} ({sz // 1024} KB)')
-    return out
-
-
 # точка от шаблона → полета в профила (за частично обновяване)
 FIELDS = {1: ('name', 'name_bg'), 3: ('car', 'electric'), 4: ('plate',),
           5: ('car_type', 'minivan', 'suv'), 6: ('seats',), 7: ('tariff', 'price'),
@@ -335,6 +271,18 @@ def intake(txt_path):
     notes = []
     text = io.open(txt_path, encoding='utf-8').read()
     ans, extra = parse_answers(text)
+
+    problems = assemble(os.path.join(INBOX, inbox_slug))
+    if problems:
+        os.makedirs(REPORTS, exist_ok=True)
+        io.open(os.path.join(REPORTS, f'{inbox_slug}.md'), 'w', encoding='utf-8').write(
+            f'# {inbox_slug} — ⏳ чака снимки\n\nНищо не е публикувано, inbox е непокътнат.\n\n'
+            + ''.join(f'- {x}\n' for x in problems)
+            + '\nКачи наново проблемните парчета, после пусни driver-intake ръчно.\n')
+        print(f'{inbox_slug}: ЧАКА СНИМКИ — отчет drivers/reports/{inbox_slug}.md')
+        for x in problems:
+            print('   ', x)
+        return
 
     profiles = existing_profiles()
     phone = norm_phone(ans.get(2))
