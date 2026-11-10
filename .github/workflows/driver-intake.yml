@@ -4,14 +4,17 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
+    # само текстът пуска приема: снимките (много качвания) идват преди него.
+    # Ако шофьор чака снимки — качи липсващото и пусни ръчно (workflow_dispatch).
     paths:
-      - 'drivers/inbox/**'
+      - 'drivers/inbox/*.txt'
       - 'drivers/profiles/**'
       - 'scripts/driver_intake.py'
+      - 'scripts/driver_photos.py'
       - 'scripts/build_drivers.py'
       - '.github/workflows/driver-intake.yml'
 
-# Снимките идват на много отделни качвания — без това ръновете се блъскат.
+# Без това два run-а наведнъж се блъскат при commit-а.
 concurrency:
   group: driver-intake
   cancel-in-progress: false
@@ -58,7 +61,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A -- drivers img index.html
           if git diff --cached --quiet; then echo "без промяна"; exit 0; fi
-          git commit -q -m "шофьори: $(ls drivers/reports 2>/dev/null | tail -1 | sed 's/.md$//') и сглобяване"
+          who=$(git diff --cached --name-only -- drivers/reports drivers/profiles | sed 's#.*/##; s/\.[a-z]*$//' | sort -u | paste -sd, -)
+          git commit -q -m "шофьори: ${who:-сглобяване}"
           for i in 1 2 3; do
             git pull -q --rebase --autostash && git push -q && echo "качено" && exit 0
             sleep $((i * 5))
