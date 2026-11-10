@@ -1,0 +1,60 @@
+name: apply-patch
+# Един workflow за всички бъдещи патчове вместо нов apply-*.yml всеки път.
+# Как: запиши името на скрипта (напр. scripts/patch_poll_hidden.py) в
+# .apply-patch и го качи — push-ът го пуска. Скриптът трябва да е идемпотентен.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '.apply-patch'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply patch
+        run: |
+          S=$(head -n1 .apply-patch | tr -d '\r' | xargs)
+          case "$S" in scripts/patch_*.py) ;; *) echo "непознат скрипт: '$S'"; exit 1;; esac
+          [ -f "$S" ] || { echo "няма такъв файл: $S"; exit 1; }
+          python3 "$S"
+
+      # Само главната страница. next/index.html е счупен от 06.09.2026
+      # (буквално \n между два обекта в i18n) и не е свързан от никъде.
+      - name: Sanity check inline JS
+        run: |
+          for f in index.html; do
+            [ -f "$f" ] || continue
+            python3 - "$f" <<'PY'
+          import io, re, sys
+          s = io.open(sys.argv[1], encoding='utf-8').read()
+          blocks = re.findall(r'<script(?![^>]*src=)[^>]*>(.*?)</script>', s, re.S)
+          io.open('/tmp/bundle.js', 'w', encoding='utf-8').write('\n;\n'.join(blocks))
+          print(sys.argv[1], 'script blocks:', len(blocks))
+          PY
+            node --check /tmp/bundle.js
+            echo "$f SYNTAX OK"
+          done
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A -- '*.html'
+          if git diff --cached --quiet; then
+            echo "no change"
+          else
+            git commit -m "patch: $(head -n1 .apply-patch | xargs)"
+            for i in 1 2 3; do
+              git pull --rebase --autostash && git push && exit 0
+              sleep $((i * 5))
+            done
+            exit 1
+          fi
