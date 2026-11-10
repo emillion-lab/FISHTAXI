@@ -11,25 +11,55 @@ favicon.png, img/icon-192.png и img/icon-512.png бяха едно и също
 """
 import io, subprocess, sys
 
-try:
-    from PIL import Image
-except ImportError:
-    subprocess.run([sys.executable, '-m', 'pip', 'install', '--quiet', 'pillow'], check=True)
-    from PIL import Image
+import shutil, struct
+
+def png_size(path):
+    # ширина и височина от IHDR — без библиотеки
+    with open(path, 'rb') as f:
+        head = f.read(24)
+    return struct.unpack('>II', head[16:24])
+
+def get_pil():
+    try:
+        from PIL import Image
+        return Image
+    except ImportError:
+        pass
+    # системният Python на runner-а може да отказва pip (PEP 668)
+    for extra in (['--break-system-packages'], ['--user', '--break-system-packages'], []):
+        r = subprocess.run([sys.executable, '-m', 'pip', 'install', '--quiet', *extra, 'pillow'])
+        if r.returncode == 0:
+            try:
+                from PIL import Image
+                return Image
+            except ImportError:
+                pass
+    return None
+
+Image = get_pil()
+magick = shutil.which('magick') or shutil.which('convert')
+print('инструмент:', 'Pillow' if Image else (magick or 'НЯМА'))
+if not Image and not magick:
+    sys.exit('нито Pillow, нито ImageMagick')
 
 TARGETS = [('favicon.png', 64), ('img/icon-192.png', 192), ('img/icon-512.png', 512)]
 changed = 0
 for path, size in TARGETS:
-    im = Image.open(path)
-    before = im.size
+    before = png_size(path)
     if before == (size, size):
         print(path, ': вече е', size, 'px')
         continue
-    im = im.convert('RGBA') if im.mode in ('P', 'LA') else im
-    im = im.resize((size, size), Image.LANCZOS)
-    im.save(path, optimize=True)
+    if Image:
+        im = Image.open(path)
+        im = im.convert('RGBA') if im.mode in ('P', 'LA') else im
+        im.resize((size, size), Image.LANCZOS).save(path, optimize=True)
+    else:
+        subprocess.run([magick, path, '-resize', f'{size}x{size}!', '-strip', path], check=True)
+    after = png_size(path)
+    if after != (size, size):
+        sys.exit(f'{path}: очаквах {size}, стана {after}')
     changed += 1
-    print(path, ':', before, '→', (size, size))
+    print(path, ':', before, '→', after)
 
 for page in ('index.html', 'next/index.html'):
     try:
