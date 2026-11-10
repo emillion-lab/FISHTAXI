@@ -1,0 +1,4 @@
+== scripts/patch_icons.py Tue Nov 10 13:13:54 UTC 2026
+инструмент: НЯМА
+нито Pillow, нито ImageMagick
+== резултат: failure
