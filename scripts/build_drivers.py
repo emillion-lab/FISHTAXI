@@ -63,7 +63,10 @@ def load_profiles():
 
 
 def public(p):
-    return {k: v for k, v in p.items() if k not in INTERNAL and not k.startswith('_')}
+    d = {k: v for k, v in p.items() if k not in INTERNAL and not k.startswith('_')}
+    if 'smoking' in d:
+        d['smoking'] = False   # пушене в такси е забранено — никога „пушене OK“
+    return d
 
 
 def render(drivers):
