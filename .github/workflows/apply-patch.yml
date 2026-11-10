@@ -18,6 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Системният Python на runner-а няма Pillow и pip там не минава
+      # (10.11.2026: patch_icons.py падна три пъти). setup-python дава нормален.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --quiet pillow
 
       - name: Apply patch
         run: |
@@ -25,7 +31,7 @@ jobs:
           case "$S" in scripts/patch_*.py) ;; *) echo "непознат скрипт: '$S'"; exit 1;; esac
           [ -f "$S" ] || { echo "няма такъв файл: $S"; exit 1; }
           echo "== $S $(date -u)" > /tmp/patch.log
-          python3 "$S" 2>&1 | tee -a /tmp/patch.log
+          python "$S" 2>&1 | tee -a /tmp/patch.log
           exit ${PIPESTATUS[0]}
 
       # Само главната страница. next/index.html е счупен от 06.09.2026
