@@ -24,7 +24,9 @@ jobs:
           S=$(head -n1 .apply-patch | tr -d '\r' | xargs)
           case "$S" in scripts/patch_*.py) ;; *) echo "непознат скрипт: '$S'"; exit 1;; esac
           [ -f "$S" ] || { echo "няма такъв файл: $S"; exit 1; }
-          python3 "$S"
+          echo "== $S $(date -u)" > /tmp/patch.log
+          python3 "$S" 2>&1 | tee -a /tmp/patch.log
+          exit ${PIPESTATUS[0]}
 
       # Само главната страница. next/index.html е счупен от 06.09.2026
       # (буквално \n между два обекта в i18n) и не е свързан от никъде.
@@ -39,12 +41,13 @@ jobs:
           io.open('/tmp/bundle.js', 'w', encoding='utf-8').write('\n;\n'.join(blocks))
           print(sys.argv[1], 'script blocks:', len(blocks))
           PY
-            node --check /tmp/bundle.js
+            node --check /tmp/bundle.js 2>&1 | tee -a /tmp/patch.log; [ ${PIPESTATUS[0]} = 0 ] || exit 1
             echo "$f SYNTAX OK"
           done
 
       - name: Commit
         run: |
+          exec > >(tee -a /tmp/patch.log) 2>&1
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A -- '*.html' '*.png' 'manifest.json'
@@ -58,3 +61,18 @@ jobs:
             done
             exit 1
           fi
+
+      # Логът се записва в репото и при провал — Actions логовете не се
+      # виждат удобно от телефон, а apply-patch.log се чете като файл.
+      - name: Лог
+        if: always()
+        run: |
+          [ -f /tmp/patch.log ] || echo "няма лог (падна преди скрипта)" > /tmp/patch.log
+          echo "== резултат: ${{ job.status }}" >> /tmp/patch.log
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git stash -u -q || true
+          cp /tmp/patch.log apply-patch.log
+          git add apply-patch.log
+          git commit -q -m "apply-patch.log [skip ci]" || exit 0
+          for i in 1 2 3; do git pull -q --rebase && git push -q && exit 0; sleep $((i * 5)); done
