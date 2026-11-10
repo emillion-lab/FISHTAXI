@@ -1,4 +1,14 @@
-== scripts/patch_icons.py Tue Nov 10 13:13:54 UTC 2026
-инструмент: НЯМА
-нито Pillow, нито ImageMagick
-== резултат: failure
+== scripts/patch_icons.py Tue Nov 10 13:14:44 UTC 2026
+инструмент: Pillow
+favicon.png : (1254, 1254) → (64, 64)
+img/icon-192.png : (1254, 1254) → (192, 192)
+img/icon-512.png : (1254, 1254) → (512, 512)
+index.html : favicon ?v=3
+next/index.html : favicon ?v=3
+иконки сменени: 3
+[main 8aeb5dc] patch: scripts/patch_icons.py
+ 5 files changed, 2 insertions(+), 2 deletions(-)
+Current branch main is up to date.
+To https://github.com/emillion-lab/FISHTAXI
+   4c60cfc..8aeb5dc  main -> main
+== резултат: success
