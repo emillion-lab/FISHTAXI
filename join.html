@@ -81,8 +81,26 @@ input::placeholder{color:#9c988a}
 .done .tick{font-size:2.8rem}
 .done .founder-badge{margin-top:8px}
 .foot{margin-top:32px;font-size:.8rem;color:#8a8678;text-align:center;line-height:1.7}
+/* 10.11.2026: помощ за неможещите + подробности с бутончета (lib/join-details.js) */
+.help{background:var(--card);border:2px dashed var(--line);border-radius:13px;padding:14px 16px;margin:-8px 0 28px}
+.help p{font-size:.94rem;margin-bottom:10px}
+.help .send{margin-top:0}
+.help .btn{white-space:nowrap}
+.btn.call{background:#3d3b35}
+.btn.copy{background:var(--card);color:var(--txt);border:2px solid var(--line);flex:0 0 auto;padding:17px 14px}
+.dl{font-size:.86rem;font-weight:700;color:var(--dim);margin:14px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:9px 15px;font-size:.98rem;
+  font-family:inherit;color:var(--txt);cursor:pointer}
+.chip.on{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:700}
+.tar{display:flex;gap:7px}
+.tar input{padding:13px 10px;font-size:1rem}
+textarea{width:100%;background:var(--card);border:2px solid var(--line);border-radius:11px;padding:13px 14px;
+  font-size:1rem;font-family:inherit;color:var(--txt);outline:none;resize:vertical}
+textarea:focus{border-color:var(--gold)}
 </style>
 <script src="lib/join-i18n.js"></script>
+<script src="lib/join-details.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -100,6 +118,14 @@ input::placeholder{color:#9c988a}
       <li id="j-b2">Клиентът звъни директно на теб</li>
       <li id="j-b3">Founder значка за първите — постоянна</li>
     </ul>
+  </div>
+
+  <div class="help" id="help">
+    <p id="j-help">Не ти се попълва? Обади ми се или ми пиши — ще те питам аз.</p>
+    <div class="send">
+      <a class="btn call" id="hc" href="#">📞 <span id="j-call">Обади се</span></a>
+      <a class="btn viber" id="hv" href="#">Viber</a>
+    </div>
   </div>
 
   <div id="form">
@@ -134,14 +160,19 @@ input::placeholder{color:#9c988a}
       <div class="err" id="err"></div>
     </div>
 
-    <!-- 4 · изпращане -->
+    <!-- 4 · подробности (само БГ номер) — рисува ги lib/join-details.js -->
+    <div class="step off" id="s3b" style="display:none"></div>
+
+    <!-- 5 · изпращане -->
     <div class="step off" id="s4">
-      <div class="step-n"><i>4</i><span id="j-s4">Изпрати заявката</span></div>
+      <div class="step-n"><i id="n4">4</i><span id="j-s4">Изпрати заявката</span></div>
       <div class="hint" id="j-hint4">Отваря се готово съобщение. Само натискаш „изпрати“.</div>
       <div class="send">
         <a class="btn viber" id="bv" href="#">Viber</a>
         <a class="btn wa" id="bw" href="#">WhatsApp</a>
+        <button class="btn copy" id="bc" type="button" title="Копирай текста">⧉</button>
       </div>
+      <div class="hint" id="j-paste">Ако чатът се отвори празен — натисни „Постави“: текстът вече е копиран.</div>
     </div>
   </div>
 
@@ -150,6 +181,7 @@ input::placeholder{color:#9c988a}
       <div class="tick">🐟</div>
       <h2 id="j-okH" style="margin:14px 0 9px;font-size:1.35rem">Заявката е изпратена</h2>
       <p id="j-okP" style="color:var(--dim);font-size:1rem">Ще се свържем с теб до 24 часа.</p>
+      <p id="j-photos" style="display:none;margin-top:14px;font-weight:600">📸 Сега прати в същия чат 4 снимки: лице, колата отвън, салона, табелата с тарифата.</p>
       <span class="founder-badge">★ FOUNDER</span>
     </div>
   </div>
@@ -163,7 +195,26 @@ input::placeholder{color:#9c988a}
 <script>
 const TEL = '359889638230';
 const $ = id => document.getElementById(id);
-let REG = null, picked = null, country = null;
+let REG = null, picked = null, country = null, MSG = '';
+
+/* Чат с Емил във Viber; draft= слага текста в полето. Не е официално
+   документирано — затова текстът се копира и при натискане (виж долу). */
+const VIBER = t => `viber://chat?number=%2B${TEL}` + (t ? '&draft=' + encodeURIComponent(t) : '');
+$('hc').href = 'tel:+' + TEL;
+$('hv').href = VIBER();
+function helpLang(){
+  const bg = ($('j-lang').value || jlang) === 'bg';
+  $('j-help').textContent = bg ? 'Не ти се попълва? Обади ми се или ми пиши — ще те питам аз.'
+                               : "Can't fill this in? Call or message me — I'll ask you myself.";
+  $('j-call').textContent = bg ? 'Обади се' : 'Call';
+  $('j-paste').textContent = bg ? 'Ако чатът се отвори празен — натисни „Постави“: текстът вече е копиран.'
+                                : 'If the chat opens empty, tap “Paste” — the text is already copied.';
+}
+helpLang();
+$('j-lang').addEventListener('change', () => setTimeout(helpLang));
+JD.render($('s3b'), () => check());
+function copyMsg(){ try { navigator.clipboard.writeText(MSG); } catch(e){} }
+$('bc').onclick = () => { copyMsg(); $('bc').textContent = '✓'; setTimeout(() => $('bc').textContent = '⧉', 1500); };
 
 /* Регистърът е 24 MB суров; тук идва свит на ~67 KB след gzip.
    Операторите и моделите са в отделни таблици, колите пазят само индекси. */
@@ -206,6 +257,8 @@ $('phone').addEventListener('input', () => {
     $('s2bg').className = 'step ' + (country==='BG' ? 'on':'off');
     $('s2foreign').className = 'step ' + (country==='foreign' ? 'on':'off');
     $('s3').className = 'step off'; $('s4').className = 'step off';
+    $('s3b').style.display = 'none';
+    $('n4').textContent = country==='BG' ? 5 : 4;
     $('phoneHint').textContent = country==='BG'
       ? 'Български номер разпознат.'
       : country==='foreign'
@@ -267,12 +320,13 @@ function pick(v){
       <button class="change" onclick="reset()">Друг автомобил</button>
     </div>`;
   $('s3').classList.remove('off'); $('s3').classList.add('on');
+  JD.preset(REG.mods[mi]);
   $('name').focus();
   check();
 }
 function reset(){
   picked = null; $('picked').innerHTML=''; $('q').value=''; $('q').focus();
-  $('s3').className='step off'; $('s4').className='step off';
+  $('s3').className='step off'; $('s4').className='step off'; $('s3b').style.display='none';
 }
 
 $('name').addEventListener('input', check);
@@ -293,31 +347,38 @@ function check(){
   const carOk = country === 'BG' ? !!picked : $('carManual').value.trim().length >= 4;
   const ready = !!country && okPhone && carOk && okName;
   $('s4').className = 'step ' + (ready ? 'on' : 'off');
+  /* БГ номер: пълният шаблон (drivers/TEMPLATE.txt) — приемът го чете сам. */
+  const det = ready && country === 'BG';
+  $('s3b').style.display = det ? '' : 'none';
+  $('s3b').className = 'step ' + (det ? 'on' : 'off');
   if (!ready) return;
 
-  let carLine, licLine = '';
+  let msg;
   if (country === 'BG') {
     const [pl, mi, oi, yr] = picked;
     const to = picked[4];
     const lic = to ? (new Date(to) > new Date()
           ? 'валиден до ' + fmtDate(to) : 'изтекъл ' + fmtDate(to))
         : 'няма вписана дата';
-    carLine = `Автомобил: ${pl} · ${REG.mods[mi]}${yr?' ('+yr+')':''}\nПревозвач: ${REG.ops[oi]}`;
-    licLine = `\nЛиценз: ${lic}`;
+    msg = JD.message({
+      head: `Превозвач: ${REG.ops[oi]}\nЛиценз: ${lic}${yr ? '\nПърва регистрация: ' + yr : ''}`,
+      name: nm, phone: $('phone').value.trim(), model: REG.mods[mi], plate: pl });
   } else {
-    carLine = `Автомобил (чужбина, за ръчна проверка): ${$('carManual').value.trim()}`;
+    msg = `Заявка за fish.taxi — Founder\n\n`
+      + `Име: ${nm}\nТелефон: ${$('phone').value.trim()}\n`
+      + `Автомобил (чужбина, за ръчна проверка): ${$('carManual').value.trim()}`;
   }
-  const msg = `Заявка за fish.taxi — Founder\n\n`
-    + `Име: ${nm}\nТелефон: ${$('phone').value.trim()}\n`
-    + `${carLine}${licLine}`;
-  $('bv').href = `viber://forward?text=${encodeURIComponent(msg)}`;
+  MSG = msg;
+  $('bv').href = VIBER(msg);
   $('bw').href = `https://wa.me/${TEL}?text=${encodeURIComponent(msg)}`;
 }
 
 /* Едно изпращане на автомобил от това устройство. Не спира упорит човек —
    за това трябва сървър — но маха случайните повторни заявки, които са
    огромната част от шума. */
-document.querySelectorAll('.btn').forEach(b => b.addEventListener('click', () => {
+document.querySelectorAll('#bv,#bw').forEach(b => b.addEventListener('click', () => {
+  copyMsg();
+  $('j-photos').style.display = country === 'BG' ? '' : 'none';
   try {
     const sent = JSON.parse(localStorage.getItem('ft_sent') || '[]');
     const key = country === 'BG' ? (picked && picked[0]) : $('carManual').value.trim();
