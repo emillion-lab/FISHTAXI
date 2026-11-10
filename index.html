@@ -306,7 +306,6 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-sy
     </div>
     <div class="fs"><span class="fl">Comfort</span>
       <button class="flt" onclick="sf('nosmoker',this)" data-f='nosmoker'>🚭 No Smoking</button>
-      <button class="flt" onclick="sf('smoking',this)" data-f='smoking'>🚬 Smoking OK</button>
       <button class="flt" onclick="sf('pet',this)" data-f='pet'>🐾 Pets OK</button>
       <button class="flt" onclick="sf('child',this)" data-f='child'>👶 Child Seat</button>
       <button class="flt" onclick="sf('ac',this)" data-f='ac'>❄️ A/C</button>
@@ -1080,7 +1079,7 @@ function card(d,mini){
   if(d.suv)tags+='<span class="t tb">🚙 SUV</span>';
   tags+='<span class="t" style="color:'+st.c+';border-color:'+st.c+'44;background:'+st.c+'11">'+st.l+'</span>';
   if(d.nosmoker)tags+='<span class="t ty">🚭</span>';
-  if(d.smoking)tags+='<span class="t tr">🚬</span>';
+  /* FT-NO-SMOKING-OK-V1: пушене в такси е забранено — само 🚭 за потвърдилите */
   if(d.petfriendly)tags+='<span class="t tp">🐾</span>';
   if(d.childok)tags+='<span class="t to">👶</span>';
   if(d.silent_ok)tags+='<span class="t tc">🤫</span>';
@@ -1311,8 +1310,7 @@ function openMod(id){
   var oreq=t.onRequest||'on request';
   var epay=t.extraFee||'extra charge';
   var optDefs=[
-    [d.nosmoker,'ty',t.fNosmoker],[d.smoking,'tr',t.fSmoking],
-    [d.petfriendly,'tp',t.fPet],[d.childok,'to',t.fChild],
+    [d.nosmoker,'ty',t.fNosmoker],[d.petfriendly,'tp',t.fPet],[d.childok,'to',t.fChild],
     [d.silent_ok,'tc',t.fSilent],[d.talk_ok,'tg',t.fTalk],
     [d.music,'tp',t.fMusic],[d.nomusic,'ty',t.fNomusic],
     [d.airport,'tb',t.fAirport],[d.longdist,'tb',t.fLong],
