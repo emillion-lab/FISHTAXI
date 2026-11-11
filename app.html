@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0e1012">
+<title>fish.taxi — такси директно от шофьора</title>
+<meta name="description" content="Find verified taxi drivers directly in Sofia. Call or message them yourself — see the car, price and driver before you book.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="fish.taxi">
+<meta property="og:title" content="🚕 fish.taxi — Direct Taxi Finder">
+<meta property="og:description" content="Find verified taxi drivers directly. See the car, price and driver before you book — call or message them yourself.">
+<meta property="og:image" content="https://fish.taxi/img/og-image.jpg">
+<meta property="og:url" content="https://fish.taxi/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon.png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="lib/app.css?v=1">
+</head>
+<body>
+<div id="map" aria-label="Карта"></div>
+
+<div id="hud">
+  <div class="brand glassy">fish.taxi</div>
+  <div class="live glassy"><b id="hOn">0</b><span id="hOnT"></span><br><span id="hAge">…</span></div>
+  <button class="round glassy" id="menuBtn"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+</div>
+<button class="round glassy" id="locate" aria-label="Моето местоположение"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
+
+<section id="sheet">
+  <div id="grab"><div class="bar"></div><h1 id="count">…</h1></div>
+  <div id="action"><div class="lever" id="lever"><div class="fill"></div><div class="txt" id="levTxt"></div><div class="knob" id="knob" role="button" tabindex="0"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div></div></div>
+  <div id="chips"></div>
+  <div id="list"></div>
+</section>
+
+<div id="dim"></div>
+<section class="panel" id="prof">
+  <div class="ptop"><i></i></div><button class="pclose" aria-label="Затвори">×</button>
+  <div class="pgal" id="pgal"></div><div class="pdots" id="pdots"></div>
+  <div class="pbody" id="pbody"></div><div class="pact" id="pact"></div>
+</section>
+<section class="panel" id="ord">
+  <div class="ptop"><i></i></div><button class="pclose" aria-label="Затвори">×</button>
+  <div class="pbody" id="obody" style="padding-top:30px"></div><div class="pact" id="oact"></div>
+</section>
+<section class="panel auto" id="menu">
+  <div class="ptop"><i></i></div><button class="pclose" aria-label="Затвори">×</button>
+  <div class="pbody" id="mbody" style="padding-top:56px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 24px)"></div>
+</section>
+<div id="toast" role="status"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="lib/app-core.js?v=1"></script>
+<script src="lib/app-ui.js?v=1"></script>
+<script src="lib/app-order.js?v=1"></script>
+</body>
+</html>
