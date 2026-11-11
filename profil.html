@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="bg"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Моят профил — fish.taxi</title>
+<style>
+:root{--bg:#0f1419;--card:#1a212b;--tx:#e8edf2;--mu:#8b97a5;--ac:#2f9e6e;--ln:#2a3340}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 system-ui,sans-serif;padding:16px;max-width:520px;margin:auto}
+h1{font-size:20px;margin:4px 0 12px}h2{font-size:13px;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;margin:18px 0 6px}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:12px}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--ln);background:#0f1419;color:var(--tx);font-size:16px;margin:4px 0 8px}
+button{font:inherit;border:0;border-radius:10px;padding:12px 14px;cursor:pointer}
+.go{width:100%;background:var(--ac);color:#fff;font-weight:600;margin-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:#0f1419;color:var(--tx);border:1px solid var(--ln)}
+.chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.chip.ask{background:#6b5b1e;border-color:#6b5b1e}
+.hint{color:var(--mu);font-size:13px;margin:4px 0}.msg{margin-top:10px;font-size:14px}.err{color:#ff8a80}.ok{color:#7ee0a8}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0}
+.row b{font-weight:500}
+#ed{display:none}
+</style></head><body>
+<h1>Моят профил</h1>
+<div class="card" id="login">
+  <div class="hint">Влез със същите телефон и код като в апа за GPS.</div>
+  <input id="ph" inputmode="tel" placeholder="Телефон, напр. 0889…" autocomplete="username">
+  <input id="tk" type="password" placeholder="Код (token)" autocomplete="current-password">
+  <button class="go" id="enter">Влез</button>
+  <div class="msg err" id="lerr"></div>
+</div>
+
+<div id="ed">
+  <div class="hint" id="who"></div>
+  <h2>В колата</h2><div class="chips" data-g="b"></div>
+  <h2>Музика</h2><div class="chips" data-g="m"></div>
+  <h2>Езици</h2><div class="chips" data-g="l"></div>
+  <h2>Какво приемаш</h2><div id="tri"></div>
+  <div class="hint">Жълто = „по договаряне“. Име, снимки, кола, тарифа и описание ги сменя Емил — пиши му във Viber.</div>
+  <button class="go" id="save">Запази</button>
+  <div class="msg" id="smsg"></div>
+</div>
+
+<script>
+var API='https://mvr-proxy.mihov-emil.workers.dev/driver/profile';
+var B=[['ac','Климатик'],['usb','USB зарядно'],['streaming','Стрийминг'],['petfriendly','Домашни любимци'],['childok','Детско столче'],['nosmoker','Непушач'],['terminal','Терминал'],['talk_ok','Приказлив'],['silent_ok','Тих/мълчалив'],['calm_ok','Спокойно каране']];
+var M=[['music','Музика'],['music_pop','Поп'],['music_chalga','Чалга'],['music_rock','Рок'],['music_classical','Класика'],['music_jazz','Джаз'],['music_electronic','Електронна'],['music_chillout','Чилаут'],['music_lounge','Лаунж']];
+var L=[['bg','Български'],['en','Английски'],['ru','Руски'],['de','Немски'],['fr','Френски'],['tr','Турски'],['it','Италиански'],['es','Испански']];
+var T=[['airport','Летище'],['longdist','Дълги курсове'],['night','Нощем'],['wheelchair','Инвалидна количка']];
+var S={},LG=[],cur=null,orig={};
+function $(i){return document.getElementById(i)}
+function norm(p){var d=String(p||'').replace(/\D/g,'');if(d.indexOf('00')==0)d=d.slice(2);if(d.charAt(0)=='0')d='359'+d.slice(1);return d}
+function save(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function load(k){try{return localStorage.getItem(k)||''}catch(e){return ''}}
+function chips(sel,arr,isLang){var box=document.querySelector('[data-g="'+sel+'"]');box.innerHTML='';
+ arr.forEach(function(x){var b=document.createElement('button');b.type='button';b.className='chip';b.textContent=x[1];
+  function on(){return isLang?LG.indexOf(x[0])>=0:S[x[0]]===true}
+  function paint(){b.classList.toggle('on',on())}
+  b.onclick=function(){if(isLang){var i=LG.indexOf(x[0]);if(i>=0)LG.splice(i,1);else LG.push(x[0])}else S[x[0]]=!(S[x[0]]===true);paint()};
+  paint();box.appendChild(b)})}
+function tri(){var t=$('tri');t.innerHTML='';T.forEach(function(x){var r=document.createElement('div');r.className='row';r.innerHTML='<b>'+x[1]+'</b><span class="chips"></span>';
+ var c=r.querySelector('.chips');[[true,'да'],[false,'не'],['ask','по договаряне']].forEach(function(o){var b=document.createElement('button');b.type='button';b.className='chip';b.textContent=o[1];
+  function paint(){b.classList.toggle('on',S[x[0]]===o[0]&&o[0]!=='ask');b.classList.toggle('ask',S[x[0]]===o[0]&&o[0]==='ask')}
+  b.onclick=function(){S[x[0]]=o[0];[].forEach.call(c.children,function(z){z.classList.remove('on','ask')});paint()};paint();c.appendChild(b)});t.appendChild(r)})}
+$('enter').onclick=function(){
+ $('lerr').textContent='';var ph=norm($('ph').value),tk=$('tk').value.trim();
+ if(ph.length<11||!tk){$('lerr').textContent='Попълни телефон и код.';return}
+ fetch('data/drivers.json?'+Date.now()).then(function(r){return r.json()}).then(function(a){
+  var d=a.filter(function(x){return String(x.gps_id)===ph})[0];
+  if(!d){$('lerr').textContent='Няма публикуван профил за този телефон.';return}
+  // кодът се проверява при „Запази“; тук само показваме профила
+  cur={ph:ph,tk:tk};save('pp_ph',$('ph').value);save('pp_tk',tk);
+  S={};orig={};B.concat(M,T).forEach(function(x){S[x[0]]=d[x[0]]});LG=(d.langs||[]).slice();
+  $('who').textContent=(d.name_bg||d.name)+' · '+(d.car||'');
+  chips('b',B);chips('m',M);chips('l',L,true);tri();
+  $('login').style.display='none';$('ed').style.display='block'
+ }).catch(function(){$('lerr').textContent='Не успях да заредя профила. Опитай пак.'})};
+$('save').onclick=function(){
+ var m=$('smsg');m.className='msg';m.textContent='Записвам…';var f={};
+ B.concat(M).forEach(function(x){f[x[0]]=S[x[0]]===true});T.forEach(function(x){if(S[x[0]]!==undefined)f[x[0]]=S[x[0]]});
+ if(LG.length)f.langs=LG;else{m.className='msg err';m.textContent='Избери поне един език.';return}
+ fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({driver_id:cur.ph,token:cur.tk,fields:f})})
+ .then(function(r){return r.json().then(function(j){return{s:r.status,j:j}})}).then(function(o){
+  if(o.s==401){m.className='msg err';m.textContent='Грешен код. Върни се и влез отново.'}
+  else if(o.j&&o.j.ok){m.className='msg ok';m.textContent='Готово. Промяната се вижда на сайта до 2–3 минути.'}
+  else{m.className='msg err';m.textContent=(o.j&&o.j.error)||'Не стана. Опитай след малко.'}
+ }).catch(function(){m.className='msg err';m.textContent='Няма връзка. Опитай пак.'})};
+$('ph').value=load('pp_ph');$('tk').value=load('pp_tk');
+</script></body></html>
