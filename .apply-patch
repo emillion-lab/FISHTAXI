@@ -1,2 +1,5 @@
 scripts/patch_map_local.py
-# 11.11.2026 — картата не се мащабира до Европа заради Lancelot
+scripts/patch_filter_labels.py
+scripts/patch_profil_langs.py
+scripts/patch_preview_v2.py
+# 11.11.2026 — карта без Европа, етикети на филтрите, езици в профила, пробен дизайн v2
