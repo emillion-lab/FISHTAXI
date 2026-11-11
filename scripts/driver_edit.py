@@ -16,7 +16,7 @@ BOOL = {'ac', 'music', 'silent_ok', 'talk_ok', 'calm_ok', 'usb', 'streaming',
         'music_pop', 'music_chalga', 'music_rock', 'music_classical',
         'music_jazz', 'music_electronic', 'music_chillout', 'music_lounge'}
 TRI = {'airport', 'longdist', 'night', 'wheelchair'}      # true / false / "ask"
-LANGS = {'bg', 'en', 'ru', 'de', 'fr', 'tr', 'it', 'es'}
+LANGS = {'bg', 'en', 'ru', 'de', 'fr', 'tr', 'it', 'es', 'cs', 'ar', 'zh'}
 
 
 def norm(p):
