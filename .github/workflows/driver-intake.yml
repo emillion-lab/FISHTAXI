@@ -2,6 +2,15 @@ name: driver-intake
 # Нов или променен шофьор → профил → index.html. Виж drivers/README.md.
 on:
   workflow_dispatch:
+    inputs:
+      edit_phone:
+        description: 'Само от „Моят профил“: телефон на шофьора'
+        required: false
+        default: ''
+      edit_json:
+        description: 'Само от „Моят профил“: промените (JSON)'
+        required: false
+        default: ''
   push:
     branches: [ main ]
     # само текстът пуска приема: снимките (много качвания) идват преди него.
@@ -32,9 +41,19 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install --quiet pillow
 
+      - name: Редакция от шофьор (Моят профил)
+        if: ${{ inputs.edit_phone != '' }}
+        env:
+          EDIT_PHONE: ${{ inputs.edit_phone }}
+          EDIT_JSON: ${{ inputs.edit_json }}
+        run: |
+          echo "== driver-edit $(date -u)" > /tmp/intake.log
+          python scripts/driver_edit.py "$EDIT_PHONE" "$EDIT_JSON" 2>&1 | tee -a /tmp/intake.log
+          exit ${PIPESTATUS[0]}
+
       - name: Inbox → профили
         run: |
-          echo "== driver-intake $(date -u)" > /tmp/intake.log
+          echo "== driver-intake $(date -u)" >> /tmp/intake.log
           python scripts/driver_intake.py 2>&1 | tee -a /tmp/intake.log
           exit ${PIPESTATUS[0]}
 
@@ -59,7 +78,7 @@ jobs:
           exec > >(tee -a /tmp/intake.log) 2>&1
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A -- drivers img index.html
+          git add -A -- drivers img index.html data/drivers.json
           if git diff --cached --quiet; then echo "без промяна"; exit 0; fi
           who=$(git diff --cached --name-only -- drivers/reports drivers/profiles | sed 's#.*/##; s/\.[a-z]*$//' | sort -u | paste -sd, -)
           git commit -q -m "шофьори: ${who:-сглобяване}"
