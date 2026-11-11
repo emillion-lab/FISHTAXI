@@ -13,6 +13,11 @@ on:
 permissions:
   contents: write
 
+# Един по един — два патча наведнъж се блъскат при commit-а.
+concurrency:
+  group: apply-patch
+  cancel-in-progress: false
+
 jobs:
   patch:
     runs-on: ubuntu-latest
@@ -25,20 +30,28 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install --quiet pillow
 
+      # Всеки ред scripts/patch_*.py в .apply-patch се пуска по ред (11.11.2026:
+      # преди само първият). Редове с # са бележки. Първа грешка спира всичко.
       - name: Apply patch
         run: |
-          S=$(head -n1 .apply-patch | tr -d '\r' | xargs)
-          case "$S" in scripts/patch_*.py) ;; *) echo "непознат скрипт: '$S'"; exit 1;; esac
-          [ -f "$S" ] || { echo "няма такъв файл: $S"; exit 1; }
-          echo "== $S $(date -u)" > /tmp/patch.log
-          python "$S" 2>&1 | tee -a /tmp/patch.log
-          exit ${PIPESTATUS[0]}
+          : > /tmp/patch.log
+          n=0
+          while IFS= read -r L || [ -n "$L" ]; do
+            S=$(printf '%s' "$L" | tr -d '\r' | xargs)
+            case "$S" in ''|'#'*) continue;; scripts/patch_*.py) ;; *) echo "непознат скрипт: '$S'" | tee -a /tmp/patch.log; exit 1;; esac
+            [ -f "$S" ] || { echo "няма такъв файл: $S" | tee -a /tmp/patch.log; exit 1; }
+            echo "== $S $(date -u)" >> /tmp/patch.log
+            python "$S" 2>&1 | tee -a /tmp/patch.log
+            [ ${PIPESTATUS[0]} = 0 ] || exit 1
+            n=$((n + 1))
+          done < .apply-patch
+          [ $n -gt 0 ] || { echo "няма скрипт в .apply-patch" | tee -a /tmp/patch.log; exit 1; }
 
       # Само главната страница. next/index.html е счупен от 06.09.2026
       # (буквално \n между два обекта в i18n) и не е свързан от никъде.
       - name: Sanity check inline JS
         run: |
-          for f in index.html; do
+          for f in index.html v2.html; do
             [ -f "$f" ] || continue
             python3 - "$f" <<'PY'
           import io, re, sys
@@ -60,7 +73,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "no change"
           else
-            git commit -m "patch: $(head -n1 .apply-patch | xargs)"
+            git commit -m "patch: $(grep -v '^#' .apply-patch | grep -o 'patch_[a-z0-9_]*' | paste -sd, -)"
             for i in 1 2 3; do
               git pull --rebase --autostash && git push && exit 0
               sleep $((i * 5))
