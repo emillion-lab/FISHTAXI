@@ -109,6 +109,10 @@ def main():
         print(f'index.html: DRIVERS обновен — {len(live)} на сайта')
     else:
         print(f'index.html: без промяна — {len(live)} на сайта')
+    # публичен препис за „Моят профил“ (само вече публикуваното)
+    os.makedirs('data', exist_ok=True)
+    io.open('data/drivers.json', 'w', encoding='utf-8').write(
+        json.dumps(live, ensure_ascii=False, separators=(',', ':')))
     if hidden:
         print('скрити (publish: false):', ', '.join(hidden))
 
