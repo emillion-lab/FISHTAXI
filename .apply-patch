@@ -1,2 +1,2 @@
-scripts/patch_profil_langs.py
-# 11.11.2026 — Моят профил: чешки, арабски, китайски
+scripts/patch_map_local.py
+# 11.11.2026 — картата не се мащабира до Европа заради Lancelot
