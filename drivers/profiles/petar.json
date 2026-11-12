@@ -4,8 +4,8 @@
  "id": 2,
  "founder": 2,
  "gps_id": "359897644448",
- "name": "Petar M.",
- "name_bg": "Петър М.",
+ "name": "Peter M.",
+ "name_bg": "Петер М.",
  "bio_key": "petarBio",
  "avatar": "img/petar_avatar.jpg",
  "photos": [
@@ -74,7 +74,7 @@
  "wheelchair": "ask",
  "verified": true,
  "areas": "Sofia — Center, Airport, Ring Road, All districts",
- "phone": "+359897644448",
+ "phone": "+359878666671",
  "price": "0.75 EUR/km day / 0.85 EUR/km night / Start 1.49 EUR",
  "tariff": {
   "start": 1.5,
