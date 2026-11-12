@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "taxi.fish.client",
+    "sha256_cert_fingerprints": [
+      "43:14:8F:30:66:BC:40:01:AA:DF:56:4E:0E:32:36:1F:00:4F:EA:E5:5F:33:F1:0E:F1:BE:0B:CF:A9:75:B4:42"
+    ]
+  }
+}]
