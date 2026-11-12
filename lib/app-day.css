@@ -62,3 +62,24 @@ html.day #rcard .rt[aria-pressed="true"]{background:rgba(154,116,36,.12);border-
 #rcard .rwait{padding:16px 4px;color:var(--dust);font-size:15px}
 #rcard .btn{width:100%}
 #rcard .note{padding-top:8px}
+/* избор на шофьор след „Поръчай до тук“ */
+#rcard .rto{position:relative}
+#rcard .pback{position:absolute;left:-2px;top:0;width:30px;height:30px;border-radius:50%;font-size:22px;line-height:1;color:var(--ink)}
+#rcard .pback~span,#rcard .pback~b{padding-left:30px}
+#rcard .plist{display:flex;flex-direction:column;gap:8px;max-height:min(54vh,440px);overflow-y:auto;overscroll-behavior:contain;margin:0 -2px;padding:0 2px 4px}
+#rcard .pk{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;text-align:left;padding:8px 12px 8px 8px;border-radius:16px;background:var(--glass);border:1px solid var(--edge);animation:rise .4s both var(--ease)}
+#rcard .pk:active{transform:scale(.98)}
+#rcard .pk.off{opacity:.72}
+#rcard .ph{position:relative;width:84px;height:58px;flex:none}
+#rcard .pc{width:84px;height:58px;border-radius:12px;object-fit:cover;display:block;background:var(--glass2)}
+#rcard .pa{position:absolute;right:-6px;bottom:-6px;width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--pit);box-shadow:0 2px 6px rgba(0,0,0,.4)}
+#rcard .ph img:only-child.pa{position:static;width:58px;height:58px}
+#rcard .pi{min-width:0}
+#rcard .pi b{display:block;font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#rcard .pi span{display:block;font-size:13px;color:var(--dust);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#rcard .pi em{display:block;font-style:normal;font-size:14px;letter-spacing:.5px;line-height:1.4;margin-top:3px}
+#rcard .pp{text-align:right;white-space:nowrap}
+#rcard .pp b{display:block;font-size:16px;font-weight:700;color:var(--taxi)}
+#rcard .pp small{display:block;font-size:12px;color:var(--dust);margin-top:3px}
+#rcard .pp small i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--rivet);margin-right:5px;vertical-align:1px}
+#rcard .pp small i.on{background:var(--go)}
