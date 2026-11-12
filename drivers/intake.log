@@ -1,10 +1,5 @@
-== driver-edit Thu Nov 12 04:02:31 UTC 2026
-профил: emil.json | сменено: childok | отхвърлено: —
-== driver-intake Thu Nov 12 04:02:31 UTC 2026
+== driver-intake Thu Nov 12 08:43:27 UTC 2026
 inbox е празен
-classic.html: DRIVERS обновен — 3 на сайта
-To https://github.com/emillion-lab/FISHTAXI
- ! [remote rejected] main -> main (cannot lock ref 'refs/heads/main': is at 11f04b7c0767185b01f2c1801813a63f681a9561 but expected 941c083ef3fb8165d6f692f0209cbef9eecfb72d)
-error: failed to push some refs to 'https://github.com/emillion-lab/FISHTAXI'
-качено
-== резултат: success
+ПРОФИЛИТЕ ИМАТ ГРЕШКИ — index.html не е пипан:
+  - drivers/profiles/emil.json: невалиден JSON — Expecting property name enclosed in double quotes: line 38 column 1 (char 590)
+== резултат: failure
