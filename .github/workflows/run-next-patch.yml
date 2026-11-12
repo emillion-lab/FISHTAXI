@@ -16,12 +16,12 @@ jobs:
       - name: Syntax check
         run: |
           for f in lib/*.js; do node --check $f; done
-          python3 -c "import json;json.load(open('data/drivers.json'));json.load(open('drivers/profiles/petar.json'))"
+          python3 -c "import json;json.load(open('data/drivers.json'));json.load(open('.well-known/assetlinks.json'))"
       - name: Commit
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add -A lib index.html data drivers classic.html next
-          git diff --cached --quiet && echo "nothing to commit" || git commit -m "patch_next: Петер М., нов телефон"
+          git add -A lib index.html data drivers classic.html next .well-known
+          git diff --cached --quiet && echo "nothing to commit" || git commit -m "patch_next: assetlinks с ключа от Google Play"
           git pull --rebase origin main || true
           git push
