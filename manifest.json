@@ -4,7 +4,7 @@
   "description": "Commission-free taxi platform. Find verified drivers directly.",
   "start_url": "./",
   "scope": "./",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "portrait",
   "background_color": "#0e1012",
   "theme_color": "#0e1012",
@@ -26,5 +26,9 @@
       "sizes": "any",
       "type": "image/png"
     }
+  ],
+  "display_override": [
+    "fullscreen",
+    "standalone"
   ]
 }
