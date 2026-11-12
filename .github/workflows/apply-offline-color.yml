@@ -1,0 +1,27 @@
+name: apply-offline-color
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply patch
+        run: python3 scripts/patch_offline_color.py
+      - name: Syntax check
+        run: |
+          node --check lib/app-core.js
+          node --check lib/app-ui.js
+      - name: Commit
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A lib index.html
+          git diff --cached --quiet && echo "nothing to commit" || git commit -m "офлайн шофьори в цвят, онлайн със зелено; подсказка за директна поръчка"
+          git pull --rebase origin main || true
+          git push
