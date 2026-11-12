@@ -1,0 +1,64 @@
+/* fish.taxi v3.4 — дневен режим (html.day). Нощният е основният в app.css. Превключва се с докосване на логото. */
+html.day{color-scheme:light;--pit:#eceff1;--ink:#15191c;--dust:#5b656e;--rivet:#b9bfc5;--taxi:#9a7424;--go:#2d8a57;--stop:#c4554b;
+ --glass:rgba(255,255,255,.5);--glass2:rgba(255,255,255,.78);--edge:rgba(15,20,25,.12)}
+html.day body{background:var(--pit);color:var(--ink)}
+html.day .leaflet-tile-pane{filter:saturate(.6) contrast(.96) brightness(1.02)}
+html.day .glassy{background:rgba(255,255,255,.55);box-shadow:0 8px 24px rgba(15,20,25,.12)}
+html.day .round svg{stroke:var(--ink)}
+html.day #sheet{background:rgba(250,251,252,.62);box-shadow:0 -14px 40px rgba(15,20,25,.14)}
+html.day .bar,html.day .ptop i{background:rgba(0,0,0,.22)}
+html.day .lever .txt{background-image:linear-gradient(100deg,rgba(21,25,28,.55) 35%,#000 50%,rgba(21,25,28,.55) 65%)}
+html.day .card{background:rgba(255,255,255,.6);border-color:rgba(15,20,25,.08)}
+html.day .card.sel{background:rgba(255,255,255,.88);box-shadow:inset 0 0 0 1px rgba(154,116,36,.6)}
+html.day .chip[aria-pressed="true"],html.day .btn.go{background:rgba(154,116,36,.14);border-color:rgba(154,116,36,.5)}
+html.day .panel{background:rgba(247,248,249,.92);box-shadow:0 -20px 50px rgba(15,20,25,.2)}
+html.day .pclose{background:rgba(255,255,255,.7)}
+html.day .pgrp{border-color:rgba(15,20,25,.08)}
+html.day .prow+.prow,html.day .sug button+button,html.day .mrow+.mrow,html.day .pact{border-color:rgba(15,20,25,.08)}
+html.day .fld{background:rgba(255,255,255,.75)}
+html.day .fld:focus{border-color:rgba(154,116,36,.6)}
+html.day .sug button{background:rgba(255,255,255,.65)}
+html.day .pgal{background:#e1e4e7}
+html.day .pdots i{background:rgba(0,0,0,.2)}
+html.day .pdots i.on{background:var(--ink)}
+html.day #toast{background:rgba(255,255,255,.8)}
+html.day #dim{background:rgba(0,0,0,.18)}
+html.day .mk .tag span{background:rgba(255,255,255,.8);color:var(--ink)}
+html.day .mk .in{box-shadow:0 4px 12px rgba(0,0,0,.25)}
+
+/* логото = бутон за режима */
+.brand{cursor:pointer;position:relative;-webkit-user-select:none;user-select:none}
+.brand:active{transform:scale(.95)}
+.brand img{border-radius:6px}
+.brand .mode{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;margin-left:-2px;background:rgba(255,255,255,.08);border:1px solid var(--edge)}
+.brand .mode svg{width:13px;height:13px;fill:none;stroke:var(--taxi);stroke-width:2;stroke-linecap:round}
+html.day .brand .mode{background:rgba(0,0,0,.05)}
+
+/* ---------- дестинация със задържане + маршрути ---------- */
+.dpin{width:0!important;height:0!important}
+.dpin i{position:absolute;left:-13px;top:-34px;width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--taxi);border:3px solid #fff;box-shadow:0 6px 14px rgba(0,0,0,.45);animation:pinIn .45s var(--spring) both}
+.dpin b{position:absolute;left:-6px;top:-3px;width:12px;height:6px;border-radius:50%;background:rgba(0,0,0,.35);filter:blur(1px)}
+@keyframes pinIn{from{transform:translateY(-30px) rotate(-45deg);opacity:0}}
+body.rmode #sheet{opacity:0;pointer-events:none;transition:opacity .25s}
+body.rmode #locate{bottom:calc(var(--rh,220px) + 24px)!important}
+#rcard{position:absolute;left:12px;right:12px;bottom:calc(var(--sb) + 12px);z-index:20;max-width:536px;margin:0 auto;border-radius:24px;padding:14px 14px 12px;
+ background:rgba(16,19,22,.74);transform:translateY(130%);opacity:0;transition:transform .45s var(--ease),opacity .3s;pointer-events:none}
+#rcard.open{transform:none;opacity:1;pointer-events:auto}
+html.day #rcard{background:rgba(250,251,252,.86)}
+#rcard .x{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.3);border:1px solid var(--edge);font-size:19px;line-height:1}
+html.day #rcard .x{background:rgba(255,255,255,.7)}
+#rcard .rto{padding:2px 44px 10px 4px}
+#rcard .rto span{display:block;font-size:13px;color:var(--dust)}
+#rcard .rto b{display:block;font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#rcard .rlist{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:10px}
+#rcard .rlist::-webkit-scrollbar{display:none}
+#rcard .rt{flex:1 1 0;min-width:96px;text-align:left;padding:10px 12px;border-radius:16px;background:var(--glass);border:1px solid var(--edge);animation:rise .4s both var(--ease)}
+#rcard .rt b{display:block;font-size:20px;font-weight:700}
+#rcard .rt span{display:block;font-size:13px;color:var(--dust);white-space:nowrap}
+#rcard .rt em{display:block;font-style:normal;font-size:12px;font-weight:600;margin-top:4px;color:var(--dust)}
+#rcard .rt[aria-pressed="true"]{background:rgba(230,195,106,.16);border-color:rgba(230,195,106,.6)}
+#rcard .rt[aria-pressed="true"] em{color:var(--taxi)}
+html.day #rcard .rt[aria-pressed="true"]{background:rgba(154,116,36,.12);border-color:rgba(154,116,36,.55)}
+#rcard .rwait{padding:16px 4px;color:var(--dust);font-size:15px}
+#rcard .btn{width:100%}
+#rcard .note{padding-top:8px}
