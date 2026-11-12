@@ -100,15 +100,22 @@ def main():
     hidden = [p.get('slug') or path for path, p in profiles if p.get('publish', True) is False]
     live.sort(key=lambda d: d['id'])
 
-    s = io.open(PAGE, encoding='utf-8').read()
-    new = replace_array(s, render(live))
-    if BIO_OLD in new:
-        new = new.replace(BIO_OLD, BIO_NEW)
-    if new != s:
-        io.open(PAGE, 'w', encoding='utf-8').write(new)
-        print(f'index.html: DRIVERS обновен — {len(live)} на сайта')
+    # От v3 (12.11.2026) началната страница чете data/drivers.json и няма вграден
+    # масив. Старият сайт живее в classic.html — вграждаме там, където го има.
+    page = next((f for f in (PAGE, 'classic.html')
+                 if os.path.exists(f) and io.open(f, encoding='utf-8').read().count('var DRIVERS=') == 1), None)
+    if page is None:
+        print(f'няма страница с вграден DRIVERS — само data/drivers.json ({len(live)} на сайта)')
     else:
-        print(f'index.html: без промяна — {len(live)} на сайта')
+        s = io.open(page, encoding='utf-8').read()
+        new = replace_array(s, render(live))
+        if BIO_OLD in new:
+            new = new.replace(BIO_OLD, BIO_NEW)
+        if new != s:
+            io.open(page, 'w', encoding='utf-8').write(new)
+            print(f'{page}: DRIVERS обновен — {len(live)} на сайта')
+        else:
+            print(f'{page}: без промяна — {len(live)} на сайта')
     # публичен препис за „Моят профил“ (само вече публикуваното)
     os.makedirs('data', exist_ok=True)
     io.open('data/drivers.json', 'w', encoding='utf-8').write(
