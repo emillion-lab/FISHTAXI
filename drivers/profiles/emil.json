@@ -38,7 +38,7 @@
  "smoking": false,
  "nosmoker": true,
  "petfriendly": false,
- "childok": false,
+ "childok": true,
  "sport": true,
  "fast": true,
  "comfort": true,
