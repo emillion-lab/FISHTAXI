@@ -1,0 +1,7 @@
+/* v3.1: клавиатура, лого */
+#ord{bottom:var(--kb,0px);height:min(92%,calc(100% - var(--st) - 44px - var(--kb,0px)));transition:transform .5s var(--ease),bottom .2s}
+#ord.kbd .pbody{padding-bottom:45vh}
+.sug button{padding:13px 14px;min-height:48px}
+.brand{padding:5px 14px 5px 8px}
+.brand img{height:26px;width:auto;display:block;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+.brand span{font-size:15px;letter-spacing:.2px}
