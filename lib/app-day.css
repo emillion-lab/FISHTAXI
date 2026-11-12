@@ -83,3 +83,5 @@ html.day #rcard .rt[aria-pressed="true"]{background:rgba(154,116,36,.12);border-
 #rcard .pp small{display:block;font-size:12px;color:var(--dust);margin-top:3px}
 #rcard .pp small i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--rivet);margin-right:5px;vertical-align:1px}
 #rcard .pp small i.on{background:var(--go)}
+/* X винаги отгоре (заглавието е position:relative и го покриваше) */
+#rcard .x{z-index:3}
