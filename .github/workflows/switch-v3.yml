@@ -1,0 +1,66 @@
+name: switch-v3
+# Сменя началната страница с новия сайт (v3). Старият сайт остава на classic.html
+# и в backups/. Отделен workflow, защото опашката на apply-patch заседна на 11.11.2026.
+# Връщане назад: пусни с back=true.
+on:
+  workflow_dispatch:
+    inputs:
+      back:
+        description: 'true = върни стария сайт на началната страница'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: switch-v3
+  cancel-in-progress: false
+
+jobs:
+  switch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Чакащите поправки върху стария сайт (не спират смяната)
+        if: ${{ github.event.inputs.back != 'true' }}
+        run: |
+          for p in scripts/patch_map_local.py scripts/patch_filter_labels.py scripts/patch_profil_langs.py; do
+            python3 "$p" || echo "ПРОПУСНАТ: $p"
+          done
+
+      - name: Смяна
+        if: ${{ github.event.inputs.back != 'true' }}
+        run: python3 scripts/patch_switch_v3.py
+
+      - name: Връщане
+        if: ${{ github.event.inputs.back == 'true' }}
+        run: |
+          test -f classic.html || { echo "няма classic.html"; exit 1; }
+          grep -q 'var DRIVERS=' classic.html || { echo "classic.html не е старият сайт"; exit 1; }
+          cp index.html app.html
+          cp classic.html index.html
+
+      - name: Проверка
+        run: |
+          test -s index.html
+          if [ "${{ github.event.inputs.back }}" != "true" ]; then
+            grep -q 'lib/app-core.js' index.html
+            grep -q 'var DRIVERS=' classic.html
+            ls -la index.html classic.html backups/index-classic-2026-11-11.html
+          fi
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A -- '*.html'
+          if git diff --cached --quiet; then echo "без промяна"; exit 0; fi
+          git commit -q -m "switch-v3: начална страница (back=${{ github.event.inputs.back }})"
+          for i in 1 2 3; do
+            git pull -q --rebase origin main && git push -q origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1
