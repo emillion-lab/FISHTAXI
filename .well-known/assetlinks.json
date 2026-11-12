@@ -1,10 +1,15 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "taxi.fish.client",
-    "sha256_cert_fingerprints": [
-      "3D:AC:79:25:61:E8:F9:D7:5B:5F:91:F8:8B:06:CC:7A:50:DA:65:75:C7:90:F9:7C:5F:07:DD:F0:60:38:33:1C"
-    ]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "taxi.fish.client",
+      "sha256_cert_fingerprints": [
+        "3D:AC:79:25:61:E8:F9:D7:5B:5F:91:F8:8B:06:CC:7A:50:DA:65:75:C7:90:F9:7C:5F:07:DD:F0:60:38:33:1C",
+        "1F:D8:1E:AC:EF:39:BD:D8:AB:78:5B:E9:E6:1F:EB:08:B2:E3:68:26:7A:9F:17:A5:19:F4:EA:67:D7:18:9A:29"
+      ]
+    }
   }
-}]
+]
