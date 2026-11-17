@@ -1,8 +1,19 @@
-== scripts/patch_no_smoking_ok.py Tue Nov 10 18:43:33 UTC 2026
-„Пушене OK“ е махнато: филтър, значка, ред в картата
-[main 8220f85] patch: scripts/patch_no_smoking_ok.py
- 1 file changed, 2 insertions(+), 4 deletions(-)
+== scripts/patch_i18n_dict.py Tue Nov 17 13:42:30 UTC 2026
+lib/app-i18n.js 16474 bytes {'it': 100, 'es': 100, 'fr': 100}
+== scripts/patch_i18n_code.py Tue Nov 17 13:42:30 UTC 2026
+ok lib/app-core.js
+ok lib/app-route.js
+ok lib/app-order.js
+ok lib/app-ui.js
+ok lib/app-theme.js
+ok lib/app-fs.js
+ok index.html
+ok app.html
+lib JS SYNTAX OK
+[main ea59176] patch: patch_i18n_dict,patch_i18n_code
+ 9 files changed, 60 insertions(+), 38 deletions(-)
+ create mode 100644 lib/app-i18n.js
 Current branch main is up to date.
 To https://github.com/emillion-lab/FISHTAXI
-   33e92d4..8220f85  main -> main
+   d8bb6f4..ea59176  main -> main
 == резултат: success
