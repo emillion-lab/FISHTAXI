@@ -1,2 +1,3 @@
-scripts/patch_gsw.py
-# 17.11.2026 — швейцарски немски (gsw): блок в app-i18n.js, име/знаме/точка в app-core.js, ?v= в index.html и app.html
+scripts/patch_de.py
+scripts/patch_lang_roll.py
+# 17.11.2026 — немски (de) + ролка за езика в менюто (gsw вече е приложен)
