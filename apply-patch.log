@@ -1,13 +1,14 @@
-== scripts/patch_gsw.py Tue Nov 17 17:59:33 UTC 2026
-lib/app-i18n.js : gsw добавен
-lib/app-core.js : LN, FLAG, dc
-index.html : ?v= вдигнат
-app.html : ?v= вдигнат
-FT-GSW-V1 готово
+== scripts/patch_de.py Tue Nov 17 18:01:58 UTC 2026
+lib/app-i18n.js : de добавен
+== scripts/patch_lang_roll.py Tue Nov 17 18:01:58 UTC 2026
+lib/app-ui.js : ролка добавена
+index.html : app-lang.css вързан, app-ui.js ?v=12
+app.html : app-lang.css вързан, app-ui.js ?v=12
+FT-LROLL-V1 готово
 lib JS SYNTAX OK
-[main 3af6c1d] patch: patch_gsw
- 4 files changed, 8 insertions(+), 8 deletions(-)
+[main 848ad81] patch: patch_de,patch_lang_roll
+ 4 files changed, 19 insertions(+), 5 deletions(-)
 Current branch main is up to date.
 To https://github.com/emillion-lab/FISHTAXI
-   490aded..3af6c1d  main -> main
+   d6d98c7..848ad81  main -> main
 == резултат: success
