@@ -1,19 +1,13 @@
-== scripts/patch_i18n_dict.py Tue Nov 17 13:42:30 UTC 2026
-lib/app-i18n.js 16474 bytes {'it': 100, 'es': 100, 'fr': 100}
-== scripts/patch_i18n_code.py Tue Nov 17 13:42:30 UTC 2026
-ok lib/app-core.js
-ok lib/app-route.js
-ok lib/app-order.js
-ok lib/app-ui.js
-ok lib/app-theme.js
-ok lib/app-fs.js
-ok index.html
-ok app.html
+== scripts/patch_gsw.py Tue Nov 17 17:59:33 UTC 2026
+lib/app-i18n.js : gsw добавен
+lib/app-core.js : LN, FLAG, dc
+index.html : ?v= вдигнат
+app.html : ?v= вдигнат
+FT-GSW-V1 готово
 lib JS SYNTAX OK
-[main ea59176] patch: patch_i18n_dict,patch_i18n_code
- 9 files changed, 60 insertions(+), 38 deletions(-)
- create mode 100644 lib/app-i18n.js
+[main 3af6c1d] patch: patch_gsw
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 Current branch main is up to date.
 To https://github.com/emillion-lab/FISHTAXI
-   d8bb6f4..ea59176  main -> main
+   490aded..3af6c1d  main -> main
 == резултат: success
