@@ -1,14 +1,16 @@
-== scripts/patch_de.py Tue Nov 17 18:01:58 UTC 2026
-lib/app-i18n.js : de добавен
-== scripts/patch_lang_roll.py Tue Nov 17 18:01:58 UTC 2026
-lib/app-ui.js : ролка добавена
-index.html : app-lang.css вързан, app-ui.js ?v=12
-app.html : app-lang.css вързан, app-ui.js ?v=12
-FT-LROLL-V1 готово
+== scripts/patch_lang_roll2.py Tue Nov 17 18:07:04 UTC 2026
+lib/app-ui.js : ролка v2 (плаваща)
+index.html : ?v= вдигнат
+app.html : ?v= вдигнат
+FT-LROLL-V2 готово
+== scripts/patch_join_gsw.py Tue Nov 17 18:07:04 UTC 2026
+scripts/gen_join_i18n.py : gsw добавен
+lib/join-i18n.js : прегенериран, 14337 байта
+FT-JOIN-GSW-V1 готово
 lib JS SYNTAX OK
-[main 848ad81] patch: patch_de,patch_lang_roll
- 4 files changed, 19 insertions(+), 5 deletions(-)
+[main 916e372] patch: patch_lang_roll2,patch_join_gsw
+ 5 files changed, 47 insertions(+), 18 deletions(-)
 Current branch main is up to date.
 To https://github.com/emillion-lab/FISHTAXI
-   d6d98c7..848ad81  main -> main
+   a6cd302..916e372  main -> main
 == резултат: success
