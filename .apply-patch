@@ -1,3 +1,3 @@
-scripts/patch_de.py
-scripts/patch_lang_roll.py
-# 17.11.2026 — немски (de) + ролка за езика в менюто (gsw вече е приложен)
+scripts/patch_lang_roll2.py
+scripts/patch_join_gsw.py
+# 17.11.2026 — ролката за езика е плаващ бутон под менюто; швейцарски немски и за join.html
