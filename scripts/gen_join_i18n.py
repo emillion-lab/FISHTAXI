@@ -14,10 +14,10 @@ footBG се попълва САМО за български.  Чуждите ш�
 """
 import json
 
-LANGS = ['bg','en','de','fr','es','it','ru','ro','el','tr','pl','nl']
+LANGS = ['bg','en','de','gsw','fr','es','it','ru','ro','el','tr','pl','nl']
 
 NAMES = {
- 'bg':'Български','en':'English','de':'Deutsch','fr':'Français',
+ 'bg':'Български','en':'English','de':'Deutsch','gsw':'Schwiizerdütsch','fr':'Français',
  'es':'Español','it':'Italiano','ru':'Русский','ro':'Română',
  'el':'Ελληνικά','tr':'Türkçe','pl':'Polski','nl':'Nederlands',
 }
@@ -72,6 +72,31 @@ T = {
  okH='Anfrage gesendet', okP='Wir melden uns innerhalb von 24 Stunden.',
  errName='Bitte Vor- und Nachnamen angeben.',
  gdpr='Kunden sehen nur das, was du hier einträgst. Nichts weiter.',
+ footBG='',
+),
+'gsw': dict(
+ lead='Aamäldig als Fahrer. Under ere Minute.',
+ h1='0 % Kommission. Du behaltsch, was du verdienisch.',
+ p='D grosse Plattforme nämed 20–40 % vo jedere Fahrt – bi churze Strecke am meiste. Mir nämed nüt. De Chund gseht dich, rüeft dich diräkt aa und zahlt dir.',
+ b1='Kei Kommission – nöd jetzt und nöd spöter',
+ b2='D Chunde rüefed dich diräkt aa',
+ b3='Founder-Abzeiche für die Erschte – dauerhaft',
+ s1='Dini Telefonnummere',
+ ph1='Telefon',
+ hint1='Gib dini Telefonnummere ii',
+ s2='Din Wage',
+ ph2='Nummereschild',
+ hint2='Gib mindestens 3 Zeiche ii',
+ hintF='Mir prüefed s Auto vo Hand. Beschriib es churz.',
+ phF='Marke, Modell, Nummere',
+ s3='Din Name',
+ ph3='Vor- und Nachname',
+ s4='Aafrag schicke',
+ hint4='E fertigi Nachricht gaht uf. Du drücksch nume uf Sende.',
+ okH='Aafrag gschickt',
+ okP='Mir mäldid is innerhalb vo 24 Stunde.',
+ errName='Bitte Vor- und Nachname aagäh.',
+ gdpr='Mir zeiged de Chunde nume, was du da iigisch. Süsch nüt.',
  footBG='',
 ),
 'fr': dict(
