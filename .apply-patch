@@ -1,5 +1,3 @@
-scripts/patch_map_local.py
-scripts/patch_filter_labels.py
-scripts/patch_profil_langs.py
-scripts/patch_preview_v2.py
-# 11.11.2026 — карта без Европа, етикети на филтрите, езици в профила, пробен дизайн v2
+scripts/patch_i18n_dict.py
+scripts/patch_i18n_code.py
+# 17.11.2026 — италиански, испански и френски; мишената и адресите на латиница, когато езикът не е български
